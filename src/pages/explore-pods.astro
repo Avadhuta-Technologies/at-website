@@ -21,7 +21,7 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
       <div class="absolute bottom-1/3 left-1/3 w-12 h-12 bg-gradient-to-r from-red-400 to-pink-400 transform rotate-12 opacity-30"></div>
       
       <!-- Grid Pattern -->
-      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+      <div class="absolute inset-0 opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.05%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
     </div>
 
     <!-- Main Content -->
@@ -105,7 +105,7 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
       <div class="max-w-2xl mx-auto text-center mb-10">
         <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">Why Choose a Pod?</h2>
       </div>
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <!-- Card 1 -->
         <div class="relative rounded-xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-2 transition duration-300 cursor-pointer overflow-hidden min-h-[260px] bg-black">
           <div class="absolute inset-0 z-10 bg-gradient-to-tr from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"></div>
@@ -179,7 +179,7 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
       <div class="max-w-2xl mx-auto text-center mb-10">
         <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">Available Project Pods</h2>
       </div>
-      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <!-- Full-Stack Dev Pod -->
         <div class="bg-white dark:bg-dark rounded-2xl shadow-lg p-6 flex flex-col hover:-translate-y-2 transition duration-300 cursor-pointer">
           <div class="flex items-center justify-between mb-4">
@@ -211,8 +211,11 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
           </div>
           
           <div class="mt-auto">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">1 month min</span>
+            </div>
             <div class="font-bold text-lg mb-1 text-dark dark:text-white">₹2.2–2.5 Lakhs/month</div>
-            <div class="text-xs text-gray-500 mb-3">~$2,700–$3,000 • Min. Engagement: 1 month</div>
+            <div class="font-bold text-lg mb-3 text-dark dark:text-white">$2,700–$3,000/month</div>
             <div class="flex gap-2">
               <a href="#" class="flex-1 bg-primary text-white text-center py-2 px-4 rounded-lg hover:bg-blue-600 transition">Book Now</a>
               <a href="#" class="text-xs text-primary underline self-center">Details</a>
@@ -251,8 +254,11 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
           </div>
           
           <div class="mt-auto">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">1 month min</span>
+            </div>
             <div class="font-bold text-lg mb-1 text-dark dark:text-white">₹3.5–4 Lakhs/month</div>
-            <div class="text-xs text-gray-500 mb-3">~$4,200–$4,800 • Min. Engagement: 1 month</div>
+            <div class="font-bold text-lg mb-3 text-dark dark:text-white">$4,200–$4,800/month</div>
             <div class="flex gap-2">
               <a href="#" class="flex-1 bg-primary text-white text-center py-2 px-4 rounded-lg hover:bg-blue-600 transition">Book Now</a>
               <a href="#" class="text-xs text-primary underline self-center">Details</a>
@@ -290,8 +296,11 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
           </div>
           
           <div class="mt-auto">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full font-medium">1 month min</span>
+            </div>
             <div class="font-bold text-lg mb-1 text-dark dark:text-white">₹1.5–1.8 Lakhs/month</div>
-            <div class="text-xs text-gray-500 mb-3">~$1,800–$2,200 • Min. Engagement: 1 month</div>
+            <div class="font-bold text-lg mb-3 text-dark dark:text-white">$1,800–$2,200/month</div>
             <div class="flex gap-2">
               <a href="#" class="flex-1 bg-primary text-white text-center py-2 px-4 rounded-lg hover:bg-blue-600 transition">Book Now</a>
               <a href="#" class="text-xs text-primary underline self-center">Details</a>
@@ -330,8 +339,11 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
           </div>
           
           <div class="mt-auto">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full font-medium">1 month min</span>
+            </div>
             <div class="font-bold text-lg mb-1 text-dark dark:text-white">₹2–2.2 Lakhs/month</div>
-            <div class="text-xs text-gray-500 mb-3">~$2,400–$2,700 • Min. Engagement: 1 month</div>
+            <div class="font-bold text-lg mb-3 text-dark dark:text-white">$2,400–$2,700/month</div>
             <div class="flex gap-2">
               <a href="#" class="flex-1 bg-primary text-white text-center py-2 px-4 rounded-lg hover:bg-blue-600 transition">Book Now</a>
               <a href="#" class="text-xs text-primary underline self-center">Details</a>
@@ -375,8 +387,11 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
             </div>
             
             <div class="mt-auto">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full font-medium">Flexible</span>
+              </div>
               <div class="font-bold text-lg mb-1 text-dark dark:text-white">Custom Pricing</div>
-              <div class="text-xs text-gray-500 mb-3">Based on requirements • Flexible engagement</div>
+              <div class="font-bold text-lg mb-3 text-dark dark:text-white">Based on requirements</div>
               <div class="flex gap-2">
                 <a href="#" class="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-center py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-600 transition">Free Discovery Call</a>
                 <a href="#" class="text-xs text-purple-600 underline self-center">Details</a>
@@ -575,9 +590,12 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
       const accordionButtons = document.querySelectorAll('[data-accordion]');
       
       accordionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const content = this.nextElementSibling;
-          const icon = this.querySelector('svg');
+        button.addEventListener('click', () => {
+          const content = button.nextElementSibling;
+          const icon = button.querySelector('svg');
+          
+          if (!content || !icon) return;
+          
           const isOpen = content.classList.contains('open');
           
           // Close all accordion items with animation
@@ -591,7 +609,7 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
           // Reset all icons with animation
           document.querySelectorAll('[data-accordion] svg').forEach(svg => {
             if (svg !== icon) {
-              svg.style.transform = 'rotate(0deg)';
+              (svg as HTMLElement).style.transform = 'rotate(0deg)';
               svg.classList.remove('text-blue-500');
             }
           });
