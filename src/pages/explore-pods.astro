@@ -1,0 +1,243 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+// TODO: Import or create new components for each section as needed
+---
+
+<Layout description="Explore our on-demand tech teams and project pods." title="Explore Pods | Avadhuta Technologies">
+  <Breadcrumb>
+    <Fragment slot="title">Project Pods</Fragment>
+  </Breadcrumb>
+
+  <!-- Hero Section (TailGrids Hero) -->
+  <section class="relative bg-white dark:bg-dark py-16 md:py-24">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto text-center">
+        <h1 class="text-3xl md:text-5xl font-bold mb-4 text-dark dark:text-white">Project Pods</h1>
+        <p class="text-lg md:text-2xl font-medium mb-4 text-body-color dark:text-dark-6">Your On-Demand Tech Team, Without the Hiring Hassle</p>
+        <p class="max-w-xl mx-auto text-base md:text-lg text-body-color dark:text-dark-6 mb-8">
+          Avadhuta's Project Pods are pre-structured, outcome-focused tech teams that plug into your product journey — just like an in-house team, but faster, more flexible, and easier to manage.<br/>
+          Whether you're scaling a product, clearing your backlog, or building something from scratch, our Pods help you move faster with accountability and consistency.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose a Pod? (TailGrids Trending Products Section style with unique AI gradient overlays, icon top-right, text bottom-left) -->
+  <section class="py-12 bg-gray-1 dark:bg-dark-2">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">Why Choose a Pod?</h2>
+      </div>
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <!-- Card 1 -->
+        <div class="relative rounded-xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-2 transition duration-300 cursor-pointer overflow-hidden min-h-[260px] bg-black">
+          <div class="absolute inset-0 z-10 bg-gradient-to-tr from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"></div>
+          <img src="/assets/features/icon-01.svg" alt="No Hiring Delays Icon" class="absolute top-4 right-4 w-10 h-10 opacity-40 z-20" />
+          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
+            <h3 class="font-bold text-lg mb-2 text-white">No Hiring Delays</h3>
+            <p class="text-white text-sm">Skip the 2-3 month hiring cycle. Get a vetted, ready-to-start pod within a week.</p>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="relative rounded-xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-2 transition duration-300 cursor-pointer overflow-hidden min-h-[260px] bg-black">
+          <div class="absolute inset-0 z-10 bg-gradient-to-tr from-[#FDE68A] via-[#FCA5A5] to-[#F43F5E]"></div>
+          <img src="/assets/features/icon-02.svg" alt="Built for Execution Icon" class="absolute top-4 right-4 w-10 h-10 opacity-40 z-20" />
+          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
+            <h3 class="font-bold text-lg mb-2 text-white">Built for Execution</h3>
+            <p class="text-white text-sm">Each pod is pre-configured for high output — with the right mix of skills and clear delivery workflows.</p>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="relative rounded-xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-2 transition duration-300 cursor-pointer overflow-hidden min-h-[260px] bg-black">
+          <div class="absolute inset-0 z-10 bg-gradient-to-tr from-[#FBC2EB] via-[#A6C1EE] to-[#3B82F6]"></div>
+          <img src="/assets/features/icon-03.svg" alt="Flexible and Scalable Icon" class="absolute top-4 right-4 w-10 h-10 opacity-40 z-20" />
+          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
+            <h3 class="font-bold text-lg mb-2 text-white">Flexible and Scalable</h3>
+            <p class="text-white text-sm">Start with a lean pod, scale up as your needs grow. Pause or adjust based on your roadmap.</p>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="relative rounded-xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-2 transition duration-300 cursor-pointer overflow-hidden min-h-[260px] bg-black">
+          <div class="absolute inset-0 z-10 bg-gradient-to-tr from-[#FDE68A] via-[#6EE7B7] to-[#3B82F6]"></div>
+          <img src="/assets/features/icon-04.svg" alt="One Invoice. One Team. Full Ownership. Icon" class="absolute top-4 right-4 w-10 h-10 opacity-40 z-20" />
+          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
+            <h3 class="font-bold text-lg mb-2 text-white">One Invoice. One Team. Full Ownership.</h3>
+            <p class="text-white text-sm">No freelancers. No contractors. Just one accountable, delivery-focused team with transparent billing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's Included (TailGrids List Style) -->
+  <section class="py-12 bg-white dark:bg-dark">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">What's Included in Every Pod</h2>
+      </div>
+      <ul class="max-w-xl mx-auto space-y-4 text-left">
+        <li class="flex items-center gap-3 text-body-color dark:text-dark-6"><span class="text-green-500 text-xl">🟢</span>Pre-determined delivery plan & project sprints</li>
+        <li class="flex items-center gap-3 text-body-color dark:text-dark-6"><span class="text-green-500 text-xl">🟢</span>Dedicated team members (no context-switching)</li>
+        <li class="flex items-center gap-3 text-body-color dark:text-dark-6"><span class="text-green-500 text-xl">🟢</span>Integrated with your tools (Jira, Slack, GitHub, etc.)</li>
+        <li class="flex items-center gap-3 text-body-color dark:text-dark-6"><span class="text-green-500 text-xl">🟢</span>Daily/weekly check-ins & sprint planning</li>
+        <li class="flex items-center gap-3 text-body-color dark:text-dark-6"><span class="text-green-500 text-xl">🟢</span>Reporting & visibility dashboard</li>
+        <li class="flex items-center gap-3 text-body-color dark:text-dark-6"><span class="text-green-500 text-xl">🟢</span>IP protection & signed NDAs</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Available Project Pods (TailGrids Cards) -->
+  <section class="py-12 bg-gray-1 dark:bg-dark-2">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">Available Project Pods</h2>
+      </div>
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Card: Full-Stack Dev Pod -->
+        <div class="bg-white dark:bg-dark rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+          <h3 class="font-bold text-lg mb-2 text-dark dark:text-white">Full-Stack Dev Pod</h3>
+          <p class="mb-2 text-sm text-body-color dark:text-dark-6">Ideal for: MVP builds, rapid iteration, feature pipelines</p>
+          <ul class="mb-2 text-left text-xs text-body-color dark:text-dark-6">
+            <li>• 1 Frontend Developer</li>
+            <li>• 1 Backend Developer</li>
+            <li>• 1 QA Engineer</li>
+          </ul>
+          <p class="mb-2 text-xs text-body-color dark:text-dark-6">2-week sprints with defined feature drops<br/>Bug resolution, feature enhancements, and maintenance<br/>Integrated CI/CD if required</p>
+          <div class="font-semibold text-base mb-2 text-dark dark:text-white">₹2.2–2.5 Lakhs/month (~$2,700–$3,000)</div>
+          <div class="text-xs text-gray-500 mb-2">Min. Engagement: 1 month</div>
+          <div class="flex gap-2">
+            <a href="#" class="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-blue-dark">Book Now</a>
+            <a href="#" class="text-xs text-primary underline">View Details</a>
+          </div>
+        </div>
+        <!-- Card: Tech Lead Pod -->
+        <div class="bg-white dark:bg-dark rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+          <h3 class="font-bold text-lg mb-2 text-dark dark:text-white">Tech Lead Pod</h3>
+          <p class="mb-2 text-sm text-body-color dark:text-dark-6">Ideal for: Scale-up companies, Teams with junior devs needing strong leadership, Complex product builds</p>
+          <ul class="mb-2 text-left text-xs text-body-color dark:text-dark-6">
+            <li>• 1 Tech Lead / Architect</li>
+            <li>• 2 Developers</li>
+            <li>• 1 Project Manager</li>
+          </ul>
+          <p class="mb-2 text-xs text-body-color dark:text-dark-6">Architecture review, sprint planning, team execution<br/>Feature planning + delivery with high visibility<br/>Strategic input and roadmap alignment</p>
+          <div class="font-semibold text-base mb-2 text-dark dark:text-white">₹3.5–4 Lakhs/month (~$4,200–$4,800)</div>
+          <div class="text-xs text-gray-500 mb-2">Min. Engagement: 1 month</div>
+          <div class="flex gap-2">
+            <a href="#" class="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-blue-dark">Book Now</a>
+            <a href="#" class="text-xs text-primary underline">View Details</a>
+          </div>
+        </div>
+        <!-- Card: Frontend + Design Pod -->
+        <div class="bg-white dark:bg-dark rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+          <h3 class="font-bold text-lg mb-2 text-dark dark:text-white">Frontend + Design Pod</h3>
+          <p class="mb-2 text-sm text-body-color dark:text-dark-6">Ideal for: UX refresh, mobile-first apps, landing pages</p>
+          <ul class="mb-2 text-left text-xs text-body-color dark:text-dark-6">
+            <li>• 1 UI/UX Designer</li>
+            <li>• 1 Frontend Developer</li>
+          </ul>
+          <p class="mb-2 text-xs text-body-color dark:text-dark-6">Figma design + responsive implementation<br/>Landing pages, web/mobile UI components<br/>Rapid iterations with feedback loops</p>
+          <div class="font-semibold text-base mb-2 text-dark dark:text-white">₹1.5–1.8 Lakhs/month (~$1,800–$2,200)</div>
+          <div class="text-xs text-gray-500 mb-2">Min. Engagement: 1 month</div>
+          <div class="flex gap-2">
+            <a href="#" class="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-blue-dark">Book Now</a>
+            <a href="#" class="text-xs text-primary underline">View Details</a>
+          </div>
+        </div>
+        <!-- Card: Automation & AI Pod -->
+        <div class="bg-white dark:bg-dark rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+          <h3 class="font-bold text-lg mb-2 text-dark dark:text-white">Automation & AI Pod</h3>
+          <p class="mb-2 text-sm text-body-color dark:text-dark-6">Ideal for: Internal workflow automation, intelligent features, dashboards</p>
+          <ul class="mb-2 text-left text-xs text-body-color dark:text-dark-6">
+            <li>• 1 Backend Developer</li>
+            <li>• 1 Automation/Integration Specialist (n8n, Zapier, APIs)</li>
+            <li>• Optional: 1 Data Engineer (addon)</li>
+          </ul>
+          <p class="mb-2 text-xs text-body-color dark:text-dark-6">Business workflow automation (e.g., lead routing, alerts)<br/>Smart dashboards, reporting, or AI-enhanced features<br/>n8n/Zapier/GPT/ML model integration</p>
+          <div class="font-semibold text-base mb-2 text-dark dark:text-white">₹2–2.2 Lakhs/month (~$2,400–$2,700)</div>
+          <div class="text-xs text-gray-500 mb-2">Min. Engagement: 1 month</div>
+          <div class="flex gap-2">
+            <a href="#" class="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-blue-dark">Book Now</a>
+            <a href="#" class="text-xs text-primary underline">View Details</a>
+          </div>
+        </div>
+      </div>
+      <!-- Custom Pod Card -->
+      <div class="mt-10 max-w-2xl mx-auto bg-white dark:bg-dark rounded-xl shadow-lg p-8 text-center">
+        <h3 class="font-bold text-lg mb-2 text-dark dark:text-white">Custom Pod (Tailored for You)</h3>
+        <p class="mb-4 text-sm text-body-color dark:text-dark-6">Need a combination of backend, mobile, QA, DevOps, or something niche? We'll assemble a custom pod based on your exact needs and timelines.</p>
+        <a href="#" class="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-blue-dark">Book a Free Discovery Call</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section (TailGrids Accordion) -->
+  <section class="py-12 bg-white dark:bg-dark">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">Frequently Asked Questions</h2>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="divide-y divide-gray-200 dark:divide-dark-3 rounded-xl shadow-lg bg-white dark:bg-dark">
+          <details class="group p-6">
+            <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-dark dark:text-white">
+              How is this different from hiring freelancers or agencies?
+              <span class="ml-4 transition-transform group-open:rotate-180">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </summary>
+            <div class="mt-4 text-body-color dark:text-dark-6 text-sm">
+              Pods are structured, accountable, and built for long-term delivery. You don't manage freelancers — you collaborate with a delivery partner who operates like your internal team.
+            </div>
+          </details>
+          <details class="group p-6">
+            <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-dark dark:text-white">
+              What's the minimum engagement?
+              <span class="ml-4 transition-transform group-open:rotate-180">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </summary>
+            <div class="mt-4 text-body-color dark:text-dark-6 text-sm">
+              Most pods require a 1-month minimum. You can extend monthly, scale up/down, or convert to a different engagement model later.
+            </div>
+          </details>
+          <details class="group p-6">
+            <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-dark dark:text-white">
+              Who manages the team?
+              <span class="ml-4 transition-transform group-open:rotate-180">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </summary>
+            <div class="mt-4 text-body-color dark:text-dark-6 text-sm">
+              Every pod comes with a Delivery Coordinator or Project Manager depending on the pod size. You get full visibility without micromanaging.
+            </div>
+          </details>
+          <details class="group p-6">
+            <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-dark dark:text-white">
+              Do I own the code and IP?
+              <span class="ml-4 transition-transform group-open:rotate-180">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </summary>
+            <div class="mt-4 text-body-color dark:text-dark-6 text-sm">
+              Yes — everything we build is yours. All code, documentation, and deployments are handed off with full transparency.
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section (TailGrids CTA) -->
+  <section class="py-16 bg-primary text-white text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-2xl md:text-3xl font-bold mb-4">Start Your Pod</h2>
+      <p class="mb-6 max-w-xl mx-auto text-base md:text-lg">Need clarity on which pod fits your goals?<br/>Book a free 30-min call and we'll help you define the best setup.</p>
+      <a href="#" class="inline-block px-8 py-4 bg-white text-primary font-semibold rounded-lg shadow hover:bg-gray-100 transition">Book a Free Discovery Call</a>
+      <div class="mt-6 flex flex-col items-center gap-2">
+        <a href="mailto:hello@avadhutatech.com" class="text-sm underline">hello@avadhutatech.com</a>
+        <a href="#" class="text-sm underline">[Download Pod Services Deck]</a>
+      </div>
+    </div>
+  </section>
+</Layout> 
