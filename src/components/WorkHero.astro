@@ -1,0 +1,55 @@
+---
+export interface Props {
+  title: string;
+  subtitle: string;
+  description: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const { title, subtitle, description, ctaText = "View All Portfolio", ctaLink = "/portfolio" } = Astro.props;
+---
+
+<!-- ====== Work Hero Section Start -->
+<section class="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 pt-[120px] md:pt-[130px] lg:pt-[160px] pb-20">
+  <div class="container">
+    <div class="-mx-4 flex flex-wrap items-center">
+      <div class="w-full px-4">
+        <div class="hero-content wow fadeInUp mx-auto max-w-[780px] text-center" data-wow-delay=".2s">
+          <span class="inline-block px-4 py-1 bg-white/20 text-white rounded-full text-sm font-medium mb-4">
+            {subtitle}
+          </span>
+          <h1 class="mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]">
+            {title}
+          </h1>
+          <p class="mx-auto mb-9 max-w-[600px] font-medium text-base text-white/90 sm:text-lg sm:leading-[1.44]">
+            {description}
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href={ctaLink}
+              class="inline-flex items-center justify-center rounded-md bg-white py-[14px] px-7 text-center text-base font-medium text-dark shadow-1 transition duration-300 ease-in-out hover:text-body-color hover:bg-gray-2"
+            >
+              {ctaText}
+            </a>
+            <a
+              href="#portfolio"
+              class="flex items-center gap-4 py-[14px] rounded-md bg-white/[0.12] px-6 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-white hover:text-dark"
+            >
+              Explore Our Work
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-20 left-10 w-20 h-20 bg-white rounded-full"></div>
+    <div class="absolute top-40 right-20 w-16 h-16 bg-white rounded-full"></div>
+    <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-white rounded-full"></div>
+    <div class="absolute bottom-40 right-1/3 w-8 h-8 bg-white rounded-full"></div>
+  </div>
+</section>
+<!-- ====== Work Hero Section End --> 
