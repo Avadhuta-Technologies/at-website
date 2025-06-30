@@ -40,13 +40,17 @@ const menuitems = [
 ];
 ---
 
-<header class="ud-header absolute top-0 left-0 z-40 flex w-full items-center bg-transparent">
+<header class="ud-header absolute top-0 left-0 z-40 flex w-full items-center bg-transparent transition-all duration-300" id="header">
   <div class="container">
     <div class="relative -mx-4 flex items-center justify-between">
       <div class="w-60 max-w-full px-4">
         <a href="/" class="navbar-logo flex items-center">
-          <img src="/logo512.png" alt="Avadhuta Technologies Logo" class="h-10 w-10 mr-2" />
-          <span class="font-bold text-xl text-black">Avadhuta Technologies</span>
+          <!-- Logo for transparent header (white logo) -->
+          <img src="/assets/logo/at-logo-white.png" alt="Avadhuta Technologies Logo" class="h-10 w-auto mr-2 transition-opacity duration-300" id="logo-white" />
+          <!-- Logo for scrolled header (dark logo) -->
+          <img src="/assets/logo/at-logo.png" alt="Avadhuta Technologies Logo" class="h-10 w-auto mr-2 transition-opacity duration-300 opacity-0" id="logo-dark" />
+          <!-- Company name with dynamic color -->
+          <span class="font-bold text-xl text-white transition-colors duration-300" id="company-name">Avadhuta Technologies</span>
         </a>
       </div>
       <div class="flex w-full items-center justify-between px-4">
@@ -56,13 +60,16 @@ const menuitems = [
             class="absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden"
           >
             <span
-              class="relative my-[6px] block h-[2px] w-[30px] bg-dark dark:bg-white"
+              class="relative my-[6px] block h-[2px] w-[30px] bg-white transition-colors duration-300"
+              id="hamburger-line-1"
             ></span>
             <span
-              class="relative my-[6px] block h-[2px] w-[30px] bg-dark dark:bg-white"
+              class="relative my-[6px] block h-[2px] w-[30px] bg-white transition-colors duration-300"
+              id="hamburger-line-2"
             ></span>
             <span
-              class="relative my-[6px] block h-[2px] w-[30px] bg-dark dark:bg-white"
+              class="relative my-[6px] block h-[2px] w-[30px] bg-white transition-colors duration-300"
+              id="hamburger-line-3"
             ></span>
           </button>
           <nav
@@ -78,8 +85,9 @@ const menuitems = [
                         <a
                           href={item.path}
                           class={` ${index}
-                          ${Astro.url.pathname === '/' ? 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10' : 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-body-color dark:lg:text-dark-6 xl:ml-10'}
-                          `}>
+                          ${Astro.url.pathname === '/' ? 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10 transition-colors duration-300' : 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-body-color dark:lg:text-dark-6 xl:ml-10'}
+                          `}
+                          id={Astro.url.pathname === '/' ? `nav-link-${index}` : ''}>
                           {item.title}
                         </a>
                       </li>
@@ -93,8 +101,9 @@ const menuitems = [
                         <a
                           href={item.path}
                           class={` ${index}
-                          ${Astro.url.pathname === '/' ? 'relative mx-8 flex items-center justify-between py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-8 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10' : 'relative mx-8 flex items-center justify-between py-2 font-medium text-base text-primary group-hover:text-primary lg:mr-0 lg:ml-8 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 xl:ml-10'}
-                          `}>
+                          ${Astro.url.pathname === '/' ? 'relative mx-8 flex items-center justify-between py-2 font-medium text-base text-white group-hover:text-primary lg:mr-0 lg:ml-8 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10 transition-colors duration-300' : 'relative mx-8 flex items-center justify-between py-2 font-medium text-base text-primary group-hover:text-primary lg:mr-0 lg:ml-8 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 xl:ml-10'}
+                          `}
+                          id={Astro.url.pathname === '/' ? `nav-link-${index}` : ''}>
                           {item.title}
 
                           <svg class="fill-current ml-2" width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -169,13 +178,15 @@ const menuitems = [
           <div class="hidden sm:flex">
             <a
               href="/signin"
-              class={`${Astro.url.pathname === '/' ? 'loginBtn py-2 px-[22px] text-base font-medium text-white hover:opacity-70' : 'loginBtn py-2 px-[22px] text-base font-medium text-dark dark:text-white hover:opacity-70'}`}
+              class={`${Astro.url.pathname === '/' ? 'loginBtn py-2 px-[22px] text-base font-medium text-white hover:opacity-70 transition-colors duration-300' : 'loginBtn py-2 px-[22px] text-base font-medium text-dark dark:text-white hover:opacity-70'}`}
+              id="signin-btn"
             >
               Sign In
             </a>
             <a
               href="/signup"
               class={`${Astro.url.pathname === '/' ? 'signUpBtn rounded-md bg-white bg-opacity-20 py-2 px-6 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark' : 'signUpBtn rounded-md bg-primary py-2 px-6 text-base font-medium text-white duration-300 ease-in-out hover:bg-blue-dark'}`}
+              id="signup-btn"
             >
               Sign Up
             </a>
@@ -185,3 +196,174 @@ const menuitems = [
     </div>
   </div>
 </header>
+
+<script>
+  // Header scroll effect for logo and text color changes
+  document.addEventListener('DOMContentLoaded', function() {
+    const header = document.getElementById('header');
+    const logoWhite = document.getElementById('logo-white');
+    const logoDark = document.getElementById('logo-dark');
+    const companyName = document.getElementById('company-name');
+    const hamburgerLines = [
+      document.getElementById('hamburger-line-1'),
+      document.getElementById('hamburger-line-2'),
+      document.getElementById('hamburger-line-3')
+    ];
+    const signinBtn = document.getElementById('signin-btn');
+    const signupBtn = document.getElementById('signup-btn');
+    
+    // Get all navigation links on homepage
+    const navLinks = document.querySelectorAll('[id^="nav-link-"]');
+    
+    function isDarkMode() {
+      return document.documentElement.classList.contains('dark');
+    }
+    
+    function updateHeaderStyle() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const darkMode = isDarkMode();
+      
+      if (scrollTop > 50) {
+        // Scrolled state
+        if (header) {
+          if (darkMode) {
+            // Dark mode scrolled - keep dark background, use white logo
+            header.classList.add('bg-dark-2', 'shadow-lg');
+            header.classList.remove('bg-transparent');
+          } else {
+            // Light mode scrolled - white background, use dark logo
+            header.classList.add('bg-white', 'shadow-lg');
+            header.classList.remove('bg-transparent');
+          }
+        }
+        
+        // Logo handling based on mode
+        if (darkMode) {
+          // Dark mode: always use white logo
+          if (logoWhite) logoWhite.classList.remove('opacity-0');
+          if (logoDark) logoDark.classList.add('opacity-0');
+        } else {
+          // Light mode: use dark logo when scrolled
+          if (logoWhite) logoWhite.classList.add('opacity-0');
+          if (logoDark) logoDark.classList.remove('opacity-0');
+        }
+        
+        // Text color handling
+        if (companyName) {
+          if (darkMode) {
+            companyName.classList.remove('text-dark');
+            companyName.classList.add('text-white');
+          } else {
+            companyName.classList.remove('text-white');
+            companyName.classList.add('text-dark');
+          }
+        }
+        
+        // Update hamburger menu lines
+        hamburgerLines.forEach(line => {
+          if (line) {
+            if (darkMode) {
+              line.classList.remove('bg-dark');
+              line.classList.add('bg-white');
+            } else {
+              line.classList.remove('bg-white');
+              line.classList.add('bg-dark');
+            }
+          }
+        });
+        
+        // Update navigation links
+        navLinks.forEach(link => {
+          if (darkMode) {
+            link.classList.remove('text-dark');
+            link.classList.add('text-white');
+          } else {
+            link.classList.remove('text-white');
+            link.classList.add('text-dark');
+          }
+        });
+        
+        // Update buttons
+        if (signinBtn) {
+          if (darkMode) {
+            signinBtn.classList.remove('text-dark');
+            signinBtn.classList.add('text-white');
+          } else {
+            signinBtn.classList.remove('text-white');
+            signinBtn.classList.add('text-dark');
+          }
+        }
+        if (signupBtn) {
+          if (darkMode) {
+            signupBtn.classList.remove('bg-white', 'bg-opacity-20', 'text-white');
+            signupBtn.classList.add('bg-primary', 'text-white');
+          } else {
+            signupBtn.classList.remove('bg-white', 'bg-opacity-20', 'text-white');
+            signupBtn.classList.add('bg-primary', 'text-white');
+          }
+        }
+        
+      } else {
+        // Top state - always transparent background
+        if (header) {
+          header.classList.remove('bg-white', 'bg-dark-2', 'shadow-lg');
+          header.classList.add('bg-transparent');
+        }
+        
+        // Logo handling - always white logo at top
+        if (logoWhite) logoWhite.classList.remove('opacity-0');
+        if (logoDark) logoDark.classList.add('opacity-0');
+        
+        // Text color - always white at top
+        if (companyName) {
+          companyName.classList.remove('text-dark');
+          companyName.classList.add('text-white');
+        }
+        
+        // Update hamburger menu lines - always white at top
+        hamburgerLines.forEach(line => {
+          if (line) {
+            line.classList.remove('bg-dark');
+            line.classList.add('bg-white');
+          }
+        });
+        
+        // Update navigation links - always white at top
+        navLinks.forEach(link => {
+          link.classList.remove('text-dark');
+          link.classList.add('text-white');
+        });
+        
+        // Update buttons - always white at top
+        if (signinBtn) {
+          signinBtn.classList.remove('text-dark');
+          signinBtn.classList.add('text-white');
+        }
+        if (signupBtn) {
+          signupBtn.classList.remove('bg-primary', 'text-white');
+          signupBtn.classList.add('bg-white', 'bg-opacity-20', 'text-white');
+        }
+      }
+    }
+    
+    // Initial call
+    updateHeaderStyle();
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', updateHeaderStyle);
+    
+    // Listen for dark mode changes
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          updateHeaderStyle();
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  });
+</script>
