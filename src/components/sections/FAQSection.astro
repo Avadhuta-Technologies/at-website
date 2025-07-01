@@ -1,0 +1,128 @@
+---
+export interface Props {
+  title: string;
+  subtitle: string;
+  items: Array<{
+    question: string;
+    answer: string;
+  }>;
+  className?: string;
+}
+
+const { title, subtitle, items, className = "" } = Astro.props;
+---
+
+<section class={`py-20 bg-gray-50 dark:bg-gray-900 ${className}`}>
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+          {title}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400">
+          {subtitle}
+        </p>
+      </div>
+
+      <!-- Accordion Container -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
+        <div class="divide-y divide-gray-200 dark:divide-gray-700">
+          {items.map((item, index) => (
+            <div class="group">
+              <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset" data-accordion>
+                <div class="flex items-center justify-between">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4">
+                    {item.question}
+                  </h3>
+                  <div class="flex-shrink-0">
+                    <svg class={`w-5 h-5 transform transition-transform duration-300 group-hover:text-blue-500 ${index === 0 ? 'text-blue-500 rotate-90' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </button>
+              <div class={`accordion-content ${index === 0 ? 'open' : 'hidden'}`}>
+                <div class="px-8 pb-6">
+                  <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {item.answer}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .accordion-content {
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+  }
+  
+  .accordion-content.hidden {
+    max-height: 0;
+    opacity: 0;
+  }
+  
+  .accordion-content.open {
+    max-height: 200px;
+    opacity: 1;
+  }
+  
+  .accordion-content svg {
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+</style>
+
+<script>
+  // Simple accordion functionality with smooth animations
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordionButtons = document.querySelectorAll('[data-accordion]');
+    
+    accordionButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('svg');
+        
+        if (!content || !icon) return;
+        
+        const isOpen = content.classList.contains('open');
+        
+        // Close all accordion items with animation
+        document.querySelectorAll('.accordion-content').forEach(item => {
+          if (item !== content) {
+            item.classList.remove('open');
+            item.classList.add('hidden');
+          }
+        });
+        
+        // Reset all icons with animation
+        document.querySelectorAll('[data-accordion] svg').forEach(svg => {
+          if (svg !== icon) {
+            (svg as HTMLElement).style.transform = 'rotate(0deg)';
+            svg.classList.remove('text-blue-500');
+          }
+        });
+        
+        // Toggle the clicked item with animation
+        if (isOpen) {
+          // Close the item
+          content.classList.remove('open');
+          content.classList.add('hidden');
+          icon.style.transform = 'rotate(0deg)';
+          icon.classList.remove('text-blue-500');
+        } else {
+          // Open the item
+          content.classList.remove('hidden');
+          content.classList.add('open');
+          icon.style.transform = 'rotate(90deg)';
+          icon.classList.add('text-blue-500');
+        }
+      });
+    });
+  });
+</script> 
