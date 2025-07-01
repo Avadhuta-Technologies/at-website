@@ -42,9 +42,64 @@ const blogCollection = defineCollection({
   }),
 });
 
+const podsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    badge: z.string().optional(),
+    badgeColor: z.string().optional(),
+    icon: z.string().optional(),
+    teamComposition: z.array(z.string()),
+    deliverables: z.array(z.string()),
+    engagement: z.string(),
+    priceINR: z.string(),
+    priceUSD: z.string(),
+    hero: z.object({
+      title: z.string(),
+      subtitle: z.string(),
+      description: z.string(),
+      image: z.string(),
+    }),
+    idealFor: z.array(z.string()),
+    features: z.array(z.object({
+      title: z.string(),
+      description: z.string(),
+      icon: z.string(),
+    })),
+    process: z.object({
+      title: z.string(),
+      steps: z.array(z.object({
+        number: z.string(),
+        title: z.string(),
+        description: z.string(),
+      })),
+    }),
+    pastUseCases: z.array(z.string()),
+    testimonials: z.array(z.object({
+      name: z.string(),
+      role: z.string(),
+      content: z.string(),
+      image: z.string(),
+    })),
+    faq: z.array(z.object({
+      question: z.string(),
+      answer: z.string(),
+    })),
+    cta: z.object({
+      title: z.string(),
+      description: z.string(),
+      buttonText: z.string(),
+    }),
+    upgradeNote: z.string().optional(),
+  }),
+});
+
 
 // 3. Export a single `collections` object to register your collection(s)
 //    This key should match your collection directory name in "src/content"
 export const collections = {
   'blog': blogCollection,
+  'pods': podsCollection,
 };
