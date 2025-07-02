@@ -11,14 +11,82 @@ export interface Props {
 const { title, description, buttonText, email, downloadLink, className = "" } = Astro.props;
 ---
 
-<section class={`py-16 bg-primary text-white text-center ${className}`}>
-  <div class="container mx-auto px-4">
-    <h2 class="text-2xl md:text-3xl font-bold mb-4">{title}</h2>
-    <p class="mb-6 max-w-xl mx-auto text-base md:text-lg">{description}</p>
-    <a href="#" class="inline-block px-8 py-4 bg-white text-primary font-semibold rounded-lg shadow hover:bg-gray-100 transition">{buttonText}</a>
-    <div class="mt-6 flex flex-col items-center gap-2">
-      <a href={`mailto:${email}`} class="text-sm underline">{email}</a>
-      <a href="#" class="text-sm underline">{downloadLink}</a>
+<section class={`py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white text-center relative overflow-hidden ${className}`}>
+  <!-- Background Graphics -->
+  <div class="absolute inset-0">
+    <div class="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
+    <div class="absolute top-20 right-20 w-24 h-24 bg-white/10 rounded-full animate-bounce"></div>
+    <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-white/10 rounded-full animate-ping"></div>
+    <div class="absolute bottom-10 right-1/3 w-16 h-16 bg-white/10 rounded-full animate-spin"></div>
+  </div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate-fade-in-up">
+        {title}
+      </h2>
+      <p class="mb-8 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed animate-fade-in-up animation-delay-200">
+        {description}
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in-up animation-delay-400">
+        <a href="#" class="group relative px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+          <span class="relative z-10 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            {buttonText}
+          </span>
+          <div class="absolute inset-0 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        
+        <a href="#contact" class="group px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:border-white hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+          <span class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            Book Free Consultation
+          </span>
+        </a>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up animation-delay-600">
+        <a href={`mailto:${email}`} class="group flex items-center text-white/80 hover:text-white transition-colors duration-300">
+          <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+          {email}
+        </a>
+        <a href="#" class="group flex items-center text-white/80 hover:text-white transition-colors duration-300">
+          <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          {downloadLink}
+        </a>
+      </div>
     </div>
   </div>
-</section> 
+</section>
+
+<style>
+  /* Animation delays */
+  .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+
+  /* Fade in animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

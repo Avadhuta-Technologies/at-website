@@ -12,45 +12,59 @@ export interface Props {
 const { title, subtitle, items, className = "" } = Astro.props;
 ---
 
-<section class={`py-20 bg-gray-50 dark:bg-gray-900 ${className}`}>
+<section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-dark-2 ${className}`}>
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mx-auto">
       <!-- Section Header -->
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+      <div class="text-center mb-16 animate-fade-in-up">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
           {title}
         </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400">
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
           {subtitle}
         </p>
       </div>
 
       <!-- Accordion Container -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl transform transition-all duration-500 hover:shadow-2xl animate-fade-in-up animation-delay-400">
         <div class="divide-y divide-gray-200 dark:divide-gray-700">
           {items.map((item, index) => (
-            <div class="group">
-              <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset" data-accordion>
+            <div class="group faq-item">
+              <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300" data-accordion>
                 <div class="flex items-center justify-between">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                     {item.question}
                   </h3>
                   <div class="flex-shrink-0">
-                    <svg class={`w-5 h-5 transform transition-transform duration-300 group-hover:text-blue-500 ${index === 0 ? 'text-blue-500 rotate-90' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110">
+                      <svg class={`w-4 h-4 text-white transform transition-transform duration-300 ${index === 0 ? 'rotate-90' : 'rotate-0'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </button>
               <div class={`accordion-content ${index === 0 ? 'open' : 'hidden'}`}>
                 <div class="px-8 pb-6">
-                  <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {item.answer}
-                  </p>
+                  <div class="border-l-4 border-blue-500 pl-6">
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+                      {item.answer}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+      </div>
+      
+      <!-- Additional CTA -->
+      <div class="text-center mt-12 animate-fade-in-up animation-delay-600">
+        <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          Still have questions? Contact us
         </div>
       </div>
     </div>
@@ -58,28 +72,55 @@ const { title, subtitle, items, className = "" } = Astro.props;
 </section>
 
 <style>
+  .faq-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .faq-item:hover {
+    transform: translateX(4px);
+  }
+
   .accordion-content {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
   }
   
   .accordion-content.hidden {
     max-height: 0;
     opacity: 0;
+    transform: translateY(-10px);
   }
   
   .accordion-content.open {
-    max-height: 200px;
+    max-height: 300px;
     opacity: 1;
+    transform: translateY(0);
   }
-  
-  .accordion-content svg {
-    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+
+  /* Animation delays */
+  .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+
+  /* Fade in animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 
 <script>
-  // Simple accordion functionality with smooth animations
+  // Enhanced accordion functionality with smooth animations
   document.addEventListener('DOMContentLoaded', function() {
     const accordionButtons = document.querySelectorAll('[data-accordion]');
     
@@ -104,7 +145,6 @@ const { title, subtitle, items, className = "" } = Astro.props;
         document.querySelectorAll('[data-accordion] svg').forEach(svg => {
           if (svg !== icon) {
             (svg as HTMLElement).style.transform = 'rotate(0deg)';
-            svg.classList.remove('text-blue-500');
           }
         });
         
@@ -114,13 +154,11 @@ const { title, subtitle, items, className = "" } = Astro.props;
           content.classList.remove('open');
           content.classList.add('hidden');
           icon.style.transform = 'rotate(0deg)';
-          icon.classList.remove('text-blue-500');
         } else {
           // Open the item
           content.classList.remove('hidden');
           content.classList.add('open');
           icon.style.transform = 'rotate(90deg)';
-          icon.classList.add('text-blue-500');
         }
       });
     });

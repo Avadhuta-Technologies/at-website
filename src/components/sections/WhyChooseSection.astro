@@ -13,22 +13,101 @@ export interface Props {
 const { title, cards, className = "" } = Astro.props;
 ---
 
-<section class={`py-12 bg-white dark:bg-dark ${className}`}>
+<section class={`py-16 bg-gradient-to-br from-gray-50 to-white dark:from-dark-2 dark:to-dark ${className}`}>
   <div class="container mx-auto px-4">
-    <div class="max-w-2xl mx-auto text-center mb-10">
-      <h2 class="text-2xl md:text-3xl font-bold mb-6 text-dark dark:text-white">{title}</h2>
+    <div class="max-w-4xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
+        {title}
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+        Discover the advantages of working with our specialized project pods
+      </p>
     </div>
+    
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-      {cards.map((card) => (
-        <div class="relative rounded-xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-2 transition duration-300 cursor-pointer overflow-hidden min-h-[260px] bg-black">
-          <div class={`absolute inset-0 z-10 bg-gradient-to-tr ${card.gradient}`}></div>
-          <img src={card.icon} alt={`${card.title} Icon`} class="absolute top-4 right-4 w-10 h-10 opacity-40 z-20" />
-          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
-            <h3 class="font-bold text-lg mb-2 text-white">{card.title}</h3>
-            <p class="text-white text-sm">{card.description}</p>
+      {cards.map((card, index) => (
+        <div class="why-choose-card group relative rounded-2xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-4 transition-all duration-500 cursor-pointer overflow-hidden min-h-[280px] bg-black animate-fade-in-up animation-delay-${(index + 1) * 200}">
+          <div class={`absolute inset-0 z-10 bg-gradient-to-tr ${card.gradient} transition-all duration-500 group-hover:scale-110`}></div>
+          
+          {/* Animated background elements */}
+          <div class="absolute inset-0 z-15 opacity-20">
+            <div class="absolute top-4 right-4 w-16 h-16 bg-white rounded-full opacity-30 group-hover:scale-150 transition-all duration-500"></div>
+            <div class="absolute bottom-8 left-8 w-12 h-12 bg-white rounded-full opacity-20 group-hover:scale-125 transition-all duration-500 delay-100"></div>
           </div>
+          
+          <img src={card.icon} alt={`${card.title} Icon`} class="absolute top-6 right-6 w-12 h-12 opacity-60 z-20 transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
+          
+          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
+            <div class="mb-4">
+              <h3 class="font-bold text-xl mb-3 text-white group-hover:text-blue-200 transition-colors duration-300">
+                {card.title}
+              </h3>
+              <p class="text-white/90 text-sm leading-relaxed group-hover:text-white transition-colors duration-300">
+                {card.description}
+              </p>
+            </div>
+            
+            {/* Hover indicator */}
+            <div class="w-full h-1 bg-white/30 rounded-full overflow-hidden">
+              <div class="h-full bg-white/80 rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700"></div>
+            </div>
+          </div>
+          
+          {/* Hover overlay */}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-25"></div>
         </div>
       ))}
     </div>
   </div>
-</section> 
+</section>
+
+<style>
+  .why-choose-card {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .why-choose-card:hover {
+    transform: translateY(-16px) scale(1.02);
+    box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.3);
+  }
+
+  .why-choose-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 40;
+  }
+
+  .why-choose-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Animation delays */
+  .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+  .animation-delay-800 { animation-delay: 0.8s; }
+
+  /* Fade in animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 
