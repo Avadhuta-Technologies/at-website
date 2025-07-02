@@ -2,28 +2,8 @@
 const menuitems = [
   {
     title: "Home",
-    path: "/#home",
+    path: "/",
   },
-  {
-    title: "About",
-    path: "/#about",
-  },
-  {
-    title: "Pricing",
-    path: "/#pricing",
-  },
-  // {
-  //   title: "Team",
-  //   path: "/#team",
-  // },
-  // {
-  //   title: "Contact",
-  //   path: "/#contact",
-  // },
-  // {
-  //   title: "Blog",
-  //   path: "/blog",
-  // },
   {
     title: "Explore Pods",
     path: "/explore-pods",
@@ -32,19 +12,6 @@ const menuitems = [
     title: "Explore Packs",
     path: "/explore-packs",
   },
-  {
-    title: "Pages",
-    path: "javascript:void(0)",
-    children: [
-      { title: "About Page", path: "/about" },
-      { title: "Pricing Page", path: "/pricing" },
-      { title: "Contact Page", path: "/contact" },
-      { title: "Blog Grid Page", path: "/blog" },
-      { title: "Sign Up Page", path: "/signup" },
-      { title: "Sign In Page", path: "/signin" },
-      { title: "404 Page", path: "/404" },
-    ],
-  },
 ];
 ---
 
@@ -52,9 +19,13 @@ const menuitems = [
   <div class="container">
     <div class="relative -mx-4 flex items-center justify-between">
       <div class="w-60 max-w-full px-4">
-        <a href="/" class="navbar-logo flex items-center">
-          <img src="/logo512.png" alt="Avadhuta Technologies Logo" class="h-10 w-10 mr-2" />
-          <span class="font-bold text-xl text-black">Avadhuta Technologies</span>
+        <a href="/" class="navbar-logo flex items-center group">
+          <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-3 transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <span class="font-bold text-xl text-black dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">NovaPod.ai</span>
         </a>
       </div>
       <div class="flex w-full items-center justify-between px-4">
@@ -79,57 +50,17 @@ const menuitems = [
           >
             <ul class="block lg:flex 2xl:ml-20">
               {
-                menuitems.map((item, index) => {
-                  if(!item.children) {
-                    return (
-                      <li class="group relative">
-                        <a
-                          href={item.path}
-                          class={` ${index}
-                          ${Astro.url.pathname === '/' ? 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10' : 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-body-color dark:lg:text-dark-6 xl:ml-10'}
-                          `}>
-                          {item.title}
-                        </a>
-                      </li>
-
-                    )
-                  }
-                
-                  if(item.children) {
-                    return (
-                      <li class="submenu-item group relative">
-                        <a
-                          href={item.path}
-                          class={` ${index}
-                          ${Astro.url.pathname === '/' ? 'relative mx-8 flex items-center justify-between py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-8 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10' : 'relative mx-8 flex items-center justify-between py-2 font-medium text-base text-primary group-hover:text-primary lg:mr-0 lg:ml-8 lg:inline-flex lg:py-6 lg:pl-0 lg:pr-4 xl:ml-10'}
-                          `}>
-                          {item.title}
-
-                          <svg class="fill-current ml-2" width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M7.99999 14.9C7.84999 14.9 7.72499 14.85 7.59999 14.75L1.84999 9.10005C1.62499 8.87505 1.62499 8.52505 1.84999 8.30005C2.07499 8.07505 2.42499 8.07505 2.64999 8.30005L7.99999 13.525L13.35 8.25005C13.575 8.02505 13.925 8.02505 14.15 8.25005C14.375 8.47505 14.375 8.82505 14.15 9.05005L8.39999 14.7C8.27499 14.825 8.14999 14.9 7.99999 14.9Z" 
-                            />
-                          </svg>
-                        </a>
-
-                        <div
-                          class="submenu relative top-full left-0 hidden w-[250px] rounded-sm bg-white dark:bg-dark-2 p-4 transition-[top] duration-300 group-hover:opacity-100 lg:invisible lg:absolute lg:top-[110%] lg:block lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full"
-                        >
-                          {
-                            item.children.map(item => (
-                              <a
-                                href={item.path}
-                                class="block rounded py-[10px] px-4 text-sm text-body-color dark:text-dark-6 hover:text-primary dark:hover:text-primary"
-                              >
-                                {item.title}
-                              </a>
-                            ))
-                          }
-                        </div>
-                      </li>
-                    )
-                  }
-                })
+                menuitems.map((item, index) => (
+                  <li class="group relative">
+                    <a
+                      href={item.path}
+                      class={` ${index}
+                      ${Astro.url.pathname === '/' ? 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-white lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10' : 'ud-menu-scroll mx-8 flex py-2 font-medium text-base text-dark dark:text-white group-hover:text-primary lg:mr-0 lg:ml-7 lg:inline-flex lg:py-6 lg:px-0 lg:text-body-color dark:lg:text-dark-6 xl:ml-10'}
+                      `}>
+                      {item.title}
+                    </a>
+                  </li>
+                ))
               }
             </ul>
           </nav>
@@ -176,16 +107,16 @@ const menuitems = [
           </button>
           <div class="hidden sm:flex">
             <a
-              href="/signin"
+              href="/contact"
               class={`${Astro.url.pathname === '/' ? 'loginBtn py-2 px-[22px] text-base font-medium text-white hover:opacity-70' : 'loginBtn py-2 px-[22px] text-base font-medium text-dark dark:text-white hover:opacity-70'}`}
             >
-              Sign In
+              Contact
             </a>
             <a
-              href="/signup"
+              href="/explore-pods"
               class={`${Astro.url.pathname === '/' ? 'signUpBtn rounded-md bg-white bg-opacity-20 py-2 px-6 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark' : 'signUpBtn rounded-md bg-primary py-2 px-6 text-base font-medium text-white duration-300 ease-in-out hover:bg-blue-dark'}`}
             >
-              Sign Up
+              Get Started
             </a>
           </div>
         </div>
@@ -193,3 +124,13 @@ const menuitems = [
     </div>
   </div>
 </header>
+
+<style>
+  .navbar-logo {
+    transition: all 0.3s ease;
+  }
+
+  .navbar-logo:hover {
+    transform: translateY(-2px);
+  }
+</style>

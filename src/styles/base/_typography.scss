@@ -1,0 +1,135 @@
+// Typography Styles
+
+// Font families
+.font-primary {
+  font-family: $font-family-primary;
+}
+
+.font-secondary {
+  font-family: $font-family-secondary;
+}
+
+// Font sizes
+.text-xs { font-size: $font-size-xs; }
+.text-sm { font-size: $font-size-sm; }
+.text-base { font-size: $font-size-base; }
+.text-lg { font-size: $font-size-lg; }
+.text-xl { font-size: $font-size-xl; }
+.text-2xl { font-size: $font-size-2xl; }
+.text-3xl { font-size: $font-size-3xl; }
+.text-4xl { font-size: $font-size-4xl; }
+.text-5xl { font-size: $font-size-5xl; }
+.text-6xl { font-size: $font-size-6xl; }
+.text-7xl { font-size: $font-size-7xl; }
+
+// Font weights
+.font-light { font-weight: $font-weight-light; }
+.font-normal { font-weight: $font-weight-normal; }
+.font-medium { font-weight: $font-weight-medium; }
+.font-semibold { font-weight: $font-weight-semibold; }
+.font-bold { font-weight: $font-weight-bold; }
+.font-extrabold { font-weight: $font-weight-extrabold; }
+.font-black { font-weight: $font-weight-black; }
+
+// Line heights
+.leading-tight { line-height: $line-height-tight; }
+.leading-snug { line-height: $line-height-snug; }
+.leading-normal { line-height: $line-height-normal; }
+.leading-relaxed { line-height: $line-height-relaxed; }
+.leading-loose { line-height: $line-height-loose; }
+
+// Text colors
+.text-primary { color: $text-primary; }
+.text-secondary { color: $text-secondary; }
+.text-muted { color: $text-muted; }
+.text-white { color: $text-white; }
+.text-dark { color: $text-dark; }
+
+// Text alignment
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+// Text decoration
+.underline { text-decoration: underline; }
+.line-through { text-decoration: line-through; }
+.no-underline { text-decoration: none; }
+
+// Text transform
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+.normal-case { text-transform: none; }
+
+// Text overflow
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.break-words {
+  word-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+// Responsive typography
+@media (min-width: $breakpoint-sm) {
+  .sm\:text-xs { font-size: $font-size-xs; }
+  .sm\:text-sm { font-size: $font-size-sm; }
+  .sm\:text-base { font-size: $font-size-base; }
+  .sm\:text-lg { font-size: $font-size-lg; }
+  .sm\:text-xl { font-size: $font-size-xl; }
+  .sm\:text-2xl { font-size: $font-size-2xl; }
+  .sm\:text-3xl { font-size: $font-size-3xl; }
+  .sm\:text-4xl { font-size: $font-size-4xl; }
+  .sm\:text-5xl { font-size: $font-size-5xl; }
+  .sm\:text-6xl { font-size: $font-size-6xl; }
+  .sm\:text-7xl { font-size: $font-size-7xl; }
+}
+
+@media (min-width: $breakpoint-md) {
+  .md\:text-xs { font-size: $font-size-xs; }
+  .md\:text-sm { font-size: $font-size-sm; }
+  .md\:text-base { font-size: $font-size-base; }
+  .md\:text-lg { font-size: $font-size-lg; }
+  .md\:text-xl { font-size: $font-size-xl; }
+  .md\:text-2xl { font-size: $font-size-2xl; }
+  .md\:text-3xl { font-size: $font-size-3xl; }
+  .md\:text-4xl { font-size: $font-size-4xl; }
+  .md\:text-5xl { font-size: $font-size-5xl; }
+  .md\:text-6xl { font-size: $font-size-6xl; }
+  .md\:text-7xl { font-size: $font-size-7xl; }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .lg\:text-xs { font-size: $font-size-xs; }
+  .lg\:text-sm { font-size: $font-size-sm; }
+  .lg\:text-base { font-size: $font-size-base; }
+  .lg\:text-lg { font-size: $font-size-lg; }
+  .lg\:text-xl { font-size: $font-size-xl; }
+  .lg\:text-2xl { font-size: $font-size-2xl; }
+  .lg\:text-3xl { font-size: $font-size-3xl; }
+  .lg\:text-4xl { font-size: $font-size-4xl; }
+  .lg\:text-5xl { font-size: $font-size-5xl; }
+  .lg\:text-6xl { font-size: $font-size-6xl; }
+  .lg\:text-7xl { font-size: $font-size-7xl; }
+}
+
+@media (min-width: $breakpoint-xl) {
+  .xl\:text-xs { font-size: $font-size-xs; }
+  .xl\:text-sm { font-size: $font-size-sm; }
+  .xl\:text-base { font-size: $font-size-base; }
+  .xl\:text-lg { font-size: $font-size-lg; }
+  .xl\:text-xl { font-size: $font-size-xl; }
+  .xl\:text-2xl { font-size: $font-size-2xl; }
+  .xl\:text-3xl { font-size: $font-size-3xl; }
+  .xl\:text-4xl { font-size: $font-size-4xl; }
+  .xl\:text-5xl { font-size: $font-size-5xl; }
+  .xl\:text-6xl { font-size: $font-size-6xl; }
+  .xl\:text-7xl { font-size: $font-size-7xl; }
+} 

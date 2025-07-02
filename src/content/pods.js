@@ -3,7 +3,7 @@ export const podsData = {
     badge: "AI-Powered Project Teams",
     title: "Project Pods",
     subtitle: "Your On-Demand Tech Team, Without the Hiring Hassle",
-    description: "Avadhuta's Project Pods are pre-structured, outcome-focused tech teams that plug into your product journey. Get the expertise you need, when you need it, with zero hiring overhead.",
+    description: "NovaPod.ai's Project Pods are pre-structured, outcome-focused tech teams that plug into your product journey. Get the expertise you need, when you need it, with zero hiring overhead.",
     stats: [
       { value: "15+", label: "Years Experience" },
       { value: "50+", label: "Projects Delivered" },
@@ -284,7 +284,7 @@ export const podsData = {
     title: "Start Your Pod",
     description: "Need clarity on which pod fits your goals? Book a free 30-min call and we'll help you define the best setup.",
     buttonText: "Book a Free Discovery Call",
-    email: "hello@avadhutatech.com",
-    downloadLink: "[Download Pod Services Deck]"
+    email: "hello@novapod.ai",
+    downloadLink: "/contact"
   }
 }; 
