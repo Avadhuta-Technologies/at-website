@@ -3,10 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import HowItWorksSection from '../components/sections/HowItWorksSection.astro';
 import HomePodsSection from '../components/sections/HomePodsSection.astro';
-import PacksGridSection from '../components/sections/PacksGridSection.astro';
+import HomePacksSection from '../components/sections/HomePacksSection.astro';
 import PodStrategistSection from '../components/sections/PodStrategistSection.astro';
 import WhyWorksSection from '../components/sections/WhyWorksSection.astro';
-import TeamsFoundersSection from '../components/sections/TeamsFoundersSection.astro';
+import BuiltForSection from '../components/sections/BuiltForSection.astro';
 import SuccessStoriesSection from '../components/sections/SuccessStoriesSection.astro';
 import FinalCTASection from '../components/sections/FinalCTASection.astro';
 import { podsData } from '../content/pods.js';
@@ -126,7 +126,42 @@ const podsGrid = {
 
 const packsGrid = {
   title: 'Add-on Packs',
-  packs: packsData?.availablePacks?.packs?.slice(0, 4) || [], // Show 4 packs
+  subtitle: 'Supercharge any pod with specialized services.',
+  description: 'NovaPods are powerful on their own—but with Add-On Packs, you can enhance performance, quality, and capabilities exactly where you need them.',
+  packs: [
+    {
+      id: 'ux-audit-pack',
+      title: 'UX Audit Pack',
+      description: 'Get a fresh set of expert + AI-powered eyes on your product. Usability, accessibility, and design feedback—delivered fast.',
+      icon: 'ux-audit',
+      badge: 'UX/UI',
+      badgeColor: 'purple'
+    },
+    {
+      id: 'qa-automation-pack',
+      title: 'QA Automation Pack',
+      description: 'Automate your testing flows across devices and browsers. We integrate Playwright, Cypress, or custom scripts to improve release confidence.',
+      icon: 'qa-automation',
+      badge: 'Testing',
+      badgeColor: 'green'
+    },
+    {
+      id: 'llm-agent-pack',
+      title: 'LLM Agent Setup Pack',
+      description: 'Want an AI chatbot, assistant, or internal tool? This pack sets up your GPT/Claude agent with prompt engineering + full UI integration.',
+      icon: 'llm-agent',
+      badge: 'AI/ML',
+      badgeColor: 'orange'
+    },
+    {
+      id: 'seo-optimization-pack',
+      title: 'SEO & Site Optimization Pack',
+      description: 'Get your product search-ready with structured metadata, performance tuning, and crawl-friendly setup.',
+      icon: 'seo-optimization',
+      badge: 'SEO',
+      badgeColor: 'blue'
+    }
+  ]
 };
 
 const podStrategistCTA = {
@@ -140,26 +175,26 @@ const whyWorks = {
     {
       icon: '/assets/features/icon-01.svg',
       title: 'Fast Ramp-Up',
-      description: 'You need a ready-to-go team for your project',
+      description: 'Your pod is ready to ship from day one',
     },
     {
       icon: '/assets/features/icon-02.svg',
       title: 'AI-Augmented',
-      description: 'Smart logistics + Code bots, fewer cycles',
+      description: 'Smart copilots = fewer bugs, faster code',
     },
     {
       icon: '/assets/features/icon-03.svg',
       title: 'Global Talent',
-      description: 'Expert builders from across the world',
+      description: 'Expert humans from across the world',
     },
     {
       icon: '/assets/features/icon-04.svg',
-      title: 'Modular Automation',
-      description: 'Pods as your project evolves',
+      title: 'Modular',
+      description: 'Add/remove pods as your project scal',
     },
     {
       icon: '/assets/features/icon-01.svg',
-      title: 'Customer Focused',
+      title: 'Outcome Focused',
       description: 'Pay for results, not hours',
     },
   ],
@@ -382,15 +417,20 @@ const homeData = {
 
   <HomePodsSection title={podsGrid.title} subtitle={podsGrid.subtitle} pods={podsGrid.pods} />
 
-  <PacksGridSection title={packsGrid.title} packs={packsGrid.packs} className="max-w-5xl mx-auto" />
+  <HomePacksSection 
+    title={packsGrid.title}
+    subtitle={packsGrid.subtitle}
+    description={packsGrid.description}
+    packs={packsGrid.packs}
+  />
 
   <PodStrategistSection question={podStrategistCTA.question} button={podStrategistCTA.button} />
 
   <WhyWorksSection title={whyWorks.title} items={whyWorks.items} />
 
-  <TeamsFoundersSection title={teamsFounders.title} columns={teamsFounders.columns} />
+  <BuiltForSection title={teamsFounders.title} />
 
-  <SuccessStoriesSection title={successStories.title} cases={successStories.cases} />
+  <SuccessStoriesSection title={successStories.title}  />
 
   <FinalCTASection
     title={finalCTA.title}
