@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import HowItWorksSection from '../components/sections/HowItWorksSection.astro';
-import PodsGridSection from '../components/sections/PodsGridSection.astro';
+import HomePodsSection from '../components/sections/HomePodsSection.astro';
 import PacksGridSection from '../components/sections/PacksGridSection.astro';
 import PodStrategistSection from '../components/sections/PodStrategistSection.astro';
 import WhyWorksSection from '../components/sections/WhyWorksSection.astro';
@@ -14,126 +14,215 @@ import { packsData } from '../content/packs.js';
 
 // Home page content from screenshot
 const hero = {
-  title: "Build smarter. Ship faster. With NovaPod.",
-  subtitle: "Hybrid AI + human delivery pods that get your product built—end-to-end.",
-  description: "Say goodbye to builder-for-hire chaos or slow, costly agencies. NovaPods combine expert builders and AI agents for speed, predictability, and outcomes.",
-  primaryButton: { label: "Get Started with a Pod", href: "#" },
-  secondaryButton: { label: "See How It Works", href: "#how-it-works" }
+  title: 'Build smarter. Ship faster. With NovaPod.',
+  subtitle: 'Hybrid AI + human delivery pods that get your product built—end-to-end.',
+  description:
+    'Say goodbye to builder-for-hire chaos or slow, costly agencies. NovaPods combine expert builders and AI agents for speed, predictability, and outcomes.',
+  primaryButton: { label: 'Get Started with a Pod', href: '#' },
+  secondaryButton: { label: 'See How It Works', href: '#how-it-works' },
 };
 
 const howItWorks = {
-  title: "How It Works",
+  title: 'How It Works',
   steps: [
-    { 
-      number: "1.", 
-      title: "Choose Your Pod", 
-      description: "Pick from a curated set of delivery pods—built for MVPs, AI apps, ecommerce, design sprints, or full product builds. Each pod comes pre-structured with the right blend of human expertise and AI-powered workflows.\n\nAvailable Pods:\nBuildPod: Full-stack development team\nVisionPod: UX/UI design & prototyping\nCodePod: Developer + AI pair-programming unit\nLaunchPod: End-to-end product launch squad", 
-      icon: "choose-pod" 
+    {
+      number: '1.',
+      title: 'Choose Your Pod',
+      description:
+        'Pick from a curated set of delivery pods—built for MVPs, AI apps, ecommerce, design sprints, or full product builds. Each pod comes pre-structured with the right blend of human expertise and AI-powered workflows.\n\nAvailable Pods:\nBuildPod: Full-stack development team\nVisionPod: UX/UI design & prototyping\nCodePod: Developer + AI pair-programming unit\nLaunchPod: End-to-end product launch squad',
+      icon: 'choose-pod',
     },
-    { 
-      number: "2.", 
-      title: "Align on Outcomes", 
-      description: "We define clear goals, scope, and success metrics upfront. No hourly billing—just outcome-based delivery that keeps everyone focused and accountable.\n\nYou get:\nTransparent timelines\nMilestone-driven execution\nFlexible scaling as your needs grow", 
-      icon: "align-outcomes" 
+    {
+      number: '2.',
+      title: 'Align on Outcomes',
+      description:
+        'We define clear goals, scope, and success metrics upfront. No hourly billing—just outcome-based delivery that keeps everyone focused and accountable.\n\nYou get:\nTransparent timelines\nMilestone-driven execution\nFlexible scaling as your needs grow',
+      icon: 'align-outcomes',
     },
-    { 
-      number: "3.", 
-      title: "Your Pod Gets to Work", 
-      description: "Your NovaPod starts delivering from day one—powered by human builders, supported by AI agents. From design to code to QA, everything runs in sync, fast.\n\nWhat's inside a pod?\nProduct managers\nEngineers + AI dev copilots\nDesigners + AI research assistants\nAutomated workflows and delivery pipelines", 
-      icon: "pod-working" 
+    {
+      number: '3.',
+      title: 'Your Pod Gets to Work',
+      description:
+        "Your NovaPod starts delivering from day one—powered by human builders, supported by AI agents. From design to code to QA, everything runs in sync, fast.\n\nWhat's inside a pod?\nProduct managers\nEngineers + AI dev copilots\nDesigners + AI research assistants\nAutomated workflows and delivery pipelines",
+      icon: 'pod-working',
     },
-    { 
-      number: "4.", 
-      title: "Review. Launch. Iterate.", 
-      description: "You stay in control with regular updates, reviews, and testable outputs. Once launched, your pod can evolve into a support or growth pod—or spin up a new one instantly.\n\nBuilt to adapt:\nRetain the same pod or rotate\nLayer in new pods for expansion\nScale delivery without re-hiring", 
-      icon: "launch-iterate" 
-    }
-  ]
+    {
+      number: '4.',
+      title: 'Review. Launch. Iterate.',
+      description:
+        'You stay in control with regular updates, reviews, and testable outputs. Once launched, your pod can evolve into a support or growth pod—or spin up a new one instantly.\n\nBuilt to adapt:\nRetain the same pod or rotate\nLayer in new pods for expansion\nScale delivery without re-hiring',
+      icon: 'launch-iterate',
+    },
+  ],
 };
 
 const podsGrid = {
-  title: "CHOOSE YOUR NOVAPOD",
-  pods: podsData.availablePods.pods.slice(0, 6) // Show 6 pods
+  title: 'Choose Your NovaPod',
+  subtitle:
+    'From ecommerce engines to AI-powered apps, each pod is a hybrid team—combining expert builders and AI agents—ready to deliver your next outcome.',
+  pods: [
+    {
+      id: 'shoppod',
+      title: 'ShopPod',
+      subtitle: 'Build ecommerce experiences that convert.',
+      description:
+        'Launch fast, high-performance storefronts with custom flows, headless integrations, and automated fulfillment.',
+      icon: 'shopping-cart',
+      badge: 'Ecommerce',
+      badgeColor: 'green',
+    },
+    {
+      id: 'xrpod',
+      title: 'XRPod',
+      subtitle: 'Bring your products to life in AR/VR.',
+      description:
+        'Design and deploy interactive experiences for retail, training, or simulations using spatial tech and WebXR.',
+      icon: 'vr-headset',
+      badge: 'AR/VR',
+      badgeColor: 'purple',
+    },
+    {
+      id: 'apppod',
+      title: 'AppPod',
+      subtitle: 'Mobile-first SaaS, built right.',
+      description:
+        'Design and develop cross-platform SaaS apps with modern UX, responsive design, and scalable architecture.',
+      icon: 'mobile-app',
+      badge: 'SaaS',
+      badgeColor: 'blue',
+    },
+    {
+      id: 'aipod',
+      title: 'AIPod',
+      subtitle: 'Build AI-native apps, copilots, and agents.',
+      description:
+        "From custom GPT integrations to intelligent assistants, AIPod helps you turn AI into your product's core advantage.",
+      icon: 'brain',
+      badge: 'AI/ML',
+      badgeColor: 'orange',
+    },
+    {
+      id: 'launchpod',
+      title: 'LaunchPod',
+      subtitle: 'Your full-stack product team, ready to go.',
+      description:
+        'End-to-end MVP and product delivery—from UI to backend, go-to-market, and launch support.',
+      icon: 'rocket',
+      badge: 'Full-stack',
+      badgeColor: 'indigo',
+    },
+    {
+      id: 'infrapod',
+      title: 'InfraPod',
+      subtitle: 'Your DevOps and cloud automation unit.',
+      description:
+        'CI/CD, containerization, monitoring, and cost-optimized cloud infra—delivered and managed as a pod.',
+      icon: 'server',
+      badge: 'DevOps',
+      badgeColor: 'teal',
+    },
+  ],
 };
 
 const packsGrid = {
-  title: "Add-on Packs",
-  packs: packsData?.availablePacks?.packs?.slice(0, 4) || [] // Show 4 packs
+  title: 'Add-on Packs',
+  packs: packsData?.availablePacks?.packs?.slice(0, 4) || [], // Show 4 packs
 };
 
 const podStrategistCTA = {
-  question: "Not sure which pod is right for you?",
-  button: { label: "Talk To Our Pod Strategist", href: "#" }
+  question: 'Not sure which pod is right for you?',
+  button: { label: 'Talk To Our Pod Strategist', href: '#' },
 };
 
 const whyWorks = {
-  title: "Why NovaPod Works",
+  title: 'Why NovaPod Works',
   items: [
-    { icon: "/assets/features/icon-01.svg", title: "Fast Ramp-Up", description: "You need a ready-to-go team for your project" },
-    { icon: "/assets/features/icon-02.svg", title: "AI-Augmented", description: "Smart logistics + Code bots, fewer cycles" },
-    { icon: "/assets/features/icon-03.svg", title: "Global Talent", description: "Expert builders from across the world" },
-    { icon: "/assets/features/icon-04.svg", title: "Modular Automation", description: "Pods as your project evolves" },
-    { icon: "/assets/features/icon-01.svg", title: "Customer Focused", description: "Pay for results, not hours" }
-  ]
+    {
+      icon: '/assets/features/icon-01.svg',
+      title: 'Fast Ramp-Up',
+      description: 'You need a ready-to-go team for your project',
+    },
+    {
+      icon: '/assets/features/icon-02.svg',
+      title: 'AI-Augmented',
+      description: 'Smart logistics + Code bots, fewer cycles',
+    },
+    {
+      icon: '/assets/features/icon-03.svg',
+      title: 'Global Talent',
+      description: 'Expert builders from across the world',
+    },
+    {
+      icon: '/assets/features/icon-04.svg',
+      title: 'Modular Automation',
+      description: 'Pods as your project evolves',
+    },
+    {
+      icon: '/assets/features/icon-01.svg',
+      title: 'Customer Focused',
+      description: 'Pay for results, not hours',
+    },
+  ],
 };
 
 const teamsFounders = {
-  title: "NovaPod is built for fast-moving teams and visionary founders who need outcomes—not overhead.",
+  title:
+    'NovaPod is built for fast-moving teams and visionary founders who need outcomes—not overhead.',
   columns: [
     [
-      "Startup Founders: Bring your idea to life, fast.",
-      "AI/Automation: Let pros automate and optimize your product.",
-      "CTOs & Tech Leads: Get predictable outcomes, ship faster."
+      'Startup Founders: Bring your idea to life, fast.',
+      'AI/Automation: Let pros automate and optimize your product.',
+      'CTOs & Tech Leads: Get predictable outcomes, ship faster.',
     ],
     [
-      "Product Teams: Build new features without distraction.",
-      "Project Managers: Hit deadlines, avoid burnout.",
-      "Frequent Shippers: Launch, iterate, and grow."
-    ]
-  ]
+      'Product Teams: Build new features without distraction.',
+      'Project Managers: Hit deadlines, avoid burnout.',
+      'Frequent Shippers: Launch, iterate, and grow.',
+    ],
+  ],
 };
 
 const successStories = {
-  title: "Success Stories",
+  title: 'Success Stories',
   cases: [
     {
-      logo: "/assets/testimonials/author-01.jpg",
-      title: "Security/Fintech App Experience—B2B Original Feature Delivery",
-      client: "B2B Fintech SaaS (India)",
+      logo: '/assets/testimonials/author-01.jpg',
+      title: 'Security/Fintech App Experience—B2B Original Feature Delivery',
+      client: 'B2B Fintech SaaS (India)',
       bullets: [
-        "Requirement: B2B Fintech SaaS, India",
-        "Goal: Original Feature Delivery, Custom Integrations, Security",
-        "Outcome: Added Security Credentialing, Integrations, results in 3 months (delivered on time and on budget)"
+        'Requirement: B2B Fintech SaaS, India',
+        'Goal: Original Feature Delivery, Custom Integrations, Security',
+        'Outcome: Added Security Credentialing, Integrations, results in 3 months (delivered on time and on budget)',
       ],
-      button: { label: "View Case Study", href: "#" }
+      button: { label: 'View Case Study', href: '#' },
     },
     {
-      logo: "/assets/testimonials/author-02.jpg",
-      title: "E-commerce Feature Experience—Payments + Analytics",
-      client: "E-commerce SaaS (Global Brands)",
+      logo: '/assets/testimonials/author-02.jpg',
+      title: 'E-commerce Feature Experience—Payments + Analytics',
+      client: 'E-commerce SaaS (Global Brands)',
       bullets: [
-        "Requirement: E-commerce, Global Brands",
-        "Goal: Payments, Analytics, Custom Reports, Batch Processing",
-        "Outcome: Added Payments Integration, analytics, created end-to-end batch reporting, full delivery—2 months"
+        'Requirement: E-commerce, Global Brands',
+        'Goal: Payments, Analytics, Custom Reports, Batch Processing',
+        'Outcome: Added Payments Integration, analytics, created end-to-end batch reporting, full delivery—2 months',
       ],
-      button: { label: "View Case Study", href: "#" }
-    }
-  ]
+      button: { label: 'View Case Study', href: '#' },
+    },
+  ],
 };
 
 const finalCTA = {
-  title: "Ready to Build Smarter?",
+  title: 'Ready to Build Smarter?',
   checklist: [
-    "AI-augmented",
-    "Fast ramp-up",
-    "No long-term contract",
-    "Transparent pricing",
-    "Expert-vetted"
+    'AI-augmented',
+    'Fast ramp-up',
+    'No long-term contract',
+    'Transparent pricing',
+    'Expert-vetted',
   ],
   buttons: [
-    { label: "Start With a NovaPod", href: "#" },
-    { label: "Talk to a Pod Strategist", href: "#" }
-  ]
+    { label: 'Start With a NovaPod', href: '#' },
+    { label: 'Talk to a Pod Strategist', href: '#' },
+  ],
 };
 
 // Debug logging
@@ -144,126 +233,144 @@ console.log('packsData.availablePacks.packs:', packsData?.availablePacks?.packs)
 // Home page specific data
 const homeData = {
   hero: {
-    badge: "🚀 NovaPod.ai",
-    title: "On-Demand Tech Teams & Project Pods",
-    subtitle: "Scale your development with expert teams",
-    description: "Get instant access to specialized tech teams and project pods. From AI/ML integration to full-stack development, we provide the expertise you need when you need it.",
+    badge: '🚀 NovaPod.ai',
+    title: 'On-Demand Tech Teams & Project Pods',
+    subtitle: 'Scale your development with expert teams',
+    description:
+      'Get instant access to specialized tech teams and project pods. From AI/ML integration to full-stack development, we provide the expertise you need when you need it.',
     stats: [
-      { value: "50+", label: "Expert Teams" },
-      { value: "200+", label: "Projects Delivered" },
-      { value: "99%", label: "Client Satisfaction" }
-    ]
+      { value: '50+', label: 'Expert Teams' },
+      { value: '200+', label: 'Projects Delivered' },
+      { value: '99%', label: 'Client Satisfaction' },
+    ],
   },
   whyChoose: {
-    title: "Why Choose NovaPod.ai?",
+    title: 'Why Choose NovaPod.ai?',
     cards: [
       {
-        icon: "/assets/features/icon-01.svg",
-        title: "Instant Access",
-        description: "Get started with expert teams in 24 hours, not months. No lengthy hiring processes or onboarding delays.",
-        gradient: "from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"
+        icon: '/assets/features/icon-01.svg',
+        title: 'Instant Access',
+        description:
+          'Get started with expert teams in 24 hours, not months. No lengthy hiring processes or onboarding delays.',
+        gradient: 'from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]',
       },
       {
-        icon: "/assets/features/icon-02.svg",
-        title: "Specialized Expertise",
-        description: "Access niche skills like AI/ML, DevOps, AR/VR, and more. Each team is hand-picked for your specific needs.",
-        gradient: "from-[#FDE68A] via-[#FCA5A5] to-[#F43F5E]"
+        icon: '/assets/features/icon-02.svg',
+        title: 'Specialized Expertise',
+        description:
+          'Access niche skills like AI/ML, DevOps, AR/VR, and more. Each team is hand-picked for your specific needs.',
+        gradient: 'from-[#FDE68A] via-[#FCA5A5] to-[#F43F5E]',
       },
       {
-        icon: "/assets/features/icon-03.svg",
-        title: "Flexible Scaling",
-        description: "Scale up or down based on project needs. Pay only for what you use with transparent pricing.",
-        gradient: "from-[#FBC2EB] via-[#A6C1EE] to-[#3B82F6]"
+        icon: '/assets/features/icon-03.svg',
+        title: 'Flexible Scaling',
+        description:
+          'Scale up or down based on project needs. Pay only for what you use with transparent pricing.',
+        gradient: 'from-[#FBC2EB] via-[#A6C1EE] to-[#3B82F6]',
       },
       {
-        icon: "/assets/features/icon-04.svg",
-        title: "Quality Guaranteed",
-        description: "All teams are vetted, experienced, and backed by our satisfaction guarantee. Your success is our priority.",
-        gradient: "from-[#FDE68A] via-[#6EE7B7] to-[#3B82F6]"
-      }
-    ]
+        icon: '/assets/features/icon-04.svg',
+        title: 'Quality Guaranteed',
+        description:
+          'All teams are vetted, experienced, and backed by our satisfaction guarantee. Your success is our priority.',
+        gradient: 'from-[#FDE68A] via-[#6EE7B7] to-[#3B82F6]',
+      },
+    ],
   },
   included: {
     title: "What's Included in Every Team",
-    image: "/assets/hero/hero-image.jpg",
+    image: '/assets/hero/hero-image.jpg',
     items: [
-      "Dedicated project manager",
-      "Daily standups and progress reports",
-      "Code reviews and quality assurance",
-      "Git repository and documentation",
-      "Deployment and CI/CD setup",
-      "Post-launch support and maintenance"
-    ]
+      'Dedicated project manager',
+      'Daily standups and progress reports',
+      'Code reviews and quality assurance',
+      'Git repository and documentation',
+      'Deployment and CI/CD setup',
+      'Post-launch support and maintenance',
+    ],
   },
   testimonials: {
-    title: "Success Stories",
-    subtitle: "See how teams are transforming their development with NovaPod.ai",
+    title: 'Success Stories',
+    subtitle: 'See how teams are transforming their development with NovaPod.ai',
     items: [
       {
-        authorName: "Sarah Chen",
-        authorRole: "CTO at TechFlow",
-        image: "/assets/testimonials/author-01.jpg",
-        message: "NovaPod.ai helped us launch our AI-powered SaaS platform in just 6 weeks. The team was incredibly skilled and professional throughout the entire process.",
-        caseLink: "/case-studies/techflow-ai-saas"
+        authorName: 'Sarah Chen',
+        authorRole: 'CTO at TechFlow',
+        image: '/assets/testimonials/author-01.jpg',
+        message:
+          'NovaPod.ai helped us launch our AI-powered SaaS platform in just 6 weeks. The team was incredibly skilled and professional throughout the entire process.',
+        caseLink: '/case-studies/techflow-ai-saas',
       },
       {
-        authorName: "Marcus Rodriguez",
-        authorRole: "Founder at StartupXYZ",
-        image: "/assets/testimonials/author-02.jpg",
-        message: "We needed a mobile-first approach for our MVP. NovaPod.ai delivered a polished app that exceeded our expectations and helped us secure our next funding round.",
-        caseLink: "/case-studies/startupxyz-mobile-mvp"
+        authorName: 'Marcus Rodriguez',
+        authorRole: 'Founder at StartupXYZ',
+        image: '/assets/testimonials/author-02.jpg',
+        message:
+          'We needed a mobile-first approach for our MVP. NovaPod.ai delivered a polished app that exceeded our expectations and helped us secure our next funding round.',
+        caseLink: '/case-studies/startupxyz-mobile-mvp',
       },
       {
-        authorName: "Emily Watson",
-        authorRole: "Product Manager at InnovateCorp",
-        image: "/assets/testimonials/author-03.jpg",
-        message: "The DevOps automation team from NovaPod.ai transformed our deployment process. We went from manual deployments to fully automated CI/CD in just 2 weeks.",
-        caseLink: "/case-studies/innovatecorp-devops-automation"
-      }
-    ]
+        authorName: 'Emily Watson',
+        authorRole: 'Product Manager at InnovateCorp',
+        image: '/assets/testimonials/author-03.jpg',
+        message:
+          'The DevOps automation team from NovaPod.ai transformed our deployment process. We went from manual deployments to fully automated CI/CD in just 2 weeks.',
+        caseLink: '/case-studies/innovatecorp-devops-automation',
+      },
+    ],
   },
   faq: {
-    title: "Frequently Asked Questions",
-    subtitle: "Everything you need to know about NovaPod.ai",
+    title: 'Frequently Asked Questions',
+    subtitle: 'Everything you need to know about NovaPod.ai',
     items: [
       {
-        question: "How quickly can I get started with a team?",
-        answer: "Most teams can be assembled and ready to start within 24-48 hours. For specialized requirements, we may need up to 1 week to ensure we have the perfect team composition."
+        question: 'How quickly can I get started with a team?',
+        answer:
+          'Most teams can be assembled and ready to start within 24-48 hours. For specialized requirements, we may need up to 1 week to ensure we have the perfect team composition.',
       },
       {
         question: "What if I'm not satisfied with the team's work?",
-        answer: "We offer a 100% satisfaction guarantee. If you're not happy with the work, we'll either fix it at no additional cost or provide a full refund. Your success is our priority."
+        answer:
+          "We offer a 100% satisfaction guarantee. If you're not happy with the work, we'll either fix it at no additional cost or provide a full refund. Your success is our priority.",
       },
       {
-        question: "Can I scale the team up or down during the project?",
-        answer: "Absolutely! Our flexible model allows you to add or remove team members based on your project needs. We'll work with you to ensure optimal team size throughout the project."
+        question: 'Can I scale the team up or down during the project?',
+        answer:
+          "Absolutely! Our flexible model allows you to add or remove team members based on your project needs. We'll work with you to ensure optimal team size throughout the project.",
       },
       {
-        question: "Do you provide ongoing support after project completion?",
-        answer: "Yes, we offer post-launch support and maintenance packages. Many clients choose to continue working with their teams for ongoing development and feature additions."
+        question: 'Do you provide ongoing support after project completion?',
+        answer:
+          'Yes, we offer post-launch support and maintenance packages. Many clients choose to continue working with their teams for ongoing development and feature additions.',
       },
       {
-        question: "How do you ensure code quality and security?",
-        answer: "All teams follow industry best practices including code reviews, automated testing, security audits, and documentation. We also provide access to our quality assurance processes."
+        question: 'How do you ensure code quality and security?',
+        answer:
+          'All teams follow industry best practices including code reviews, automated testing, security audits, and documentation. We also provide access to our quality assurance processes.',
       },
       {
-        question: "What technologies and frameworks do your teams specialize in?",
-        answer: "Our teams cover the full spectrum of modern technologies including React, Node.js, Python, AI/ML frameworks, cloud platforms, and more. We match teams to your specific tech stack requirements."
-      }
-    ]
+        question: 'What technologies and frameworks do your teams specialize in?',
+        answer:
+          'Our teams cover the full spectrum of modern technologies including React, Node.js, Python, AI/ML frameworks, cloud platforms, and more. We match teams to your specific tech stack requirements.',
+      },
+    ],
   },
   cta: {
-    title: "Ready to Scale Your Development?",
-    description: "Join hundreds of companies that have accelerated their development with NovaPod.ai. Get started today and see the difference expert teams can make.",
-    buttonText: "Get Started Now",
-    email: "hello@novapod.ai",
-    downloadLink: "/contact"
-  }
+    title: 'Ready to Scale Your Development?',
+    description:
+      'Join hundreds of companies that have accelerated their development with NovaPod.ai. Get started today and see the difference expert teams can make.',
+    buttonText: 'Get Started Now',
+    email: 'hello@novapod.ai',
+    downloadLink: '/contact',
+  },
 };
 ---
 
-<Layout description="NovaPod.ai - Hybrid AI + human delivery pods that get your product built—end-to-end." title="NovaPod.ai - Build smarter. Ship faster.">
-  <HeroSection 
+<Layout
+  description="NovaPod.ai - Hybrid AI + human delivery pods that get your product built—end-to-end."
+  title="NovaPod.ai - Build smarter. Ship faster."
+>
+  <HeroSection
     title={hero.title}
     subtitle={hero.subtitle}
     description={hero.description}
@@ -271,23 +378,11 @@ const homeData = {
     secondaryButton={hero.secondaryButton}
   />
 
-  <HowItWorksSection 
-    title={howItWorks.title}
-    steps={howItWorks.steps}
-    className="max-w-5xl mx-auto"
-  />
+  <HowItWorksSection title={howItWorks.title} steps={howItWorks.steps} />
 
-  <PodsGridSection 
-    title={podsGrid.title}
-    pods={podsGrid.pods}
-    className="max-w-6xl mx-auto"
-  />
+  <HomePodsSection title={podsGrid.title} subtitle={podsGrid.subtitle} pods={podsGrid.pods} />
 
-  <PacksGridSection 
-    title={packsGrid.title}
-    packs={packsGrid.packs}
-    className="max-w-5xl mx-auto"
-  />
+  <PacksGridSection title={packsGrid.title} packs={packsGrid.packs} className="max-w-5xl mx-auto" />
 
   <PodStrategistSection question={podStrategistCTA.question} button={podStrategistCTA.button} />
 
@@ -297,7 +392,11 @@ const homeData = {
 
   <SuccessStoriesSection title={successStories.title} cases={successStories.cases} />
 
-  <FinalCTASection title={finalCTA.title} checklist={finalCTA.checklist} buttons={finalCTA.buttons} />
+  <FinalCTASection
+    title={finalCTA.title}
+    checklist={finalCTA.checklist}
+    buttons={finalCTA.buttons}
+  />
 </Layout>
 
 <style>
