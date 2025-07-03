@@ -1,0 +1,55 @@
+---
+export interface Props {
+  title?: string;
+  cases?: Array<{ logo: string; title: string; client: string; bullets: string[]; button: { label: string; href: string } }>;
+}
+
+const defaultCases = [
+  {
+    logo: "/assets/testimonials/author-01.jpg",
+    title: "Security/Fintech App Experience—B2B Original Feature Delivery",
+    client: "B2B Fintech SaaS (India)",
+    bullets: [
+      "Requirement: B2B Fintech SaaS, India",
+      "Goal: Original Feature Delivery, Custom Integrations, Security",
+      "Outcome: Added Security Credentialing, Integrations, results in 3 months (delivered on time and on budget)"
+    ],
+    button: { label: "View Case Study", href: "#" }
+  },
+  {
+    logo: "/assets/testimonials/author-02.jpg",
+    title: "E-commerce Feature Experience—Payments + Analytics",
+    client: "E-commerce SaaS (Global Brands)",
+    bullets: [
+      "Requirement: E-commerce, Global Brands",
+      "Goal: Payments, Analytics, Custom Reports, Batch Processing",
+      "Outcome: Added Payments Integration, analytics, created end-to-end batch reporting, full delivery—2 months"
+    ],
+    button: { label: "View Case Study", href: "#" }
+  }
+];
+
+const { title = "Success Stories", cases = defaultCases } = Astro.props;
+---
+<section class="py-16 bg-gradient-to-br from-blue-50 to-green-50 dark:from-slate-800 dark:to-slate-900">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark dark:text-white">{title}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      {cases.map((c) => (
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-10 flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 group">
+          <div class="flex items-center mb-4">
+            <img src={c.logo} alt={c.client + ' logo'} class="w-12 h-12 rounded-full mr-4 shadow" />
+            <div>
+              <div class="text-base font-semibold text-blue-700 dark:text-blue-300">{c.client}</div>
+            </div>
+          </div>
+          <h3 class="text-lg font-bold mb-2 text-dark dark:text-white">{c.title}</h3>
+          <ul class="list-disc list-inside mb-6 space-y-2 text-gray-700 dark:text-gray-300 text-base">
+            {c.bullets.map((b) => <li>{b}</li>)}
+          </ul>
+          <a href={c.button.href} class="mt-auto inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold rounded-lg shadow hover:from-blue-600 hover:to-green-600 transition-all duration-300">{c.button.label}</a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

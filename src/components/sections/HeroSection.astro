@@ -8,6 +8,8 @@ export interface Props {
   showBackgroundGraphics?: boolean;
   showWave?: boolean;
   className?: string;
+  primaryButton?: { label: string; href: string };
+  secondaryButton?: { label: string; href: string };
 }
 
 const {
@@ -18,7 +20,9 @@ const {
   stats = [],
   showBackgroundGraphics = true,
   showWave = true,
-  className = ""
+  className = "",
+  primaryButton,
+  secondaryButton
 } = Astro.props;
 ---
 
@@ -76,19 +80,17 @@ const {
 
       <!-- CTA Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up animation-delay-600">
-        <a href="#pods" class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-          <span class="relative z-10">Explore Our Pods</span>
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </a>
-        
-        <a href="#contact" class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105">
-          <span class="flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-            Book Free Consultation
-          </span>
-        </a>
+        {primaryButton && (
+          <a href={primaryButton.href} class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            <span class="relative z-10">{primaryButton.label}</span>
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </a>
+        )}
+        {secondaryButton && (
+          <a href={secondaryButton.href} class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105">
+            <span class="flex items-center">{secondaryButton.label}</span>
+          </a>
+        )}
       </div>
 
       {stats.length > 0 && (

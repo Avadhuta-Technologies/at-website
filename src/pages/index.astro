@@ -1,15 +1,140 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
-import WhyChooseSection from '../components/sections/WhyChooseSection.astro';
-import FeaturesSection from '../components/sections/FeaturesSection.astro';
+import HowItWorksSection from '../components/sections/HowItWorksSection.astro';
 import PodsGridSection from '../components/sections/PodsGridSection.astro';
 import PacksGridSection from '../components/sections/PacksGridSection.astro';
-import TestimonialsSection from '../components/sections/TestimonialsSection.astro';
-import FAQSection from '../components/sections/FAQSection.astro';
-import CTASection from '../components/sections/CTASection.astro';
+import PodStrategistSection from '../components/sections/PodStrategistSection.astro';
+import WhyWorksSection from '../components/sections/WhyWorksSection.astro';
+import TeamsFoundersSection from '../components/sections/TeamsFoundersSection.astro';
+import SuccessStoriesSection from '../components/sections/SuccessStoriesSection.astro';
+import FinalCTASection from '../components/sections/FinalCTASection.astro';
 import { podsData } from '../content/pods.js';
 import { packsData } from '../content/packs.js';
+
+// Home page content from screenshot
+const hero = {
+  title: "Build smarter. Ship faster. With NovaPod.",
+  subtitle: "Hybrid AI + human delivery pods that get your product built—end-to-end.",
+  description: "Say goodbye to builder-for-hire chaos or slow, costly agencies. NovaPods combine expert builders and AI agents for speed, predictability, and outcomes.",
+  primaryButton: { label: "Get Started with a Pod", href: "#" },
+  secondaryButton: { label: "See How It Works", href: "#how-it-works" }
+};
+
+const howItWorks = {
+  title: "How It Works",
+  steps: [
+    { 
+      number: "1.", 
+      title: "Choose Your Pod", 
+      description: "Pick from a curated set of delivery pods—built for MVPs, AI apps, ecommerce, design sprints, or full product builds. Each pod comes pre-structured with the right blend of human expertise and AI-powered workflows.\n\nAvailable Pods:\nBuildPod: Full-stack development team\nVisionPod: UX/UI design & prototyping\nCodePod: Developer + AI pair-programming unit\nLaunchPod: End-to-end product launch squad", 
+      icon: "choose-pod" 
+    },
+    { 
+      number: "2.", 
+      title: "Align on Outcomes", 
+      description: "We define clear goals, scope, and success metrics upfront. No hourly billing—just outcome-based delivery that keeps everyone focused and accountable.\n\nYou get:\nTransparent timelines\nMilestone-driven execution\nFlexible scaling as your needs grow", 
+      icon: "align-outcomes" 
+    },
+    { 
+      number: "3.", 
+      title: "Your Pod Gets to Work", 
+      description: "Your NovaPod starts delivering from day one—powered by human builders, supported by AI agents. From design to code to QA, everything runs in sync, fast.\n\nWhat's inside a pod?\nProduct managers\nEngineers + AI dev copilots\nDesigners + AI research assistants\nAutomated workflows and delivery pipelines", 
+      icon: "pod-working" 
+    },
+    { 
+      number: "4.", 
+      title: "Review. Launch. Iterate.", 
+      description: "You stay in control with regular updates, reviews, and testable outputs. Once launched, your pod can evolve into a support or growth pod—or spin up a new one instantly.\n\nBuilt to adapt:\nRetain the same pod or rotate\nLayer in new pods for expansion\nScale delivery without re-hiring", 
+      icon: "launch-iterate" 
+    }
+  ]
+};
+
+const podsGrid = {
+  title: "CHOOSE YOUR NOVAPOD",
+  pods: podsData.availablePods.pods.slice(0, 6) // Show 6 pods
+};
+
+const packsGrid = {
+  title: "Add-on Packs",
+  packs: packsData?.availablePacks?.packs?.slice(0, 4) || [] // Show 4 packs
+};
+
+const podStrategistCTA = {
+  question: "Not sure which pod is right for you?",
+  button: { label: "Talk To Our Pod Strategist", href: "#" }
+};
+
+const whyWorks = {
+  title: "Why NovaPod Works",
+  items: [
+    { icon: "/assets/features/icon-01.svg", title: "Fast Ramp-Up", description: "You need a ready-to-go team for your project" },
+    { icon: "/assets/features/icon-02.svg", title: "AI-Augmented", description: "Smart logistics + Code bots, fewer cycles" },
+    { icon: "/assets/features/icon-03.svg", title: "Global Talent", description: "Expert builders from across the world" },
+    { icon: "/assets/features/icon-04.svg", title: "Modular Automation", description: "Pods as your project evolves" },
+    { icon: "/assets/features/icon-01.svg", title: "Customer Focused", description: "Pay for results, not hours" }
+  ]
+};
+
+const teamsFounders = {
+  title: "NovaPod is built for fast-moving teams and visionary founders who need outcomes—not overhead.",
+  columns: [
+    [
+      "Startup Founders: Bring your idea to life, fast.",
+      "AI/Automation: Let pros automate and optimize your product.",
+      "CTOs & Tech Leads: Get predictable outcomes, ship faster."
+    ],
+    [
+      "Product Teams: Build new features without distraction.",
+      "Project Managers: Hit deadlines, avoid burnout.",
+      "Frequent Shippers: Launch, iterate, and grow."
+    ]
+  ]
+};
+
+const successStories = {
+  title: "Success Stories",
+  cases: [
+    {
+      logo: "/assets/testimonials/author-01.jpg",
+      title: "Security/Fintech App Experience—B2B Original Feature Delivery",
+      client: "B2B Fintech SaaS (India)",
+      bullets: [
+        "Requirement: B2B Fintech SaaS, India",
+        "Goal: Original Feature Delivery, Custom Integrations, Security",
+        "Outcome: Added Security Credentialing, Integrations, results in 3 months (delivered on time and on budget)"
+      ],
+      button: { label: "View Case Study", href: "#" }
+    },
+    {
+      logo: "/assets/testimonials/author-02.jpg",
+      title: "E-commerce Feature Experience—Payments + Analytics",
+      client: "E-commerce SaaS (Global Brands)",
+      bullets: [
+        "Requirement: E-commerce, Global Brands",
+        "Goal: Payments, Analytics, Custom Reports, Batch Processing",
+        "Outcome: Added Payments Integration, analytics, created end-to-end batch reporting, full delivery—2 months"
+      ],
+      button: { label: "View Case Study", href: "#" }
+    }
+  ]
+};
+
+const finalCTA = {
+  title: "Ready to Build Smarter?",
+  checklist: [
+    "AI-augmented",
+    "Fast ramp-up",
+    "No long-term contract",
+    "Transparent pricing",
+    "Expert-vetted"
+  ],
+  buttons: [
+    { label: "Start With a NovaPod", href: "#" },
+    { label: "Talk to a Pod Strategist", href: "#" }
+  ]
+};
 
 // Debug logging
 console.log('packsData:', packsData);
@@ -137,76 +262,44 @@ const homeData = {
 };
 ---
 
-<Layout description="NovaPod.ai - On-demand tech teams and project pods for modern businesses. Scale your development with expert teams." title="NovaPod.ai - On-Demand Tech Teams & Project Pods">
-
+<Layout description="NovaPod.ai - Hybrid AI + human delivery pods that get your product built—end-to-end." title="NovaPod.ai - Build smarter. Ship faster.">
   <HeroSection 
-    badge={homeData.hero.badge}
-    title={homeData.hero.title}
-    subtitle={homeData.hero.subtitle}
-    description={homeData.hero.description}
-    stats={homeData.hero.stats}
+    title={hero.title}
+    subtitle={hero.subtitle}
+    description={hero.description}
+    primaryButton={hero.primaryButton}
+    secondaryButton={hero.secondaryButton}
   />
 
-  <WhyChooseSection 
-    title={homeData.whyChoose.title}
-    cards={homeData.whyChoose.cards}
-  />
-
-  <FeaturesSection 
-    title={homeData.included.title}
-    image={homeData.included.image}
-    items={homeData.included.items}
+  <HowItWorksSection 
+    title={howItWorks.title}
+    steps={howItWorks.steps}
+    className="max-w-5xl mx-auto"
   />
 
   <PodsGridSection 
-    title="Popular Project Pods"
-    pods={podsData.availablePods.pods.slice(0, 3)}
+    title={podsGrid.title}
+    pods={podsGrid.pods}
+    className="max-w-6xl mx-auto"
   />
 
-  {/* Temporarily comment out to debug
   <PacksGridSection 
-    title="Featured Project Packs"
-    packs={packsData?.availablePacks?.packs?.slice(0, 3) || []}
-  />
-  */}
-
-  <div class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-8">Debug Info</h2>
-      <pre class="bg-white p-4 rounded-lg shadow">
-        {JSON.stringify({
-          packsDataExists: !!packsData,
-          availablePacksExists: !!packsData?.availablePacks,
-          packsArrayExists: !!packsData?.availablePacks?.packs,
-          packsLength: packsData?.availablePacks?.packs?.length,
-          firstPack: packsData?.availablePacks?.packs?.[0]
-        }, null, 2)}
-      </pre>
-    </div>
-  </div>
-
-  <TestimonialsSection 
-    title={homeData.testimonials.title}
-    subtitle={homeData.testimonials.subtitle}
-    items={homeData.testimonials.items}
+    title={packsGrid.title}
+    packs={packsGrid.packs}
+    className="max-w-5xl mx-auto"
   />
 
-  <FAQSection 
-    title={homeData.faq.title}
-    subtitle={homeData.faq.subtitle}
-    items={homeData.faq.items}
-  />
+  <PodStrategistSection question={podStrategistCTA.question} button={podStrategistCTA.button} />
 
-  <CTASection 
-    title={homeData.cta.title}
-    description={homeData.cta.description}
-    buttonText={homeData.cta.buttonText}
-    email={homeData.cta.email}
-    downloadLink={homeData.cta.downloadLink}
-  />
+  <WhyWorksSection title={whyWorks.title} items={whyWorks.items} />
 
+  <TeamsFoundersSection title={teamsFounders.title} columns={teamsFounders.columns} />
+
+  <SuccessStoriesSection title={successStories.title} cases={successStories.cases} />
+
+  <FinalCTASection title={finalCTA.title} checklist={finalCTA.checklist} buttons={finalCTA.buttons} />
 </Layout>
 
 <style>
-  /* Custom styles can be added here */
+  /* Custom styles for new content can be added here */
 </style>

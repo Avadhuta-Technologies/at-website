@@ -1,0 +1,46 @@
+---
+export interface Props {
+  title?: string;
+  checklist?: string[];
+  buttons?: Array<{ label: string; href: string }>;
+}
+
+const defaultTitle = "Ready to Build Smarter?";
+const defaultChecklist = [
+  "AI-augmented",
+  "Fast ramp-up",
+  "No long-term contract",
+  "Transparent pricing",
+  "Expert-vetted"
+];
+const defaultButtons = [
+  { label: "Start With a NovaPod", href: "#" },
+  { label: "Talk to a Pod Strategist", href: "#" }
+];
+
+const {
+  title = defaultTitle,
+  checklist = defaultChecklist,
+  buttons = defaultButtons
+} = Astro.props;
+---
+<section class="py-16 bg-gradient-to-br from-green-100 via-blue-50 to-yellow-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800">
+  <div class="container mx-auto px-4 text-center">
+    <div class="max-w-2xl mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-10">
+      <h2 class="text-3xl md:text-4xl font-bold mb-8 text-dark dark:text-white">{title}</h2>
+      <ul class="inline-block text-left mb-8">
+        {checklist.map((item) => (
+          <li class="flex items-center mb-3">
+            <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+            <span class="text-gray-700 dark:text-gray-300 text-lg">{item}</span>
+          </li>
+        ))}
+      </ul>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        {buttons.map((btn) => (
+          <a href={btn.href} class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">{btn.label}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section> 
