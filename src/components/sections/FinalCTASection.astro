@@ -1,45 +1,106 @@
 ---
 export interface Props {
   title?: string;
+  description?: string;
   checklist?: string[];
   buttons?: Array<{ label: string; href: string }>;
+  contactInfo?: {
+    email1: string;
+    email2: string;
+  };
 }
 
 const defaultTitle = "Ready to Build Smarter?";
+const defaultDescription = "Ditch slow agencies and scattered freelancers. NovaPod gives you a high-performance pod—expert humans + AI agents—ready to launch your product, feature, or automation in record time.";
 const defaultChecklist = [
-  "AI-augmented",
-  "Fast ramp-up",
-  "No long-term contract",
-  "Transparent pricing",
-  "Expert-vetted"
+  "Outcome-focused",
+  "Fast ramp-up", 
+  "No micromanagement",
+  "Fully yours"
 ];
 const defaultButtons = [
-  { label: "Start With a NovaPod", href: "#" },
+  { label: "Start With A NovaPod", href: "#" },
   { label: "Talk to a Pod Strategist", href: "#" }
 ];
+const defaultContactInfo = {
+  email1: "vikram@avadhutatech.com",
+  email2: "vinay@avadhutatech.com"
+};
 
 const {
   title = defaultTitle,
+  description = defaultDescription,
   checklist = defaultChecklist,
-  buttons = defaultButtons
+  buttons = defaultButtons,
+  contactInfo = defaultContactInfo
 } = Astro.props;
 ---
-<section class="py-16 bg-gradient-to-br from-green-100 via-blue-50 to-yellow-50 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800">
-  <div class="container mx-auto px-4 text-center">
-    <div class="max-w-2xl mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-10">
-      <h2 class="text-3xl md:text-4xl font-bold mb-8 text-dark dark:text-white">{title}</h2>
-      <ul class="inline-block text-left mb-8">
-        {checklist.map((item) => (
-          <li class="flex items-center mb-3">
-            <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-            <span class="text-gray-700 dark:text-gray-300 text-lg">{item}</span>
-          </li>
-        ))}
-      </ul>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        {buttons.map((btn) => (
-          <a href={btn.href} class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">{btn.label}</a>
-        ))}
+<section class="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0">
+    <div class="absolute top-0 left-0 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl"></div>
+  </div>
+  
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Main Content -->
+      <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm rounded-3xl shadow-2xl p-12 border border-white/20">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
+          {title}
+        </h2>
+        
+        <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+          {description}
+        </p>
+        
+        <!-- Benefits Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-2xl mx-auto">
+          {checklist.map((item) => (
+            <div class="flex items-center justify-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl border border-green-200 dark:border-green-800">
+              <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="text-sm font-semibold text-green-800 dark:text-green-200">{item}</span>
+            </div>
+          ))}
+        </div>
+        
+        <!-- Primary CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          {buttons.map((btn, index) => (
+            <a 
+              href={btn.href} 
+              class={`px-8 py-4 font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 ${
+                index === 0 
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-green-500/25 hover:shadow-green-500/40' 
+                  : 'bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 hover:border-gray-300 shadow-white/25 hover:shadow-white/40'
+              }`}
+            >
+              {btn.label}
+            </a>
+          ))}
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="flex items-center justify-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
+          <span class="flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Or reach us directly at
+          </span>
+          <div class="flex space-x-4">
+            <a href={`mailto:${contactInfo.email1}`} class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
+              {contactInfo.email1}
+            </a>
+            <span class="text-gray-400">or</span>
+            <a href={`mailto:${contactInfo.email2}`} class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
+              {contactInfo.email2}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

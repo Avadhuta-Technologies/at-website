@@ -247,17 +247,21 @@ const successStories = {
 
 const finalCTA = {
   title: 'Ready to Build Smarter?',
+  description: 'Ditch slow agencies and scattered freelancers. NovaPod gives you a high-performance pod—expert humans + AI agents—ready to launch your product, feature, or automation in record time.',
   checklist: [
-    'AI-augmented',
+    'Outcome-focused',
     'Fast ramp-up',
-    'No long-term contract',
-    'Transparent pricing',
-    'Expert-vetted',
+    'No micromanagement',
+    'Fully yours',
   ],
   buttons: [
-    { label: 'Start With a NovaPod', href: '#' },
+    { label: 'Start With A NovaPod', href: '#' },
     { label: 'Talk to a Pod Strategist', href: '#' },
   ],
+  contactInfo: {
+    email1: 'vikram@avadhutatech.com',
+    email2: 'vinay@avadhutatech.com'
+  }
 };
 
 // Debug logging
@@ -434,8 +438,10 @@ const homeData = {
 
   <FinalCTASection
     title={finalCTA.title}
+    description={finalCTA.description}
     checklist={finalCTA.checklist}
     buttons={finalCTA.buttons}
+    contactInfo={finalCTA.contactInfo}
   />
 </Layout>
 
