@@ -1,0 +1,118 @@
+---
+export interface Props {
+  badge?: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  stats?: Array<{ value: string; label: string }>;
+  showBackgroundGraphics?: boolean;
+  showWave?: boolean;
+  className?: string;
+}
+
+const {
+  badge,
+  title,
+  subtitle,
+  description,
+  stats = [],
+  showBackgroundGraphics = true,
+  showWave = true,
+  className = ""
+} = Astro.props;
+---
+
+<section class={`relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden ${className}`}>
+  {showBackgroundGraphics && (
+    <!-- Abstract Background Graphics -->
+    <div class="absolute inset-0">
+      <!-- Floating Orbs -->
+      <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 animate-pulse"></div>
+      <div class="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-30 animate-bounce"></div>
+      <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-gradient-to-r from-green-400 to-blue-400 rounded-full opacity-25 animate-ping"></div>
+      
+      <!-- Geometric Shapes -->
+      <div class="absolute top-1/3 right-1/3 w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-400 transform rotate-45 opacity-20 animate-spin"></div>
+      <div class="absolute bottom-1/3 left-1/3 w-12 h-12 bg-gradient-to-r from-red-400 to-pink-400 transform rotate-12 opacity-30"></div>
+      
+      <!-- Grid Pattern -->
+      <div class="absolute inset-0 opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.05%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+    </div>
+  )}
+
+  <!-- Main Content -->
+  <div class="relative z-10 container mx-auto px-4 py-20 md:py-32">
+    <div class="max-w-4xl mx-auto text-center">
+      {badge && (
+        <!-- AI Badge -->
+        <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold rounded-full mb-8">
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+          </svg>
+          {badge}
+        </div>
+      )}
+
+      <!-- Main Heading -->
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+        <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          {title}
+        </span>
+      </h1>
+      
+      {subtitle && (
+        <!-- Subtitle -->
+        <h2 class="text-xl md:text-2xl lg:text-3xl font-medium text-gray-300 mb-8">
+          {subtitle}
+        </h2>
+      )}
+
+      {description && (
+        <!-- Description -->
+        <p class="text-lg md:text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+          {description}
+        </p>
+      )}
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+        <a href="#pods" class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <span class="relative z-10">Explore Our Pods</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        
+        <a href="#contact" class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105">
+          <span class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            Book Free Consultation
+          </span>
+        </a>
+      </div>
+
+      {stats.length > 0 && (
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+          {stats.map((stat) => (
+            <div class="text-center">
+              <div class="text-3xl md:text-4xl font-bold text-white mb-2">{stat.value}</div>
+              <div class="text-gray-400 text-sm">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+
+  {showWave && (
+    <!-- Bottom Wave -->
+    <div class="absolute bottom-0 left-0 right-0 rotate-180">
+      <svg class="w-full h-16 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor"></path>
+        <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor"></path>
+        <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor"></path>
+      </svg>
+    </div>
+  )}
+</section> 
