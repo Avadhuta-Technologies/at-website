@@ -1,14 +1,9 @@
 export const podsData = {
   hero: {
-    badge: "AI-Powered Project Teams",
-    title: "Project Pods",
-    subtitle: "Your On-Demand Tech Team, Without the Hiring Hassle",
-    description: "Avadhuta's Project Pods are pre-structured, outcome-focused tech teams that plug into your product journey. Get the expertise you need, when you need it, with zero hiring overhead.",
-    stats: [
-      { value: "15+", label: "Years Experience" },
-      { value: "50+", label: "Projects Delivered" },
-      { value: "24/7", label: "Support Available" }
-    ]
+    title: "Explore High-Impact Service Pods Built for Results",
+    subtitle: "Modular, outcome-driven pods combining expert talent and smart AI to help you build faster, automate smarter, and grow sustainably — without the chaos of traditional software services.",
+    primaryButton: { label: "Browse Pods", href: "#available-pods" },
+    secondaryButton: { label: "Talk To A Specialist", href: "/contact" }
   },
   
   whyChoose: {
@@ -45,12 +40,12 @@ export const podsData = {
     title: "What's Included in Every Pod",
     image: "/assets/features/icon-01.svg",
     items: [
-      "Dedicated team (not freelancers or randoms)",
-      "Project manager for delivery & communication",
-      "Weekly check-ins & progress reports",
-      "Sprint-based delivery (2-week sprints)",
-      "QA & code reviews included",
-      "All code & IP 100% yours"
+      "Pre-defined roles based on your project type",
+      "Dedicated team members (no context-switching)",
+      "Integrated with your tools (Jira, Slack, GitHub, etc.)",
+      "Daily/weekly check-ins & sprint planning",
+      "Reporting & visibility dashboard",
+      "IP protection & signed NDAs"
     ]
   },
 
@@ -59,41 +54,71 @@ export const podsData = {
     pods: [
       {
         id: "ecommerce-engine",
-        title: "Ecommerce Engine Pod",
+        title: "Ecommerce Engine Pod (ShopPod)",
         description: "Your Dedicated Team for Scalable, High-Converting Ecommerce Experiences",
         icon: "/assets/features/icon-01.svg",
         badge: "Popular",
         badgeColor: "green",
+        idealFor: [
+          "D2C brands launching custom ecommerce stores",
+          "B2B platforms needing tailored ordering workflows",
+          "Retail businesses scaling beyond Shopify limitations"
+        ],
+        podDescription: "This pod is built for speed, performance, and flexibility — whether you're building headless ecommerce, a custom storefront, or a feature-rich backend.",
         teamComposition: [
           "1 Full Stack Developer (4+ yrs) – storefront, backend logic, integrations",
           "1 UI/UX Designer – conversion-focused shopping experience",
           "0.5 QA & SEO Engineer – quality, speed, and search optimization",
           "Project Lead / Architect (Shared) – ecommerce strategy and tech guidance"
         ],
+        upgradeNote: "🧩 Need marketplace features or Shopify/Shopware custom app development? Upgrade to the Plus Pod.",
         deliverables: [
           "Custom storefront (Next.js, Nuxt, or Shopify/Shopware)",
-          "Cart, checkout, discount engine, and payment gateway integration",
+          "Cart, checkout, discount engine, and payment gateway integration (Razorpay, Stripe, etc.)",
           "Admin panel for orders, inventory, returns",
           "Loyalty, referral, and coupon modules",
-          "SEO optimization, Google Shopping, and analytics integration"
+          "SEO optimization, Google Shopping, and analytics integration",
+          "Scalable backend for product catalogs"
         ],
-        engagement: "minimum 1 month",
-        priceINR: "₹2.5L/month",
-        priceUSD: "$3K/month"
+        deliveryTimelines: [
+          "2–3 Weeks: MVP store setup with product flows",
+          "4–6 Weeks: Full-featured ecommerce platform",
+          "Sprints: Weekly delivery, feedback, and scope alignment"
+        ],
+        whyTrust: [
+          "🛍️ Battle-tested ecommerce team (B2C + B2B use cases)",
+          "🚀 Fast ramp-up, no delays in going live",
+          "📈 Optimized for conversion, speed, and performance",
+          "🔌 Integrates with ERPs, CRMs, and shipping APIs"
+        ],
+        pastUseCases: [
+          "Multi-brand D2C store with Razorpay & NetSuite integration",
+          "Wholesale B2B portal with custom pricing workflows",
+          "Shopify-based subscription store with referral tracking"
+        ],
+        engagement: "Starting at ₹2.5L/month (~$3K/month)",
+        priceNote: "Includes dev, design, QA, infrastructure, and deployment"
       },
       {
         id: "ar-vr-experience",
-        title: "AR/VR Experience Pod",
+        title: "AR/VR Experience Pod (XRPod)",
         description: "Immersive Digital Experiences for Products, Training, and Visualization",
         icon: "/assets/features/icon-02.svg",
         badge: "Immersive",
         badgeColor: "purple",
+        idealFor: [
+          "Retail & D2C brands offering virtual product try-ons",
+          "Industrial or manufacturing training with AR",
+          "Real estate, interior, and architectural walkthroughs"
+        ],
+        podDescription: "This pod specializes in building rich AR/VR applications using Unity, Unreal, WebXR, or ARKit/ARCore — deployed across mobile, web, or headsets.",
         teamComposition: [
           "1 Unity / Unreal Developer – immersive interactions and logic",
           "1 3D Designer – models, animations, and textures",
           "1 WebXR / Frontend Dev – WebAR/WebVR experiences",
           "Project Lead (Shared) – scene flow, device testing, delivery"
         ],
+        upgradeNote: "🧪 Need integration with ecommerce or IoT? Upgrade to the Custom AR+VR Pod.",
         deliverables: [
           "AR/VR scenes optimized for Meta Quest, WebXR, or mobile AR",
           "3D models, environments, and interaction design",
@@ -101,23 +126,45 @@ export const podsData = {
           "Cross-platform delivery (Web + Android/iOS)",
           "Testing, optimization, and packaging for deployment"
         ],
-        engagement: "minimum 1 month",
-        priceINR: "₹3L/month",
-        priceUSD: "$3.6K/month"
+        deliveryTimelines: [
+          "3 Weeks: Functional AR prototype or walkthrough",
+          "5–6 Weeks: Full interactive experience",
+          "Sprints: Weekly demo and device testing feedback"
+        ],
+        whyTrust: [
+          "🎮 Deep AR/VR domain experience",
+          "🧩 Seamless integration with ecommerce, CMS, and analytics",
+          "📱 Tested across major headsets and mobile devices",
+          "🖼️ Polished visuals with optimized performance"
+        ],
+        pastUseCases: [
+          "AR-enabled virtual furniture try-on app for ecommerce",
+          "VR safety training simulation for a manufacturing firm",
+          "WebAR product showcase for a launch event"
+        ],
+        engagement: "Starting at ₹3L/month (~$3.6K/month)",
+        priceNote: "Includes full development, 3D assets, testing, and deployment"
       },
       {
         id: "ai-product-studio",
-        title: "AI Product Studio Pod",
+        title: "AI Product Studio Pod (AIPod)",
         description: "Build AI-First Products Without Building a Data Science Team",
         icon: "/assets/features/icon-03.svg",
         badge: "AI-Powered",
         badgeColor: "blue",
+        idealFor: [
+          "SaaS founders building GenAI-powered tools",
+          "Enterprises automating processes with LLMs",
+          "Teams embedding voice, chat, or smart recommendations"
+        ],
+        podDescription: "This pod is your go-to team for launching AI-powered products — from design to integration and feedback loops.",
         teamComposition: [
           "1 AI Engineer – LLMs, embeddings, prompt tuning, RAG pipelines",
           "1 Full Stack Developer – frontend/backend integration and APIs",
           "1 Product Designer – conversational UX and AI-specific UI flows",
           "Project Architect (Shared) – use case validation and evaluation framework"
         ],
+        upgradeNote: "💬 Add a voice/chat avatar, or document chatbot? Upgrade to the AI+ Copilot Pod.",
         deliverables: [
           "End-to-end AI SaaS workflow with OpenAI, Anthropic, or open-source models",
           "Prompt engineering, evaluation & fallback strategies",
@@ -125,157 +172,123 @@ export const podsData = {
           "Secure deployment with API rate limiting and analytics",
           "Conversational UI, dashboard, or widget-based frontend"
         ],
-        engagement: "minimum 1 month",
-        priceINR: "₹3.5L/month",
-        priceUSD: "$4.2K/month"
+        deliveryTimelines: [
+          "2–3 Weeks: Working PoC or feature integration",
+          "4–6 Weeks: Production-ready AI product",
+          "Sprints: Weekly demos and tuning based on evaluation metrics"
+        ],
+        whyTrust: [
+          "🤖 Fast AI development without in-house data science",
+          "⚙️ Tested architecture for reliability and observability",
+          "🧠 Use-case first: focus on real outcomes, not hype",
+          "🔍 Transparent progress with usage and latency metrics"
+        ],
+        pastUseCases: [
+          "AI resume screener with OpenAI + Pinecone",
+          "Chat-based internal knowledge assistant",
+          "Audio transcription and summarization app"
+        ],
+        engagement: "Starting at ₹3.5L/month (~$4.2K/month)",
+        priceNote: "Includes design, dev, infra, and AI pipelines"
       },
       {
         id: "product-launch",
-        title: "Product Launch Pod",
+        title: "Product Launch Pod (LaunchPod)",
         description: "Your All-in-One Team for Fast, Confident MVP Delivery",
         icon: "/assets/features/icon-04.svg",
         badge: "Fast",
         badgeColor: "orange",
+        idealFor: [
+          "Founders launching new products",
+          "Startups validating product-market fit",
+          "Teams spinning up internal tools or SaaS MVPs"
+        ],
+        podDescription: "This pod is a lean cross-functional unit to take your product from idea to MVP, fast.",
         teamComposition: [
           "1 Product Engineer (Frontend + Backend) – builds complete flows",
           "1 UI/UX Designer – wireframes, high-fidelity UI, interaction design",
           "0.5 QA Engineer – automated + manual tests",
           "Project Architect (Shared) – scalable architecture, guidance"
         ],
+        upgradeNote: "💡 Want to build faster or add mobile? Upgrade to Launch+ Pod.",
         deliverables: [
           "Fully functional MVP within 2–3 weeks",
           "Mobile-responsive UI + scalable backend",
           "Auth, roles & CRUD dashboards",
           "REST or GraphQL API setup",
-          "DevOps pipeline (Vercel, Render, or Docker)"
+          "DevOps pipeline (Vercel, Render, or Docker)",
+          "QA, documentation, and handoff"
         ],
-        engagement: "minimum 1 month",
-        priceINR: "₹2.5L/month",
-        priceUSD: "$3K/month"
+        deliveryTimelines: [
+          "2–3 Weeks: Functional MVP",
+          "4–6 Weeks: Full-feature launch version",
+          "Weekly sprints, demos, and roadmap alignment"
+        ],
+        whyTrust: [
+          "🔥 No hiring delay, product team ready",
+          "🧠 Startup-savvy engineers, lean mindset",
+          "🛠️ Scalable codebase, test-driven development",
+          "🤝 Transparency: weekly reports, Git access, and architectural reviews"
+        ],
+        pastUseCases: [
+          "Candidate evaluation platform MVP",
+          "Internal CRM tool for early-stage sales",
+          "IoT dashboard for field data monitoring"
+        ],
+        engagement: "Starts at ₹2.5L/month (~$3K/month)",
+        priceNote: "Includes dev, design, testing, DevOps & coordination"
       },
       {
-        id: "admin-workflow-automation",
-        title: "Admin & Workflow Automation Pod",
-        description: "For Teams Looking to Automate Business Operations",
+        id: "custom-pod",
+        title: "Custom Pod (Tailored for You)",
+        description: "Need a combination of backend, mobile, QA, DevOps, or something niche? We'll assemble a custom pod based on your exact needs and timelines.",
         icon: "/assets/features/icon-01.svg",
-        badge: "Automation",
-        badgeColor: "indigo",
+        badge: "Custom",
+        badgeColor: "purple",
+        isCustom: true,
+        idealFor: [
+          "Unique project requirements not covered by standard pods",
+          "Combination of multiple technologies or domains",
+          "Specialized industry needs or compliance requirements"
+        ],
+        podDescription: "We'll build a custom team composition based on your specific project requirements, technology stack, and timeline.",
         teamComposition: [
-          "1 Full Stack Developer – dashboard and logic-heavy flows",
-          "1 QA/Tester – robust testing and data validation",
-          "Project Manager (Shared) – handles coordination, delivery"
+          "Custom team composition based on your needs",
+          "Flexible roles: Backend, Frontend, Mobile, DevOps, QA",
+          "Specialized expertise for niche requirements",
+          "Project Lead tailored to your domain"
         ],
         deliverables: [
-          "Role-based dashboards",
-          "Workflow logic and status tracking",
-          "Data import/export + reporting tools",
-          "Secure login, access controls",
-          "Deployment + CI/CD support"
+          "Custom solution designed for your specific use case",
+          "Flexible technology stack based on your requirements",
+          "Scalable architecture for your unique needs",
+          "Integration with your existing systems and workflows"
         ],
-        engagement: "minimum 1 month",
-        priceINR: "₹2L/month",
-        priceUSD: "$2.4K/month"
-      },
-      {
-        id: "ai-ml-integration",
-        title: "AI/ML Integration Pod",
-        description: "Integrate Smart Features into Your Product—No Data Science Hiring Needed",
-        icon: "/assets/features/icon-02.svg",
-        badge: "AI/ML",
-        badgeColor: "cyan",
-        teamComposition: [
-          "1 AI Engineer (ML/LLM experience)",
-          "1 Backend Developer – APIs, integration, deployment",
-          "Project Architect (Shared) – data pipeline and evaluation guidance"
-        ],
-        deliverables: [
-          "Prompt-based or model-based feature delivery",
-          "REST/GraphQL APIs for use inside your product",
-          "Evaluation metrics, fallbacks, error handling",
-          "On-device or cloud model deployment"
-        ],
-        engagement: "minimum 1 month",
-        priceINR: "₹3L/month",
-        priceUSD: "$3.6K/month"
-      },
-      {
-        id: "mobile-first-saas",
-        title: "Mobile-First SaaS Pod",
-        description: "Your Cross-Platform Team for Beautiful, Functional Mobile SaaS Products",
-        icon: "/assets/features/icon-03.svg",
-        badge: "Mobile",
-        badgeColor: "pink",
-        teamComposition: [
-          "1 React Native / Flutter Developer – cross-platform mobile app development",
-          "1 Backend Developer – APIs, auth, and business logic",
-          "1 UI/UX Designer – mobile-first designs and user flows",
-          "0.5 QA Engineer – test coverage and release readiness",
-          "Project Lead (Shared) – sprint planning and tech oversight"
-        ],
-        deliverables: [
-          "Cross-platform mobile app (iOS + Android)",
-          "Responsive UI + native-like performance",
-          "REST/GraphQL APIs with auth & business logic",
-          "Push notifications, secure login, and offline support",
-          "Store publishing (Play Store & App Store)"
-        ],
-        engagement: "minimum 1 month",
-        priceINR: "₹3L/month",
-        priceUSD: "$3.6K/month"
-      },
-      {
-        id: "devops-infra-automation",
-        title: "DevOps & Infra Automation Pod",
-        description: "Scale with Confidence — Reliable Infrastructure, CI/CD, and CloudOps Support",
-        icon: "/assets/features/icon-04.svg",
-        badge: "DevOps",
-        badgeColor: "gray",
-        teamComposition: [
-          "1 DevOps Engineer – infra setup, pipelines, scaling, security",
-          "0.5 Backend Developer – service integration, logging, tooling",
-          "Project Lead (Shared) – tracks milestones and environments"
-        ],
-        deliverables: [
-          "Cloud environment setup (AWS, GCP, Azure, or Vercel/Render)",
-          "CI/CD pipelines using GitHub Actions, GitLab, or Docker",
-          "Logging, alerting, and monitoring (ELK, Prometheus, Grafana)",
-          "Staging & production segregation",
-          "SSL, backups, and security hardening"
-        ],
-        engagement: "minimum 1 month",
-        priceINR: "₹2L/month",
-        priceUSD: "$2.4K/month"
+        engagement: "Custom pricing based on requirements",
+        priceNote: "Free discovery call to discuss your needs"
       }
     ]
   },
 
   faq: {
     title: "Frequently Asked Questions",
-    subtitle: "Everything you need to know about our Project Pods",
+    subtitle: "Everything you need to know about our project pods",
     items: [
       {
-        question: "How quickly can we get started?",
-        answer: "Most pods can be assembled and onboarded within 1-2 weeks. We'll start with a discovery call to understand your needs, then match you with the right team composition. Custom pods may take slightly longer depending on specific requirements."
+        question: "❓ How is this different from hiring freelancers or agencies?",
+        answer: "Pods are structured, accountable, and built for long-term delivery. You don't manage freelancers — you collaborate with a delivery partner who operates like your internal team."
       },
       {
-        question: "What's the minimum engagement period?",
-        answer: "We require a minimum 1-month engagement to ensure proper onboarding and project momentum. However, we recommend 3-6 months for optimal results and team cohesion. Longer engagements often come with volume discounts."
+        question: "📆 What's the minimum engagement?",
+        answer: "Most pods require a 1-month minimum. You can extend monthly, scale up/down, or convert to a different engagement model later."
       },
       {
-        question: "How do you ensure quality and accountability?",
-        answer: "Each pod includes a dedicated project manager who provides weekly updates, milestone tracking, and regular check-ins. We use industry-standard tools for project management, code reviews, and quality assurance. All team members are vetted professionals with proven track records."
+        question: "💼 Who manages the team?",
+        answer: "Every Pod comes with a Delivery Coordinator or Project Manager depending on the pod size. You get full visibility without micromanaging."
       },
       {
-        question: "Can we scale up or down during the engagement?",
-        answer: "Yes! Our pods are designed to be flexible. You can add or remove team members with 2 weeks' notice. We can also switch between different pod types (e.g., from Full-Stack to Tech Lead) based on your evolving needs. Custom pods offer maximum flexibility for unique requirements."
-      },
-      {
-        question: "What technologies and tools do your pods work with?",
-        answer: "Our teams are proficient in modern tech stacks including React, Vue, Angular, Node.js, Python, Java, AWS, Azure, and more. We adapt to your existing tools and processes, or can recommend optimal solutions. Each pod member is selected based on your specific technology requirements."
-      },
-      {
-        question: "How do you handle communication and time zones?",
-        answer: "We work in your time zone and provide 24/7 support for critical issues. Regular communication happens through your preferred channels (Slack, Teams, email, etc.). Weekly video calls ensure alignment, and our project managers are always available for urgent matters."
+        question: "🔐 Do I own the code and IP?",
+        answer: "Yes — everything we build is yours. All code, documentation, and deployments are handed off with full transparency."
       }
     ]
   },
@@ -285,6 +298,6 @@ export const podsData = {
     description: "Need clarity on which pod fits your goals? Book a free 30-min call and we'll help you define the best setup.",
     buttonText: "Book a Free Discovery Call",
     email: "hello@avadhutatech.com",
-    downloadLink: "[Download Pod Services Deck]"
+    downloadLink: "Download Pod Services Deck"
   }
 }; 

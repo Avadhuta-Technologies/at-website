@@ -13,7 +13,7 @@ publishedBlogEntries.sort(function (a, b) {
 
 const footerLinks = [
   {
-    header: 'About Us',
+    header: 'Company',
     links: [
       {
         name: 'Home',
@@ -21,69 +21,69 @@ const footerLinks = [
         isExternal: false,
       },
       {
-        name: 'Features',
-        href: '/',
-        isExternal: false,
-      },
-      {
         name: 'About',
-        href: '/',
+        href: '/about',
         isExternal: false,
       },
       {
-        name: 'Testimonial',
-        href: '/',
+        name: 'Contact',
+        href: '/contact',
+        isExternal: false,
+      },
+      {
+        name: 'Privacy Policy',
+        href: '/privacy',
         isExternal: false,
       },
     ],
   },
   {
-    header: 'Features',
+    header: 'Services',
     links: [
       {
-        name: 'How it works',
-        href: '/',
+        name: 'Explore Pods',
+        href: '/explore-pods',
         isExternal: false,
       },
       {
-        name: 'Privacy policy',
-        href: '/',
+        name: 'Explore Packs',
+        href: '/explore-packs',
+        isExternal: false,
+      },
+      {
+        name: 'How it Works',
+        href: '/#how-it-works',
+        isExternal: false,
+      },
+      {
+        name: 'Case Studies',
+        href: '/case-studies',
+        isExternal: false,
+      },
+    ],
+  },
+  {
+    header: 'Resources',
+    links: [
+      {
+        name: 'Blog',
+        href: '/blog',
+        isExternal: false,
+      },
+      {
+        name: 'Documentation',
+        href: '/docs',
+        isExternal: false,
+      },
+      {
+        name: 'Support',
+        href: '/support',
         isExternal: false,
       },
       {
         name: 'Terms of Service',
-        href: '/',
+        href: '/terms',
         isExternal: false,
-      },
-      {
-        name: 'Refund policy',
-        href: '/',
-        isExternal: false,
-      },
-    ],
-  },
-  {
-    header: 'Our Products',
-    links: [
-      {
-        name: 'Lineicons',
-        href: 'https://lineicons.com/',
-        isExternal: true,
-      },
-      {
-        name: 'TailAdmin',
-        href: 'https://tailadmin.com/',
-        isExternal: true,
-      },
-      {
-        name: 'TailGrids',
-        href: 'https://tailgrids.com/',
-        isExternal: true,
-      },
-      {
-        name: 'UIdeck',
-        href: 'https://uideck.com/',
-        isExternal: true,
       },
     ],
   },
@@ -105,17 +105,19 @@ const footerLinks = [
         <div class="mb-10 w-full">
           <a
             href="/"
-            class="mb-6 inline-block max-w-[160px]"
+            class="mb-6 inline-block max-w-[160px] group"
           >
-            <img
-              src="/assets/logo/logo-white.svg"
-              alt="logo"
-              class="max-w-full"
-            />
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-3 transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              </div>
+              <span class="font-bold text-xl text-white group-hover:text-blue-400 transition-colors duration-300">NovaPod.ai</span>
+            </div>
           </a>
           <p class="mb-8 max-w-[270px] text-base text-gray-7">
-            We create digital experiences for brands and companies by using
-            technology.
+            On-demand tech teams and project pods for modern businesses. Scale your development with expert teams.
           </p>
           <div class="-mx-3 flex items-center">
             <a href="javascript:void(0)" class="px-3 text-gray-7 hover:text-white">
@@ -283,12 +285,12 @@ const footerLinks = [
             <p class="text-base text-gray-7">
               Designed and Developed by
               <a
-                href="https://tailgrids.com"
+                href="https://avadhutatech.com"
                 rel="nofollow noopner"
                 target="_blank"
                 class="text-gray-1 hover:underline"
               >
-                TailGrids
+                Avadhuta Technologies Pvt. Ltd.
               </a>
             </p>
           </div>

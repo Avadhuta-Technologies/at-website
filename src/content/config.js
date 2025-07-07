@@ -42,6 +42,126 @@ const blogCollection = defineCollection({
   }),
 });
 
+const homeCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    hero: z.object({
+      title: z.string(),
+      subtitle: z.string(),
+      description: z.string(),
+      primaryButton: z.object({
+        label: z.string(),
+        href: z.string(),
+      }),
+      secondaryButton: z.object({
+        label: z.string(),
+        href: z.string(),
+      }),
+    }),
+    howItWorks: z.object({
+      title: z.string(),
+      steps: z.array(z.object({
+        number: z.string(),
+        title: z.string(),
+        description: z.string(),
+        icon: z.string(),
+      })),
+    }),
+    podsGrid: z.object({
+      title: z.string(),
+      subtitle: z.string(),
+      pods: z.array(z.object({
+        id: z.string(),
+        title: z.string(),
+        subtitle: z.string(),
+        description: z.string(),
+        icon: z.string(),
+        badge: z.string(),
+        badgeColor: z.string(),
+      })),
+    }),
+    packsGrid: z.object({
+      title: z.string(),
+      subtitle: z.string(),
+      description: z.string(),
+      packs: z.array(z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string(),
+        icon: z.string(),
+        badge: z.string(),
+        badgeColor: z.string(),
+      })),
+    }),
+    podStrategistCTA: z.object({
+      question: z.string(),
+      button: z.object({
+        label: z.string(),
+        href: z.string(),
+      }),
+    }),
+    whyWorks: z.object({
+      title: z.string(),
+      items: z.array(z.object({
+        icon: z.string(),
+        title: z.string(),
+        description: z.string(),
+      })),
+    }),
+    teamsFounders: z.object({
+      title: z.string(),
+    }),
+    successStories: z.object({
+      title: z.string(),
+      cases: z.array(z.object({
+        logo: z.string(),
+        title: z.string(),
+        client: z.string(),
+        engagement: z.string(),
+        success: z.string(),
+        challenge: z.string(),
+        outcomes: z.array(z.string()),
+        quote: z.string(),
+        quoteAuthor: z.string(),
+        button: z.object({
+          label: z.string(),
+          href: z.string(),
+        }),
+      })),
+    }),
+    faq: z.object({
+      title: z.string(),
+      items: z.array(z.object({
+        question: z.string(),
+        answer: z.string(),
+      })),
+      cta: z.object({
+        question: z.string(),
+        description: z.string(),
+        button: z.object({
+          label: z.string(),
+          href: z.string(),
+        }),
+      }),
+    }),
+    finalCTA: z.object({
+      title: z.string(),
+      description: z.string(),
+      checklist: z.array(z.string()),
+      buttons: z.array(z.object({
+        label: z.string(),
+        href: z.string(),
+      })),
+      contactInfo: z.object({
+        email1: z.string(),
+        email2: z.string(),
+      }),
+    }),
+  }),
+});
+
 const podsCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -96,10 +216,10 @@ const podsCollection = defineCollection({
   }),
 });
 
-
 // 3. Export a single `collections` object to register your collection(s)
 //    This key should match your collection directory name in "src/content"
 export const collections = {
   'blog': blogCollection,
+  'home': homeCollection,
   'pods': podsCollection,
 };

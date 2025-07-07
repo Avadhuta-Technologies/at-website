@@ -10,14 +10,13 @@ import CTASection from '../components/sections/CTASection.astro';
 import { podsData } from '../content/pods.js';
 ---
 
-<Layout description="Explore our on-demand tech teams and project pods." title="Explore Pods | Avadhuta Technologies">
+<Layout description="Explore our on-demand tech teams and project pods." title="Explore Pods | NovaPod.ai">
 
   <HeroSection 
-    badge={podsData.hero.badge}
     title={podsData.hero.title}
     subtitle={podsData.hero.subtitle}
-    description={podsData.hero.description}
-    stats={podsData.hero.stats}
+    primaryButton={podsData.hero.primaryButton}
+    secondaryButton={podsData.hero.secondaryButton}
   />
 
   <WhyChooseSection 
