@@ -275,37 +275,29 @@ export const podsData = {
     subtitle: "Everything you need to know about our project pods",
     items: [
       {
-        question: "How quickly can a pod start working on my project?",
-        answer: "Most pods can begin within 1-2 weeks of contract signing. We maintain a pool of pre-vetted talent ready to deploy, eliminating traditional hiring delays."
+        question: "❓ How is this different from hiring freelancers or agencies?",
+        answer: "Pods are structured, accountable, and built for long-term delivery. You don't manage freelancers — you collaborate with a delivery partner who operates like your internal team."
       },
       {
-        question: "What's included in the monthly pod pricing?",
-        answer: "Each pod includes the full team (developers, designers, QA), project management, infrastructure costs, and all deliverables. No hidden fees or additional charges."
+        question: "📆 What's the minimum engagement?",
+        answer: "Most pods require a 1-month minimum. You can extend monthly, scale up/down, or convert to a different engagement model later."
       },
       {
-        question: "Can I scale up or down based on my needs?",
-        answer: "Absolutely. You can start with a lean pod and scale up as your project grows. We also offer flexible engagement models to match your development phases."
+        question: "💼 Who manages the team?",
+        answer: "Every Pod comes with a Delivery Coordinator or Project Manager depending on the pod size. You get full visibility without micromanaging."
       },
       {
-        question: "How do you ensure code quality and maintainability?",
-        answer: "Every pod includes QA engineers, code reviews, automated testing, and follows industry best practices. We also provide comprehensive documentation and knowledge transfer."
-      },
-      {
-        question: "What happens if I need to pause or modify the project scope?",
-        answer: "We offer flexible contracts that allow you to pause, modify, or scale your engagement. We work closely with you to adjust timelines and deliverables as needed."
-      },
-      {
-        question: "Do you provide ongoing support after project completion?",
-        answer: "Yes, we offer post-launch support packages including maintenance, updates, and feature additions. Many clients choose to continue with their pod for ongoing development."
+        question: "🔐 Do I own the code and IP?",
+        answer: "Yes — everything we build is yours. All code, documentation, and deployments are handed off with full transparency."
       }
     ]
   },
 
   cta: {
-    title: "Ready to Build Something Amazing?",
-    description: "Get started with a project pod today and see the difference a dedicated, outcome-focused team can make.",
-    buttonText: "Start Your Project",
-    email: "hello@novapod.ai",
-    downloadLink: "/contact"
+    title: "Start Your Pod",
+    description: "Need clarity on which pod fits your goals? Book a free 30-min call and we'll help you define the best setup.",
+    buttonText: "Book a Free Discovery Call",
+    email: "hello@avadhutatech.com",
+    downloadLink: "Download Pod Services Deck"
   }
 }; 
