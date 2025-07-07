@@ -26,7 +26,7 @@ const {
 } = Astro.props;
 ---
 
-<section class={`relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden ${className}`}>
+<section class={`relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden hero-section ${className}`}>
   {showBackgroundGraphics && (
     <!-- Abstract Background Graphics -->
     <div class="absolute inset-0">
@@ -47,15 +47,7 @@ const {
   <!-- Main Content -->
   <div class="relative z-10 container mx-auto px-4 py-20 md:py-32">
     <div class="max-w-4xl mx-auto text-center">
-      {badge && (
-        <!-- AI Badge -->
-        <div data-animate="fade-in-up" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold rounded-full mb-8">
-          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-          </svg>
-          {badge}
-        </div>
-      )}
+
 
       <!-- Main Heading -->
       <h1 data-animate="fade-in-up" class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
@@ -71,39 +63,24 @@ const {
         </h2>
       )}
 
-      {description && (
-        <!-- Description -->
-        <p data-animate="fade-in-up" class="text-lg md:text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-          {description}
-        </p>
-      )}
+
 
       <!-- CTA Buttons -->
-      <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+      <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 cta-buttons">
         {primaryButton && (
-          <a href={primaryButton.href} class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <a href={primaryButton.href} class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
             <span class="relative z-10">{primaryButton.label}</span>
             <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </a>
         )}
         {secondaryButton && (
-          <a href={secondaryButton.href} class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105">
+          <a href={secondaryButton.href} class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
             <span class="flex items-center">{secondaryButton.label}</span>
           </a>
         )}
       </div>
 
-      {stats.length > 0 && (
-        <!-- Stats -->
-        <div data-animate="staggered-children" data-delay="300" data-stagger-delay="100" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
-          {stats.map((stat, index) => (
-            <div class="text-center group transform transition-all duration-300 hover:scale-105">
-              <div class="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors duration-300">{stat.value}</div>
-              <div class="text-gray-400 text-sm group-hover:text-gray-300 transition-colors duration-300">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      )}
+
     </div>
   </div>
 

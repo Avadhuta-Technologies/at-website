@@ -1,14 +1,9 @@
 export const podsData = {
   hero: {
-    badge: "AI-Powered Project Teams",
-    title: "Project Pods",
-    subtitle: "Your On-Demand Tech Team, Without the Hiring Hassle",
-    description: "NovaPod.ai's Project Pods are pre-structured, outcome-focused tech teams that plug into your product journey. Get the expertise you need, when you need it, with zero hiring overhead.",
-    stats: [
-      { value: "15+", label: "Years Experience" },
-      { value: "50+", label: "Projects Delivered" },
-      { value: "24/7", label: "Support Available" }
-    ]
+    title: "Explore High-Impact Service Pods Built for Results",
+    subtitle: "Modular, outcome-driven pods combining expert talent and smart AI to help you build faster, automate smarter, and grow sustainably — without the chaos of traditional software services.",
+    primaryButton: { label: "Browse Pods", href: "#available-pods" },
+    secondaryButton: { label: "Talk To A Specialist", href: "/contact" }
   },
   
   whyChoose: {
@@ -45,12 +40,12 @@ export const podsData = {
     title: "What's Included in Every Pod",
     image: "/assets/features/icon-01.svg",
     items: [
-      "Dedicated team (not freelancers or randoms)",
-      "Project manager for delivery & communication",
-      "Weekly check-ins & progress reports",
-      "Sprint-based delivery (2-week sprints)",
-      "QA & code reviews included",
-      "All code & IP 100% yours"
+      "Pre-defined roles based on your project type",
+      "Dedicated team members (no context-switching)",
+      "Integrated with your tools (Jira, Slack, GitHub, etc.)",
+      "Daily/weekly check-ins & sprint planning",
+      "Reporting & visibility dashboard",
+      "IP protection & signed NDAs"
     ]
   },
 
