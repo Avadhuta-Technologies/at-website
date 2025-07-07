@@ -54,10 +54,10 @@ const { title = "Success Stories", cases = defaultCases } = Astro.props;
 ---
 <section class="py-16 bg-gradient-to-br from-blue-50 to-green-50 dark:from-slate-800 dark:to-slate-900">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark dark:text-white">{title}</h2>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    <h2 data-animate="fade-in-up" class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark dark:text-white">{title}</h2>
+    <div data-animate="staggered-children" class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
       {cases.map((c) => (
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 group border border-gray-100 dark:border-slate-700">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 group border border-gray-100 dark:border-slate-700 hover-lift">
           <!-- Header with Logo and Client -->
           <div class="flex items-center mb-6">
             <img src={c.logo} alt={c.client + ' logo'} class="w-16 h-16 rounded-full mr-4 shadow-lg" />

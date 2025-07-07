@@ -124,14 +124,14 @@ function getSvgIcon(iconType: string) {
   </div>
   
   <div class="w-full px-4 relative z-10 max-w-6xl mx-auto">
-    <div class="max-w-4xl mx-auto text-center mb-16">
+    <div data-animate="fade-in-up" class="max-w-4xl mx-auto text-center mb-16">
       <h3 class="text-2xl md:text-3xl font-semibold mb-6 text-dark dark:text-white">{title}</h3>
     </div>
     
     <!-- Audiences Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+    <div data-animate="staggered-children" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
       {audiences.map((audience, index) => (
-        <div class="audience-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2">
+        <div class="audience-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2 hover-lift">
           <!-- Card Content -->
           <div class="p-6 h-full flex flex-col">
             <!-- Header with Avatar and Icon -->
@@ -162,7 +162,7 @@ function getSvgIcon(iconType: string) {
     </div>
     
     <!-- CTA Section -->
-    <div class="text-center">
+    <div data-animate="fade-in-up" class="text-center">
       <div class="p-8 max-w-2xl mx-auto">
         <h3 class="text-xl font-semibold text-dark dark:text-white mb-4">
           {cta.question}
@@ -177,37 +177,3 @@ function getSvgIcon(iconType: string) {
     </div>
   </div>
 </section>
-
-<style>
-  .audience-card {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.6s ease-out forwards;
-  }
-  
-  .audience-card:nth-child(1) { animation-delay: 0.1s; }
-  .audience-card:nth-child(2) { animation-delay: 0.2s; }
-  .audience-card:nth-child(3) { animation-delay: 0.3s; }
-  .audience-card:nth-child(4) { animation-delay: 0.4s; }
-  .audience-card:nth-child(5) { animation-delay: 0.5s; }
-  .audience-card:nth-child(6) { animation-delay: 0.6s; }
-  
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Smooth hover transitions */
-  .audience-card:hover {
-    transform: translateY(-8px);
-  }
-  
-  /* Mobile optimizations */
-  @media (max-width: 768px) {
-    .audience-card {
-      margin-bottom: 1rem;
-    }
-  }
-</style>

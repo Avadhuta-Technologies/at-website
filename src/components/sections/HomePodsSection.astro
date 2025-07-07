@@ -102,16 +102,16 @@ function getSvgIcon(iconType: string) {
     <!-- Header -->
     <div class="max-w-4xl mx-auto text-center mb-16">
       
-      <h2 class="text-3xl md:text-4xl font-bold mb-6 text-dark dark:text-white">
+      <h2 data-animate="fade-in-up" class="text-3xl md:text-4xl font-bold mb-6 text-dark dark:text-white">
         {title}
       </h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+      <p data-animate="fade-in-up" class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
         {subtitle}
       </p>
     </div>
     
     <!-- Pods Grid -->
-    <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
+    <div data-animate="staggered-children" class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
       {pods.map((pod, index) => (
         <div class="pod-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2">
           <!-- Card Content -->
@@ -157,7 +157,7 @@ function getSvgIcon(iconType: string) {
     </div>
     
     <!-- Explore All Button -->
-    <div class="text-center mt-12">
+    <div data-animate="fade-in-up" class="text-center mt-12">
       <a href="/explore-pods" class="inline-flex items-center justify-center py-4 px-8 bg-white dark:bg-slate-800 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:scale-105 shadow-lg">
         Explore All Pods
         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,26 +169,6 @@ function getSvgIcon(iconType: string) {
 </section>
 
 <style>
-  .pod-card {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.6s ease-out forwards;
-  }
-  
-  .pod-card:nth-child(1) { animation-delay: 0.1s; }
-  .pod-card:nth-child(2) { animation-delay: 0.2s; }
-  .pod-card:nth-child(3) { animation-delay: 0.3s; }
-  .pod-card:nth-child(4) { animation-delay: 0.4s; }
-  .pod-card:nth-child(5) { animation-delay: 0.5s; }
-  .pod-card:nth-child(6) { animation-delay: 0.6s; }
-  
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
   /* Background animations */
   @keyframes float {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -207,11 +187,6 @@ function getSvgIcon(iconType: string) {
   
   .bg-pulse-slow {
     animation: pulse-slow 4s ease-in-out infinite;
-  }
-  
-  /* Smooth hover transitions */
-  .pod-card:hover {
-    transform: translateY(-8px);
   }
   
   /* Mobile optimizations */

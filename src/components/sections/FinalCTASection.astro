@@ -46,17 +46,17 @@ const {
   <div class="container mx-auto px-4 relative z-10">
     <div class="max-w-4xl mx-auto text-center">
       <!-- Main Content -->
-      <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm rounded-3xl shadow-2xl p-12 border border-white/20">
-        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
+      <div data-animate="scale-in" class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm rounded-3xl shadow-2xl p-12 border border-white/20">
+        <h2 data-animate="fade-in-up" class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
           {title}
         </h2>
         
-        <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+        <p data-animate="fade-in-up" class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
           {description}
         </p>
         
         <!-- Benefits Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-2xl mx-auto">
+        <div data-animate="staggered-children" data-delay="200" data-stagger-delay="80" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-2xl mx-auto">
           {checklist.map((item) => (
             <div class="flex items-center justify-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl border border-green-200 dark:border-green-800">
               <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@ const {
         </div>
         
         <!-- Primary CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           {buttons.map((btn, index) => (
             <a 
               href={btn.href} 
@@ -84,7 +84,7 @@ const {
         </div>
         
         <!-- Contact Info -->
-        <div class="flex items-center justify-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
+        <div data-animate="fade-in-up" class="flex items-center justify-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
           <span class="flex items-center">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
