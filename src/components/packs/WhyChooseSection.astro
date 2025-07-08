@@ -1,7 +1,18 @@
 ---
 export interface Props {
-  title: string;
-  cards: Array<{
+  // New format - single data object
+  data?: {
+    title: string;
+    cards: Array<{
+      title: string;
+      description: string;
+      icon: string;
+      gradient: string;
+    }>;
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
+  cards?: Array<{
     title: string;
     description: string;
     icon: string;
@@ -10,7 +21,11 @@ export interface Props {
   className?: string;
 }
 
-const { title, cards, className = "" } = Astro.props;
+const { data, title: titleProp, cards: cardsProp, className = "" } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const cards = data?.cards || cardsProp;
 ---
 
 <section class={`py-16 bg-gradient-to-br from-gray-50 to-white dark:from-dark-2 dark:to-dark ${className}`}>
@@ -24,9 +39,9 @@ const { title, cards, className = "" } = Astro.props;
       </p>
     </div>
     
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-      {cards.map((card, index) => (
-        <div class="why-choose-card group relative rounded-2xl shadow-lg flex flex-col justify-end text-left hover:-translate-y-4 transition-all duration-500 cursor-pointer overflow-hidden min-h-[280px] bg-black animate-fade-in-up animation-delay-${(index + 1) * 200}">
+    <div class={`grid gap-8 md:grid-cols-2 ${cards?.length === 4 ? 'lg:grid-cols-4' : cards?.length === 5 ? 'lg:grid-cols-3 xl:grid-cols-5' : 'lg:grid-cols-3'}`}>
+      {cards?.map((card, index) => (
+        <div class="why-choose-card group relative rounded-2xl shadow-lg flex flex-col text-left hover:-translate-y-4 transition-all duration-500 cursor-pointer overflow-hidden min-h-[280px] bg-black animate-fade-in-up animation-delay-${(index + 1) * 200}">
           <div class={`absolute inset-0 z-10 bg-gradient-to-tr ${card.gradient} transition-all duration-500 group-hover:scale-110`}></div>
           
           {/* Animated background elements */}
@@ -35,11 +50,15 @@ const { title, cards, className = "" } = Astro.props;
             <div class="absolute bottom-8 left-8 w-12 h-12 bg-white rounded-full opacity-20 group-hover:scale-125 transition-all duration-500 delay-100"></div>
           </div>
           
-          <img src={card.icon} alt={`${card.title} Icon`} class="absolute top-6 right-6 w-12 h-12 opacity-60 z-20 transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
+          {/* First row - Icon */}
+          <div class="relative z-20 flex justify-end p-6">
+            <img src={card.icon} alt={`${card.title} Icon`} class="w-12 h-12 opacity-60 transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
+          </div>
           
-          <div class="relative z-30 p-8 flex flex-col items-start justify-end h-full w-full">
+          {/* Second row - Text content */}
+          <div class="relative z-30 p-6 pt-0 flex flex-col items-start justify-end flex-1">
             <div class="mb-4">
-              <h3 class="font-bold text-xl mb-3 text-white group-hover:text-blue-200 transition-colors duration-300">
+              <h3 class="font-bold text-xl mb-3 text-white group-hover:text-blue-200 transition-colors duration-300 leading-tight">
                 {card.title}
               </h3>
               <p class="text-white/90 text-sm leading-relaxed group-hover:text-white transition-colors duration-300">
@@ -94,6 +113,7 @@ const { title, cards, className = "" } = Astro.props;
   .animation-delay-400 { animation-delay: 0.4s; }
   .animation-delay-600 { animation-delay: 0.6s; }
   .animation-delay-800 { animation-delay: 0.8s; }
+  .animation-delay-1000 { animation-delay: 1.0s; }
 
   /* Fade in animations */
   .animate-fade-in-up {

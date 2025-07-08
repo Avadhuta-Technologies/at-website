@@ -1,8 +1,26 @@
 ---
 export interface Props {
-  title: string;
+  // New format - single data object
+  data?: {
+    title: string;
+    subtitle?: string;
+    items: Array<{
+      question: string;
+      answer: string;
+    }>;
+    cta?: {
+      question: string;
+      description: string;
+      button: {
+        label: string;
+        href: string;
+      };
+    };
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
   subtitle?: string;
-  items: Array<{
+  items?: Array<{
     question: string;
     answer: string;
   }>;
@@ -17,7 +35,13 @@ export interface Props {
   className?: string;
 }
 
-const { title, subtitle, items, cta, className = "" } = Astro.props;
+const { data, title: titleProp, subtitle: subtitleProp, items: itemsProp, cta: ctaProp, className = "" } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const subtitle = data?.subtitle || subtitleProp;
+const items = data?.items || itemsProp || [];
+const cta = data?.cta || ctaProp;
 ---
 
 <section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-dark-2 ${className}`}>
@@ -38,7 +62,7 @@ const { title, subtitle, items, cta, className = "" } = Astro.props;
       <!-- Accordion Container -->
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl transform transition-all duration-500 hover:shadow-2xl animate-fade-in-up animation-delay-400">
         <div class="divide-y divide-gray-200 dark:divide-gray-700">
-          {items.map((item, index) => (
+          {items?.map((item, index) => (
             <div class="group faq-item">
               <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300" data-accordion>
                 <div class="flex items-center justify-between">

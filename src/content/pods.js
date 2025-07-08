@@ -239,33 +239,182 @@ export const podsData = {
         priceNote: "Includes dev, design, testing, DevOps & coordination"
       },
       {
-        id: "custom-pod",
-        title: "Custom Pod (Tailored for You)",
-        description: "Need a combination of backend, mobile, QA, DevOps, or something niche? We'll assemble a custom pod based on your exact needs and timelines.",
-        icon: "/assets/features/icon-01.svg",
-        badge: "Custom",
-        badgeColor: "purple",
-        isCustom: true,
+        id: "admin-workflow-automation",
+        title: "Admin & Workflow Automation Pod (FlowPod)",
+        description: "For Teams Looking to Automate Business Operations",
+        icon: "/assets/features/icon-05.svg",
+        badge: "Automation",
+        badgeColor: "indigo",
         idealFor: [
-          "Unique project requirements not covered by standard pods",
-          "Combination of multiple technologies or domains",
-          "Specialized industry needs or compliance requirements"
+          "Internal tools and workflow automation",
+          "Admin portals, multi-role systems",
+          "Process digitalization and reporting"
         ],
-        podDescription: "We'll build a custom team composition based on your specific project requirements, technology stack, and timeline.",
+        podDescription: "This pod focuses on operational software—building dashboards, CRMs, portals, and integrations.",
         teamComposition: [
-          "Custom team composition based on your needs",
-          "Flexible roles: Backend, Frontend, Mobile, DevOps, QA",
-          "Specialized expertise for niche requirements",
-          "Project Lead tailored to your domain"
+          "1 Full Stack Developer – dashboard and logic-heavy flows",
+          "1 QA/Tester – robust testing and data validation",
+          "Project Manager (Shared) – handles coordination, delivery"
         ],
+        upgradeNote: "💡 Need custom integrations? Opt for the Plus Pod with integration engineer.",
         deliverables: [
-          "Custom solution designed for your specific use case",
-          "Flexible technology stack based on your requirements",
-          "Scalable architecture for your unique needs",
-          "Integration with your existing systems and workflows"
+          "Role-based dashboards",
+          "Workflow logic and status tracking",
+          "Data import/export + reporting tools",
+          "Secure login, access controls",
+          "Deployment + CI/CD support"
         ],
-        engagement: "Custom pricing based on requirements",
-        priceNote: "Free discovery call to discuss your needs"
+        deliveryTimelines: [
+          "2 Weeks: Admin dashboard & basic workflows",
+          "4–5 Weeks: Full workflow suite with reports"
+        ],
+        whyTrust: [
+          "⚙️ Automation-ready setup",
+          "📊 Configurable workflows, usable from day one",
+          "🛡️ Secure, scalable, and auditable"
+        ],
+        pastUseCases: [
+          "Admin portal for managing field staff",
+          "Approval workflows for finance teams",
+          "Reporting dashboard for executive teams"
+        ],
+        engagement: "Starting at ₹2L/month (~$2.4K)",
+        priceNote: "Includes development, testing, and deployment"
+      },
+      {
+        id: "ai-ml-integration",
+        title: "AI/ML Integration Pod (IntegratePod)",
+        description: "Integrate Smart Features into Your Product—No Data Science Hiring Needed",
+        icon: "/assets/features/icon-06.svg",
+        badge: "Integration",
+        badgeColor: "teal",
+        idealFor: [
+          "SaaS tools looking to add ML-driven features",
+          "Internal tools needing document or image parsing",
+          "Teams wanting recommendations, insights, or summarization"
+        ],
+        podDescription: "This pod helps you ship useful AI features using LLMs, OCR, and lightweight ML models.",
+        teamComposition: [
+          "1 AI Engineer (ML/LLM experience)",
+          "1 Backend Developer – APIs, integration, deployment",
+          "Project Architect (Shared) – data pipeline and evaluation guidance"
+        ],
+        upgradeNote: "💡 Add a front-end engineer if building full flows around the AI.",
+        deliverables: [
+          "Prompt-based or model-based feature delivery",
+          "REST/GraphQL APIs for use inside your product",
+          "Evaluation metrics, fallbacks, error handling",
+          "On-device or cloud model deployment"
+        ],
+        deliveryTimelines: [
+          "2–4 Weeks: ML feature integrated into your product",
+          "Sprints: Weekly review and feature evolution"
+        ],
+        whyTrust: [
+          "🧠 LLMs without the ML hiring",
+          "⚡ Fast prototyping, clean APIs",
+          "🤖 Expertise in OpenAI, HuggingFace, and vector DBs"
+        ],
+        pastUseCases: [
+          "Resume evaluation with OpenAI",
+          "Image OCR and tagging system",
+          "Recommendation engine for user engagement"
+        ],
+        engagement: "Starts at ₹3L/month (~$3.6K)",
+        priceNote: "PoC-based pricing also available"
+      },
+      {
+        id: "mobile-first-saas",
+        title: "Mobile-First SaaS Pod (AppPod)",
+        description: "Your Cross-Platform Team for Beautiful, Functional Mobile SaaS Products",
+        icon: "/assets/features/icon-07.svg",
+        badge: "Mobile",
+        badgeColor: "pink",
+        idealFor: [
+          "SaaS founders building mobile-first products",
+          "Businesses needing mobile companion apps",
+          "Teams launching iOS/Android MVPs with backend"
+        ],
+        podDescription: "This pod delivers end-to-end mobile SaaS apps — from UI to backend — with production-ready deployment.",
+        teamComposition: [
+          "1 React Native / Flutter Developer – cross-platform mobile app development",
+          "1 Backend Developer – APIs, auth, and business logic",
+          "1 UI/UX Designer – mobile-first designs and user flows",
+          "0.5 QA Engineer – test coverage and release readiness",
+          "Project Lead (Shared) – sprint planning and tech oversight"
+        ],
+        upgradeNote: "💡 Need native performance or wearables? Ask for the Native+ upgrade.",
+        deliverables: [
+          "Cross-platform mobile app (iOS + Android)",
+          "Responsive UI + native-like performance",
+          "REST/GraphQL APIs with auth & business logic",
+          "Push notifications, secure login, and offline support",
+          "Backend admin panel (optional)",
+          "Store publishing (Play Store & App Store)"
+        ],
+        deliveryTimelines: [
+          "3 Weeks: MVP with core flows",
+          "6 Weeks: Full-featured mobile SaaS launch",
+          "Weekly sprints, UI reviews, and test builds"
+        ],
+        whyTrust: [
+          "📱 Mobile-first thinking from day one",
+          "🎨 Beautiful, user-tested mobile UI",
+          "🛠️ Backend and DevOps included — no separate vendors",
+          "🚀 Rapid launch to app stores"
+        ],
+        pastUseCases: [
+          "Mobile CRM for sales teams on the go",
+          "Habit tracker SaaS with analytics backend",
+          "IoT control app with device sync and notifications"
+        ],
+        engagement: "Starting at ₹3L/month (~$3.6K)",
+        priceNote: "Includes mobile dev, backend dev, design, testing, and deployment"
+      },
+      {
+        id: "devops-infra-automation",
+        title: "DevOps & Infra Automation Pod (InfraPod)",
+        description: "Scale with Confidence — Reliable Infrastructure, CI/CD, and CloudOps Support",
+        icon: "/assets/features/icon-08.svg",
+        badge: "Infrastructure",
+        badgeColor: "gray",
+        idealFor: [
+          "Startups scaling their platform",
+          "Teams setting up secure, automated deployment pipelines",
+          "SaaS products needing infra cost optimization"
+        ],
+        podDescription: "This pod handles everything behind the scenes — CI/CD, cloud provisioning, monitoring, and ops automation.",
+        teamComposition: [
+          "1 DevOps Engineer – infra setup, pipelines, scaling, security",
+          "0.5 Backend Developer – service integration, logging, tooling",
+          "Project Lead (Shared) – tracks milestones and environments"
+        ],
+        upgradeNote: "💡 Want 24/7 monitoring or custom cloud setup? Add the Infra+ SLA Pack.",
+        deliverables: [
+          "Cloud environment setup (AWS, GCP, Azure, or Vercel/Render)",
+          "CI/CD pipelines using GitHub Actions, GitLab, or Docker",
+          "Logging, alerting, and monitoring (ELK, Prometheus, Grafana)",
+          "Staging & production segregation",
+          "SSL, backups, and security hardening",
+          "Cost optimization recommendations"
+        ],
+        deliveryTimelines: [
+          "1–2 Weeks: Basic CI/CD + cloud deployment",
+          "3–4 Weeks: Full-scale infra, monitoring & automation setup"
+        ],
+        whyTrust: [
+          "🛡️ Secure, battle-tested infrastructure practices",
+          "⚙️ Dev handoff with full automation and rollback strategies",
+          "🔁 Works with any stack: Node, Django, Rails, Go, etc.",
+          "💸 Infra cost savings and cloud strategy consulting"
+        ],
+        pastUseCases: [
+          "CI/CD for microservices on AWS ECS",
+          "GitHub → Docker → Production pipeline setup",
+          "Multi-tenant SaaS with containerized staging environments"
+        ],
+        engagement: "Starting at ₹2L/month (~$2.4K)",
+        priceNote: "One-time infra setup plans available as well"
       }
     ]
   },

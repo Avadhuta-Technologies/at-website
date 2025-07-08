@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ourWorkData } from '../content/our-work.js';
+import { OurWorkData } from '../content/types/our-work';
+import HeroSection from '../components/shared/HeroSection.astro';
+import CTASection from '../components/shared/CTASection.astro';
+import IndustryGridSection from '../components/our-work/IndustryGridSection.astro';
+import WhyChooseSection from '../components/shared/WhyChooseSection.astro';
+---
+
+<Layout title="Our Work | Avadhuta Technologies" description="Explore our portfolio of AI, automation, healthcare, eCommerce, and field ops solutions.">
+  <HeroSection 
+    title={ourWorkData.hero.title}
+    subtitle={ourWorkData.hero.subtitle}
+    description={ourWorkData.hero.description}
+  />
+
+  <IndustryGridSection 
+    industries={ourWorkData.industries}
+    moreIndustries={ourWorkData.moreIndustries}
+  />
+
+  <WhyChooseSection 
+    title={ourWorkData.whyChoose.title}
+    points={ourWorkData.whyChoose.points}
+  />
+
+  <CTASection 
+    title={ourWorkData.cta.title}
+    description={ourWorkData.cta.description}
+    buttonText={ourWorkData.cta.buttonText}
+    email={ourWorkData.cta.email}
+  />
+</Layout> 
