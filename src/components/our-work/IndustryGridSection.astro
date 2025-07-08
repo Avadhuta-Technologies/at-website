@@ -1,0 +1,96 @@
+---
+import { industryIcons, projectIcons } from './icons.js';
+
+interface Project {
+  title: string;
+  description: string;
+}
+
+interface Industry {
+  name: string;
+  projects: Project[];
+}
+
+interface MoreIndustries {
+  description: string;
+  buttonText: string;
+}
+
+interface Props {
+  industries: Industry[];
+  moreIndustries: MoreIndustries;
+}
+
+const { industries, moreIndustries } = Astro.props;
+
+// Map industry names to icons
+const getIndustryIcon = (industryName: string) => {
+  const iconMap: Record<string, string> = {
+    'AI & Automation': industryIcons.aiAutomation,
+    'Retail, Design & eCommerce': industryIcons.retailEcommerce,
+    'Healthcare & Pharma': industryIcons.healthcarePharma,
+    'Security & Field Ops': industryIcons.securityFieldOps
+  };
+  return iconMap[industryName] || industryIcons.aiAutomation;
+};
+
+// Map project titles to icons
+const getProjectIcon = (projectTitle: string) => {
+  const iconMap: Record<string, string> = {
+    'AI-Powered Interview Assistant': projectIcons.aiInterview,
+    'AI-Based Room Layout Generator': projectIcons.aiLayout,
+    '3D Interior Visualization Tool (Browser-Based)': projectIcons.visualization3d,
+    'Customizable eCommerce Storefront Platform': projectIcons.ecommerce,
+    'Regulatory Intelligence Workflow System': projectIcons.regulatory,
+    'Automated Data Reconciliation Tool': projectIcons.dataReconciliation,
+    'Security Guard Patrol Tracking App': projectIcons.securityPatrol
+  };
+  return iconMap[projectTitle] || projectIcons.aiInterview;
+};
+---
+
+<section class="py-16 bg-white dark:bg-dark-2">
+  <div class="container mx-auto px-4">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-2">
+      {industries.map((industry) => (
+        <div class="industry-card bg-gray-50 dark:bg-dark-3 rounded-2xl shadow-md p-8 flex flex-col mb-8">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+              <Fragment set:html={getIndustryIcon(industry.name)} />
+            </div>
+            <h3 class="text-2xl font-bold text-blue-700 dark:text-blue-300">{industry.name}</h3>
+          </div>
+          <ul class="space-y-6">
+            {industry.projects.map((project) => (
+              <li class="project-item">
+                <div class="flex items-start gap-3">
+                  <div class="w-6 h-6 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center mt-1">
+                    <Fragment set:html={getProjectIcon(project.title)} />
+                  </div>
+                  <div>
+                    <div class="font-semibold text-lg text-dark dark:text-white">{project.title}</div>
+                    <div class="text-gray-600 dark:text-gray-300 text-sm">{project.description}</div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div class="text-center mt-12">
+      <p class="text-lg text-gray-700 dark:text-gray-200 mb-4">{moreIndustries.description}</p>
+      <a href="/portfolio" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-500 text-white font-semibold shadow-lg hover:scale-105 transition-transform duration-200">{moreIndustries.buttonText}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.industry-card {
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.industry-card:hover {
+  box-shadow: 0 8px 32px rgba(60, 60, 180, 0.12);
+  transform: translateY(-4px) scale(1.01);
+}
+</style> 
