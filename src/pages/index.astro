@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
-import HowItWorksSection from '../components/sections/HowItWorksSection.astro';
+import HomeHowItWorksSection from '../components/sections/HomeHowItWorksSection.astro';
 import HomePodsSection from '../components/sections/HomePodsSection.astro';
 import HomePacksSection from '../components/sections/HomePacksSection.astro';
 import PodStrategistSection from '../components/sections/PodStrategistSection.astro';
@@ -44,7 +44,7 @@ const { hero, howItWorks, podsGrid, packsGrid, podStrategistCTA, whyWorks, teams
   </div>
 
   <div data-animate="fade-in-up">
-    <HowItWorksSection title={howItWorks.title} steps={howItWorks.steps} />
+    <HomeHowItWorksSection title={howItWorks.title} steps={howItWorks.steps} />
   </div>
 
   <div data-animate="row-staggered" data-base-delay="200" data-card-delay="120" data-row-delay="200" data-columns-per-row="3">

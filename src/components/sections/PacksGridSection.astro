@@ -1,6 +1,28 @@
 ---
 export interface Props {
-  title: string;
+  // New format - single data object
+  data?: {
+    title: string;
+    categories?: Array<{
+      id: string;
+      title: string;
+      description: string;
+      packs: Array<{
+        id: string;
+        title: string;
+        description: string;
+        icon: string;
+        badge: string;
+        badgeColor: string;
+        deliverables?: string[];
+        timeline: string;
+        priceINR: string;
+        priceUSD: string;
+      }>;
+    }>;
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
   categories?: Array<{
     id: string;
     title: string;
@@ -21,7 +43,11 @@ export interface Props {
   className?: string;
 }
 
-const { title, categories = [], className = "" } = Astro.props;
+const { data, title: titleProp, categories: categoriesProp, className = "" } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const categories = data?.categories || categoriesProp || [];
 
 // Debug logging
 console.log('PacksGridSection received categories:', categories);

@@ -1,8 +1,21 @@
 ---
 export interface Props {
-  title: string;
-  subtitle: string;
-  items: Array<{
+  // New format - single data object
+  data?: {
+    title: string;
+    subtitle: string;
+    items: Array<{
+      authorName: string;
+      authorRole: string;
+      image: string;
+      message: string;
+      caseLink: string;
+    }>;
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
+  subtitle?: string;
+  items?: Array<{
     authorName: string;
     authorRole: string;
     image: string;
@@ -12,7 +25,12 @@ export interface Props {
   className?: string;
 }
 
-const { title, subtitle, items, className = "" } = Astro.props;
+const { data, title: titleProp, subtitle: subtitleProp, items: itemsProp, className = "" } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const subtitle = data?.subtitle || subtitleProp;
+const items = data?.items || itemsProp || [];
 ---
 
 <section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3 ${className}`}>

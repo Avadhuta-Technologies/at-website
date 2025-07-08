@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/sections/HeroSection.astro';
 import WhyChooseSection from '../components/sections/WhyChooseSection.astro';
-import HowItWorksSection from '../components/sections/HowItWorksSection.astro';
+import PacksHowItWorksSection from '../components/sections/PacksHowItWorksSection.astro';
 import PacksGridSection from '../components/sections/PacksGridSection.astro';
 import FAQSection from '../components/sections/FAQSection.astro';
 import TestimonialsSection from '../components/sections/TestimonialsSection.astro';
@@ -12,51 +12,18 @@ import { packsData } from '../content/packs.js';
 
 <Layout description="Explore our fixed scope packs for predictable outcomes and deadlines." title="Explore Packs | Avadhuta Technologies">
 
-  <HeroSection 
-    title={packsData.hero.title}
-    subtitle={packsData.hero.subtitle}
-    description={packsData.hero.description}
-    primaryButton={packsData.hero.primaryButton}
-    secondaryButton={packsData.hero.secondaryButton}
-  />
+  <HeroSection data={packsData.hero} />
 
-  <WhyChooseSection 
-    title={packsData.whyChoose.title}
-    cards={packsData.whyChoose.cards}
-  />
+  <WhyChooseSection data={packsData.whyChoose} />
 
-  <HowItWorksSection 
-    title={packsData.howItWorks.title}
-    steps={packsData.howItWorks.steps}
-  />
+  <PacksHowItWorksSection data={packsData.howItWorks} />
 
-  <PacksGridSection 
-    title={packsData.availablePacks.title}
-    categories={packsData.availablePacks.categories}
-  />
+  <PacksGridSection data={packsData.availablePacks} />
 
-  <FAQSection 
-    title={packsData.faq.title}
-    subtitle={packsData.faq.subtitle}
-    items={packsData.faq.items}
-  />
+  <FAQSection data={packsData.faq} />
 
-  <TestimonialsSection 
-    title={packsData.testimonials.title}
-    subtitle={packsData.testimonials.subtitle}
-    items={packsData.testimonials.items}
-  />
+  <TestimonialsSection data={packsData.testimonials} />
 
-  <CTASection 
-    title={packsData.cta.title}
-    description={packsData.cta.description}
-    subtitle={packsData.cta.subtitle}
-    subDescription={packsData.cta.subDescription}
-    primaryButton={packsData.cta.primaryButton}
-    secondaryButton={packsData.cta.secondaryButton}
-    email={packsData.cta.email}
-    downloadLink={packsData.cta.downloadLink}
-    downloadText={packsData.cta.downloadText}
-  />
+  <CTASection data={packsData.cta} />
 
 </Layout> 

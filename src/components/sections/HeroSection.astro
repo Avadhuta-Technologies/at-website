@@ -1,7 +1,18 @@
 ---
 export interface Props {
+  // New format - single data object
+  data?: {
+    badge?: string;
+    title: string;
+    subtitle?: string;
+    description?: string;
+    stats?: Array<{ value: string; label: string }>;
+    primaryButton?: { label: string; href: string };
+    secondaryButton?: { label: string; href: string };
+  };
+  // Old format - individual props (for backward compatibility)
   badge?: string;
-  title: string;
+  title?: string;
   subtitle?: string;
   description?: string;
   stats?: Array<{ value: string; label: string }>;
@@ -13,17 +24,27 @@ export interface Props {
 }
 
 const {
-  badge,
-  title,
-  subtitle,
-  description,
-  stats = [],
+  data,
+  badge: badgeProp,
+  title: titleProp,
+  subtitle: subtitleProp,
+  description: descriptionProp,
+  stats: statsProp = [],
   showBackgroundGraphics = true,
   showWave = true,
   className = "",
-  primaryButton,
-  secondaryButton
+  primaryButton: primaryButtonProp,
+  secondaryButton: secondaryButtonProp
 } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const badge = data?.badge || badgeProp;
+const title = data?.title || titleProp;
+const subtitle = data?.subtitle || subtitleProp;
+const description = data?.description || descriptionProp;
+const stats = data?.stats || statsProp;
+const primaryButton = data?.primaryButton || primaryButtonProp;
+const secondaryButton = data?.secondaryButton || secondaryButtonProp;
 ---
 
 <section class={`relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden hero-section ${className}`}>

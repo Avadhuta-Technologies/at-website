@@ -1,31 +1,58 @@
 ---
 export interface Props {
-  title: string;
-  description: string;
+  // New format - single data object
+  data?: {
+    title: string;
+    description: string;
+    buttonText?: string;
+    subtitle?: string;
+    subDescription?: string;
+    primaryButton?: { label: string; href: string };
+    secondaryButton?: { label: string; href: string };
+    email: string;
+    downloadLink: string;
+    downloadText?: string;
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
+  description?: string;
   buttonText?: string;
   subtitle?: string;
   subDescription?: string;
   primaryButton?: { label: string; href: string };
   secondaryButton?: { label: string; href: string };
-  email: string;
-  downloadLink: string;
+  email?: string;
+  downloadLink?: string;
   downloadText?: string;
   className?: string;
 }
 
 const { 
-  title, 
-  description, 
-  buttonText, 
-  subtitle, 
-  subDescription, 
-  primaryButton, 
-  secondaryButton, 
-  email, 
-  downloadLink, 
-  downloadText, 
+  data, 
+  title: titleProp, 
+  description: descriptionProp, 
+  buttonText: buttonTextProp, 
+  subtitle: subtitleProp, 
+  subDescription: subDescriptionProp, 
+  primaryButton: primaryButtonProp, 
+  secondaryButton: secondaryButtonProp, 
+  email: emailProp, 
+  downloadLink: downloadLinkProp, 
+  downloadText: downloadTextProp, 
   className = "" 
 } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const description = data?.description || descriptionProp;
+const buttonText = data?.buttonText || buttonTextProp;
+const subtitle = data?.subtitle || subtitleProp;
+const subDescription = data?.subDescription || subDescriptionProp;
+const primaryButton = data?.primaryButton || primaryButtonProp;
+const secondaryButton = data?.secondaryButton || secondaryButtonProp;
+const email = data?.email || emailProp;
+const downloadLink = data?.downloadLink || downloadLinkProp;
+const downloadText = data?.downloadText || downloadTextProp;
 
 // Determine if this is the new format (packs page) or old format
 const isNewFormat = subtitle && subDescription && primaryButton && secondaryButton;

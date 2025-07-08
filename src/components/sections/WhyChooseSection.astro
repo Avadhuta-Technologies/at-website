@@ -1,7 +1,18 @@
 ---
 export interface Props {
-  title: string;
-  cards: Array<{
+  // New format - single data object
+  data?: {
+    title: string;
+    cards: Array<{
+      title: string;
+      description: string;
+      icon: string;
+      gradient: string;
+    }>;
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
+  cards?: Array<{
     title: string;
     description: string;
     icon: string;
@@ -10,7 +21,11 @@ export interface Props {
   className?: string;
 }
 
-const { title, cards, className = "" } = Astro.props;
+const { data, title: titleProp, cards: cardsProp, className = "" } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const cards = data?.cards || cardsProp;
 ---
 
 <section class={`py-16 bg-gradient-to-br from-gray-50 to-white dark:from-dark-2 dark:to-dark ${className}`}>
