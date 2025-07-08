@@ -39,8 +39,8 @@ const cards = data?.cards || cardsProp;
       </p>
     </div>
     
-    <div class={`grid gap-8 md:grid-cols-2 ${cards.length === 4 ? 'lg:grid-cols-4' : cards.length === 5 ? 'lg:grid-cols-3 xl:grid-cols-5' : 'lg:grid-cols-3'}`}>
-      {cards.map((card, index) => (
+    <div class={`grid gap-8 md:grid-cols-2 ${cards?.length === 4 ? 'lg:grid-cols-4' : cards?.length === 5 ? 'lg:grid-cols-3 xl:grid-cols-5' : 'lg:grid-cols-3'}`}>
+      {cards?.map((card, index) => (
         <div class="why-choose-card group relative rounded-2xl shadow-lg flex flex-col text-left hover:-translate-y-4 transition-all duration-500 cursor-pointer overflow-hidden min-h-[280px] bg-black animate-fade-in-up animation-delay-${(index + 1) * 200}">
           <div class={`absolute inset-0 z-10 bg-gradient-to-tr ${card.gradient} transition-all duration-500 group-hover:scale-110`}></div>
           
