@@ -1,0 +1,40 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="24" fill="url(#gradient)" opacity="0.1"/>
+  
+  <!-- Main alignment elements -->
+  <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Left alignment line -->
+    <line x1="8" y1="16" x2="16" y2="16"/>
+    <line x1="8" y1="20" x2="20" y2="20"/>
+    <line x1="8" y1="24" x2="18" y2="24"/>
+    <line x1="8" y1="28" x2="22" y2="28"/>
+    <line x1="8" y1="32" x2="16" y2="32"/>
+    
+    <!-- Right alignment line -->
+    <line x1="40" y1="16" x2="32" y2="16"/>
+    <line x1="40" y1="20" x2="28" y2="20"/>
+    <line x1="40" y1="24" x2="30" y2="24"/>
+    <line x1="40" y1="28" x2="26" y2="28"/>
+    <line x1="40" y1="32" x2="32" y2="32"/>
+    
+    <!-- Center connection -->
+    <line x1="24" y1="12" x2="24" y2="36"/>
+    
+    <!-- Connection dots -->
+    <circle cx="24" cy="16" r="2" fill="currentColor"/>
+    <circle cx="24" cy="20" r="2" fill="currentColor"/>
+    <circle cx="24" cy="24" r="2" fill="currentColor"/>
+    <circle cx="24" cy="28" r="2" fill="currentColor"/>
+    <circle cx="24" cy="32" r="2" fill="currentColor"/>
+  </g>
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A78BFA;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EF4444;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg> 

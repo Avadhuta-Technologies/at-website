@@ -1,8 +1,10 @@
 export const packsData = {
   hero: {
-    title: "Fixed Scope Packs",
-    subtitle: "Outcomes You Can Trust. Deadlines You Can Count On.",
-    description: "Don't want to manage a dev team? Just want a specific outcome delivered—quickly, predictably, and without the back-and-forth? That's exactly what our Fixed Scope Packs are built for."
+    title: "Add Power to Your Pod with Fixed-Scope Packs",
+    subtitle: "Modular Packs that extend your Pod's capabilities — from launching your product to automating operations, boosting growth, or integrating AI. Clear outcomes, fixed pricing, faster delivery.",
+    description: "Don't want to manage a dev team? Just want a specific outcome delivered—quickly, predictably, and without the back-and-forth? That's exactly what our Fixed Scope Packs are built for.",
+    primaryButton: { label: "Browse Packs", href: "#popular-packs" },
+    secondaryButton: { label: "Build Your Bundle", href: "/contact" }
   },
 
   availablePacks: {
@@ -129,28 +131,34 @@ export const packsData = {
     title: "Why Choose a Fixed Scope Pack?",
     cards: [
       {
-        title: "Clear Deliverables",
-        description: "You know exactly what you'll get, and when.",
+        title: "Clear Scope, No Surprises",
+        description: "Each Pack comes with well-defined deliverables, timelines, and pricing. No scope creep. No hourly billing drama.",
         icon: "/assets/features/icon-01.svg",
         gradient: "from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"
       },
       {
-        title: "Fixed Cost",
-        description: "No variable pricing, no scope creep, no surprises.",
+        title: "Faster Kickoff, Faster Results",
+        description: "Skip endless meetings and proposals. Pick a Pack, pair it with your Pod, and get started within days.",
         icon: "/assets/features/icon-02.svg",
         gradient: "from-[#FDE68A] via-[#FCA5A5] to-[#F43F5E]"
       },
       {
-        title: "Fast Turnaround",
-        description: "Each pack is optimized for speed—usually delivered in 2–6 weeks.",
+        title: "Fixed Pricing = Predictable Budgeting",
+        description: "Know exactly what you're paying for, upfront. Great for startups, finance teams, and anyone tired of inflated quotes.",
         icon: "/assets/features/icon-03.svg",
         gradient: "from-[#FBC2EB] via-[#A6C1EE] to-[#3B82F6]"
       },
       {
-        title: "Minimal Involvement",
-        description: "You give inputs at key checkpoints. We handle execution end-to-end.",
+        title: "Modular & Stackable",
+        description: "Start small and scale with confidence. Add more Packs as your needs grow — from launch to automation and beyond.",
         icon: "/assets/features/icon-04.svg",
         gradient: "from-[#FDE68A] via-[#6EE7B7] to-[#3B82F6]"
+      },
+      {
+        title: "Aligned Expectations",
+        description: "Everyone's on the same page from day one — making collaboration smoother and delivery sharper.",
+        icon: "/assets/features/icon-05.svg",
+        gradient: "from-[#A78BFA] via-[#F59E0B] to-[#EF4444]"
       }
     ]
   },
@@ -160,23 +168,33 @@ export const packsData = {
     steps: [
       {
         number: "01",
-        title: "Pick a Pack",
-        description: "Choose from the list below or talk to us to customize."
+        title: "Pick Your Pod",
+        description: "Choose the service area that aligns with your goal — AI integration, automation, product launch, or more.",
+        icon: "pick-pod"
       },
       {
         number: "02",
-        title: "Scope Alignment Call",
-        description: "30–45 min call to finalize deliverables."
+        title: "Select a Pack",
+        description: "Based on your needs and budget — Startup Pack, Scale Pack, or Custom — each one comes with defined deliverables and timelines.",
+        icon: "select-pack"
       },
       {
         number: "03",
-        title: "Execution",
-        description: "You get weekly updates, demos, and sign-offs."
+        title: "Kick Off the Project",
+        description: "Our team gets started with minimal handholding. You'll stay in the loop with regular updates and demos.",
+        icon: "kick-off"
       },
       {
         number: "04",
-        title: "Launch & Handover",
-        description: "We deliver, deploy, and hand over the code + documentation."
+        title: "Review & Launch",
+        description: "Once deliverables are met, we ensure everything is production-ready and handover is smooth.",
+        icon: "review-launch"
+      },
+      {
+        number: "05",
+        title: "Stack More Packs as You Scale",
+        description: "Extend, iterate, or switch focus by adding new Packs or Pods as your needs evolve.",
+        icon: "stack-scale"
       }
     ]
   },
