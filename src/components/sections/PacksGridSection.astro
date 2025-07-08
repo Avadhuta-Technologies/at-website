@@ -1,25 +1,30 @@
 ---
 export interface Props {
   title: string;
-  packs: Array<{
+  categories?: Array<{
     id: string;
     title: string;
     description: string;
-    icon: string;
-    badge: string;
-    badgeColor: string;
-    deliverables?: string[];
-    timeline: string;
-    priceINR: string;
-    priceUSD: string;
+    packs: Array<{
+      id: string;
+      title: string;
+      description: string;
+      icon: string;
+      badge: string;
+      badgeColor: string;
+      deliverables?: string[];
+      timeline: string;
+      priceINR: string;
+      priceUSD: string;
+    }>;
   }>;
   className?: string;
 }
 
-const { title, packs = [], className = "" } = Astro.props;
+const { title, categories = [], className = "" } = Astro.props;
 
 // Debug logging
-console.log('PacksGridSection received packs:', packs);
+console.log('PacksGridSection received categories:', categories);
 
 // Utility functions
 function getBadgeColorClass(color: string): string {
@@ -86,88 +91,107 @@ function getGradientClass(color: string): string {
       </p>
     </div>
     
-    <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      {packs && packs.length > 0 ? packs.map((pack, index) => (
-        <div class={`pack-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200}`}>
-          <div class="relative z-10 flex flex-col h-full p-8">
-            {/* Header */}
-            <div class="flex items-center justify-between mb-6">
-              <div class={`w-16 h-16 rounded-2xl bg-gradient-to-r ${getGradientClass(pack.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
-                <img src={pack.icon} alt={`${pack.title} Icon`} class="w-8 h-8 filter brightness-0 invert" />
-              </div>
-              <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeStyle(pack.badgeColor)} transform transition-all duration-300 group-hover:scale-105`}>
-                {pack.badge}
-              </span>
-            </div>
-            
-            {/* Title and Description */}
-            <div class="mb-6">
-              <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                {pack.title}
-              </h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                {pack.description}
-              </p>
-            </div>
-            
-            {/* Deliverables */}
-            {pack.deliverables && pack.deliverables.length > 0 && (
-              <div class="mb-6">
-                <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-                  <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Key Deliverables
-                </h4>
-                <ul class="space-y-2">
-                  {pack.deliverables.slice(0, 3).map((deliverable) => (
-                    <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
-                      <span class="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span class="leading-relaxed">{deliverable}</span>
-                    </li>
-                  ))}
-                  {pack.deliverables.length > 3 && (
-                    <li class="text-xs text-green-600 dark:text-green-400 font-medium">
-                      +{pack.deliverables.length - 3} more deliverables
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )}
-            
-            {/* Timeline and Pricing - Fixed at bottom */}
-            <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
-              <div class="flex items-center gap-2 mb-3">
-                <span class={`text-xs px-3 py-1 rounded-full font-medium ${getBadgeStyle(pack.badgeColor)}`}>
-                  <b>Timeline:</b> {pack.timeline}
-                </span>
-              </div>
-              <div class="mb-4">
-                <div class="font-bold text-2xl text-dark dark:text-white">{pack.priceINR}</div>
-                <div class="font-semibold text-lg text-gray-600 dark:text-gray-400">{pack.priceUSD}</div>
+    {categories && categories.length > 0 ? categories.map((category, categoryIndex) => (
+      <div class="mb-16 last:mb-0">
+        {/* Category Header */}
+        <div class="text-center mb-12">
+          <h3 class="text-2xl md:text-3xl font-bold mb-4 text-dark dark:text-white">
+            {category.title}
+          </h3>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            {category.description}
+          </p>
+        </div>
+        
+        {/* Packs Grid */}
+        <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {category.packs && category.packs.length > 0 ? category.packs.map((pack, packIndex) => (
+            <div class={`pack-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(categoryIndex * 200) + (packIndex + 1) * 100}`}>
+              <div class="relative z-10 flex flex-col h-full p-8">
+                {/* Header */}
+                <div class="flex items-center justify-between mb-6">
+                  <div class={`w-16 h-16 rounded-2xl bg-gradient-to-r ${getGradientClass(pack.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
+                    <img src={pack.icon} alt={`${pack.title} Icon`} class="w-8 h-8 filter brightness-0 invert" />
+                  </div>
+                  <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeStyle(pack.badgeColor)} transform transition-all duration-300 group-hover:scale-105`}>
+                    {pack.badge}
+                  </span>
+                </div>
+                
+                {/* Title and Description */}
+                <div class="mb-6">
+                  <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                    {pack.title}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {pack.description}
+                  </p>
+                </div>
+                
+                {/* Deliverables */}
+                {pack.deliverables && pack.deliverables.length > 0 && (
+                  <div class="mb-6">
+                    <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                      <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      Key Deliverables
+                    </h4>
+                    <ul class="space-y-2">
+                      {pack.deliverables.slice(0, 3).map((deliverable: string) => (
+                        <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
+                          <span class="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span class="leading-relaxed">{deliverable}</span>
+                        </li>
+                      ))}
+                      {pack.deliverables.length > 3 && (
+                        <li class="text-xs text-green-600 dark:text-green-400 font-medium">
+                          +{pack.deliverables.length - 3} more deliverables
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Timeline and Pricing - Fixed at bottom */}
+                <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class={`text-xs px-3 py-1 rounded-full font-medium ${getBadgeStyle(pack.badgeColor)}`}>
+                      <b>Timeline:</b> {pack.timeline}
+                    </span>
+                  </div>
+                  <div class="mb-4">
+                    <div class="font-bold text-2xl text-dark dark:text-white">{pack.priceINR}</div>
+                    <div class="font-semibold text-lg text-gray-600 dark:text-gray-400">{pack.priceUSD}</div>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div class="flex gap-3">
+                    <a href="#" class="flex-1 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl">
+                      Get Started
+                    </a>
+                    <a href={`/packs/${pack.id}`} class="flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20">
+                      Details
+                    </a>
+                  </div>
+                </div>
               </div>
               
-              {/* Action Buttons */}
-              <div class="flex gap-3">
-                <a href="#" class="flex-1 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl">
-                  Get Started
-                </a>
-                <a href={`/packs/${pack.id}`} class="flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20">
-                  Details
-                </a>
-              </div>
+              {/* Hover effect overlay */}
+              <div class="absolute inset-0 bg-gradient-to-br from-green-500/0 to-emerald-500/0 group-hover:from-green-500/5 group-hover:to-emerald-500/5 transition-all duration-500 rounded-2xl"></div>
             </div>
-          </div>
-          
-          {/* Hover effect overlay */}
-          <div class="absolute inset-0 bg-gradient-to-br from-green-500/0 to-emerald-500/0 group-hover:from-green-500/5 group-hover:to-emerald-500/5 transition-all duration-500 rounded-2xl"></div>
+          )) : (
+            <div class="col-span-full text-center py-12">
+              <p class="text-gray-500 dark:text-gray-400">No packs available in this category.</p>
+            </div>
+          )}
         </div>
-      )) : (
-        <div class="col-span-full text-center py-12">
-          <p class="text-gray-500 dark:text-gray-400">No packs available at the moment.</p>
-        </div>
-      )}
-    </div>
+      </div>
+    )) : (
+      <div class="text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400">No categories available at the moment.</p>
+      </div>
+    )}
   </div>
 </section>
 

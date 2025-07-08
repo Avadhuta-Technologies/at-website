@@ -9,120 +9,198 @@ export const packsData = {
 
   availablePacks: {
     title: "Available Project Packs",
-    packs: [
+    categories: [
       {
-        id: "mvp-launch",
-        title: "MVP Launch Pack",
-        description: "Build your first product with clean UX, frontend, backend, and admin dashboard.",
-        icon: "/assets/features/icon-01.svg",
-        badge: "Popular",
-        badgeColor: "green",
-        deliverables: [
-          "Responsive frontend with modern UI/UX",
-          "Backend API with authentication",
-          "Admin dashboard with user management",
-          "Database design and setup",
-          "Deployment and hosting configuration",
-          "Documentation and handover"
-        ],
-        timeline: "4-6 weeks",
-        priceINR: "₹3.5-4 Lakhs",
-        priceUSD: "$4,200-4,800"
+        id: "launch-gtm",
+        title: "Launch & Go-to-Market Packs",
+        description: "Get your product to market quickly and effectively",
+        packs: [
+          {
+            id: "launch-pack",
+            title: "Launch Pack",
+            description: "Take your product live with confidence. Includes deployment, basic analytics, Play Store/App Store setup, and a launch checklist.",
+            icon: "/assets/features/icon-01.svg",
+            badge: "Popular",
+            badgeColor: "green",
+            deliverables: [
+              "Product deployment and hosting",
+              "Basic analytics integration",
+              "Play Store/App Store setup",
+              "Launch checklist and optimization",
+              "Performance monitoring",
+              "User onboarding flows"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹75,000",
+            priceUSD: "$900"
+          },
+          {
+            id: "web-presence",
+            title: "Web Presence Pack",
+            description: "Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready.",
+            icon: "/assets/features/icon-02.svg",
+            badge: "Fast",
+            badgeColor: "blue",
+            deliverables: [
+              "Responsive landing page or multi-section site",
+              "Basic CMS integration",
+              "Mobile-first design",
+              "SEO optimization",
+              "Performance optimization",
+              "Content management system"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹45,000",
+            priceUSD: "$550"
+          },
+          {
+            id: "brand-starter",
+            title: "Brand Starter Pack",
+            description: "Build a professional identity for your product or startup. Logo, color palette, typography, pitch deck template, and social banners.",
+            icon: "/assets/features/icon-03.svg",
+            badge: "Essential",
+            badgeColor: "purple",
+            deliverables: [
+              "Professional logo design",
+              "Color palette and typography",
+              "Pitch deck template",
+              "Social media banners",
+              "Brand guidelines document",
+              "Marketing collateral"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹30,000",
+            priceUSD: "$350"
+          }
+        ]
       },
       {
-        id: "ai-chatbot",
-        title: "AI Chatbot Pack",
-        description: "Deploy a GPT-powered assistant for your website or app. Includes chat UI, backend integration, prompt tuning.",
-        icon: "/assets/features/icon-02.svg",
-        badge: "Fast",
-        badgeColor: "blue",
-        deliverables: [
-          "Custom chatbot interface",
-          "GPT API integration",
-          "Prompt engineering and optimization",
-          "Conversation history and context",
-          "Admin panel for monitoring",
-          "Analytics and insights dashboard"
-        ],
-        timeline: "2-3 weeks",
-        priceINR: "₹1.2-1.5 Lakhs",
-        priceUSD: "$1,440-1,800"
+        id: "growth-optimization",
+        title: "Growth & Optimization Packs",
+        description: "Scale and optimize your existing products",
+        packs: [
+          {
+            id: "growth-launch",
+            title: "Launch Pack",
+            description: "Take your product live with confidence. Includes deployment, basic analytics, Play Store/App Store setup, and a launch checklist.",
+            icon: "/assets/features/icon-04.svg",
+            badge: "Growth",
+            badgeColor: "orange",
+            deliverables: [
+              "Advanced analytics integration",
+              "A/B testing setup",
+              "Conversion optimization",
+              "User engagement tracking",
+              "Performance optimization",
+              "Growth metrics dashboard"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹75,000",
+            priceUSD: "$900"
+          },
+          {
+            id: "growth-web-presence",
+            title: "Web Presence Pack",
+            description: "Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready.",
+            icon: "/assets/features/icon-05.svg",
+            badge: "Optimized",
+            badgeColor: "teal",
+            deliverables: [
+              "Advanced SEO optimization",
+              "Conversion-focused design",
+              "Performance optimization",
+              "Analytics integration",
+              "User experience improvements",
+              "Mobile optimization"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹45,000",
+            priceUSD: "$550"
+          },
+          {
+            id: "growth-brand",
+            title: "Brand Starter Pack",
+            description: "Build a professional identity for your product or startup. Logo, color palette, typography, pitch deck template, and social banners.",
+            icon: "/assets/features/icon-01.svg",
+            badge: "Premium",
+            badgeColor: "indigo",
+            deliverables: [
+              "Advanced brand strategy",
+              "Comprehensive visual identity",
+              "Marketing campaign design",
+              "Brand positioning",
+              "Competitive analysis",
+              "Brand guidelines"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹30,000",
+            priceUSD: "$350"
+          }
+        ]
       },
       {
-        id: "ai-knowledge",
-        title: "AI-Powered Knowledge Assistant",
-        description: "Train a bot on your documentation, support queries, or product FAQs—and let guests get instant answers.",
-        icon: "/assets/features/icon-03.svg",
-        badge: "Smart",
-        badgeColor: "purple",
-        deliverables: [
-          "Knowledge base integration",
-          "Document processing and indexing",
-          "Semantic search capabilities",
-          "Custom training on your data",
-          "Web interface for queries",
-          "Analytics and improvement insights"
-        ],
-        timeline: "2-3 weeks",
-        priceINR: "₹1.5-2 Lakhs",
-        priceUSD: "$1,800-2,400"
-      },
-      {
-        id: "workflow-automation",
-        title: "Workflow Automation Pack",
-        description: "Create custom workflows: form to CRM, automated follow-ups, alerts, task creation using n8n or Zapier.",
-        icon: "/assets/features/icon-04.svg",
-        badge: "Efficient",
-        badgeColor: "orange",
-        deliverables: [
-          "Custom workflow design",
-          "API integrations setup",
-          "Automated triggers and actions",
-          "Error handling and monitoring",
-          "User interface for workflow management",
-          "Documentation and training"
-        ],
-        timeline: "2-3 weeks",
-        priceINR: "₹85,000-1.1 Lakhs",
-        priceUSD: "$1,020-1,320"
-      },
-      {
-        id: "3d-visualization",
-        title: "3D Visualization Pack (Three.js)",
-        description: "Add interactive, browser-based 3D models to your website or app using Three.js",
-        icon: "/assets/features/icon-01.svg",
-        badge: "Interactive",
-        badgeColor: "teal",
-        deliverables: [
-          "3D model integration",
-          "Interactive controls and animations",
-          "Performance optimization",
-          "Mobile responsiveness",
-          "Custom shaders and materials",
-          "Documentation and examples"
-        ],
-        timeline: "2-3 weeks",
-        priceINR: "₹1.5-2 Lakhs",
-        priceUSD: "$1,800-2,400"
-      },
-      {
-        id: "analytics-dashboard",
-        title: "Analytics + Dashboard Pack",
-        description: "Add user metrics, funnel tracking, and business dashboards using Chart.js, Supabase, or Metabase.",
-        icon: "/assets/features/icon-02.svg",
-        badge: "Insights",
-        badgeColor: "indigo",
-        deliverables: [
-          "Data collection and tracking",
-          "Custom dashboard design",
-          "Real-time analytics",
-          "Export and reporting features",
-          "User access management",
-          "Integration with existing systems"
-        ],
-        timeline: "2-3 weeks",
-        priceINR: "₹80,000-1.2 Lakhs",
-        priceUSD: "$960-1,440"
+        id: "automation-efficiency",
+        title: "Automation & Efficiency Packs",
+        description: "Streamline operations and boost productivity",
+        packs: [
+          {
+            id: "automation-launch",
+            title: "Launch Pack",
+            description: "Take your product live with confidence. Includes deployment, basic analytics, Play Store/App Store setup, and a launch checklist.",
+            icon: "/assets/features/icon-02.svg",
+            badge: "Automated",
+            badgeColor: "cyan",
+            deliverables: [
+              "Automated deployment pipeline",
+              "CI/CD setup",
+              "Monitoring and alerting",
+              "Performance automation",
+              "Testing automation",
+              "Infrastructure as code"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹75,000",
+            priceUSD: "$900"
+          },
+          {
+            id: "automation-web",
+            title: "Web Presence Pack",
+            description: "Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready.",
+            icon: "/assets/features/icon-03.svg",
+            badge: "Efficient",
+            badgeColor: "green",
+            deliverables: [
+              "Automated content management",
+              "Workflow automation",
+              "Integration automation",
+              "Performance monitoring",
+              "Automated testing",
+              "Deployment automation"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹45,000",
+            priceUSD: "$550"
+          },
+          {
+            id: "automation-brand",
+            title: "Brand Starter Pack",
+            description: "Build a professional identity for your product or startup. Logo, color palette, typography, pitch deck template, and social banners.",
+            icon: "/assets/features/icon-04.svg",
+            badge: "Streamlined",
+            badgeColor: "purple",
+            deliverables: [
+              "Automated brand asset generation",
+              "Template automation",
+              "Content automation",
+              "Workflow optimization",
+              "Process automation",
+              "Efficiency tools"
+            ],
+            timeline: "2 weeks",
+            priceINR: "₹30,000",
+            priceUSD: "$350"
+          }
+        ]
       }
     ]
   },
@@ -131,31 +209,31 @@ export const packsData = {
     title: "Why Choose a Fixed Scope Pack?",
     cards: [
       {
-        title: "Clear Scope, No Surprises",
+        title: "🚀 Clear Scope, No Surprises",
         description: "Each Pack comes with well-defined deliverables, timelines, and pricing. No scope creep. No hourly billing drama.",
         icon: "/assets/features/icon-01.svg",
         gradient: "from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]"
       },
       {
-        title: "Faster Kickoff, Faster Results",
+        title: "⚡ Faster Kickoff, Faster Results",
         description: "Skip endless meetings and proposals. Pick a Pack, pair it with your Pod, and get started within days.",
         icon: "/assets/features/icon-02.svg",
         gradient: "from-[#FDE68A] via-[#FCA5A5] to-[#F43F5E]"
       },
       {
-        title: "Fixed Pricing = Predictable Budgeting",
+        title: "💰 Fixed Pricing = Predictable Budgeting",
         description: "Know exactly what you're paying for, upfront. Great for startups, finance teams, and anyone tired of inflated quotes.",
         icon: "/assets/features/icon-03.svg",
         gradient: "from-[#FBC2EB] via-[#A6C1EE] to-[#3B82F6]"
       },
       {
-        title: "Modular & Stackable",
+        title: "🧩 Modular & Stackable",
         description: "Start small and scale with confidence. Add more Packs as your needs grow — from launch to automation and beyond.",
         icon: "/assets/features/icon-04.svg",
         gradient: "from-[#FDE68A] via-[#6EE7B7] to-[#3B82F6]"
       },
       {
-        title: "Aligned Expectations",
+        title: "🤝 Aligned Expectations",
         description: "Everyone's on the same page from day one — making collaboration smoother and delivery sharper.",
         icon: "/assets/features/icon-05.svg",
         gradient: "from-[#A78BFA] via-[#F59E0B] to-[#EF4444]"
@@ -264,38 +342,57 @@ export const packsData = {
     subtitle: "Everything you need to know about our Fixed Scope Packs",
     items: [
       {
-        question: "Can I customize a Pack?",
-        answer: "Yes! We can tweak scope, add/remove features, or combine two packs."
+        question: "What exactly is a Pack?",
+        answer: "A Pack is a fixed-scope, fixed-cost add-on that extends the capabilities of a Pod. It delivers a specific outcome — like launching your product, adding automation, or improving UX — in a defined time frame."
       },
       {
-        question: "What if I need something ongoing?",
-        answer: "You can transition into a monthly Pod after your pack is delivered—no disruption."
+        question: "Do I need to buy a Pod to use a Pack?",
+        answer: "Yes. Packs are designed to enhance or complement a Pod. Think of the Pod as your core service, and Packs as modular boosters that add extra value."
       },
       {
-        question: "What if I don't like the output?",
-        answer: "We follow a milestone-based approach: You'll get early previews, can suggest changes, and only approve the next phase after you're satisfied."
+        question: "Can I combine multiple Packs with one Pod?",
+        answer: "Absolutely. You can stack multiple Packs with a single Pod — for example, combine a Launch Pack + Web Presence Pack + Brand Starter Pack with the Product Launch Pod."
       },
       {
-        question: "Do I get the code and IP?",
-        answer: "100%. All code is handed over, along with documentation and deployment access."
+        question: "Are the prices fixed or do they vary?",
+        answer: "All Pack prices are fixed for the defined scope. If you need customizations beyond the listed deliverables, we can scope a Custom Pack for you."
+      },
+      {
+        question: "How long does each Pack take to deliver?",
+        answer: "Each Pack comes with a set delivery timeline (e.g., 1–4 weeks depending on the scope). Timelines are listed clearly with each Pack."
+      },
+      {
+        question: "What happens after I choose a Pack?",
+        answer: "Once you select a Pack, we'll schedule a short kickoff session to align on requirements. From there, our team gets started and keeps you updated throughout the delivery cycle."
+      },
+      {
+        question: "Can I create a custom Pack?",
+        answer: "Yes! If none of the standard Packs fit your needs, you can request a Custom Pack tailored to your goals. Just [Talk to a Specialist] to get started."
+      },
+      {
+        question: "What if I only want a Pack but not a Pod?",
+        answer: "Packs are designed to work with Pods, not independently. If you're unsure which Pod you need, we'll help you choose the right one for your goal."
       }
     ]
   },
 
   testimonials: {
     title: "What Customers Are Saying",
+    subtitle: "Real stories from teams who've transformed their projects with our Packs",
     items: [
       {
-        name: "Jackie Sanders",
-        role: "Content Writer",
-        content: "Their packs are incredibly efficient—no surprises, just solid results. We launched our MVP and onboarded real users in 6 weeks.",
-        image: "/assets/testimonials/author-01.jpg"
+        authorName: "CTO, HR Tech Startup",
+        authorRole: "Technology Leader",
+        message: "🗣️ \"The Launch Pack helped us go live 3x faster than we planned.\" We had our mobile app ready, but launching it felt like a mountain — website, deployment, store listings... it was a lot. NovaPod's Launch Pack took care of everything with zero back-and-forth. Smooth, fast, and super professional.",
+        image: "/assets/testimonials/author-01.jpg",
+        caseLink: "/case-studies/hr-tech-launch"
       },
       {
-        name: "Jane Doe",
-        role: "Founder",
-        content: "We just needed a chatbot. They gave us exactly that—in 10 days. No bloated proposal, just delivery.",
-        image: "/assets/testimonials/author-02.jpg"
+        authorName: "Founder, E-learning Platform",
+        authorRole: "Startup Founder",
+        message: "🗣️ \"Fixed scope Packs gave us clarity and control.\" As a scaling startup, we were tired of vague proposals and ballooning costs. With NovaPod's Growth and Integration Packs, we knew exactly what we were getting and when. The delivery was solid — on time, on point.",
+        image: "/assets/testimonials/author-02.jpg",
+        caseLink: "/case-studies/e-learning-growth"
       }
     ]
   },
