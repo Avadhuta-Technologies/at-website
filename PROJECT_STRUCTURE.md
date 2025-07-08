@@ -65,7 +65,6 @@ src/
 │   ├── blog.astro
 │   ├── signin.astro
 │   ├── signup.astro
-│   ├── pricing.astro
 │   ├── 404.astro
 │   ├── pods/           # Pod-specific pages
 │   └── blog/           # Blog pages

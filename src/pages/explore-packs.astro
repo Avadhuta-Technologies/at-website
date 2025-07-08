@@ -3,27 +3,42 @@ import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/shared/HeroSection.astro';
 import WhyChooseSection from '../components/packs/WhyChooseSection.astro';
 import PacksHowItWorksSection from '../components/packs/PacksHowItWorksSection.astro';
-import PacksGridSection from '../components/packs/PacksGridSection.astro';
+import ProductGrid from '../components/shared/ProductGrid.astro';
 import FAQSection from '../components/shared/FAQSection.astro';
 import TestimonialsSection from '../components/shared/TestimonialsSection.astro';
 import CTASection from '../components/shared/CTASection.astro';
 import { packsData } from '../content/packs.js';
 ---
 
-<Layout description="Explore our fixed scope packs for predictable outcomes and deadlines." title="Explore Packs | Avadhuta Technologies">
+<Layout title="Explore Packs | NovaPod.ai" description="Browse fixed-scope packs to launch, grow, and automate your product.">
+  <section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-dark dark:text-white">{packsData.hero.title}</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">{packsData.hero.subtitle}</p>
+        <p class="text-base text-gray-500 dark:text-gray-500">{packsData.hero.description}</p>
+      </div>
+      {packsData.availablePacks.categories.map((cat) => (
+        <div class="mb-16" id={cat.id}>
+          <h2 class="text-2xl md:text-3xl font-bold mb-2 text-dark dark:text-white">{cat.title}</h2>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">{cat.description}</p>
+          <ProductGrid
+            products={cat.packs}
+            type="pack"
+            learnMoreUrlPrefix="/packs"
+            actionUrl="/contact"
+            actionText="Buy Now"
+          />
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
 
-  <HeroSection data={packsData.hero} />
-
-  <WhyChooseSection data={packsData.whyChoose} />
-
-  <PacksHowItWorksSection data={packsData.howItWorks} />
-
-  <PacksGridSection data={packsData.availablePacks} />
-
-  <FAQSection data={packsData.faq} />
-
-  <TestimonialsSection data={packsData.testimonials} />
-
-  <CTASection data={packsData.cta} />
-
-</Layout> 
+<style>
+  .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style> 

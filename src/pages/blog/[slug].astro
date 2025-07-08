@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import Newsletterbox from '../../components/Newsletterbox.astro';
 import PopularArticles from '../../components/PopularArticles.astro';
 import Layout from "../../layouts/Layout.astro";
-import RelatedArticles from "../../components/RelatedArticles.astro";
+// import RelatedArticles from "../../components/RelatedArticles.astro";
 
 // Generate a new path for every collection entry
 export async function getStaticPaths() {
@@ -155,7 +155,7 @@ const { Content } = await entry.render();
                       {entry.data.quotes.quote}
                     </p>
                     <span class="text-xs italic text-body-color dark:text-dark-6">
-                      “{entry.data.quotes.author}”
+                      "{entry.data.quotes.author}"
                     </span>
                   </div>
                   <div>
@@ -295,8 +295,6 @@ const { Content } = await entry.render();
           </div>
         </div>
       </div>
-
-      <RelatedArticles />
     </div>
   </section>
   <!-- ====== Blog Details Section End -->
