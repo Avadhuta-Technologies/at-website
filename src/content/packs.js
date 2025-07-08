@@ -398,10 +398,14 @@ export const packsData = {
   },
 
   cta: {
-    title: "Take the Shortcut to Shipping",
-    description: "Don't waste weeks trying to figure out what team to hire. Choose a Pack, and we'll get it done.",
-    buttonText: "Book a Free Scope Call",
-    email: "hello@novapod.ai",
-    downloadLink: "/contact"
+    title: "Ready to Power Up Your Pod?",
+    description: "Whether you're launching, scaling, or automating — the right Pack gets you there faster. Fixed scope, fixed cost, no guesswork.",
+    subtitle: "✅ Pick a Pod • ➕ Add the Packs You Need • 🔧 Start Building with Confidence",
+    subDescription: "Don't waste weeks in discovery — get results in days.",
+    primaryButton: { label: "Build Your Bundle", href: "/contact" },
+    secondaryButton: { label: "Talk To A Specialist", href: "/contact" },
+    email: "hello@avadhutatech.com",
+    downloadLink: "/downloads/pack-catalog.pdf",
+    downloadText: "Download Full Pack Catalog"
   }
 }; 

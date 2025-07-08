@@ -43,15 +43,20 @@ import { packsData } from '../content/packs.js';
 
   <TestimonialsSection 
     title={packsData.testimonials.title}
+    subtitle={packsData.testimonials.subtitle}
     items={packsData.testimonials.items}
   />
 
   <CTASection 
     title={packsData.cta.title}
     description={packsData.cta.description}
-    buttonText={packsData.cta.buttonText}
+    subtitle={packsData.cta.subtitle}
+    subDescription={packsData.cta.subDescription}
+    primaryButton={packsData.cta.primaryButton}
+    secondaryButton={packsData.cta.secondaryButton}
     email={packsData.cta.email}
     downloadLink={packsData.cta.downloadLink}
+    downloadText={packsData.cta.downloadText}
   />
 
 </Layout> 
