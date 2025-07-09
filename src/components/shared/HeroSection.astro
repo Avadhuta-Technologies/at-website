@@ -89,13 +89,13 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
       <!-- CTA Buttons -->
       <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 cta-buttons">
         {primaryButton && (
-          <a href={primaryButton.href} class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
+          <a href={primaryButton.href} onclick="handleButtonClick(event, '{primaryButton.label}')" class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
             <span class="relative z-10">{primaryButton.label}</span>
             <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </a>
         )}
         {secondaryButton && (
-          <a href={secondaryButton.href} onclick="scrollToHowItWorks(event)" class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
+          <a href={secondaryButton.href} onclick="handleButtonClick(event, '{secondaryButton.label}')" class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
             <span class="flex items-center">{secondaryButton.label}</span>
           </a>
         )}
@@ -118,48 +118,37 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
 </section>
 
 <script>
-  function scrollToHowItWorks(event) {
+  // Direct scroll functionality
+  function handleButtonClick(event: Event, buttonLabel: string) {
     event.preventDefault();
     
-    // Check if we're on the home page
-    if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-      // Find the How It Works section by ID
-      const howItWorksSection = document.getElementById('how-it-works');
-      
-      if (howItWorksSection) {
-        // Smooth scroll to the section
-        howItWorksSection.scrollIntoView({
+    const label = buttonLabel.toLowerCase();
+    let sectionId = null;
+    
+    // Map button labels to section IDs
+    if (label.includes('get started with a pod')) {
+      sectionId = 'choose-pod-section';
+    } else if (label.includes('see how it works')) {
+      sectionId = 'how-it-works';
+    }
+    
+    if (sectionId) {
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
       } else {
-        // Fallback: try to find any section with "how" in the id
-        const sections = document.querySelectorAll('[id*="how"]');
-        if (sections.length > 0) {
-          sections[0].scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
+        console.warn(`Section with id "${sectionId}" not found`);
       }
     } else {
-      // If not on home page, navigate to home page with hash without reload
-      const currentPath = window.location.pathname;
-      if (currentPath !== '/') {
-        // Use history.pushState to change URL without reload
-        window.history.pushState({}, '', '/#how-it-works');
-        // Then navigate to home page
-        window.location.href = '/#how-it-works';
-      } else {
-        // Already on home page, just scroll
-        const howItWorksSection = document.getElementById('how-it-works');
-        if (howItWorksSection) {
-          howItWorksSection.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }
+      // No matching section, use default navigation
+      const target = event.target as HTMLAnchorElement;
+      const href = target?.href || '#';
+      window.location.href = href;
     }
   }
+
+ 
 </script>
