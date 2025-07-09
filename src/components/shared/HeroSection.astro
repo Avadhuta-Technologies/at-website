@@ -138,6 +138,8 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
       // Map button labels to section IDs
       if (label.includes('get started with a pod')) {
         sectionId = 'choose-pod-section';
+      } else if (label.includes('start with a novapod')) {
+        sectionId = 'available-pods';
       } else if (label.includes('see how it works')) {
         sectionId = 'how-it-works';
       }
@@ -145,6 +147,13 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
       console.log('Mapped section ID:', sectionId);
       
       if (sectionId) {
+        // Special handling for available-pods section - navigate to explore-pods page
+        if (sectionId === 'available-pods') {
+          console.log('Navigating to explore-pods page with available-pods section');
+          window.location.href = '/explore-pods#available-pods';
+          return;
+        }
+        
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
           console.log('Found target section, scrolling...');

@@ -104,6 +104,13 @@ window.ScrollUtils = {
     const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
     console.log('Is home page:', isHomePage);
     
+    // Special handling for available-pods section - always navigate to explore-pods page
+    if (sectionId === 'available-pods') {
+      console.log('Navigating to explore-pods page with available-pods section');
+      window.location.href = '/explore-pods#available-pods';
+      return;
+    }
+    
     if (isHomePage) {
       // Try to scroll to section on current page
       const targetSection = document.getElementById(sectionId);
@@ -140,6 +147,7 @@ window.ScrollUtils = {
     const sectionMap = {
       'get started with a pod': 'choose-pod-section',
       'choose your novapod': 'choose-pod-section',
+      'start with a novapod': 'available-pods',
       'see how it works': 'how-it-works',
       'how it works': 'how-it-works',
       'explore all pods': 'available-pods',

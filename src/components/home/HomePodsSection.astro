@@ -113,7 +113,11 @@ function getSvgIcon(iconType: string) {
     <!-- Pods Grid -->
     <div data-animate="staggered-children" class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
       {pods.map((pod, index) => (
-        <div class="pod-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2">
+        <div 
+          class="pod-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
+          data-pod-id={pod.id}
+          onclick="handlePodCardClick(event, this.getAttribute('data-pod-id'))"
+        >
           <!-- Card Content -->
           <div class="p-8 h-full flex flex-col">
             <!-- Header with Icon and Badge -->
@@ -141,11 +145,28 @@ function getSvgIcon(iconType: string) {
             
             <!-- Action Button -->
             <div class="mt-auto">
-              <a href={`/pods/${pod.id}`} class="inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                View Details
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
+              <a 
+                href={`/pods/${pod.id}`} 
+                data-pod-id={pod.id}
+                class="group relative inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer overflow-hidden"
+                style="cursor: pointer;"
+                onmousedown="event.stopPropagation()"
+                onmouseup="event.stopPropagation()"
+                onclick="event.stopPropagation(); handlePodDetailsClick(event, this.getAttribute('data-pod-id'))"
+              >
+                <!-- Hover animation overlay -->
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <!-- Button content -->
+                <span class="relative z-10 flex items-center">
+                  View Details
+                  <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+                
+                <!-- Ripple effect -->
+                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl"></div>
               </a>
             </div>
           </div>
@@ -182,6 +203,61 @@ function getSvgIcon(iconType: string) {
       window.location.href = '/explore-pods#available-pods';
     }
   }
+
+  function handlePodCardClick(event: Event, podId: string) {
+    event.preventDefault();
+    
+    console.log('Pod card clicked for:', podId);
+    
+    // Map home page pod IDs to actual pod page IDs
+    const podIdMapping: { [key: string]: string } = {
+      'shoppod': 'ecommerce-engine',
+      'xrpod': 'ar-vr-experience', 
+      'apppod': 'product-launch', // AppPod maps to LaunchPod
+      'aipod': 'ai-product-studio',
+      'launchpod': 'product-launch',
+      'infrapod': 'admin-workflow-automation'
+    };
+    
+    // Get the actual pod page ID
+    const actualPodId = podIdMapping[podId] || podId;
+    console.log('Mapped to actual pod ID:', actualPodId);
+    
+    // Navigate to the specific pod page
+    window.location.href = `/pods/${actualPodId}`;
+  }
+
+  function handlePodDetailsClick(event: Event, podId: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    console.log('Pod details button clicked for:', podId);
+    
+    // Map home page pod IDs to actual pod page IDs
+    const podIdMapping: { [key: string]: string } = {
+      'shoppod': 'ecommerce-engine',
+      'xrpod': 'ar-vr-experience', 
+      'apppod': 'product-launch', // AppPod maps to LaunchPod
+      'aipod': 'ai-product-studio',
+      'launchpod': 'product-launch',
+      'infrapod': 'admin-workflow-automation'
+    };
+    
+    // Get the actual pod page ID
+    const actualPodId = podIdMapping[podId] || podId;
+    console.log('Mapped to actual pod ID:', actualPodId);
+    
+    // Navigate to the specific pod page
+    window.location.href = `/pods/${actualPodId}`;
+  }
+
+  // Make functions globally available
+  // @ts-ignore
+  window.handlePodCardClick = handlePodCardClick;
+  // @ts-ignore
+  window.handlePodDetailsClick = handlePodDetailsClick;
+  // @ts-ignore
+  window.handleExplorePodsClick = handleExplorePodsClick;
 </script>
   </div>
 </section>
@@ -198,6 +274,12 @@ function getSvgIcon(iconType: string) {
     50% { opacity: 0.6; transform: scale(1.1); }
   }
   
+  /* Button hover animations */
+  @keyframes buttonGlow {
+    0%, 100% { box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3); }
+    50% { box-shadow: 0 15px 35px rgba(147, 51, 234, 0.5); }
+  }
+  
   /* Floating animation for background elements */
   .bg-float {
     animation: float 6s ease-in-out infinite;
@@ -205,6 +287,25 @@ function getSvgIcon(iconType: string) {
   
   .bg-pulse-slow {
     animation: pulse-slow 4s ease-in-out infinite;
+  }
+  
+  /* Card and button hover effects */
+  .pod-card {
+    cursor: pointer !important;
+  }
+  
+  .pod-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  }
+  
+  .pod-card a {
+    cursor: pointer !important;
+  }
+  
+  .pod-card a:hover {
+    animation: buttonGlow 2s ease-in-out infinite;
+    cursor: pointer !important;
   }
   
   /* Mobile optimizations */
