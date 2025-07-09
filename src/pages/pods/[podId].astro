@@ -1,0 +1,25 @@
+---
+import PodDetailLayout from '../../components/pods/PodDetailLayout.astro';
+
+export async function getStaticPaths() {
+  const podIds = [
+    'ecommerce-engine',
+    'ar-vr-experience', 
+    'ai-product-studio',
+    'product-launch',
+    'admin-workflow-automation',
+    'ai-ml-integration',
+    'mobile-first-saas',
+    'devops-infra-automation'
+  ];
+
+  return podIds.map(podId => ({
+    params: { podId },
+    props: { podId }
+  }));
+}
+
+const { podId } = Astro.params;
+---
+
+<PodDetailLayout podId={podId} /> 
