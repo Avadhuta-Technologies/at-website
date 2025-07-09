@@ -48,17 +48,53 @@ window.ScrollUtils = {
   navigateToPageAndSection: function(pagePath, sectionId) {
     const url = sectionId ? `${pagePath}#${sectionId}` : pagePath;
     
-    // Use history.pushState to change URL without reload
-    window.history.pushState({}, '', url);
-    
-    // Navigate to the page
+    // Navigate to the page with hash
     window.location.href = url;
+  },
+
+  /**
+   * Handle URL hash scrolling on page load
+   */
+  handleUrlHashScroll: function() {
+    // Check for hash in URL
+    if (window.location.hash) {
+      const sectionId = window.location.hash.substring(1); // Remove the #
+      console.log('Handling hash scroll for section:', sectionId);
+      
+      // Try multiple times to ensure the section is loaded
+      const tryScroll = () => {
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+          console.log('Found target section, scrolling...');
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          return true;
+        } else {
+          console.log('Section not found, retrying...');
+          return false;
+        }
+      };
+      
+      // Try immediately
+      if (!tryScroll()) {
+        // Try after a delay
+        setTimeout(() => {
+          if (!tryScroll()) {
+            // Try one more time after longer delay
+            setTimeout(tryScroll, 1000);
+          }
+        }, 500);
+      }
+    }
   },
 
   /**
    * Handle button clicks with section navigation
    */
   handleSectionNavigation: function(event, sectionId, fallbackHref) {
+    console.log('handleSectionNavigation called with sectionId:', sectionId);
     event.preventDefault();
     
     const target = event.target;
@@ -66,23 +102,28 @@ window.ScrollUtils = {
     
     // Check if we're on the home page
     const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
+    console.log('Is home page:', isHomePage);
     
     if (isHomePage) {
       // Try to scroll to section on current page
       const targetSection = document.getElementById(sectionId);
+      console.log('Looking for section:', sectionId, 'Found:', !!targetSection);
       
       if (targetSection) {
+        console.log('Scrolling to section:', sectionId);
         targetSection.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
       } else {
+        console.log('Section not found, using fallback href:', href);
         // Section not found, use fallback href
         window.location.href = href;
       }
     } else {
       // Not on home page, navigate to home page with section
       const homeUrl = `/#${sectionId}`;
+      console.log('Navigating to home page with section:', homeUrl);
       window.history.pushState({}, '', homeUrl);
       window.location.href = homeUrl;
     }
@@ -93,6 +134,7 @@ window.ScrollUtils = {
    */
   getSectionIdFromButtonLabel: function(buttonLabel) {
     const label = buttonLabel.toLowerCase();
+    console.log('Looking for section ID for button label:', buttonLabel, 'normalized to:', label);
     
     // Map button labels to section IDs
     const sectionMap = {
@@ -100,6 +142,7 @@ window.ScrollUtils = {
       'choose your novapod': 'choose-pod-section',
       'see how it works': 'how-it-works',
       'how it works': 'how-it-works',
+      'explore all pods': 'available-pods',
       'explore packs': 'packs-section',
       'view packs': 'packs-section'
     };
@@ -107,10 +150,12 @@ window.ScrollUtils = {
     // Find matching section
     for (const [key, sectionId] of Object.entries(sectionMap)) {
       if (label.includes(key)) {
+        console.log('Found matching section:', key, '->', sectionId);
         return sectionId;
       }
     }
     
+    console.log('No matching section found for label:', label);
     return null;
   },
 
@@ -118,12 +163,15 @@ window.ScrollUtils = {
    * Generic button click handler
    */
   handleButtonClick: function(event, buttonLabel) {
+    console.log('ScrollUtils.handleButtonClick called with label:', buttonLabel);
     const sectionId = this.getSectionIdFromButtonLabel(buttonLabel);
     
     if (sectionId) {
+      console.log('Using section navigation for:', sectionId);
       // Use the generic section navigation
       this.handleSectionNavigation(event, sectionId);
     } else {
+      console.log('No matching section, using default navigation');
       // No matching section, use default navigation
       const target = event.target;
       const href = target?.href || '#';

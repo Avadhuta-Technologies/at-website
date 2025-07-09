@@ -158,13 +158,31 @@ function getSvgIcon(iconType: string) {
     
     <!-- Explore All Button -->
     <div data-animate="fade-in-up" class="text-center mt-12">
-      <a href="/explore-pods" class="inline-flex items-center justify-center py-4 px-8 bg-white dark:bg-slate-800 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:scale-105 shadow-lg">
+      <a href="/explore-pods" onclick="handleExplorePodsClick(event)" class="inline-flex items-center justify-center py-4 px-8 bg-white dark:bg-slate-800 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:scale-105 shadow-lg">
         Explore All Pods
         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
         </svg>
       </a>
     </div>
+
+<script>
+  function handleExplorePodsClick(event: Event) {
+    event.preventDefault();
+    
+    console.log('Explore pods button clicked');
+    
+    // Use the generic ScrollUtils for cross-page navigation
+    // @ts-ignore
+    if (window.ScrollUtils) {
+      // @ts-ignore
+      window.ScrollUtils.navigateToPageAndSection('/explore-pods', 'available-pods');
+    } else {
+      // Fallback if ScrollUtils is not loaded
+      window.location.href = '/explore-pods#available-pods';
+    }
+  }
+</script>
   </div>
 </section>
 

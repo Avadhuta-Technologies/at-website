@@ -139,6 +139,24 @@ function getGradientClass(color: string): string {
     secondaryButton={podsData.cta.secondaryButton}
   />
 
+  <script>
+    // Use the generic ScrollUtils for hash scrolling
+    function handleHashScroll() {
+      // @ts-ignore
+      if (window.ScrollUtils) {
+        // @ts-ignore
+        window.ScrollUtils.handleUrlHashScroll();
+      }
+    }
+
+    // Try multiple event listeners for better reliability
+    document.addEventListener('DOMContentLoaded', handleHashScroll);
+    window.addEventListener('load', handleHashScroll);
+    
+    // Also try after a delay as fallback
+    setTimeout(handleHashScroll, 1000);
+  </script>
+
 </Layout>
 
 <style>
