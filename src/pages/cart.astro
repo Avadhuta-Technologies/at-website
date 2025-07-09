@@ -1,387 +1,368 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import CartUtility from '../components/shared/CartUtility.astro';
 ---
 
-<Layout description="Your NovaPod.ai cart - Review and checkout your selected pods and packs." title="Cart | NovaPod.ai">
+<Layout title="Cart Summary - NovaPod" description="Review your selected pod and packs">
+  <CartUtility />
+  
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="max-w-6xl mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Pod Summary</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">Review your selected pod and packs</p>
+      </div>
 
-  <Breadcrumb 
-    title="Shopping Cart"
-    subtitle="Review your selected pods and packs"
-  />
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Selected Items -->
+        <div class="lg:col-span-2">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Selected Pod and Packs</h2>
+            
+            <!-- Pod Section -->
+            <div id="pod-section" class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                Your Pod
+              </h3>
+              <div id="selected-pod" class="space-y-4">
+                <!-- Pod will be rendered here -->
+              </div>
+            </div>
 
-  <!-- Cart Section -->
-  <section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
-    <div class="container mx-auto px-4">
-      <div class="max-w-6xl mx-auto">
-        
-        <!-- Cart Header -->
-        <div class="mb-8">
-          <h1 class="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-2">Your Cart</h1>
-          <p class="text-gray-600 dark:text-gray-400">Review your selected items before checkout</p>
-        </div>
+            <!-- Packs Section -->
+            <div id="packs-section" class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Selected Packs
+              </h3>
+              <div id="selected-packs" class="space-y-4">
+                <!-- Packs will be rendered here -->
+              </div>
+            </div>
 
-        <!-- Cart Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          <!-- Cart Items -->
-          <div class="lg:col-span-2">
-            <div id="cart-items" class="space-y-4">
-              <!-- Cart items will be populated by JavaScript -->
-              <div id="empty-cart" class="text-center py-12">
-                <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-                  </svg>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Your cart is empty</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">Add some pods or packs to get started</p>
-                <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                  <a href="/explore-pods" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            <!-- No Pod Warning -->
+            <div id="no-pod-warning" class="hidden bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-6">
+              <div class="flex items-start">
+                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                <div>
+                  <h4 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200">Pod Required</h4>
+                  <p class="text-yellow-700 dark:text-yellow-300 mt-1">You must select a pod before proceeding. Packs cannot be purchased without a pod.</p>
+                  <a href="/pricing" class="inline-flex items-center mt-3 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+                    <span>Select a Pod</span>
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                     </svg>
-                    Explore Pods
-                  </a>
-                  <a href="/explore-packs" class="inline-flex items-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:border-blue-500 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-all duration-300">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                    </svg>
-                    Explore Packs
                   </a>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Cart Summary -->
-          <div class="lg:col-span-1">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-24">
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Order Summary</h3>
-              
-              <!-- Summary Items -->
-              <div id="cart-summary" class="space-y-3 mb-6">
-                <!-- Summary items will be populated by JavaScript -->
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="/pricing" class="flex-1 bg-gray-500 text-white py-3 px-6 rounded-xl font-semibold text-center hover:bg-gray-600 transition-colors">
+              Continue Shopping
+            </a>
+            <button id="proceed-btn" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+              Start My Pod Journey
+            </button>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-8">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Order Summary</h3>
+            
+            <div id="order-summary" class="space-y-4 mb-6">
+              <!-- Summary items will be rendered here -->
+            </div>
+
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div class="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
+                <span>Total</span>
+                <span id="total-amount">₹0</span>
               </div>
+              <p class="text-sm text-gray-500 mt-1">+ GST (18%)</p>
+            </div>
 
-              <!-- Total -->
-              <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
-                <div class="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
-                  <span>Total</span>
-                  <span id="cart-total">₹0</span>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">All prices in INR</p>
-              </div>
-
-              <!-- Checkout Button -->
-              <button id="checkout-btn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                Proceed to Checkout
-              </button>
-
-              <!-- Additional Info -->
-              <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                <p class="mb-2">✓ Secure checkout</p>
-                <p class="mb-2">✓ 30-day money-back guarantee</p>
-                <p>✓ Free consultation included</p>
+            <!-- Recommendations -->
+            <div id="recommendations" class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Recommended Add-ons</h4>
+              <div id="recommendation-items" class="space-y-3">
+                <!-- Recommendations will be rendered here -->
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
-  </section>
-
+  </div>
 </Layout>
 
 <script>
-  // IndexedDB Cart functionality
-  class IndexedDBCart {
+  // Cart Summary functionality
+  class CartSummary {
     constructor() {
-      this.dbName = 'NovaPodCart';
-      this.dbVersion = 1;
-      this.storeName = 'cart';
-      this.db = null;
+      this.cart = null;
       this.init();
     }
 
     async init() {
-      try {
-        await this.openDB();
+      if (typeof window !== 'undefined' && window.cartUtility) {
+        this.cart = window.cartUtility;
         await this.render();
-        this.updateCartBadge();
         this.setupEventListeners();
-      } catch (error) {
-        console.error('Failed to initialize IndexedDB cart:', error);
-        this.fallbackToLocalStorage();
       }
-    }
-
-    async openDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(this.dbName, this.dbVersion);
-        
-        request.onerror = () => {
-          console.error('IndexedDB error:', request.error);
-          reject(request.error);
-        };
-        
-        request.onsuccess = () => {
-          this.db = request.result;
-          resolve();
-        };
-        
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains(this.storeName)) {
-            const store = db.createObjectStore(this.storeName, { keyPath: 'id' });
-            store.createIndex('type', 'type', { unique: false });
-            store.createIndex('timestamp', 'timestamp', { unique: false });
-          }
-        };
-      });
-    }
-
-    async getCart() {
-      try {
-        return new Promise((resolve, reject) => {
-          const transaction = this.db.transaction([this.storeName], 'readonly');
-          const store = transaction.objectStore(this.storeName);
-          const request = store.get('cart');
-          
-          request.onsuccess = () => {
-            const result = request.result;
-            resolve(result?.items || []);
-          };
-          
-          request.onerror = () => reject(request.error);
-        });
-      } catch (error) {
-        console.error('Failed to get cart from IndexedDB:', error);
-        return this.getCartFromLocalStorage();
-      }
-    }
-
-    async saveCart(cart) {
-      return new Promise((resolve, reject) => {
-        const transaction = this.db.transaction([this.storeName], 'readwrite');
-        const store = transaction.objectStore(this.storeName);
-        const request = store.put({ 
-          id: 'cart', 
-          items: cart,
-          lastUpdated: Date.now()
-        });
-        
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-    }
-
-    async removeItem(id, type) {
-      try {
-        const cart = await this.getCart();
-        const filteredCart = cart.filter(item => !(item.id === id && item.type === type));
-        await this.saveCart(filteredCart);
-        await this.render();
-        this.updateCartBadge();
-      } catch (error) {
-        console.error('Failed to remove item from cart:', error);
-      }
-    }
-
-    async updateQuantity(id, type, quantity) {
-      try {
-        const cart = await this.getCart();
-        const item = cart.find(i => i.id === id && i.type === type);
-        
-        if (item) {
-          if (quantity <= 0) {
-            await this.removeItem(id, type);
-          } else {
-            item.quantity = quantity;
-            item.timestamp = Date.now();
-            await this.saveCart(cart);
-            await this.render();
-            this.updateCartBadge();
-          }
-        }
-      } catch (error) {
-        console.error('Failed to update quantity:', error);
-      }
-    }
-
-    parsePrice(price) {
-      if (typeof price === 'number') return price;
-      if (typeof price === 'string') {
-        const match = price.match(/[\d.]+/);
-        return match ? parseFloat(match[0]) * 100000 : 0;
-      }
-      return 0;
-    }
-
-    formatPrice(amount) {
-      if (amount >= 100000) {
-        return `₹${(amount / 100000).toFixed(1)}L`;
-      } else if (amount >= 1000) {
-        return `₹${(amount / 1000).toFixed(0)}K`;
-      }
-      return `₹${amount.toFixed(0)}`;
-    }
-
-    async updateCartBadge() {
-      try {
-        const cart = await this.getCart();
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        
-        const badges = document.querySelectorAll('.cart-badge');
-        badges.forEach(badge => {
-          badge.textContent = totalItems;
-          badge.style.display = totalItems > 0 ? 'flex' : 'none';
-        });
-      } catch (error) {
-        console.error('Failed to update cart badge:', error);
-      }
-    }
-
-    setupEventListeners() {
-      // Handle quantity updates and remove buttons
-      document.addEventListener('click', async (e) => {
-        if (e.target.matches('[data-action="decrease"]')) {
-          const item = e.target.closest('[data-item-id]');
-          const id = item.dataset.itemId;
-          const type = item.dataset.itemType;
-          const currentQty = parseInt(item.dataset.quantity);
-          await this.updateQuantity(id, type, currentQty - 1);
-        }
-        
-        if (e.target.matches('[data-action="increase"]')) {
-          const item = e.target.closest('[data-item-id]');
-          const id = item.dataset.itemId;
-          const type = item.dataset.itemType;
-          const currentQty = parseInt(item.dataset.quantity);
-          await this.updateQuantity(id, type, currentQty + 1);
-        }
-        
-        if (e.target.matches('[data-action="remove"]')) {
-          const item = e.target.closest('[data-item-id]');
-          const id = item.dataset.itemId;
-          const type = item.dataset.itemType;
-          await this.removeItem(id, type);
-        }
-      });
     }
 
     async render() {
-      try {
-        const cartItems = document.getElementById('cart-items');
-        const cartSummary = document.getElementById('cart-summary');
-        const cartTotal = document.getElementById('cart-total');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        const emptyCart = document.getElementById('empty-cart');
+      await this.renderSelectedItems();
+      await this.renderOrderSummary();
+      await this.renderRecommendations();
+      this.updateProceedButton();
+    }
 
-        const items = await this.getCart();
+    async renderSelectedItems() {
+      const cart = await this.cart.getCart();
+      const pods = cart.filter(item => item.type === 'pod');
+      const packs = cart.filter(item => item.type === 'pack');
 
-        if (items.length === 0) {
-          cartItems.innerHTML = emptyCart.outerHTML;
-          cartSummary.innerHTML = '';
-          cartTotal.textContent = '₹0';
-          checkoutBtn.disabled = true;
-          return;
-        }
+      // Render Pod
+      const podSection = document.getElementById('selected-pod');
+      const noPodWarning = document.getElementById('no-pod-warning');
+      
+      if (pods.length > 0) {
+        noPodWarning.classList.add('hidden');
+        const pod = pods[0]; // Only one pod allowed
+        podSection.innerHTML = this.renderPodItem(pod);
+      } else {
+        noPodWarning.classList.remove('hidden');
+        podSection.innerHTML = '<p class="text-gray-500 italic">No pod selected</p>';
+      }
 
-        // Render cart items
-        cartItems.innerHTML = items.map(item => `
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6" data-item-id="${item.id}" data-item-type="${item.type}" data-quantity="${item.quantity}">
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="flex items-center mb-2">
-                  <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">${item.title}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.type === 'pod' ? 'Pod' : 'Pack'}</p>
-                  </div>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">${item.description}</p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-2">
-                    <button data-action="decrease" class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                      <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                      </svg>
-                    </button>
-                    <span class="w-12 text-center font-medium text-gray-900 dark:text-white">${item.quantity}</span>
-                    <button data-action="increase" class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                      <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                      </svg>
-                    </button>
-                  </div>
-                  <div class="text-right">
-                    <p class="font-semibold text-gray-900 dark:text-white">${item.price}</p>
-                    <button data-action="remove" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('');
-
-        // Render summary
-        cartSummary.innerHTML = items.map(item => `
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600 dark:text-gray-400">${item.title} × ${item.quantity}</span>
-            <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
-          </div>
-        `).join('');
-
-        // Update total
-        const total = items.reduce((sum, item) => {
-          const price = this.parsePrice(item.price);
-          return sum + (price * item.quantity);
-        }, 0);
-        
-        cartTotal.textContent = this.formatPrice(total);
-        checkoutBtn.disabled = false;
-      } catch (error) {
-        console.error('Failed to render cart:', error);
+      // Render Packs
+      const packsSection = document.getElementById('selected-packs');
+      if (packs.length > 0) {
+        packsSection.innerHTML = packs.map(pack => this.renderPackItem(pack)).join('');
+      } else {
+        packsSection.innerHTML = '<p class="text-gray-500 italic">No packs selected</p>';
       }
     }
 
-    checkout() {
-      window.location.href = '/checkout';
+    renderPodItem(pod) {
+      return `
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 dark:text-white">${pod.title}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">${pod.description}</p>
+            </div>
+            <button onclick="cartSummary.removeItem('${pod.id}', '${pod.type}')" class="text-red-500 hover:text-red-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="font-semibold text-gray-700 dark:text-gray-300">Price:</span>
+              <span class="text-gray-900 dark:text-white">${pod.price}</span>
+            </div>
+            <div>
+              <span class="font-semibold text-gray-700 dark:text-gray-300">Quantity:</span>
+              <span class="text-gray-900 dark:text-white">${pod.quantity}</span>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    // Fallback methods
-    fallbackToLocalStorage() {
-      console.warn('Falling back to localStorage');
-      this.getCart = this.getCartFromLocalStorage;
-      this.saveCart = this.saveCartToLocalStorage;
+    renderPackItem(pack) {
+      return `
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 dark:text-white">${pack.title}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-400">${pack.description}</p>
+            </div>
+            <button onclick="cartSummary.removeItem('${pack.id}', '${pack.type}')" class="text-red-500 hover:text-red-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="font-semibold text-gray-700 dark:text-gray-300">Price:</span>
+              <span class="text-gray-900 dark:text-white">${pack.price}</span>
+            </div>
+            <div>
+              <span class="font-semibold text-gray-700 dark:text-gray-300">Quantity:</span>
+              <span class="text-gray-900 dark:text-white">${pack.quantity}</span>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
-    getCartFromLocalStorage() {
-      const saved = localStorage.getItem('novapod-cart');
-      return Promise.resolve(saved ? JSON.parse(saved) : []);
+    async renderOrderSummary() {
+      const cart = await this.cart.getCart();
+      const summaryDiv = document.getElementById('order-summary');
+      
+      if (cart.length === 0) {
+        summaryDiv.innerHTML = '<p class="text-gray-500 italic">No items in cart</p>';
+        return;
+      }
+
+      const summaryItems = cart.map(item => `
+        <div class="flex justify-between items-center">
+          <span class="text-gray-600 dark:text-gray-400">${item.title} × ${item.quantity}</span>
+          <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
+        </div>
+      `).join('');
+
+      summaryDiv.innerHTML = summaryItems;
     }
 
-    saveCartToLocalStorage(cart) {
-      localStorage.setItem('novapod-cart', JSON.stringify(cart));
-      return Promise.resolve();
+    async renderRecommendations() {
+      const cart = await this.cart.getCart();
+      const pods = cart.filter(item => item.type === 'pod');
+      const packs = cart.filter(item => item.type === 'pack');
+      
+      const recommendationsDiv = document.getElementById('recommendation-items');
+      
+      if (pods.length === 0) {
+        recommendationsDiv.innerHTML = '<p class="text-sm text-gray-500">Select a pod to see recommendations</p>';
+        return;
+      }
+
+      // Intelligent recommendations based on pod selection
+      const recommendations = this.getRecommendations(pods[0], packs);
+      
+      if (recommendations.length === 0) {
+        recommendationsDiv.innerHTML = '<p class="text-sm text-gray-500">No additional recommendations</p>';
+        return;
+      }
+
+      const recommendationsHtml = recommendations.map(rec => `
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">${rec.title}</h5>
+          <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">${rec.description}</p>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">${rec.price}</span>
+            <button onclick="cartSummary.addRecommendation('${rec.id}', '${rec.type}', '${rec.title}', '${rec.description}', '${rec.price}')" class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors">
+              Add
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      recommendationsDiv.innerHTML = recommendationsHtml;
+    }
+
+    getRecommendations(selectedPod, selectedPacks) {
+      const recommendations = [];
+      const selectedPackIds = selectedPacks.map(p => p.id);
+
+      // Launch Pack recommendation for any pod
+      if (!selectedPackIds.includes('launch-pack')) {
+        recommendations.push({
+          id: 'launch-pack',
+          type: 'pack',
+          title: 'Launch Pack',
+          description: 'Deployment, analytics, app store setup',
+          price: '₹75,000'
+        });
+      }
+
+      // Web Presence Pack for tech pods
+      if (selectedPod.id.includes('full-stack') && !selectedPackIds.includes('web-presence')) {
+        recommendations.push({
+          id: 'web-presence',
+          type: 'pack',
+          title: 'Web Presence Pack',
+          description: 'Landing page, CMS, SEO ready',
+          price: '₹45,000'
+        });
+      }
+
+      // Brand Starter Pack for any pod
+      if (!selectedPackIds.includes('brand-starter')) {
+        recommendations.push({
+          id: 'brand-starter',
+          type: 'pack',
+          title: 'Brand Starter Pack',
+          description: 'Logo, color palette, pitch deck',
+          price: '₹30,000'
+        });
+      }
+
+      return recommendations;
+    }
+
+    async addRecommendation(id, type, title, description, price) {
+      await this.cart.addItem({
+        id: id,
+        type: type,
+        title: title,
+        description: description,
+        price: price
+      });
+      await this.render();
+    }
+
+    async removeItem(id, type) {
+      await this.cart.removeItem(id, type);
+      await this.render();
+    }
+
+    updateProceedButton() {
+      const proceedBtn = document.getElementById('proceed-btn');
+      const cart = this.cart.getCart();
+      
+      cart.then(items => {
+        const hasPod = items.some(item => item.type === 'pod');
+        proceedBtn.disabled = !hasPod;
+        
+        if (hasPod) {
+          proceedBtn.textContent = 'Start My Pod Journey';
+        } else {
+          proceedBtn.textContent = 'Select a Pod First';
+        }
+      });
+    }
+
+    setupEventListeners() {
+      document.getElementById('proceed-btn')?.addEventListener('click', () => {
+        this.proceedToCheckout();
+      });
+    }
+
+    async proceedToCheckout() {
+      const cart = await this.cart.getCart();
+      const hasPod = cart.some(item => item.type === 'pod');
+      
+      if (!hasPod) {
+        alert('Please select a pod before proceeding.');
+        return;
+      }
+      
+      window.location.href = '/enhance-pod';
     }
   }
 
-  // Initialize cart
-  let cart;
+  // Initialize cart summary
+  let cartSummary;
   if (typeof window !== 'undefined') {
-    cart = new IndexedDBCart();
-    
-    // Add checkout button event listener
-    document.getElementById('checkout-btn')?.addEventListener('click', () => {
-      cart.checkout();
-    });
+    cartSummary = new CartSummary();
   }
 </script> 

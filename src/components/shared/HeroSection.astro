@@ -95,7 +95,7 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
           </a>
         )}
         {secondaryButton && (
-          <a href={secondaryButton.href} class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
+          <a href={secondaryButton.href} onclick="scrollToHowItWorks(event)" class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
             <span class="flex items-center">{secondaryButton.label}</span>
           </a>
         )}
@@ -117,4 +117,49 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
   )}
 </section>
 
- 
+<script>
+  function scrollToHowItWorks(event) {
+    event.preventDefault();
+    
+    // Check if we're on the home page
+    if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+      // Find the How It Works section by ID
+      const howItWorksSection = document.getElementById('how-it-works');
+      
+      if (howItWorksSection) {
+        // Smooth scroll to the section
+        howItWorksSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      } else {
+        // Fallback: try to find any section with "how" in the id
+        const sections = document.querySelectorAll('[id*="how"]');
+        if (sections.length > 0) {
+          sections[0].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    } else {
+      // If not on home page, navigate to home page with hash without reload
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/') {
+        // Use history.pushState to change URL without reload
+        window.history.pushState({}, '', '/#how-it-works');
+        // Then navigate to home page
+        window.location.href = '/#how-it-works';
+      } else {
+        // Already on home page, just scroll
+        const howItWorksSection = document.getElementById('how-it-works');
+        if (howItWorksSection) {
+          howItWorksSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    }
+  }
+</script>
