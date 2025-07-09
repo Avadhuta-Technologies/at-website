@@ -63,104 +63,223 @@ function getGradientClass(color: string): string {
   };
   return colorMap[color] || 'from-blue-400 to-cyan-500';
 }
+
+// Define relevant packs for each pod type
+const relevantPacks = {
+  'ecommerce-engine': [
+    {
+      id: 'web-presence',
+      title: 'Web Presence Pack',
+      description: 'Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready.',
+      duration: '2 weeks',
+      price: '₹45,000 / $550',
+      icon: '🌐'
+    },
+    {
+      id: 'payment-integration',
+      title: 'Payment Integration Pack',
+      description: 'Advanced payment gateway integration with multiple providers, subscription management, and fraud protection.',
+      duration: '1 week',
+      price: '₹25,000 / $300',
+      icon: '💳'
+    },
+    {
+      id: 'analytics-optimization',
+      title: 'Analytics & Optimization Pack',
+      description: 'Advanced analytics setup, A/B testing framework, conversion optimization, and performance monitoring.',
+      duration: '1 week',
+      price: '₹30,000 / $350',
+      icon: '📊'
+    }
+  ],
+  'ar-vr-experience': [
+    {
+      id: '3d-assets',
+      title: '3D Assets Pack',
+      description: 'Custom 3D models, textures, and animations for your AR/VR experience. High-quality assets optimized for performance.',
+      duration: '2 weeks',
+      price: '₹60,000 / $750',
+      icon: '🎨'
+    },
+    {
+      id: 'multi-platform',
+      title: 'Multi-Platform Pack',
+      description: 'Deploy your AR/VR experience across multiple platforms: Meta Quest, WebXR, iOS ARKit, and Android ARCore.',
+      duration: '2 weeks',
+      price: '₹50,000 / $600',
+      icon: '📱'
+    }
+  ],
+  'ai-product-studio': [
+    {
+      id: 'ai-training',
+      title: 'AI Model Training Pack',
+      description: 'Custom model training, fine-tuning, and optimization for your specific use case and data.',
+      duration: '3 weeks',
+      price: '₹80,000 / $950',
+      icon: '🤖'
+    },
+    {
+      id: 'data-pipeline',
+      title: 'Data Pipeline Pack',
+      description: 'End-to-end data processing pipeline, ETL workflows, and real-time data ingestion for AI applications.',
+      duration: '2 weeks',
+      price: '₹55,000 / $650',
+      icon: '📈'
+    }
+  ]
+};
+
+const packs = relevantPacks[podId as keyof typeof relevantPacks] || [];
 ---
 
 <Layout 
   title={`${podData.title} | NovaPod.ai`}
   description={podData.description}
 >
-  <!-- Hero Section -->
-  <section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
-    <div class="container mx-auto px-4">
+  <!-- Hero Section with Floating Elements -->
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-br from-purple-400/10 to-pink-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+      <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 4s;"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
       <div class="max-w-4xl mx-auto text-center">
-        <!-- Badge -->
-        <div class="inline-flex items-center mb-6">
-          <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeColor(podData.badgeColor)}`}>
+        <!-- Badge with Animation -->
+        <div class="inline-flex items-center mb-6 animate-fade-in-up">
+          <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeColor(podData.badgeColor)} animate-pulse`}>
             {podData.badge}
           </span>
         </div>
         
-        <!-- Title -->
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-dark dark:text-white">
+        <!-- Title with Typing Effect -->
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
           {podData.title}
         </h1>
         
         <!-- Description -->
-        <p class="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
+        <p class="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
           {podData.description}
         </p>
         
-        <!-- Ideal For -->
-        <div class="mb-8">
+        <!-- Ideal For with Hover Effects -->
+        <div class="mb-8 animate-fade-in-up">
           <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">Ideal For</h3>
-          <div class="flex flex-wrap justify-center gap-2">
-            {podData.idealFor.map((item: string) => (
-              <span class="px-4 py-2 bg-white dark:bg-slate-800 rounded-full text-sm text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700">
+          <div class="flex flex-wrap justify-center gap-3">
+            {podData.idealFor.map((item: string, index: number) => (
+              <span 
+                class="px-4 py-2 bg-white dark:bg-slate-800 rounded-full text-sm text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                style={`animation-delay: ${index * 0.1}s`}
+              >
                 {item}
               </span>
             ))}
           </div>
         </div>
+
+        <!-- Hero CTA -->
+        <div class="animate-fade-in-up" style="animation-delay: 0.5s;">
+          <button 
+            class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl animate-pulse"
+            onclick="handleReservePod('${podId}')"
+          >
+            Reserve Pod Now
+          </button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- What's in the Pod Section -->
+  <!-- What's in the Pod Section with Interactive Cards -->
   <section class="py-16 bg-white dark:bg-slate-900">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white">What's in the Pod?</h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white text-center">What's in the Pod?</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 text-center">
           {podData.hero?.description || podData.description}
         </p>
         
-        <!-- Team Composition -->
+        <!-- Team Composition with Interactive Cards -->
         <div class="mb-8">
-          <h3 class="text-xl font-semibold mb-4 text-dark dark:text-white">👥 Team Composition:</h3>
-          <ul class="space-y-3">
-            {podData.teamComposition.map((member: string) => (
-              <li class="flex items-start text-gray-700 dark:text-gray-300">
-                <span class="text-blue-500 mr-3 mt-1">•</span>
-                <span>{member}</span>
-              </li>
+          <h3 class="text-xl font-semibold mb-6 text-dark dark:text-white text-center">👥 Team Composition:</h3>
+          <div class="grid md:grid-cols-2 gap-4">
+            {podData.teamComposition.map((member: string, index: number) => (
+              <div 
+                class="p-4 bg-gray-50 dark:bg-slate-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 cursor-pointer transform hover:scale-105"
+                style={`animation-delay: ${index * 0.1}s`}
+              >
+                <div class="flex items-start">
+                  <span class="text-blue-500 mr-3 mt-1 text-xl">👤</span>
+                  <span class="text-gray-700 dark:text-gray-300">{member}</span>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
           {podData.upgradeNote && (
-            <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
               <p class="text-sm text-blue-700 dark:text-blue-300">{podData.upgradeNote}</p>
             </div>
           )}
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- What You Get Section -->
-  <section class="py-16 bg-gray-50 dark:bg-slate-800">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white">What You Get</h2>
-        <div class="grid gap-4">
-          {podData.deliverables.map((deliverable: string) => (
-            <div class="flex items-start">
-              <span class="text-green-500 mr-3 mt-1 text-xl">✅</span>
-              <span class="text-gray-700 dark:text-gray-300">{deliverable}</span>
-            </div>
-          ))}
+        <!-- Inline CTA -->
+        <div class="text-center mt-8">
+          <button 
+            class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+            onclick="handleReservePod('${podId}')"
+          >
+            Get This Team
+          </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Delivery Timelines Section -->
+  <!-- What You Get Section with Animated Icons -->
+  <section class="py-16 bg-gray-50 dark:bg-slate-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white text-center">What You Get</h2>
+        <div class="grid gap-4">
+          {podData.deliverables.map((deliverable: string, index: number) => (
+            <div 
+              class="flex items-start p-4 bg-white dark:bg-slate-900 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+              style={`animation-delay: ${index * 0.1}s`}
+            >
+              <span class="text-green-500 mr-3 mt-1 text-xl animate-bounce">✅</span>
+              <span class="text-gray-700 dark:text-gray-300">{deliverable}</span>
+            </div>
+          ))}
+        </div>
+
+        <!-- Inline CTA -->
+        <div class="text-center mt-8">
+          <button 
+            class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+            onclick="handleReservePod('${podId}')"
+          >
+            Start Building
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Delivery Timelines Section with Interactive Cards -->
   <section class="py-16 bg-white dark:bg-slate-900">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white">Delivery Timelines</h2>
+        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white text-center">Delivery Timelines</h2>
         <div class="grid md:grid-cols-3 gap-6">
-          {podData.process?.steps?.map((step: any) => (
-            <div class="text-center p-6 bg-gray-50 dark:bg-slate-800 rounded-lg">
-              <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">{step.number}</div>
+          {podData.process?.steps?.map((step: any, index: number) => (
+            <div 
+              class="text-center p-6 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              style={`animation-delay: ${index * 0.2}s`}
+            >
+              <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">{step.number}</div>
               <div class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{step.title}</div>
               <p class="text-gray-700 dark:text-gray-300">{step.description}</p>
             </div>
@@ -169,19 +288,32 @@ function getGradientClass(color: string): string {
         <div class="text-center mt-6">
           <p class="text-sm text-gray-500 dark:text-gray-400">Agile. Transparent. Always shipping value.</p>
         </div>
+
+        <!-- Inline CTA -->
+        <div class="text-center mt-8">
+          <button 
+            class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+            onclick="handleReservePod('${podId}')"
+          >
+            Start Your Timeline
+          </button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Why Teams Trust This Pod Section -->
+  <!-- Why Teams Trust This Pod Section with Hover Effects -->
   <section class="py-16 bg-gray-50 dark:bg-slate-800">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white">Why Teams Trust This Pod</h2>
+        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white text-center">Why Teams Trust This Pod</h2>
         <div class="grid md:grid-cols-2 gap-6">
-          {podData.features?.map((feature: any) => (
-            <div class="flex items-start">
-              <span class="text-blue-500 mr-3 mt-1">•</span>
+          {podData.features?.map((feature: any, index: number) => (
+            <div 
+              class="flex items-start p-4 bg-white dark:bg-slate-900 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              style={`animation-delay: ${index * 0.1}s`}
+            >
+              <span class="text-blue-500 mr-3 mt-1 text-xl">💪</span>
               <div>
                 <span class="font-semibold text-gray-900 dark:text-white">{feature.title}: </span>
                 <span class="text-gray-700 dark:text-gray-300">{feature.description}</span>
@@ -189,34 +321,58 @@ function getGradientClass(color: string): string {
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Past Use Cases Section -->
-  <section class="py-16 bg-white dark:bg-slate-900">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white">Past Use Cases</h2>
-        <div class="grid gap-4">
-          {podData.pastUseCases?.map((useCase: string) => (
-            <div class="flex items-start">
-              <span class="text-green-500 mr-3 mt-1">•</span>
-              <span class="text-gray-700 dark:text-gray-300">{useCase}</span>
-            </div>
-          ))}
+        <!-- Inline CTA -->
+        <div class="text-center mt-8">
+          <button 
+            class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+            onclick="handleReservePod('${podId}')"
+          >
+            Trust This Team
+          </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Pricing Section -->
+  <!-- Past Use Cases Section with Interactive Cards -->
+  <section class="py-16 bg-white dark:bg-slate-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white text-center">Past Use Cases</h2>
+        <div class="grid gap-4">
+          {podData.pastUseCases?.map((useCase: string, index: number) => (
+            <div 
+              class="flex items-start p-4 bg-gray-50 dark:bg-slate-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 cursor-pointer transform hover:scale-105"
+              style={`animation-delay: ${index * 0.1}s`}
+              onclick="handleCaseStudyClick('${useCase}')"
+            >
+              <span class="text-green-500 mr-3 mt-1 text-xl">📈</span>
+              <span class="text-gray-700 dark:text-gray-300">{useCase}</span>
+            </div>
+          ))}
+        </div>
+
+        <!-- Inline CTA -->
+        <div class="text-center mt-8">
+          <button 
+            class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+            onclick="handleReservePod('${podId}')"
+          >
+            Create Your Success Story
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section with Enhanced Design -->
   <section class="py-16 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-3xl font-bold mb-8 text-dark dark:text-white">Pricing</h2>
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg">
-          <div class="text-4xl font-bold text-dark dark:text-white mb-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <div class="text-4xl font-bold text-dark dark:text-white mb-4 animate-pulse">
             {podData.priceINR}
           </div>
           <div class="text-lg text-gray-600 dark:text-gray-400 mb-6">
@@ -226,7 +382,7 @@ function getGradientClass(color: string): string {
             {podData.engagement}
           </p>
           <button 
-            class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl animate-pulse"
             onclick="handleReservePod('${podId}')"
           >
             Reserve Pod
@@ -236,69 +392,107 @@ function getGradientClass(color: string): string {
     </div>
   </section>
 
-  <!-- Add-on Packs Section -->
+  <!-- Add-on Packs Section with Relevant Packs -->
   <section class="py-16 bg-white dark:bg-slate-900">
     <div class="container mx-auto px-4">
       <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold mb-4 text-dark dark:text-white">Add More Power to Your Pod</h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
+        <h2 class="text-3xl font-bold mb-4 text-dark dark:text-white text-center">Add More Power to Your Pod</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 text-center">
           Complete your project with these add-on Packs designed to accelerate outcomes, simplify launch, and enhance your product
         </p>
         
         <!-- Add-on Packs Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Web Presence Pack -->
-          <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-700">
-            <h3 class="text-xl font-semibold mb-3 text-dark dark:text-white">Web Presence Pack</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-4">
-              Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready.
-            </p>
-            <div class="flex justify-between items-center mb-4">
-              <span class="text-sm text-gray-500">Duration: 2 weeks</span>
-              <span class="text-lg font-semibold text-dark dark:text-white">₹45,000 / $550</span>
-            </div>
-            <button 
-              class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
-              onclick="handleAddPack('web-presence')"
+          {packs.map((pack, index) => (
+            <div 
+              class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-slate-700 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
+              style={`animation-delay: ${index * 0.1}s`}
             >
-              Add To Pod
-            </button>
-          </div>
-          
-          <!-- Additional packs can be added here -->
+              <div class="text-3xl mb-3">{pack.icon}</div>
+              <h3 class="text-xl font-semibold mb-3 text-dark dark:text-white">{pack.title}</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">
+                {pack.description}
+              </p>
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-sm text-gray-500">Duration: {pack.duration}</span>
+                <span class="text-lg font-semibold text-dark dark:text-white">{pack.price}</span>
+              </div>
+              <button 
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
+                onclick="handleAddPack('${pack.id}')"
+              >
+                Add To Pod
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <!-- Inline CTA -->
+        <div class="text-center mt-8">
+          <button 
+            class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300"
+            onclick="handleReservePod('${podId}')"
+          >
+            Customize Your Pod
+          </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Final CTA Section -->
-  <section class="py-16 bg-gradient-to-br from-gray-900 to-blue-900 text-white">
-    <div class="container mx-auto px-4">
+  <!-- Final CTA Section with Enhanced Design -->
+  <section class="py-16 bg-gradient-to-br from-gray-900 to-blue-900 text-white relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0">
+      <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-600/20 to-purple-600/20"></div>
+      <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
+      <div class="absolute bottom-20 right-10 w-24 h-24 bg-white/10 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10">
       <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl font-bold mb-4">Ready to Launch with This Pod?</h2>
-        <p class="text-xl text-gray-300 mb-8">
+        <h2 class="text-3xl font-bold mb-4 animate-fade-in-up">Ready to Launch with This Pod?</h2>
+        <p class="text-xl text-gray-300 mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
           Let our {podData.title} hit the ground running while you focus on product and strategy. We'll own the code, the flow, and the velocity.
         </p>
-        <button 
-          class="bg-white text-gray-900 font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-          onclick="handleReservePod('${podId}')"
-        >
-          Reserve Pod
-        </button>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style="animation-delay: 0.4s;">
+          <button 
+            class="bg-white text-gray-900 font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            onclick="handleReservePod('${podId}')"
+          >
+            Reserve Pod
+          </button>
+          <button 
+            class="border-2 border-white text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-white hover:text-gray-900"
+            onclick="handleContactClick()"
+          >
+            Talk to Sales
+          </button>
+        </div>
       </div>
     </div>
   </section>
 
   <script>
-    function handleReservePod(podId: string) {
+    const podId = "{podId}";
+    function handleReservePod(podId) {
       console.log('Reserve pod clicked for:', podId);
-      // Add your reservation logic here
       window.location.href = `/contact?pod=${podId}`;
     }
 
-    function handleAddPack(packId: string) {
+    function handleAddPack(packId) {
       console.log('Add pack clicked for:', packId);
-      // Add your pack addition logic here
+      alert(`Added ${packId} pack to your pod!`);
+    }
+
+    function handleCaseStudyClick(useCase) {
+      console.log('Case study clicked:', useCase);
+      window.open(`/case-studies?pod=${podId}&case=${encodeURIComponent(useCase)}`, '_blank');
+    }
+
+    function handleContactClick() {
+      console.log('Contact sales clicked');
+      window.location.href = '/contact?type=sales';
     }
 
     // Make functions globally available
@@ -306,5 +500,69 @@ function getGradientClass(color: string): string {
     window.handleReservePod = handleReservePod;
     // @ts-ignore
     window.handleAddPack = handleAddPack;
+    // @ts-ignore
+    window.handleCaseStudyClick = handleCaseStudyClick;
+    // @ts-ignore
+    window.handleContactClick = handleContactClick;
+
+    // Add scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in-up');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
   </script>
+
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .animate-fade-in-up {
+      animation: fade-in-up 0.6s ease-out forwards;
+    }
+    
+    /* Hover effects for interactive elements */
+    .hover\:scale-105:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Smooth transitions */
+    * {
+      transition-property: all;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 300ms;
+    }
+  </style>
 </Layout> 
