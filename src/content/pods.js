@@ -56,7 +56,7 @@ export const podsData = {
         id: "ecommerce-engine",
         title: "Ecommerce Engine Pod (ShopPod)",
         description: "Your Dedicated Team for Scalable, High-Converting Ecommerce Experiences",
-        icon: "/assets/features/icon-01.svg",
+        icon: "shopping-cart",
         badge: "Popular",
         badgeColor: "green",
         idealFor: [
@@ -103,7 +103,7 @@ export const podsData = {
         id: "ar-vr-experience",
         title: "AR/VR Experience Pod (XRPod)",
         description: "Immersive Digital Experiences for Products, Training, and Visualization",
-        icon: "/assets/features/icon-02.svg",
+        icon: "vr-headset",
         badge: "Immersive",
         badgeColor: "purple",
         idealFor: [
@@ -149,7 +149,7 @@ export const podsData = {
         id: "ai-product-studio",
         title: "AI Product Studio Pod (AIPod)",
         description: "Build AI-First Products Without Building a Data Science Team",
-        icon: "/assets/features/icon-03.svg",
+        icon: "brain",
         badge: "AI-Powered",
         badgeColor: "blue",
         idealFor: [
@@ -195,7 +195,7 @@ export const podsData = {
         id: "product-launch",
         title: "Product Launch Pod (LaunchPod)",
         description: "Your All-in-One Team for Fast, Confident MVP Delivery",
-        icon: "/assets/features/icon-04.svg",
+        icon: "rocket",
         badge: "Fast",
         badgeColor: "orange",
         idealFor: [
@@ -242,7 +242,7 @@ export const podsData = {
         id: "admin-workflow-automation",
         title: "Admin & Workflow Automation Pod (FlowPod)",
         description: "For Teams Looking to Automate Business Operations",
-        icon: "/assets/features/icon-05.svg",
+        icon: "admin-workflow-automation",
         badge: "Automation",
         badgeColor: "indigo",
         idealFor: [
@@ -285,7 +285,7 @@ export const podsData = {
         id: "ai-ml-integration",
         title: "AI/ML Integration Pod (IntegratePod)",
         description: "Integrate Smart Features into Your Product—No Data Science Hiring Needed",
-        icon: "/assets/features/icon-06.svg",
+        icon: "ai-ml-integration",
         badge: "Integration",
         badgeColor: "teal",
         idealFor: [
@@ -327,7 +327,7 @@ export const podsData = {
         id: "mobile-first-saas",
         title: "Mobile-First SaaS Pod (AppPod)",
         description: "Your Cross-Platform Team for Beautiful, Functional Mobile SaaS Products",
-        icon: "/assets/features/icon-07.svg",
+        icon: "mobile-app",
         badge: "Mobile",
         badgeColor: "pink",
         idealFor: [
@@ -375,7 +375,7 @@ export const podsData = {
         id: "devops-infra-automation",
         title: "DevOps & Infra Automation Pod (InfraPod)",
         description: "Scale with Confidence — Reliable Infrastructure, CI/CD, and CloudOps Support",
-        icon: "/assets/features/icon-08.svg",
+        icon: "devops-infra-automation",
         badge: "Infrastructure",
         badgeColor: "gray",
         idealFor: [

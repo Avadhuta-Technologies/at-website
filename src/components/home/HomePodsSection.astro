@@ -46,35 +46,48 @@ function getGradientClass(color: string): string {
   return colorMap[color] || 'from-blue-400 to-cyan-500';
 }
 
-// SVG Icon Components - Relevant to content
+// SVG Icon Components - Content-based icons for each pod type
 function getSvgIcon(iconType: string) {
   switch (iconType) {
     case "shopping-cart":
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
       </svg>`;
     case "vr-headset":
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
       </svg>`;
-    case "mobile-app":
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-      </svg>`;
     case "brain":
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
       </svg>`;
     case "rocket":
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
       </svg>`;
     case "server":
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
       </svg>`;
+    case "mobile-app":
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+      </svg>`;
+    case "ai-ml-integration":
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+      </svg>`;
+    case "admin-workflow-automation":
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      </svg>`;
+    case "devops-infra-automation":
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+      </svg>`;
     default:
-      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>`;
   }
@@ -124,80 +137,43 @@ function getSvgIcon(iconType: string) {
           onclick="handlePodCardClick(event, this.getAttribute('data-pod-id'))"
         >
           <!-- Card Content -->
-          <div class="p-8 h-full flex flex-col">
+          <div class="p-6 h-full flex flex-col">
             <!-- Header with Icon and Badge -->
-            <div class="flex items-center justify-between mb-6">
-              <div class={`w-16 h-16 rounded-2xl bg-gradient-to-r ${getGradientClass(pod.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
+            <div class="flex items-center justify-between mb-4">
+              <div class={`w-12 h-12 rounded-xl bg-gradient-to-r ${getGradientClass(pod.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
                 <Fragment set:html={getSvgIcon(pod.icon)} />
               </div>
-              <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeColor(pod.badgeColor)}`}>
+              <span class={`text-xs px-2 py-1 rounded-full font-semibold ${getBadgeColor(pod.badgeColor)}`}>
                 {pod.badge}
               </span>
             </div>
             
             <!-- Title and Subtitle -->
-            <div class="mb-6">
-              <h3 class="font-bold text-2xl mb-2 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+            <div class="mb-4">
+              <h3 class="font-bold text-xl mb-2 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                 {pod.title}
               </h3>
-              <p class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
+              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                 {pod.subtitle}
               </p>
             </div>
             
-            <!-- Ideal For -->
-            <div class="mb-6">
-              <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 mb-2">Ideal for:</h4>
-              <p class="text-sm text-gray-700 dark:text-gray-300">{pod.idealFor}</p>
+            <!-- Key Highlights (Ideal For) -->
+            <div class="mb-4">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Ideal for:</p>
+              <p class="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{pod.idealFor}</p>
             </div>
             
-            <!-- Team Composition -->
-            <div class="mb-6">
-              <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 mb-2">Team Composition:</h4>
-              <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                {pod.teamComposition && pod.teamComposition.length > 0 ? pod.teamComposition.map((member) => (
-                  <li class="flex items-start">
-                    <span class="text-blue-500 mr-2">•</span>
-                    {member}
-                  </li>
-                )) : (
-                  <li class="text-gray-500 italic">Team composition details coming soon</li>
-                )}
-              </ul>
-            </div>
-            
-            <!-- Deliverables -->
-            <div class="mb-6">
-              <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 mb-2">Deliverables:</h4>
-              <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
-                {pod.deliverables && pod.deliverables.length > 0 ? (
-                  <>
-                    {pod.deliverables.slice(0, 3).map((deliverable) => (
-                      <li class="flex items-start">
-                        <span class="text-green-500 mr-2">✓</span>
-                        {deliverable}
-                      </li>
-                    ))}
-                    {pod.deliverables.length > 3 && (
-                      <li class="text-blue-500 text-xs">+{pod.deliverables.length - 3} more deliverables</li>
-                    )}
-                  </>
-                ) : (
-                  <li class="text-gray-500 italic">Deliverables details coming soon</li>
-                )}
-              </ul>
-            </div>
-            
-            <!-- Pricing and Engagement -->
-            <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl">
+            <!-- Pricing -->
+            <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
               <div class="text-center">
-                <p class="text-lg font-bold text-gray-900 dark:text-white">{pod.pricing}</p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Min. Engagement: {pod.minEngagement}</p>
+                <p class="text-base font-bold text-gray-900 dark:text-white">{pod.pricing}</p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">Min. {pod.minEngagement}</p>
               </div>
             </div>
             
-            <!-- Action Buttons -->
-            <div class="mt-auto space-y-3">
+            <!-- Action Button -->
+            <div class="mt-auto">
               <a 
                 href={`/pods/${pod.id}`} 
                 data-pod-id={pod.id}
@@ -212,7 +188,7 @@ function getSvgIcon(iconType: string) {
                 
                 <!-- Button content -->
                 <span class="relative z-10 flex items-center">
-                  Reserve Pod
+                  View Details
                   <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -220,17 +196,6 @@ function getSvgIcon(iconType: string) {
                 
                 <!-- Ripple effect -->
                 <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl"></div>
-              </a>
-              
-              <a 
-                href={`/pods/${pod.id}`} 
-                data-pod-id={pod.id}
-                class="inline-flex items-center justify-center w-full py-2 px-4 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 cursor-pointer"
-                onmousedown="event.stopPropagation()"
-                onmouseup="event.stopPropagation()"
-                onclick="event.stopPropagation(); handlePodDetailsClick(event, this.getAttribute('data-pod-id'))"
-              >
-                View Details
               </a>
             </div>
           </div>
