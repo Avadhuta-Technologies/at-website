@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import HeroSection from '../components/shared/HeroSection.astro';
 import WhyChooseSection from '../components/packs/WhyChooseSection.astro';
 import PacksHowItWorksSection from '../components/packs/PacksHowItWorksSection.astro';
-import ProductGrid from '../components/shared/ProductGrid.astro';
+import PodGrid from '../components/shared/PodGrid.astro';
 import FAQSection from '../components/shared/FAQSection.astro';
 import TestimonialsSection from '../components/shared/TestimonialsSection.astro';
 import CTASection from '../components/shared/CTASection.astro';
@@ -22,7 +22,7 @@ import { packsData } from '../content/packs.js';
         <div class="mb-16" id={cat.id}>
           <h2 class="text-2xl md:text-3xl font-bold mb-2 text-dark dark:text-white">{cat.title}</h2>
           <p class="text-gray-600 dark:text-gray-400 mb-6">{cat.description}</p>
-          <ProductGrid
+          <PodGrid
             products={cat.packs}
             type="pack"
             learnMoreUrlPrefix="/packs"

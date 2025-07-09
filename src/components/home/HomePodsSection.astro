@@ -7,6 +7,11 @@ export interface Props {
     title: string;
     subtitle: string;
     description: string;
+    idealFor: string;
+    teamComposition: string[];
+    deliverables: string[];
+    pricing: string;
+    minEngagement: string;
     icon: string;
     badge: string;
     badgeColor: string;
@@ -112,7 +117,7 @@ function getSvgIcon(iconType: string) {
     
     <!-- Pods Grid -->
     <div data-animate="staggered-children" class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
-      {pods.map((pod, index) => (
+      {pods && pods.length > 0 ? pods.map((pod, index) => (
         <div 
           class="pod-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
           data-pod-id={pod.id}
@@ -130,21 +135,69 @@ function getSvgIcon(iconType: string) {
               </span>
             </div>
             
-            <!-- Title, Subtitle and Description -->
-            <div class="flex-1 mb-6">
-              <h3 class="font-bold text-xl mb-2 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+            <!-- Title and Subtitle -->
+            <div class="mb-6">
+              <h3 class="font-bold text-2xl mb-2 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                 {pod.title}
               </h3>
-              <p class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              <p class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 {pod.subtitle}
-              </p>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                {pod.description}
               </p>
             </div>
             
-            <!-- Action Button -->
-            <div class="mt-auto">
+            <!-- Ideal For -->
+            <div class="mb-6">
+              <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 mb-2">Ideal for:</h4>
+              <p class="text-sm text-gray-700 dark:text-gray-300">{pod.idealFor}</p>
+            </div>
+            
+            <!-- Team Composition -->
+            <div class="mb-6">
+              <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 mb-2">Team Composition:</h4>
+              <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                {pod.teamComposition && pod.teamComposition.length > 0 ? pod.teamComposition.map((member) => (
+                  <li class="flex items-start">
+                    <span class="text-blue-500 mr-2">•</span>
+                    {member}
+                  </li>
+                )) : (
+                  <li class="text-gray-500 italic">Team composition details coming soon</li>
+                )}
+              </ul>
+            </div>
+            
+            <!-- Deliverables -->
+            <div class="mb-6">
+              <h4 class="font-semibold text-sm text-gray-600 dark:text-gray-400 mb-2">Deliverables:</h4>
+              <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                {pod.deliverables && pod.deliverables.length > 0 ? (
+                  <>
+                    {pod.deliverables.slice(0, 3).map((deliverable) => (
+                      <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        {deliverable}
+                      </li>
+                    ))}
+                    {pod.deliverables.length > 3 && (
+                      <li class="text-blue-500 text-xs">+{pod.deliverables.length - 3} more deliverables</li>
+                    )}
+                  </>
+                ) : (
+                  <li class="text-gray-500 italic">Deliverables details coming soon</li>
+                )}
+              </ul>
+            </div>
+            
+            <!-- Pricing and Engagement -->
+            <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl">
+              <div class="text-center">
+                <p class="text-lg font-bold text-gray-900 dark:text-white">{pod.pricing}</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Min. Engagement: {pod.minEngagement}</p>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="mt-auto space-y-3">
               <a 
                 href={`/pods/${pod.id}`} 
                 data-pod-id={pod.id}
@@ -159,7 +212,7 @@ function getSvgIcon(iconType: string) {
                 
                 <!-- Button content -->
                 <span class="relative z-10 flex items-center">
-                  View Details
+                  Reserve Pod
                   <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -168,13 +221,28 @@ function getSvgIcon(iconType: string) {
                 <!-- Ripple effect -->
                 <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl"></div>
               </a>
+              
+              <a 
+                href={`/pods/${pod.id}`} 
+                data-pod-id={pod.id}
+                class="inline-flex items-center justify-center w-full py-2 px-4 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 cursor-pointer"
+                onmousedown="event.stopPropagation()"
+                onmouseup="event.stopPropagation()"
+                onclick="event.stopPropagation(); handlePodDetailsClick(event, this.getAttribute('data-pod-id'))"
+              >
+                View Details
+              </a>
             </div>
           </div>
           
           <!-- Hover effect overlay -->
           <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 rounded-2xl"></div>
         </div>
-      ))}
+      )) : (
+        <div class="col-span-full text-center py-12">
+          <p class="text-gray-500 dark:text-gray-400">Pod information is loading...</p>
+        </div>
+      )}
     </div>
     
     <!-- Explore All Button -->
@@ -209,14 +277,13 @@ function getSvgIcon(iconType: string) {
     
     console.log('Pod card clicked for:', podId);
     
-    // Map home page pod IDs to actual pod page IDs
+    // Map home page pod IDs to actual pod page IDs (now using actual IDs)
     const podIdMapping: { [key: string]: string } = {
-      'shoppod': 'ecommerce-engine',
-      'xrpod': 'ar-vr-experience', 
-      'apppod': 'product-launch', // AppPod maps to LaunchPod
-      'aipod': 'ai-product-studio',
-      'launchpod': 'product-launch',
-      'infrapod': 'admin-workflow-automation'
+      'ecommerce-engine': 'ecommerce-engine',
+      'ar-vr-experience': 'ar-vr-experience', 
+      'ai-product-studio': 'ai-product-studio',
+      'product-launch': 'product-launch',
+      'admin-workflow-automation': 'admin-workflow-automation'
     };
     
     // Get the actual pod page ID
@@ -233,14 +300,13 @@ function getSvgIcon(iconType: string) {
     
     console.log('Pod details button clicked for:', podId);
     
-    // Map home page pod IDs to actual pod page IDs
+    // Map home page pod IDs to actual pod page IDs (now using actual IDs)
     const podIdMapping: { [key: string]: string } = {
-      'shoppod': 'ecommerce-engine',
-      'xrpod': 'ar-vr-experience', 
-      'apppod': 'product-launch', // AppPod maps to LaunchPod
-      'aipod': 'ai-product-studio',
-      'launchpod': 'product-launch',
-      'infrapod': 'admin-workflow-automation'
+      'ecommerce-engine': 'ecommerce-engine',
+      'ar-vr-experience': 'ar-vr-experience', 
+      'ai-product-studio': 'ai-product-studio',
+      'product-launch': 'product-launch',
+      'admin-workflow-automation': 'admin-workflow-automation'
     };
     
     // Get the actual pod page ID
