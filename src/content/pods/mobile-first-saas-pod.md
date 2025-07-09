@@ -19,8 +19,8 @@ deliverables:
   - "Backend admin panel (optional)"
   - "Store publishing (Play Store & App Store)"
 engagement: "minimum 1 month"
-priceINR: "₹3L/month"
-priceUSD: "$3.6K/month"
+priceINR: "₹6,50,000/month"
+priceUSD: "$28,000/month"
 hero:
   title: "Mobile-First SaaS Pod"
   subtitle: "Your Cross-Platform Team for Beautiful, Functional Mobile SaaS Products"
@@ -121,5 +121,5 @@ This pod delivers end-to-end mobile SaaS apps — from UI to backend — with pr
 
 ## Pricing
 
-**Starting at ₹3L/month (~$3.6K)**  
+**Starting at ₹6,50,000/month (~$28,000/month)**  
 Includes mobile dev, backend dev, design, testing, and deployment 

@@ -17,8 +17,8 @@ deliverables:
   - "Cross-platform delivery (Web + Android/iOS)"
   - "Testing, optimization, and packaging for deployment"
 engagement: "minimum 1 month"
-priceINR: "₹3L/month"
-priceUSD: "$3.6K/month"
+priceINR: "₹7,50,000/month"
+priceUSD: "$35,000/month"
 hero:
   title: "AR/VR Experience Pod"
   subtitle: "Immersive Digital Experiences for Products, Training, and Visualization"
@@ -117,5 +117,5 @@ This pod specializes in building rich AR/VR applications using Unity, Unreal, We
 
 ## Pricing
 
-**Starting at ₹3L/month (~$3.6K/month)**  
+**Starting at ₹7,50,000/month (~$35,000/month)**  
 Includes full development, 3D assets, testing, and deployment 

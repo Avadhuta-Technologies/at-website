@@ -145,9 +145,16 @@ const cardClass = type === 'pod' ? 'pod-card' : 'pack-card';
       
       <!-- Action Buttons -->
       <div class="flex gap-3">
-        <a href={actionUrl} class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-xl text-sm">
-          {actionText}
-        </a>
+        <button 
+          data-add-to-cart
+          data-item-id={id}
+          data-item-type={type}
+          data-item-title={title}
+          data-item-description={description}
+          data-item-price={price}
+          class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
+          Add to Cart
+        </button>
         <a href={learnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm">
           Learn More
         </a>

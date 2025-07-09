@@ -23,8 +23,8 @@ export const packsData = {
             badge: "Popular",
             badgeColor: "green",
             duration: "2 weeks",
-            priceINR: "₹75,000",
-            priceUSD: "$900",
+            priceINR: "₹1,00,000",
+            priceUSD: "$1,500",
             deliverables: [
               "Brand Identity Kit - Logo, color palette, typography, and brand voice—all aligned to tell your story powerfully and consistently.",
               "Go-To-Market Website - Launch-ready website (built on Webflow, Next.js, or your preferred stack) that communicates your value proposition, showcases your offering, and is optimized for conversions.",
@@ -179,8 +179,8 @@ export const packsData = {
             badge: "Growth",
             badgeColor: "orange",
             duration: "3 weeks",
-            priceINR: "₹95,000",
-            priceUSD: "$1,100",
+            priceINR: "₹1,50,000",
+            priceUSD: "$2,200",
             deliverables: [
               "Website Optimization Audit - Detailed review of your website's UX, SEO, speed, and conversion flows—with prioritized action items to boost performance.",
               "Lead Generation Setup - Capture leads through smart forms, popups, landing pages, and integrations with CRM or email tools like HubSpot, Mailchimp, or ConvertKit.",

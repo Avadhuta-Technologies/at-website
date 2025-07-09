@@ -96,7 +96,7 @@ export const podsData = {
           "Wholesale B2B portal with custom pricing workflows",
           "Shopify-based subscription store with referral tracking"
         ],
-        engagement: "Starting at ₹2.5L/month (~$3K/month)",
+        engagement: "Starting at ₹6,00,000/month (~$28,000/month)",
         priceNote: "Includes dev, design, QA, infrastructure, and deployment"
       },
       {
@@ -142,7 +142,7 @@ export const podsData = {
           "VR safety training simulation for a manufacturing firm",
           "WebAR product showcase for a launch event"
         ],
-        engagement: "Starting at ₹3L/month (~$3.6K/month)",
+        engagement: "Starting at ₹7,50,000/month (~$35,000/month)",
         priceNote: "Includes full development, 3D assets, testing, and deployment"
       },
       {
@@ -188,7 +188,7 @@ export const podsData = {
           "Chat-based internal knowledge assistant",
           "Audio transcription and summarization app"
         ],
-        engagement: "Starting at ₹3.5L/month (~$4.2K/month)",
+        engagement: "Starting at ₹8,00,000/month (~$38,000/month)",
         priceNote: "Includes design, dev, infra, and AI pipelines"
       },
       {
@@ -235,7 +235,7 @@ export const podsData = {
           "Internal CRM tool for early-stage sales",
           "IoT dashboard for field data monitoring"
         ],
-        engagement: "Starts at ₹2.5L/month (~$3K/month)",
+        engagement: "Starts at ₹5,50,000/month (~$25,000/month)",
         priceNote: "Includes dev, design, testing, DevOps & coordination"
       },
       {
@@ -278,7 +278,7 @@ export const podsData = {
           "Approval workflows for finance teams",
           "Reporting dashboard for executive teams"
         ],
-        engagement: "Starting at ₹2L/month (~$2.4K)",
+        engagement: "Starting at ₹5,00,000/month (~$22,000/month)",
         priceNote: "Includes development, testing, and deployment"
       },
       {
@@ -320,7 +320,7 @@ export const podsData = {
           "Image OCR and tagging system",
           "Recommendation engine for user engagement"
         ],
-        engagement: "Starts at ₹3L/month (~$3.6K)",
+        engagement: "Starts at ₹7,00,000/month (~$30,000/month)",
         priceNote: "PoC-based pricing also available"
       },
       {
@@ -368,7 +368,7 @@ export const podsData = {
           "Habit tracker SaaS with analytics backend",
           "IoT control app with device sync and notifications"
         ],
-        engagement: "Starting at ₹3L/month (~$3.6K)",
+        engagement: "Starting at ₹6,50,000/month (~$28,000/month)",
         priceNote: "Includes mobile dev, backend dev, design, testing, and deployment"
       },
       {
@@ -413,7 +413,7 @@ export const podsData = {
           "GitHub → Docker → Production pipeline setup",
           "Multi-tenant SaaS with containerized staging environments"
         ],
-        engagement: "Starting at ₹2L/month (~$2.4K)",
+        engagement: "Starting at ₹4,50,000/month (~$20,000/month)",
         priceNote: "One-time infra setup plans available as well"
       }
     ]

@@ -17,8 +17,8 @@ deliverables:
   - "SSL, backups, and security hardening"
   - "Cost optimization recommendations"
 engagement: "minimum 1 month"
-priceINR: "₹2L/month"
-priceUSD: "$2.4K/month"
+priceINR: "₹4,50,000/month"
+priceUSD: "$20,000/month"
 hero:
   title: "DevOps & Infra Automation Pod"
   subtitle: "Scale with Confidence — Reliable Infrastructure, CI/CD, and CloudOps Support"
@@ -116,5 +116,5 @@ This pod handles everything behind the scenes — CI/CD, cloud provisioning, mon
 
 ## Pricing
 
-**Starting at ₹2L/month (~$2.4K)**  
+**Starting at ₹4,50,000/month (~$20,000K)**  
 One-time infra setup plans available as well 

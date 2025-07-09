@@ -16,8 +16,8 @@ deliverables:
   - "Secure login, access controls"
   - "Deployment + CI/CD support"
 engagement: "minimum 1 month"
-priceINR: "₹2L/month"
-priceUSD: "$2.4K/month"
+priceINR: "₹5,00,000/month"
+priceUSD: "$22,000/month"
 hero:
   title: "Admin & Workflow Automation Pod"
   subtitle: "For Teams Looking to Automate Business Operations"
@@ -113,4 +113,4 @@ This pod focuses on operational software—building dashboards, CRMs, portals, a
 
 ## Pricing
 
-**Starting at ₹2L/month (~$2.4K)** 
+**Starting at ₹5,00,000/month (~$22,000/month)** 
