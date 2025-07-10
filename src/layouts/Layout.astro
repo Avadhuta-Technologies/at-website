@@ -4,6 +4,7 @@ import Header from '../components/layout/Header.astro';
 import BackToTop from '../components/layout/BackToTop.astro';
 import MadeWithButton from '../components/layout/MadeWithButton.astro';
 import CartUtility from '../components/shared/CartUtility.astro';
+import CartDrawer from '../components/shared/CartDrawer.astro';
 
 interface Props {
   description: string;
@@ -31,6 +32,7 @@ const { description, title, image } = Astro.props;
     <script>
       // Load cart service early
       import "../scripts/cart-init.ts";
+      import "../scripts/global-cart-init.ts";
     </script>
   </head>
   <body>
@@ -42,6 +44,7 @@ const { description, title, image } = Astro.props;
     <Footer />
     <BackToTop />
     <CartUtility />
+    <CartDrawer />
     <style is:global>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
       body {

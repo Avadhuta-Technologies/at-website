@@ -149,7 +149,18 @@ const {
       </div>
       
       <!-- Action Buttons -->
-      <div class="flex gap-3">        
+      <div class="flex gap-3">
+        <button 
+          data-add-to-cart
+          data-item-id={id}
+          data-item-type="pack"
+          data-item-title={title}
+          data-item-description={description}
+          data-item-price={priceINR}
+          data-item-duration={duration}
+          class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
+          Add Pack
+        </button>
         <a href={learnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm">
           View Details
         </a>
