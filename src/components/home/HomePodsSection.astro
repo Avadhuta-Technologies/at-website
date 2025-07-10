@@ -1,0 +1,218 @@
+---
+export interface Props {
+  title: string;
+  subtitle: string;
+  pods: Array<{
+    id: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    icon: string;
+    badge: string;
+    badgeColor: string;
+  }>;
+  className?: string;
+}
+
+const { title, subtitle, pods, className = "" } = Astro.props;
+
+// Badge color mapping
+function getBadgeColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    'green': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    'purple': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+    'blue': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    'orange': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+    'indigo': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
+    'teal': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300'
+  };
+  return colorMap[color] || 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
+}
+
+function getGradientClass(color: string): string {
+  const colorMap: Record<string, string> = {
+    'green': 'from-green-400 to-emerald-500',
+    'purple': 'from-purple-400 to-pink-500',
+    'blue': 'from-blue-400 to-cyan-500',
+    'orange': 'from-orange-400 to-red-500',
+    'indigo': 'from-indigo-400 to-purple-500',
+    'teal': 'from-teal-400 to-green-500'
+  };
+  return colorMap[color] || 'from-blue-400 to-cyan-500';
+}
+
+// SVG Icon Components - Relevant to content
+function getSvgIcon(iconType: string) {
+  switch (iconType) {
+    case "shopping-cart":
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+      </svg>`;
+    case "vr-headset":
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+      </svg>`;
+    case "mobile-app":
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+      </svg>`;
+    case "brain":
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+      </svg>`;
+    case "rocket":
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      </svg>`;
+    case "server":
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+      </svg>`;
+    default:
+      return `<svg class="w-8 h-8" fill="none" stroke="white" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>`;
+  }
+}
+---
+
+<section class={`py-16 bg-white dark:bg-slate-900 w-full relative overflow-hidden ${className}`}>
+  <!-- Abstract Background Vectors -->
+  <div class="absolute inset-0 pointer-events-none">
+    <!-- Large gradient circles -->
+    <div class="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-3xl bg-float"></div>
+    <div class="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-br from-purple-400/10 to-pink-500/10 rounded-full blur-3xl bg-float" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 rounded-full blur-3xl bg-float" style="animation-delay: 4s;"></div>
+    
+    <!-- Geometric shapes -->
+    <div class="absolute top-32 right-1/4 w-32 h-32 bg-gradient-to-br from-blue-300/20 to-purple-400/20 transform rotate-45 blur-xl bg-pulse-slow"></div>
+    <div class="absolute bottom-32 left-1/4 w-24 h-24 bg-gradient-to-br from-purple-300/20 to-pink-400/20 transform -rotate-12 blur-xl bg-pulse-slow" style="animation-delay: 1s;"></div>
+    
+    <!-- Floating dots -->
+    <div class="absolute top-1/4 right-1/3 w-3 h-3 bg-blue-400/30 rounded-full animate-pulse"></div>
+    <div class="absolute bottom-1/3 left-1/4 w-2 h-2 bg-purple-400/30 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+    <div class="absolute top-2/3 right-1/5 w-4 h-4 bg-cyan-400/30 rounded-full animate-pulse" style="animation-delay: 2s;"></div>
+    
+    <!-- Abstract lines -->
+    <div class="absolute top-40 left-0 w-32 h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
+    <div class="absolute bottom-40 right-0 w-40 h-px bg-gradient-to-r from-transparent via-purple-400/30 to-transparent"></div>
+  </div>
+  
+  <div class="w-full px-4 relative z-10 max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="max-w-4xl mx-auto text-center mb-16">
+      
+      <h2 data-animate="fade-in-up" class="text-3xl md:text-4xl font-bold mb-6 text-dark dark:text-white">
+        {title}
+      </h2>
+      <p data-animate="fade-in-up" class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+        {subtitle}
+      </p>
+    </div>
+    
+    <!-- Pods Grid -->
+    <div data-animate="staggered-children" class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
+      {pods.map((pod, index) => (
+        <div class="pod-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2">
+          <!-- Card Content -->
+          <div class="p-8 h-full flex flex-col">
+            <!-- Header with Icon and Badge -->
+            <div class="flex items-center justify-between mb-6">
+              <div class={`w-16 h-16 rounded-2xl bg-gradient-to-r ${getGradientClass(pod.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
+                <Fragment set:html={getSvgIcon(pod.icon)} />
+              </div>
+              <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeColor(pod.badgeColor)}`}>
+                {pod.badge}
+              </span>
+            </div>
+            
+            <!-- Title, Subtitle and Description -->
+            <div class="flex-1 mb-6">
+              <h3 class="font-bold text-xl mb-2 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                {pod.title}
+              </h3>
+              <p class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                {pod.subtitle}
+              </p>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                {pod.description}
+              </p>
+            </div>
+            
+            <!-- Action Button -->
+            <div class="mt-auto">
+              <a href={`/pods/${pod.id}`} class="inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                View Details
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Hover effect overlay -->
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 rounded-2xl"></div>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Explore All Button -->
+    <div data-animate="fade-in-up" class="text-center mt-12">
+      <a href="/explore-pods" class="inline-flex items-center justify-center py-4 px-8 bg-white dark:bg-slate-800 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:scale-105 shadow-lg">
+        Explore All Pods
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Background animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); }
+  }
+  
+  /* Floating animation for background elements */
+  .bg-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .bg-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .pod-card {
+      margin-bottom: 1rem;
+    }
+    
+    /* Reduce background elements on mobile */
+    .absolute.top-20.left-10,
+    .absolute.bottom-20.right-10,
+    .absolute.top-1\/2.left-1\/3 {
+      display: none;
+    }
+  }
+  
+  /* Dark mode adjustments for background */
+  .dark .absolute.top-20.left-10 {
+    background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
+  }
+  
+  .dark .absolute.bottom-20.right-10 {
+    background: linear-gradient(to bottom right, rgba(147, 51, 234, 0.05), rgba(236, 72, 153, 0.05));
+  }
+  
+  .dark .absolute.top-1\/2.left-1\/3 {
+    background: linear-gradient(to bottom right, rgba(34, 211, 238, 0.05), rgba(59, 130, 246, 0.05));
+  }
+</style> 

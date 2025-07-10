@@ -1,23 +1,83 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
-import HeroSection from '../components/sections/HeroSection.astro';
-import WhyChooseSection from '../components/sections/WhyChooseSection.astro';
-import FeaturesSection from '../components/sections/FeaturesSection.astro';
-import PodsGridSection from '../components/sections/PodsGridSection.astro';
-import FAQSection from '../components/sections/FAQSection.astro';
-import CTASection from '../components/sections/CTASection.astro';
+import HeroSection from '../components/shared/HeroSection.astro';
+import WhyChooseSection from '../components/pods/WhyChooseSection.astro';
+import FeaturesSection from '../components/pods/FeaturesSection.astro';
+import ProductGrid from '../components/shared/ProductGrid.astro';
+import FAQSection from '../components/shared/FAQSection.astro';
+import CTASection from '../components/shared/CTASection.astro';
 import { podsData } from '../content/pods.js';
+
+// Utility functions for styling
+function getBadgeColorClass(color: string): string {
+  const colorMap: Record<string, string> = {
+    'blue': 'bg-blue-100 dark:bg-blue-900',
+    'purple': 'bg-purple-100 dark:bg-purple-900',
+    'orange': 'bg-orange-100 dark:bg-orange-900',
+    'teal': 'bg-teal-100 dark:bg-teal-900',
+    'green': 'bg-green-100 dark:bg-green-900',
+    'indigo': 'bg-indigo-100 dark:bg-indigo-900',
+    'cyan': 'bg-cyan-100 dark:bg-cyan-900',
+    'pink': 'bg-pink-100 dark:bg-pink-900',
+    'gray': 'bg-gray-100 dark:bg-gray-900'
+  };
+  return colorMap[color] || 'bg-blue-100 dark:bg-blue-900';
+}
+
+function getBadgeStyle(color: string): string {
+  const colorMap: Record<string, string> = {
+    'blue': 'bg-blue-100 text-blue-800',
+    'purple': 'bg-purple-100 text-purple-800',
+    'orange': 'bg-orange-100 text-orange-800',
+    'teal': 'bg-teal-100 text-teal-800',
+    'green': 'bg-green-100 text-green-800',
+    'indigo': 'bg-indigo-100 text-indigo-800',
+    'cyan': 'bg-cyan-100 text-cyan-800',
+    'pink': 'bg-pink-100 text-pink-800',
+    'gray': 'bg-gray-100 text-gray-800'
+  };
+  return colorMap[color] || 'bg-blue-100 text-blue-800';
+}
+
+function getDotColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    'blue': 'bg-blue-500',
+    'purple': 'bg-purple-500',
+    'orange': 'bg-orange-500',
+    'teal': 'bg-teal-500',
+    'green': 'bg-green-500',
+    'indigo': 'bg-indigo-500',
+    'cyan': 'bg-cyan-500',
+    'pink': 'bg-pink-500',
+    'gray': 'bg-gray-500'
+  };
+  return colorMap[color] || 'bg-blue-500';
+}
+
+function getGradientClass(color: string): string {
+  const colorMap: Record<string, string> = {
+    'blue': 'from-blue-500 to-cyan-500',
+    'purple': 'from-purple-500 to-pink-500',
+    'orange': 'from-orange-500 to-red-500',
+    'teal': 'from-teal-500 to-green-500',
+    'green': 'from-green-500 to-emerald-500',
+    'indigo': 'from-indigo-500 to-purple-500',
+    'cyan': 'from-cyan-500 to-blue-500',
+    'pink': 'from-pink-500 to-purple-500',
+    'gray': 'from-gray-500 to-gray-600'
+  };
+  return colorMap[color] || 'from-blue-500 to-cyan-500';
+}
 ---
 
-<Layout description="Explore our on-demand tech teams and project pods." title="Explore Pods | Avadhuta Technologies">
+<Layout description="Explore our comprehensive on-demand tech teams and project pods with detailed specifications." title="Explore Pods | NovaPod.ai">
 
   <HeroSection 
-    badge={podsData.hero.badge}
     title={podsData.hero.title}
     subtitle={podsData.hero.subtitle}
-    description={podsData.hero.description}
-    stats={podsData.hero.stats}
+    primaryButton={podsData.hero.primaryButton}
+    secondaryButton={podsData.hero.secondaryButton}
   />
 
   <WhyChooseSection 
@@ -31,23 +91,68 @@ import { podsData } from '../content/pods.js';
     items={podsData.included.items}
   />
 
-  <PodsGridSection 
-    title={podsData.availablePods.title}
-    pods={podsData.availablePods.pods}
-  />
+  <!-- Crisp Pods Grid Section -->
+  <section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3" id="available-pods">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center mb-16">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
+          {podsData.availablePods.title}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+          Choose from our pre-configured, outcome-focused tech teams designed for specific project types
+        </p>
+      </div>
+      
+      <ProductGrid
+        products={podsData.availablePods.pods}
+        type="pod"
+        learnMoreUrlPrefix="/pods"
+        actionUrl="/contact"
+        actionText="Book Now"
+      />
+      
+      <!-- Call to Action for More Details -->
+      <div class="text-center mt-12 animate-fade-in-up animation-delay-800">
+        <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+          Each pod is carefully designed with the right mix of skills and proven delivery workflows. 
+          Click "Learn More" to see detailed team compositions, deliverables, timelines, and past success stories.
+        </p>
+        <a href="/contact" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <span>Get Started with Your Pod</span>
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <FAQSection 
     title={podsData.faq.title}
-    subtitle={podsData.faq.subtitle}
     items={podsData.faq.items}
   />
 
   <CTASection 
     title={podsData.cta.title}
-    description={podsData.cta.description}
-    buttonText={podsData.cta.buttonText}
-    email={podsData.cta.email}
-    downloadLink={podsData.cta.downloadLink}
+    subtitle={podsData.cta.subtitle}
+    primaryButton={podsData.cta.primaryButton}
+    secondaryButton={podsData.cta.secondaryButton}
   />
 
-</Layout> 
+</Layout>
+
+<style>
+  .animate-fade-in-up { 
+    animation: fadeInUp 0.8s ease-out; 
+  }
+  .animation-delay-200 { 
+    animation-delay: 0.2s; 
+  }
+  .animation-delay-800 { 
+    animation-delay: 0.8s; 
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style> 

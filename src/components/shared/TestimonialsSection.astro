@@ -1,0 +1,127 @@
+---
+export interface Props {
+  // New format - single data object
+  data?: {
+    title: string;
+    subtitle: string;
+    items: Array<{
+      authorName: string;
+      authorRole: string;
+      image: string;
+      message: string;
+      caseLink: string;
+    }>;
+  };
+  // Old format - individual props (for backward compatibility)
+  title?: string;
+  subtitle?: string;
+  items?: Array<{
+    authorName: string;
+    authorRole: string;
+    image: string;
+    message: string;
+    caseLink: string;
+  }>;
+  className?: string;
+}
+
+const { data, title: titleProp, subtitle: subtitleProp, items: itemsProp, className = "" } = Astro.props;
+
+// Use data object if provided, otherwise use individual props
+const title = data?.title || titleProp;
+const subtitle = data?.subtitle || subtitleProp;
+const items = data?.items || itemsProp || [];
+---
+
+<section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3 ${className}`}>
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
+        {title}
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+        {subtitle}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {items.map((testimonial, index) => (
+        <div class={`testimonial-card bg-white dark:bg-dark rounded-2xl shadow-xl border border-gray-100 dark:border-dark-3 overflow-hidden hover:shadow-2xl transition-all duration-500 animate-fade-in-up animation-delay-${(index + 1) * 200}`}>
+          <div class="p-8">
+            <!-- Header -->
+
+            <!-- Testimonial Content -->
+            <div class="mb-6">
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
+                {testimonial.message}
+              </p>
+            </div>
+
+            <!-- Testimonial Author -->
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 mb-6">
+              <div class="flex items-center">
+                <img src={testimonial.image} alt={testimonial.authorName} class="w-12 h-12 rounded-full mr-4 border-2 border-white dark:border-gray-700" />
+                <div>
+                  <div class="font-semibold text-dark dark:text-white">{testimonial.authorName}</div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400">{testimonial.authorRole}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    
+  </div>
+</section>
+
+<style>
+  .testimonial-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .testimonial-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .testimonial-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Animation delays */
+  .animation-delay-200 { animation-delay: 0.2s; }
+  .animation-delay-400 { animation-delay: 0.4s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+  .animation-delay-800 { animation-delay: 0.8s; }
+
+  /* Fade in animations */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

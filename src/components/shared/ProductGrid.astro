@@ -1,0 +1,51 @@
+---
+import ProductCard from './ProductCard.astro';
+
+interface Product {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  badge: string;
+  badgeColor: string;
+  price?: string;
+  priceNote?: string;
+  duration?: string;
+  teamSize?: number;
+  deliverables?: string[];
+  idealFor?: string[];
+}
+
+export interface Props {
+  products: Product[];
+  type: 'pod' | 'pack';
+  learnMoreUrlPrefix: string;
+  actionUrl: string;
+  actionText: string;
+}
+
+const { products, type, learnMoreUrlPrefix, actionUrl, actionText } = Astro.props;
+---
+
+<div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+  {products.map((product, index) => (
+    <ProductCard
+      id={product.id}
+      title={product.title}
+      description={product.description}
+      icon={product.icon}
+      badge={product.badge}
+      badgeColor={product.badgeColor}
+      price={product.price}
+      priceNote={product.priceNote}
+      duration={product.duration}
+      teamSize={product.teamSize}
+      deliverables={product.deliverables}
+      idealFor={product.idealFor}
+      learnMoreUrl={`${learnMoreUrlPrefix}/${product.id}`}
+      actionUrl={actionUrl}
+      actionText={actionText}
+      type={type}
+    />
+  ))}
+</div> 

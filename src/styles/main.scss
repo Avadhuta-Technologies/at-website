@@ -1,0 +1,40 @@
+// Main SCSS file - uses all other SCSS modules
+
+// Base styles
+@use 'base/reset';
+@use 'base/typography';
+@use 'base/variables' as vars;
+@use 'base/utilities';
+
+// Layout components
+@use 'layout/header';
+@use 'layout/footer';
+@use 'layout/layout';
+
+// Section components
+@use 'sections/hero';
+@use 'sections/why-choose';
+@use 'sections/features';
+@use 'sections/pods-grid';
+@use 'sections/packs-grid';
+@use 'sections/testimonials';
+@use 'sections/faq';
+@use 'sections/cta';
+@use 'sections/how-it-works';
+
+// Page specific styles
+@use 'pages/home';
+@use 'pages/explore-pods';
+@use 'pages/explore-packs';
+
+// Animations
+@use 'animations/fade-in';
+@use 'animations/hover-effects';
+@use 'animations/scroll-triggered';
+@import './animations.css';
+
+// Components
+@use 'components/buttons';
+@use 'components/cards';
+@use 'components/forms';
+@use 'components/navigation'; 

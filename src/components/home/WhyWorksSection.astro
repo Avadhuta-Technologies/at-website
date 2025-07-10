@@ -1,0 +1,32 @@
+---
+export interface Props {
+  title?: string;
+  items?: { icon: string; title: string; description: string }[];
+}
+
+const defaultItems = [
+  { icon: "/assets/features/icon-01.svg", title: "Fast Ramp-Up", description: "You need a ready-to-go team for your project" },
+  { icon: "/assets/features/icon-02.svg", title: "AI-Augmented", description: "Smart logistics + Code bots, fewer cycles" },
+  { icon: "/assets/features/icon-03.svg", title: "Global Talent", description: "Expert builders from across the world" },
+  { icon: "/assets/features/icon-04.svg", title: "Modular Automation", description: "Pods as your project evolves" },
+  { icon: "/assets/features/icon-01.svg", title: "Customer Focused", description: "Pay for results, not hours" }
+];
+
+const { title = "Why NovaPod Works", items = defaultItems } = Astro.props;
+---
+<section class="py-16 bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-900">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark dark:text-white">{title}</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+      {items.map((item) => (
+        <div class="flex flex-col items-center text-center p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-lg h-full transition-transform duration-300 hover:-translate-y-2 group">
+          <div class="mb-4 w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 shadow-lg">
+            <img src={item.icon} alt={item.title + ' icon'} class="w-8 h-8" />
+          </div>
+          <h3 class="text-lg font-bold text-dark dark:text-white mb-2">{item.title}</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-base">{item.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

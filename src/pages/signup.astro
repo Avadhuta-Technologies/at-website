@@ -1,5 +1,4 @@
 ---
-import Formbox from "../components/Formbox.astro";
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import Layout from '../layouts/Layout.astro';
 ---
@@ -11,7 +10,7 @@ import Layout from '../layouts/Layout.astro';
   <Breadcrumb>
     <Fragment slot="title">Sign Up Page</Fragment>
   </Breadcrumb>
-  <Formbox>
+  <div class="max-w-md mx-auto bg-white dark:bg-dark-2 rounded-xl shadow-lg p-8 mt-8">
     <form>
       <div class="mb-[22px]">
         <input
@@ -130,5 +129,5 @@ import Layout from '../layouts/Layout.astro';
         Sign In
       </a>
     </p>
-  </Formbox>
+  </div>
 </Layout>

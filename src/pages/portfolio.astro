@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { portfolioData } from '../content/portfolio.js';
+import { PortfolioData } from '../content/types/portfolio';
+import HeroSection from '../components/shared/HeroSection.astro';
+import CTASection from '../components/shared/CTASection.astro';
+import PortfolioGridSection from '../components/portfolio/PortfolioGridSection.astro';
+import PortfolioWhyChooseSection from '../components/portfolio/PortfolioWhyChooseSection.astro';
+---
+
+<Layout title="Portfolio | Avadhuta Technologies" description="Explore our portfolio of AI, automation, healthcare, eCommerce, and field ops solutions.">
+  <HeroSection 
+    title={portfolioData.hero.title}
+    subtitle={portfolioData.hero.subtitle}
+    description={portfolioData.hero.description}
+  />
+
+  <PortfolioGridSection 
+    projects={portfolioData.projects}
+  />
+
+  <PortfolioWhyChooseSection 
+    title={portfolioData.whyChoose.title}
+    points={portfolioData.whyChoose.points}
+  />
+
+  <CTASection 
+    title={portfolioData.cta.title}
+    description={portfolioData.cta.description}
+    buttonText={portfolioData.cta.buttonText}
+    email={portfolioData.cta.email}
+  />
+</Layout> 
