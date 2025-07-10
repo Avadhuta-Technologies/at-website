@@ -23,6 +23,7 @@ class GlobalCartManager {
     if (typeof window !== 'undefined' && window.cartService) {
       this.cartService = window.cartService;
       this.setupGlobalEventListeners();
+      await this.updateHeaderCartBadge();
     } else {
       // Retry after a short delay
       setTimeout(() => this.init(), 100);
@@ -62,6 +63,11 @@ class GlobalCartManager {
     window.addEventListener('cart-drawer-ready', () => {
       this.cartDrawer = window.cartDrawer;
     });
+
+    // Listen for cart updates
+    window.addEventListener('cart-updated', async () => {
+      await this.updateHeaderCartBadge();
+    });
   }
 
   async handleAddToCart(button: HTMLElement) {
@@ -91,13 +97,11 @@ class GlobalCartManager {
       if (success) {
         this.showNotification(`${itemData.type === 'pod' ? 'Pod' : 'Pack'} added to cart!`);
         
-        // Open cart drawer
-        if (this.cartDrawer) {
-          this.cartDrawer.openCart();
-        }
-        
         // Update button state
         this.updateButtonState(button, true);
+        
+        // Update header badge
+        await this.updateHeaderCartBadge();
         
         // Dispatch cart updated event
         window.dispatchEvent(new CustomEvent('cart-updated'));
@@ -173,6 +177,9 @@ class GlobalCartManager {
           this.cartDrawer.openCart();
         }
         
+        // Update header badge
+        await this.updateHeaderCartBadge();
+        
         // Dispatch cart updated event
         window.dispatchEvent(new CustomEvent('cart-updated'));
       }
@@ -182,6 +189,35 @@ class GlobalCartManager {
       console.error('Error adding item to cart:', error);
       this.showNotification('Error adding item to cart', 'error');
       return false;
+    }
+  }
+
+  // Update header cart badge
+  async updateHeaderCartBadge() {
+    if (!this.cartService) return;
+
+    try {
+      const cart = await this.cartService.getCart();
+      const count = cart.length;
+      
+      const headerCartToggle = document.getElementById('header-cart-toggle');
+      if (headerCartToggle) {
+        // Remove existing badge
+        const existingBadge = headerCartToggle.querySelector('.cart-badge');
+        if (existingBadge) {
+          existingBadge.remove();
+        }
+        
+        // Add new badge if count > 0
+        if (count > 0) {
+          const badge = document.createElement('span');
+          badge.className = 'cart-badge absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs font-bold';
+          badge.textContent = count.toString();
+          headerCartToggle.appendChild(badge);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating header cart badge:', error);
     }
   }
 }

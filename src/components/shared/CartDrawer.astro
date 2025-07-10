@@ -158,8 +158,11 @@
       });
 
       // Listen for cart updates
-      window.addEventListener('cart-updated', () => {
+      window.addEventListener('cart-updated', (event) => {
         this.loadCart();
+        if (event && event.detail && event.detail.action === 'add') {
+          this.openCart();
+        }
       });
     }
 
@@ -171,6 +174,9 @@
         this.renderCart(cart);
         this.updateCartBadge(cart.length);
         this.updateCheckoutButton(cart.length > 0);
+        
+        // Update header cart badge as well
+        this.updateHeaderCartBadge(cart.length);
       } catch (error) {
         console.error('Error loading cart:', error);
       }
@@ -273,6 +279,12 @@
         if (itemIndex !== -1) {
           await this.cartService.removeFromCart(itemIndex);
           this.showNotification('Item removed from cart');
+          
+          // Reload cart to update the display
+          await this.loadCart();
+          
+          // Dispatch cart updated event
+          window.dispatchEvent(new CustomEvent('cart-updated'));
         }
       } catch (error) {
         console.error('Error removing item:', error);
@@ -351,6 +363,25 @@
       if (badge) {
         badge.textContent = count.toString();
         badge.style.display = count > 0 ? 'flex' : 'none';
+      }
+    }
+
+    updateHeaderCartBadge(count) {
+      const headerCartToggle = document.getElementById('header-cart-toggle');
+      if (headerCartToggle) {
+        // Remove existing badge
+        const existingBadge = headerCartToggle.querySelector('.cart-badge');
+        if (existingBadge) {
+          existingBadge.remove();
+        }
+        
+        // Add new badge if count > 0
+        if (count > 0) {
+          const badge = document.createElement('span');
+          badge.className = 'cart-badge absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs font-bold';
+          badge.textContent = count.toString();
+          headerCartToggle.appendChild(badge);
+        }
       }
     }
 

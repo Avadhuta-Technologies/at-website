@@ -117,6 +117,12 @@ class CartService {
       // Store in IndexedDB
       await this.storeItem(item);
       this.updateCartCount();
+      
+      // Dispatch cart updated event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'add' } }));
+      }
+      
       return true;
     } catch (error) {
       console.error('Error adding item to cart:', error);
@@ -162,6 +168,12 @@ class CartService {
         
         await this.removeItemById(item.id, item.type);
         this.updateCartCount();
+        
+        // Dispatch cart updated event
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'remove' } }));
+        }
+        
         return true;
       }
       return false;
@@ -188,6 +200,10 @@ class CartService {
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
           this.updateCartCount();
+          // Dispatch cart updated event
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'remove' } }));
+          }
           resolve(true);
         };
       });
@@ -214,6 +230,10 @@ class CartService {
         request.onerror = () => reject(request.error);
         request.onsuccess = () => {
           this.updateCartCount();
+          // Dispatch cart updated event
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'clear' } }));
+          }
           resolve(true);
         };
       });
