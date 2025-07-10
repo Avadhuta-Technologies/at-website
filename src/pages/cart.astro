@@ -1,368 +1,458 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CartUtility from '../components/shared/CartUtility.astro';
 ---
 
-<Layout title="Cart Summary - NovaPod" description="Review your selected pod and packs">
-  <CartUtility />
-  
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-    <div class="max-w-6xl mx-auto px-4">
+<Layout title="Cart - NovaPod.ai" description="Review your selected pod and packs">
+  <div class="min-h-screen bg-gray-50 py-12 dark:bg-gray-900">
+    <div class="mx-auto max-w-6xl px-4">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Pod Summary</h1>
+      <div class="mb-12 text-center">
+        <h1 class="mb-4 text-4xl font-bold text-gray-900 dark:text-white">Your Cart</h1>
         <p class="text-xl text-gray-600 dark:text-gray-400">Review your selected pod and packs</p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Selected Items -->
+      <div class="grid ">
+        <!-- Cart Items -->
         <div class="lg:col-span-2">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Selected Pod and Packs</h2>
-            
-            <!-- Pod Section -->
-            <div id="pod-section" class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          <div class="mb-8 rounded-xl bg-white p-8 shadow-lg dark:bg-gray-800">
+            <div class="mb-6 flex items-center justify-between">
+              <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Selected Items</h2>
+              <button
+                id="checkout-btn"
+                class="transform rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                onclick="handleCheckout()"
+                disabled
+              >
+                Start My Pod Journey
+              </button>
+            </div>
+
+            <div id="cart-items" class="space-y-6">
+              <!-- Cart items will be rendered here -->
+            </div>
+
+            <div id="empty-cart" class="hidden py-12 text-center">
+              <div class="mb-4 text-gray-400">
+                <svg
+                  class="mx-auto h-16 w-16"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+                  ></path>
                 </svg>
-                Your Pod
+              </div>
+              <h3 class="mb-2 text-lg font-semibold text-gray-600 dark:text-gray-400">
+                Your cart is empty
               </h3>
-              <div id="selected-pod" class="space-y-4">
-                <!-- Pod will be rendered here -->
-              </div>
-            </div>
-
-            <!-- Packs Section -->
-            <div id="packs-section" class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                Selected Packs
-              </h3>
-              <div id="selected-packs" class="space-y-4">
-                <!-- Packs will be rendered here -->
-              </div>
-            </div>
-
-            <!-- No Pod Warning -->
-            <div id="no-pod-warning" class="hidden bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6 mb-6">
-              <div class="flex items-start">
-                <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                </svg>
-                <div>
-                  <h4 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200">Pod Required</h4>
-                  <p class="text-yellow-700 dark:text-yellow-300 mt-1">You must select a pod before proceeding. Packs cannot be purchased without a pod.</p>
-                  <a href="/pricing" class="inline-flex items-center mt-3 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
-                    <span>Select a Pod</span>
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex flex-col sm:flex-row gap-4">
-            <a href="/pricing" class="flex-1 bg-gray-500 text-white py-3 px-6 rounded-xl font-semibold text-center hover:bg-gray-600 transition-colors">
-              Continue Shopping
-            </a>
-            <button id="proceed-btn" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
-              Start My Pod Journey
-            </button>
-          </div>
-        </div>
-
-        <!-- Order Summary -->
-        <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-8">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Order Summary</h3>
-            
-            <div id="order-summary" class="space-y-4 mb-6">
-              <!-- Summary items will be rendered here -->
-            </div>
-
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-              <div class="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
-                <span>Total</span>
-                <span id="total-amount">₹0</span>
-              </div>
-              <p class="text-sm text-gray-500 mt-1">+ GST (18%)</p>
-            </div>
-
-            <!-- Recommendations -->
-            <div id="recommendations" class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Recommended Add-ons</h4>
-              <div id="recommendation-items" class="space-y-3">
-                <!-- Recommendations will be rendered here -->
-              </div>
+              <p class="mb-6 text-gray-500 dark:text-gray-500">Add a pod to get started</p>
+              <a
+                href="/"
+                class="rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white transition-colors duration-300 hover:bg-blue-600"
+              >
+                Browse Pods
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    // Import cart service
+    import { cartService } from '../services/CartService';
+
+    // Cart management using the service
+    async function loadCart() {
+      const cartSummary = await cartService.getCartSummary();
+      const cartItemsContainer = document.getElementById('cart-items');
+      const emptyCartDiv = document.getElementById('empty-cart');
+      const checkoutBtn = document.getElementById('checkout-btn');
+
+      if (!cartItemsContainer || !emptyCartDiv || !checkoutBtn) {
+        console.error('Required cart elements not found');
+        return;
+      }
+
+      if (cartSummary.totalItems === 0) {
+        cartItemsContainer.innerHTML = '';
+        emptyCartDiv.classList.remove('hidden');
+        checkoutBtn.disabled = true;
+        return;
+      }
+
+      emptyCartDiv.classList.add('hidden');
+      checkoutBtn.disabled = false;
+
+      // Separate pods and packs
+      const podItems = cartSummary.items.filter((item) => item.type === 'pod');
+      const packItems = cartSummary.items.filter((item) => item.type === 'pack');
+
+      let cartHTML = '';
+
+      // Render Selected Pod section
+      if (podItems.length > 0) {
+        cartHTML += `
+          <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <span class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold mr-3">🚀</span>
+              Selected Pod
+            </h3>
+            <div class="space-y-4">
+        `;
+
+        podItems.forEach((item, index) => {
+          const teamComposition = [
+            '1 Full Stack Developer (4+ yrs) – storefront, backend logic, integrations',
+            '1 UI/UX Designer – conversion-focused shopping experience',
+            '0.5 QA & SEO Engineer – quality, speed, and search optimization',
+            'Project Lead / Architect (Shared) – ecommerce strategy and tech guidance',
+          ];
+
+          cartHTML += `
+            <div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-600">
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                  <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+                    🚀
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${item.title}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button 
+                    onclick="showItemDetails('${item.id}', 'pod')"
+                    class="text-blue-500 hover:text-blue-700 transition-colors duration-200 p-2"
+                    title="View Details"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    onclick="removeFromCart(${cartSummary.items.indexOf(item)})"
+                    class="text-red-500 hover:text-red-700 transition-colors duration-200 p-2"
+                    title="Remove"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="grid md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Team Composition:</h4>
+                  <ul class="space-y-1">
+                    ${teamComposition
+                      .map(
+                        (member) => `
+                      <li class="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                        ${member}
+                      </li>
+                    `
+                      )
+                      .join('')}
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Reservation Period</h4>
+                  <div class="flex items-center space-x-2">
+                    <select 
+                      onchange="updateReservationPeriod('${item.id}', this.value)"
+                      class="text-sm border border-gray-300 rounded px-2 py-1"
+                    >
+                      <option value="1" ${
+                        item.reservationMonths === 1 ? 'selected' : ''
+                      }>1 Month</option>
+                      <option value="2" ${
+                        item.reservationMonths === 2 ? 'selected' : ''
+                      }>2 Months</option>
+                      <option value="3" ${
+                        item.reservationMonths === 3 ? 'selected' : ''
+                      }>3 Months</option>
+                      <option value="6" ${
+                        item.reservationMonths === 6 ? 'selected' : ''
+                      }>6 Months</option>
+                      <option value="12" ${
+                        item.reservationMonths === 12 ? 'selected' : ''
+                      }>12 Months</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div class="text-right">
+                  <p class="text-lg font-bold text-gray-900 dark:text-white">${item.price}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        cartHTML += `
+            </div>
+          </div>
+        `;
+      }
+
+      // Render Selected Packs section
+      if (packItems.length > 0) {
+        cartHTML += `
+          <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <span class="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold mr-3">📦</span>
+              Selected Packs
+            </h3>
+            <div class="space-y-4">
+        `;
+
+        packItems.forEach((item) => {
+          cartHTML += `
+            <div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-600">
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center space-x-4">
+                  <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                    ${item.icon || '📦'}
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${item.title}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button 
+                    onclick="showItemDetails('${item.id}', 'pack')"
+                    class="text-blue-500 hover:text-blue-700 transition-colors duration-200 p-2"
+                    title="View Details"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    onclick="removeFromCart(${cartSummary.items.indexOf(item)})"
+                    class="text-red-500 hover:text-red-700 transition-colors duration-200 p-2"
+                    title="Remove"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="grid md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Duration</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">${item.duration}</p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Add-on Pack</h4>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Enhancement for your pod</p>
+                </div>
+              </div>
+              
+              <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div class="text-right">
+                  <p class="text-lg font-bold text-gray-900 dark:text-white">${item.price}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        cartHTML += `
+            </div>
+          </div>
+        `;
+      }
+
+      cartItemsContainer.innerHTML = cartHTML;
+    }
+
+    async function removeFromCart(index) {
+      await cartService.removeItem(index);
+      loadCart();
+    }
+
+    async function updateReservationPeriod(podId, months) {
+      const success = await cartService.updatePodReservation(podId, parseInt(months));
+      if (success) {
+        loadCart();
+        cartService.showNotification('Reservation period updated!');
+      }
+    }
+
+    async function showItemDetails(itemId, type) {
+      let item;
+      if (type === 'pod') {
+        item = await cartService.getPodDetails(itemId);
+      } else {
+        item = await cartService.getPackDetails(itemId);
+      }
+
+      if (item) {
+        showModal(item, type);
+      }
+    }
+
+    function showModal(item, type) {
+      // Create detailed modal HTML based on item type
+      let modalContent = '';
+
+      if (type === 'pod') {
+        const teamComposition = [
+          '1 Full Stack Developer (4+ yrs) – storefront, backend logic, integrations',
+          '1 UI/UX Designer – conversion-focused shopping experience',
+          '0.5 QA & SEO Engineer – quality, speed, and search optimization',
+          'Project Lead / Architect (Shared) – ecommerce strategy and tech guidance',
+        ];
+
+        modalContent = `
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Description</h4>
+              <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Team Composition</h4>
+              <ul class="space-y-1">
+                ${teamComposition
+                  .map(
+                    (member) => `
+                  <li class="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    ${member}
+                  </li>
+                `
+                  )
+                  .join('')}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Reservation Period</h4>
+              <p class="text-gray-600 dark:text-gray-400">${item.reservationMonths || 3} months</p>
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Pricing</h4>
+              <p class="text-lg font-bold text-gray-900 dark:text-white">${item.price}</p>
+              ${item.priceUSD ? `<p class="text-sm text-gray-500">${item.priceUSD}</p>` : ''}
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">What You Get</h4>
+              <ul class="space-y-1">
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Custom storefront (Next.js, Nuxt, or Shopify/Shopware)</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Cart, checkout, discount engine, and payment gateway integration</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Admin panel for orders, inventory, returns</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Loyalty, referral, and coupon modules</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ SEO optimization, Google Shopping, and analytics integration</li>
+              </ul>
+            </div>
+          </div>
+        `;
+      } else {
+        modalContent = `
+          <div class="space-y-4">
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Description</h4>
+              <p class="text-gray-600 dark:text-gray-400">${item.description}</p>
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Duration</h4>
+              <p class="text-gray-600 dark:text-gray-400">${item.duration}</p>
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Pricing</h4>
+              <p class="text-lg font-bold text-gray-900 dark:text-white">${item.price}</p>
+            </div>
+            
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-2">What's Included</h4>
+              <ul class="space-y-1">
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Professional implementation</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Quality testing</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Documentation</li>
+                <li class="text-sm text-gray-600 dark:text-gray-400">✓ Support during implementation</li>
+              </ul>
+            </div>
+          </div>
+        `;
+      }
+
+      // Create modal HTML
+      const modalHTML = `
+        <div id="item-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">${item.title}</h3>
+                <p class="text-sm text-gray-500 mt-1">${
+                  type === 'pod' ? 'Development Pod' : 'Add-on Pack'
+                }</p>
+              </div>
+              <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+            ${modalContent}
+          </div>
+        </div>
+      `;
+
+      // Add modal to page
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('item-modal');
+      if (modal) {
+        modal.remove();
+      }
+    }
+
+    async function handleCheckout() {
+      if (await cartService.isEmpty()) {
+        alert('Your cart is empty');
+        return;
+      }
+
+      // Redirect to checkout page
+      window.location.href = '/checkout';
+    }
+
+    // Make functions globally available
+    window.removeFromCart = removeFromCart;
+    window.handleCheckout = handleCheckout;
+    window.updateReservationPeriod = updateReservationPeriod;
+    window.showItemDetails = showItemDetails;
+    window.closeModal = closeModal;
+
+    // Load cart on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCart();
+    });
+  </script>
 </Layout>
 
-<script>
-  // Cart Summary functionality
-  class CartSummary {
-    constructor() {
-      this.cart = null;
-      this.init();
-    }
-
-    async init() {
-      if (typeof window !== 'undefined' && window.cartUtility) {
-        this.cart = window.cartUtility;
-        await this.render();
-        this.setupEventListeners();
-      }
-    }
-
-    async render() {
-      await this.renderSelectedItems();
-      await this.renderOrderSummary();
-      await this.renderRecommendations();
-      this.updateProceedButton();
-    }
-
-    async renderSelectedItems() {
-      const cart = await this.cart.getCart();
-      const pods = cart.filter(item => item.type === 'pod');
-      const packs = cart.filter(item => item.type === 'pack');
-
-      // Render Pod
-      const podSection = document.getElementById('selected-pod');
-      const noPodWarning = document.getElementById('no-pod-warning');
-      
-      if (pods.length > 0) {
-        noPodWarning.classList.add('hidden');
-        const pod = pods[0]; // Only one pod allowed
-        podSection.innerHTML = this.renderPodItem(pod);
-      } else {
-        noPodWarning.classList.remove('hidden');
-        podSection.innerHTML = '<p class="text-gray-500 italic">No pod selected</p>';
-      }
-
-      // Render Packs
-      const packsSection = document.getElementById('selected-packs');
-      if (packs.length > 0) {
-        packsSection.innerHTML = packs.map(pack => this.renderPackItem(pack)).join('');
-      } else {
-        packsSection.innerHTML = '<p class="text-gray-500 italic">No packs selected</p>';
-      }
-    }
-
-    renderPodItem(pod) {
-      return `
-        <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h4 class="text-lg font-semibold text-gray-900 dark:text-white">${pod.title}</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">${pod.description}</p>
-            </div>
-            <button onclick="cartSummary.removeItem('${pod.id}', '${pod.type}')" class="text-red-500 hover:text-red-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span class="font-semibold text-gray-700 dark:text-gray-300">Price:</span>
-              <span class="text-gray-900 dark:text-white">${pod.price}</span>
-            </div>
-            <div>
-              <span class="font-semibold text-gray-700 dark:text-gray-300">Quantity:</span>
-              <span class="text-gray-900 dark:text-white">${pod.quantity}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    renderPackItem(pack) {
-      return `
-        <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h4 class="text-lg font-semibold text-gray-900 dark:text-white">${pack.title}</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400">${pack.description}</p>
-            </div>
-            <button onclick="cartSummary.removeItem('${pack.id}', '${pack.type}')" class="text-red-500 hover:text-red-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span class="font-semibold text-gray-700 dark:text-gray-300">Price:</span>
-              <span class="text-gray-900 dark:text-white">${pack.price}</span>
-            </div>
-            <div>
-              <span class="font-semibold text-gray-700 dark:text-gray-300">Quantity:</span>
-              <span class="text-gray-900 dark:text-white">${pack.quantity}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    async renderOrderSummary() {
-      const cart = await this.cart.getCart();
-      const summaryDiv = document.getElementById('order-summary');
-      
-      if (cart.length === 0) {
-        summaryDiv.innerHTML = '<p class="text-gray-500 italic">No items in cart</p>';
-        return;
-      }
-
-      const summaryItems = cart.map(item => `
-        <div class="flex justify-between items-center">
-          <span class="text-gray-600 dark:text-gray-400">${item.title} × ${item.quantity}</span>
-          <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
-        </div>
-      `).join('');
-
-      summaryDiv.innerHTML = summaryItems;
-    }
-
-    async renderRecommendations() {
-      const cart = await this.cart.getCart();
-      const pods = cart.filter(item => item.type === 'pod');
-      const packs = cart.filter(item => item.type === 'pack');
-      
-      const recommendationsDiv = document.getElementById('recommendation-items');
-      
-      if (pods.length === 0) {
-        recommendationsDiv.innerHTML = '<p class="text-sm text-gray-500">Select a pod to see recommendations</p>';
-        return;
-      }
-
-      // Intelligent recommendations based on pod selection
-      const recommendations = this.getRecommendations(pods[0], packs);
-      
-      if (recommendations.length === 0) {
-        recommendationsDiv.innerHTML = '<p class="text-sm text-gray-500">No additional recommendations</p>';
-        return;
-      }
-
-      const recommendationsHtml = recommendations.map(rec => `
-        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-          <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">${rec.title}</h5>
-          <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">${rec.description}</p>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">${rec.price}</span>
-            <button onclick="cartSummary.addRecommendation('${rec.id}', '${rec.type}', '${rec.title}', '${rec.description}', '${rec.price}')" class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors">
-              Add
-            </button>
-          </div>
-        </div>
-      `).join('');
-
-      recommendationsDiv.innerHTML = recommendationsHtml;
-    }
-
-    getRecommendations(selectedPod, selectedPacks) {
-      const recommendations = [];
-      const selectedPackIds = selectedPacks.map(p => p.id);
-
-      // Launch Pack recommendation for any pod
-      if (!selectedPackIds.includes('launch-pack')) {
-        recommendations.push({
-          id: 'launch-pack',
-          type: 'pack',
-          title: 'Launch Pack',
-          description: 'Deployment, analytics, app store setup',
-          price: '₹75,000'
-        });
-      }
-
-      // Web Presence Pack for tech pods
-      if (selectedPod.id.includes('full-stack') && !selectedPackIds.includes('web-presence')) {
-        recommendations.push({
-          id: 'web-presence',
-          type: 'pack',
-          title: 'Web Presence Pack',
-          description: 'Landing page, CMS, SEO ready',
-          price: '₹45,000'
-        });
-      }
-
-      // Brand Starter Pack for any pod
-      if (!selectedPackIds.includes('brand-starter')) {
-        recommendations.push({
-          id: 'brand-starter',
-          type: 'pack',
-          title: 'Brand Starter Pack',
-          description: 'Logo, color palette, pitch deck',
-          price: '₹30,000'
-        });
-      }
-
-      return recommendations;
-    }
-
-    async addRecommendation(id, type, title, description, price) {
-      await this.cart.addItem({
-        id: id,
-        type: type,
-        title: title,
-        description: description,
-        price: price
-      });
-      await this.render();
-    }
-
-    async removeItem(id, type) {
-      await this.cart.removeItem(id, type);
-      await this.render();
-    }
-
-    updateProceedButton() {
-      const proceedBtn = document.getElementById('proceed-btn');
-      const cart = this.cart.getCart();
-      
-      cart.then(items => {
-        const hasPod = items.some(item => item.type === 'pod');
-        proceedBtn.disabled = !hasPod;
-        
-        if (hasPod) {
-          proceedBtn.textContent = 'Start My Pod Journey';
-        } else {
-          proceedBtn.textContent = 'Select a Pod First';
-        }
-      });
-    }
-
-    setupEventListeners() {
-      document.getElementById('proceed-btn')?.addEventListener('click', () => {
-        this.proceedToCheckout();
-      });
-    }
-
-    async proceedToCheckout() {
-      const cart = await this.cart.getCart();
-      const hasPod = cart.some(item => item.type === 'pod');
-      
-      if (!hasPod) {
-        alert('Please select a pod before proceeding.');
-        return;
-      }
-      
-      window.location.href = '/enhance-pod';
-    }
-  }
-
-  // Initialize cart summary
-  let cartSummary;
-  if (typeof window !== 'undefined') {
-    cartSummary = new CartSummary();
-  }
-</script> 

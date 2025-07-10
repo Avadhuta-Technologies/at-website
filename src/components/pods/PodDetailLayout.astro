@@ -137,6 +137,9 @@ const packs = relevantPacks[podId as keyof typeof relevantPacks] || [];
   title={`${podData.title} | NovaPod.ai`}
   description={podData.description}
 >
+  <!-- Add packs data as data attribute for global functions -->
+  <div data-packs={JSON.stringify(packs)} data-pod-id={podId} style="display: none;"></div>
+  
   <!-- Hero Section with Floating Elements -->
   <section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3 relative overflow-hidden">
     <!-- Animated Background Elements -->
@@ -418,7 +421,7 @@ const packs = relevantPacks[podId as keyof typeof relevantPacks] || [];
                 <span class="text-lg font-semibold text-dark dark:text-white">{pack.price}</span>
               </div>
               <button 
-                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 transform hover:scale-105"
                 onclick="handleAddPack('${pack.id}')"
               >
                 Add To Pod
@@ -474,57 +477,27 @@ const packs = relevantPacks[podId as keyof typeof relevantPacks] || [];
   </section>
 
   <script>
-    const podId = "{podId}";
-    function handleReservePod(podId) {
-      console.log('Reserve pod clicked for:', podId);
-      window.location.href = `/contact?pod=${podId}`;
-    }
-
-    function handleAddPack(packId) {
-      console.log('Add pack clicked for:', packId);
-      alert(`Added ${packId} pack to your pod!`);
-    }
-
-    function handleCaseStudyClick(useCase) {
-      console.log('Case study clicked:', useCase);
-      window.open(`/case-studies?pod=${podId}&case=${encodeURIComponent(useCase)}`, '_blank');
-    }
-
-    function handleContactClick() {
-      console.log('Contact sales clicked');
-      window.location.href = '/contact?type=sales';
-    }
-
-    // Make functions globally available
-    // @ts-ignore
-    window.handleReservePod = handleReservePod;
-    // @ts-ignore
-    window.handleAddPack = handleAddPack;
-    // @ts-ignore
-    window.handleCaseStudyClick = handleCaseStudyClick;
-    // @ts-ignore
-    window.handleContactClick = handleContactClick;
-
-    // Add scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fade-in-up');
-        }
-      });
-    }, observerOptions);
-
-    // Observe all sections
     document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded, checking cartService availability...');
+      console.log('window.cartService:', window.cartService);
+      
+      // Initialize cart service if available
+      if (window.cartService) {
+        window.cartService.init();
+      }
+      
+      // Add scroll animations
+      const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in-up');
+          }
+        });
+      }, observerOptions);
+      
       const sections = document.querySelectorAll('section');
-      sections.forEach(section => {
-        observer.observe(section);
-      });
+      sections.forEach(section => { observer.observe(section); });
     });
   </script>
 

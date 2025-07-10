@@ -28,6 +28,10 @@ const { description, title, image } = Astro.props;
     <meta property="og:image" content={image} />
     <meta property="twitter:image" content={image} />
     <title>{title}</title>
+    <script>
+      // Load cart service early
+      import "../scripts/cart-init.ts";
+    </script>
   </head>
   <body>
     <Header />
