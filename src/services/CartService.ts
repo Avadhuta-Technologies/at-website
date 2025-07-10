@@ -298,17 +298,21 @@ class CartService {
   // Update cart count in UI
   async updateCartCount(): Promise<void> {
     const cartCount = await this.getCartCount();
-    const cartBadge = document.querySelector('[data-cart-count]') as HTMLElement;
+    const cartBadges = document.querySelectorAll('[data-cart-count], .cart-badge') as NodeListOf<HTMLElement>;
     
     console.log('Updating cart count:', cartCount);
-    console.log('Cart badge found:', !!cartBadge);
+    console.log('Cart badges found:', cartBadges.length);
     
-    if (cartBadge) {
-      cartBadge.textContent = cartCount.toString();
-      cartBadge.style.display = cartCount > 0 ? 'block' : 'none';
-      console.log('Cart badge updated successfully');
-    } else {
-      console.warn('Cart badge not found in DOM');
+    cartBadges.forEach(cartBadge => {
+      if (cartBadge) {
+        cartBadge.textContent = cartCount.toString();
+        cartBadge.style.display = cartCount > 0 ? 'flex' : 'none';
+        console.log('Cart badge updated successfully');
+      }
+    });
+    
+    if (cartBadges.length === 0) {
+      console.warn('No cart badges found in DOM');
     }
   }
 
