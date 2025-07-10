@@ -4,7 +4,7 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import HeroSection from '../components/shared/HeroSection.astro';
 import WhyChooseSection from '../components/pods/WhyChooseSection.astro';
 import FeaturesSection from '../components/pods/FeaturesSection.astro';
-import ProductGrid from '../components/shared/ProductGrid.astro';
+import PodGrid from '../components/shared/PodGrid.astro';
 import FAQSection from '../components/shared/FAQSection.astro';
 import CTASection from '../components/shared/CTASection.astro';
 import { podsData } from '../content/pods.js';
@@ -103,7 +103,7 @@ function getGradientClass(color: string): string {
         </p>
       </div>
       
-      <ProductGrid
+              <PodGrid
         products={podsData.availablePods.pods}
         type="pod"
         learnMoreUrlPrefix="/pods"
@@ -138,6 +138,24 @@ function getGradientClass(color: string): string {
     primaryButton={podsData.cta.primaryButton}
     secondaryButton={podsData.cta.secondaryButton}
   />
+
+  <script>
+    // Use the generic ScrollUtils for hash scrolling
+    function handleHashScroll() {
+      // @ts-ignore
+      if (window.ScrollUtils) {
+        // @ts-ignore
+        window.ScrollUtils.handleUrlHashScroll();
+      }
+    }
+
+    // Try multiple event listeners for better reliability
+    document.addEventListener('DOMContentLoaded', handleHashScroll);
+    window.addEventListener('load', handleHashScroll);
+    
+    // Also try after a delay as fallback
+    setTimeout(handleHashScroll, 1000);
+  </script>
 
 </Layout>
 

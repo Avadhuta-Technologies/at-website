@@ -18,8 +18,8 @@ deliverables:
   - "SEO optimization, Google Shopping, and analytics integration"
   - "Scalable backend for product catalogs"
 engagement: "minimum 1 month"
-priceINR: "₹2.5L/month"
-priceUSD: "$3K/month"
+priceINR: "₹6,00,000/month"
+priceUSD: "$28,000/month"
 hero:
   title: "Ecommerce Engine Pod"
   subtitle: "Your Dedicated Team for Scalable, High-Converting Ecommerce Experiences"
@@ -119,5 +119,5 @@ This pod is built for speed, performance, and flexibility — whether you're bui
 
 ## Pricing
 
-**Starting at ₹2.5L/month (~$3K/month)**  
+**Starting at ₹6,00,000/month (~$28,000/month)**  
 Includes dev, design, QA, infrastructure, and deployment 

@@ -1,0 +1,144 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CartUtility from '../components/shared/CartUtility.astro';
+---
+
+<Layout title="Test Cart - NovaPod" description="Test the IndexedDB cart functionality">
+  <CartUtility />
+  
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Cart Test Page</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Test Add Items -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Test Add Items</h2>
+          
+          <div class="space-y-4">
+            <button 
+              onclick="testAddItem('pod', 'Test Pod', 'This is a test pod', '₹2.5L/month')"
+              class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+              Add Test Pod
+            </button>
+            
+            <button 
+              onclick="testAddItem('pack', 'Test Pack', 'This is a test pack', '₹50K/month')"
+              class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+              Add Test Pack
+            </button>
+            
+            <button 
+              onclick="testClearCart()"
+              class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors">
+              Clear Cart
+            </button>
+          </div>
+        </div>
+        
+        <!-- Cart Status -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cart Status</h2>
+          
+          <div id="cart-status" class="space-y-2 text-sm">
+            <p>Loading cart status...</p>
+          </div>
+          
+          <button 
+            onclick="updateCartStatus()"
+            class="mt-4 bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
+            Refresh Status
+          </button>
+        </div>
+      </div>
+      
+      <!-- Cart Items Display -->
+      <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cart Items</h2>
+        <div id="cart-items-display" class="space-y-2">
+          <p>Loading cart items...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  async function testAddItem(type, title, description, price) {
+    if (window.cartUtility) {
+      await window.cartUtility.addItem({
+        id: `test-${type}-${Date.now()}`,
+        type: type,
+        title: title,
+        description: description,
+        price: price
+      });
+      updateCartStatus();
+      updateCartItemsDisplay();
+    } else {
+      alert('Cart utility not available');
+    }
+  }
+  
+  async function testClearCart() {
+    if (window.cartUtility) {
+      await window.cartUtility.clearCart();
+      updateCartStatus();
+      updateCartItemsDisplay();
+    } else {
+      alert('Cart utility not available');
+    }
+  }
+  
+  async function updateCartStatus() {
+    if (window.cartUtility) {
+      const count = await window.cartUtility.getCartCount();
+      const total = await window.cartUtility.getCartTotal();
+      const cart = await window.cartUtility.getCart();
+      
+      const statusDiv = document.getElementById('cart-status');
+      statusDiv.innerHTML = `
+        <p><strong>Items in cart:</strong> ${count}</p>
+        <p><strong>Total value:</strong> ₹${(total / 100000).toFixed(1)}L</p>
+        <p><strong>Unique items:</strong> ${cart.length}</p>
+        <p><strong>Storage type:</strong> IndexedDB</p>
+      `;
+    }
+  }
+  
+  async function updateCartItemsDisplay() {
+    if (window.cartUtility) {
+      const cart = await window.cartUtility.getCart();
+      const displayDiv = document.getElementById('cart-items-display');
+      
+      if (cart.length === 0) {
+        displayDiv.innerHTML = '<p class="text-gray-500">Cart is empty</p>';
+        return;
+      }
+      
+      displayDiv.innerHTML = cart.map(item => `
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-semibold text-gray-900 dark:text-white">${item.title}</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
+              <p class="text-sm text-gray-500">Type: ${item.type}</p>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold text-gray-900 dark:text-white">${item.price}</p>
+              <p class="text-sm text-gray-500">Qty: ${item.quantity}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
+  
+  // Initialize status on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      updateCartStatus();
+      updateCartItemsDisplay();
+    }, 1000);
+  });
+</script> 

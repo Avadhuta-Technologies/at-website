@@ -11,8 +11,11 @@
               CONTACT US
             </span>
             <h2 class="max-w-[260px] text-[35px] leading-[1.14] font-semibold text-dark dark:text-white">
-              Let's talk about your problem.
+              Let's talk about your project.
             </h2>
+            <p class="mt-4 text-gray-600 dark:text-gray-400 max-w-md">
+              Ready to get started? Fill out the form and our team will get back to you within 24 hours.
+            </p>
           </div>
           <div class="mb-12 flex flex-wrap justify-between lg:mb-0">
             <div class="mb-8 flex w-[330px] max-w-full">
@@ -27,7 +30,7 @@
               <div>
                 <h5 class="mb-[18px] text-lg font-semibold text-dark dark:text-white">Our Location</h5>
                 <p class="text-base text-body-color dark:text-dark-6">
-                  401 Broadway, 24th Floor, Orchard Cloud View, London
+                  Mumbai, India
                 </p>
               </div>
             </div>
@@ -40,9 +43,9 @@
               </div>
               <div>
                 <h5 class="mb-[18px] text-lg font-semibold text-dark dark:text-white">How Can We Help?</h5>
-                <p class="text-base text-body-color dark:text-dark-6">info@yourdomain.com</p>
+                <p class="text-base text-body-color dark:text-dark-6">hello@novapod.ai</p>
                 <p class="text-base text-body-color dark:text-dark-6 mt-1">
-                  contact@yourdomain.com
+                  support@novapod.ai
                 </p>
               </div>
             </div>
@@ -54,34 +57,58 @@
           class="wow fadeInUp rounded-lg bg-white dark:bg-dark-2 py-10 px-8 shadow-testimonial dark:shadow-none sm:py-12 sm:px-10 md:p-[60px] lg:p-10 lg:py-12 lg:px-10 2xl:p-[60px]"
           data-wow-delay=".2s"
         >
+          <!-- Order Summary (shown when coming from cart) -->
+          <div id="order-summary" class="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800" style="display: none;">
+            <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+              </svg>
+              Order Summary
+            </h4>
+            <div id="order-items" class="space-y-2 text-sm">
+              <!-- Order items will be populated by JavaScript -->
+            </div>
+            <div class="mt-3 pt-3 border-t border-blue-200 dark:border-blue-700">
+              <div class="flex justify-between items-center font-semibold text-blue-900 dark:text-blue-100">
+                <span>Total</span>
+                <span id="order-total">₹0</span>
+              </div>
+            </div>
+          </div>
+
           <h3 class="mb-8 text-2xl font-semibold md:text-[28px] md:leading-[1.42] text-dark dark:text-white">
             Send us a Message
           </h3>
-          <form>
+          <form id="contact-form">
             <div class="mb-[22px]">
               <label for="fullName" class="block text-sm text-body-color dark:text-dark-6 mb-4">Full Name*</label>
-              <input type="text" name="fullName" placeholder="Adam Gelius"
-                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+              <input type="text" name="fullName" id="fullName" placeholder="Adam Gelius"
+                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" required />
             </div>
             <div class="mb-[22px]">
               <label for="email" class="block text-sm text-body-color dark:text-dark-6 mb-4">Email*</label>
-              <input type="email" name="email" placeholder="example@yourmail.com"
-                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+              <input type="email" name="email" id="email" placeholder="example@yourmail.com"
+                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" required />
             </div>
             <div class="mb-[22px]">
               <label for="phone" class="block text-sm text-body-color dark:text-dark-6 mb-4">Phone*</label>
-              <input type="text" name="phone" placeholder="+885 1254 5211 552"
+              <input type="text" name="phone" id="phone" placeholder="+91 98765 43210"
+                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" required />
+            </div>
+            <div class="mb-[22px]">
+              <label for="company" class="block text-sm text-body-color dark:text-dark-6 mb-4">Company</label>
+              <input type="text" name="company" id="company" placeholder="Your Company Name"
                 class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
             </div>
             <div class="mb-[30px]">
               <label for="message" class="block text-sm text-body-color dark:text-dark-6 mb-4">Message*</label>
-              <textarea name="message" rows="1" placeholder="type your message here"
-                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 resize-none border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none"></textarea>
+              <textarea name="message" id="message" rows="4" placeholder="Tell us about your project requirements..."
+                class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 resize-none border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" required></textarea>
             </div>
             <div class="mb-0">
               <button type="submit"
                 class="inline-flex items-center justify-center rounded-md bg-primary py-3 px-10 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-blue-dark">
-                Send
+                Send Message
               </button>
             </div>
           </form>
@@ -91,3 +118,100 @@
   </div>
 </section>
 <!-- ====== Contact End ====== -->
+
+<script>
+  // Handle cart data from URL parameters
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cartData = urlParams.get('cart');
+    
+    if (cartData) {
+      try {
+        const items = JSON.parse(decodeURIComponent(cartData));
+        displayOrderSummary(items);
+        
+        // Pre-fill message with cart details
+        const messageTextarea = document.getElementById('message');
+        if (messageTextarea) {
+          const cartDetails = items.map(item => 
+            `${item.title} (${item.type}) - ${item.price}`
+          ).join('\n');
+          messageTextarea.value = `I'm interested in the following services:\n\n${cartDetails}\n\nPlease provide more details about my requirements.`;
+        }
+      } catch (error) {
+        console.error('Error parsing cart data:', error);
+      }
+    }
+  }
+
+  function displayOrderSummary(items) {
+    const orderSummary = document.getElementById('order-summary');
+    const orderItems = document.getElementById('order-items');
+    const orderTotal = document.getElementById('order-total');
+    
+    if (orderSummary && orderItems && orderTotal) {
+      orderSummary.style.display = 'block';
+      
+      // Display items
+      orderItems.innerHTML = items.map(item => `
+        <div class="flex justify-between items-center">
+          <span class="text-blue-800 dark:text-blue-200">${item.title} × ${item.quantity}</span>
+          <span class="font-medium text-blue-900 dark:text-blue-100">${item.price}</span>
+        </div>
+      `).join('');
+      
+      // Calculate and display total
+      const total = items.reduce((sum, item) => {
+        const price = parsePrice(item.price);
+        return sum + (price * item.quantity);
+      }, 0);
+      
+      orderTotal.textContent = formatPrice(total);
+    }
+  }
+
+  function parsePrice(price) {
+    if (typeof price === 'number') return price;
+    if (typeof price === 'string') {
+      const match = price.match(/[\d.]+/);
+      return match ? parseFloat(match[0]) * 100000 : 0;
+    }
+    return 0;
+  }
+
+  function formatPrice(amount) {
+    if (amount >= 100000) {
+      return `₹${(amount / 100000).toFixed(1)}L`;
+    } else if (amount >= 1000) {
+      return `₹${(amount / 1000).toFixed(0)}K`;
+    }
+    return `₹${amount.toFixed(0)}`;
+  }
+
+  // Handle form submission
+  document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show success message
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    
+    // Simulate form submission (in real implementation, this would send to your backend)
+    setTimeout(() => {
+      submitBtn.textContent = 'Message Sent!';
+      submitBtn.classList.add('bg-green-500');
+      
+      // Reset form
+      setTimeout(() => {
+        form.reset();
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('bg-green-500');
+      }, 2000);
+    }, 1000);
+  });
+</script>

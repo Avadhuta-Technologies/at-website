@@ -1,0 +1,285 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CartUtility from '../components/shared/CartUtility.astro';
+---
+
+<Layout title="Reserve My Pod - NovaPod" description="Complete your pod reservation">
+  <CartUtility />
+  
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="max-w-6xl mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Reserve My Pod</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">Complete your reservation</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Customer Information Form -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Customer Information</h2>
+          
+          <form id="checkout-form" class="space-y-6">
+            <!-- Personal Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
+                <input type="text" id="firstName" name="firstName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              </div>
+              <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
+                <input type="text" id="lastName" name="lastName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              </div>
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
+              <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+              <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <!-- Company Information -->
+            <div>
+              <label for="company" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company/Organization</label>
+              <input type="text" id="company" name="company" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div>
+              <label for="website" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Website (if any)</label>
+              <input type="url" id="website" name="website" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <!-- Project Information -->
+            <div>
+              <label for="projectDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Project Description *</label>
+              <textarea id="projectDescription" name="projectDescription" rows="4" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"></textarea>
+            </div>
+
+            <div>
+              <label for="timeline" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Expected Timeline *</label>
+              <select id="timeline" name="timeline" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                <option value="">Select timeline</option>
+                <option value="1-3 months">1-3 months</option>
+                <option value="3-6 months">3-6 months</option>
+                <option value="6-12 months">6-12 months</option>
+                <option value="12+ months">12+ months</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="budget" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Budget Range</label>
+              <select id="budget" name="budget" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+                <option value="">Select budget range</option>
+                <option value="₹2-3 Lakhs">₹2-3 Lakhs</option>
+                <option value="₹3-5 Lakhs">₹3-5 Lakhs</option>
+                <option value="₹5-10 Lakhs">₹5-10 Lakhs</option>
+                <option value="₹10+ Lakhs">₹10+ Lakhs</option>
+              </select>
+            </div>
+
+            <!-- Additional Information -->
+            <div>
+              <label for="additionalInfo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Additional Information</label>
+              <textarea id="additionalInfo" name="additionalInfo" rows="3" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none" placeholder="Any specific requirements, questions, or additional details..."></textarea>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="flex items-start">
+              <input type="checkbox" id="terms" name="terms" required class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <label for="terms" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                I agree to the <a href="/terms" class="text-blue-600 hover:text-blue-500">Terms and Conditions</a> and <a href="/privacy" class="text-blue-600 hover:text-blue-500">Privacy Policy</a> *
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+              Reserve My Pod
+            </button>
+          </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-8">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Summary</h3>
+            
+            <div id="order-summary" class="space-y-4 mb-6">
+              <!-- Summary items will be rendered here -->
+            </div>
+
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div class="flex justify-between items-center text-lg font-semibold text-gray-900 dark:text-white">
+                <span>Total</span>
+                <span id="total-amount">₹0</span>
+              </div>
+
+            </div>
+
+            <!-- Important Notes -->
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Important Notes:</h4>
+              <ul class="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+                <li>• A NovaPod specialist will contact you within 1 business day</li>
+                <li>• Pod reservation is subject to availability</li>
+                <li>• Final pricing will be confirmed after consultation</li>
+                <li>• 30-day money-back guarantee applies</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Checkout functionality
+  class Checkout {
+    constructor() {
+      this.cart = null;
+      this.init();
+    }
+
+    async init() {
+      if (typeof window !== 'undefined' && window.cartUtility) {
+        this.cart = window.cartUtility;
+        await this.renderOrderSummary();
+        this.setupEventListeners();
+        this.validatePodSelection();
+      }
+    }
+
+    async renderOrderSummary() {
+      const cart = await this.cart.getCart();
+      const summaryDiv = document.getElementById('order-summary');
+      const totalDiv = document.getElementById('total-amount');
+      
+      if (cart.length === 0) {
+        summaryDiv.innerHTML = '<p class="text-gray-500 italic">No items in cart</p>';
+        totalDiv.textContent = '₹0';
+        return;
+      }
+
+      const summaryItems = cart.map(item => `
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
+            <span class="text-sm text-gray-500"> × ${item.quantity}</span>
+          </div>
+          <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
+        </div>
+      `).join('');
+
+      summaryDiv.innerHTML = summaryItems;
+      
+      // Calculate total
+      const total = cart.reduce((sum, item) => {
+        const price = this.parsePrice(item.price);
+        return sum + (price * item.quantity);
+      }, 0);
+      
+      totalDiv.textContent = this.formatPrice(total);
+    }
+
+    parsePrice(price) {
+      if (typeof price === 'number') return price;
+      if (typeof price === 'string') {
+        const match = price.match(/[\d.]+/);
+        return match ? parseFloat(match[0]) * 100000 : 0;
+      }
+      return 0;
+    }
+
+    formatPrice(amount) {
+      if (amount >= 100000) {
+        return `₹${(amount / 100000).toFixed(1)}L`;
+      } else if (amount >= 1000) {
+        return `₹${(amount / 1000).toFixed(0)}K`;
+      }
+      return `₹${amount.toFixed(0)}`;
+    }
+
+    validatePodSelection() {
+      this.cart.getCart().then(cart => {
+        const hasPod = cart.some(item => item.type === 'pod');
+        if (!hasPod) {
+          alert('You must select a pod before proceeding to checkout.');
+          window.location.href = '/cart';
+        }
+      });
+    }
+
+    setupEventListeners() {
+      document.getElementById('checkout-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleCheckout();
+      });
+    }
+
+    async handleCheckout() {
+      const form = document.getElementById('checkout-form');
+      const formData = new FormData(form);
+      
+      // Validate required fields
+      const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'projectDescription', 'timeline'];
+      const missingFields = requiredFields.filter(field => !formData.get(field));
+      
+      if (missingFields.length > 0) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      // Get cart data
+      const cart = await this.cart.getCart();
+      
+      // Prepare order data
+      const orderData = {
+        customer: {
+          firstName: formData.get('firstName'),
+          lastName: formData.get('lastName'),
+          email: formData.get('email'),
+          phone: formData.get('phone'),
+          company: formData.get('company'),
+          website: formData.get('website')
+        },
+        project: {
+          description: formData.get('projectDescription'),
+          timeline: formData.get('timeline'),
+          budget: formData.get('budget'),
+          additionalInfo: formData.get('additionalInfo')
+        },
+        order: {
+          items: cart,
+          total: this.calculateTotal(cart),
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      // Store order data in localStorage for the thank you page
+      localStorage.setItem('novapod-order', JSON.stringify(orderData));
+      
+      // Clear cart after successful order
+      await this.cart.clearCart();
+      
+      // Redirect to thank you page
+      window.location.href = '/thank-you';
+    }
+
+    calculateTotal(cart) {
+      return cart.reduce((sum, item) => {
+        const price = this.parsePrice(item.price);
+        return sum + (price * item.quantity);
+      }, 0);
+    }
+  }
+
+  // Initialize checkout
+  let checkout;
+  if (typeof window !== 'undefined') {
+    checkout = new Checkout();
+  }
+</script> 

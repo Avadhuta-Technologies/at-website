@@ -15,8 +15,8 @@ deliverables:
   - "Evaluation metrics, fallbacks, error handling"
   - "On-device or cloud model deployment"
 engagement: "minimum 1 month"
-priceINR: "₹3L/month"
-priceUSD: "$3.6K/month"
+priceINR: "₹7,00,000/month"
+priceUSD: "$30,000/month"
 hero:
   title: "AI/ML Integration Pod"
   subtitle: "Integrate Smart Features into Your Product—No Data Science Hiring Needed"
@@ -111,5 +111,5 @@ This pod helps you ship useful AI features using LLMs, OCR, and lightweight ML m
 
 ## Pricing
 
-**Starts at ₹3L/month (~$3.6K)**  
+**Starts at ₹7,00,000/month (~$30,000/month)**  
 PoC-based pricing also available 

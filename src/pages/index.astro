@@ -11,6 +11,8 @@ import SuccessStoriesSection from '../components/home/SuccessStoriesSection.astr
 import FinalCTASection from '../components/home/FinalCTASection.astro';
 import FAQSection from '../components/shared/FAQSection.astro';
 import { getHomeData } from '../content/home.js';
+import { podsData } from '../content/pods.js';
+import { enhanceHomePodData } from '../utils/podUtils.js';
 
 // Get home page content from markdown
 const homeData = await getHomeData();
@@ -21,6 +23,26 @@ if (!homeData) {
 
 // Use data from markdown file
 const { hero, howItWorks, podsGrid, packsGrid, podStrategistCTA, whyWorks, teamsFounders, successStories, faq, finalCTA } = homeData;
+
+// Use pods.js as single source of truth for home page pod data
+const homePodsData = {
+  title: podsGrid.title,
+  subtitle: podsGrid.subtitle,
+  pods: podsData.availablePods.pods.slice(0, 6).map(pod => ({
+    id: pod.id,
+    title: pod.title,
+    subtitle: pod.description,
+    description: pod.podDescription || pod.description,
+    idealFor: pod.idealFor ? pod.idealFor.join(', ') : '',
+    teamComposition: pod.teamComposition || [],
+    deliverables: pod.deliverables || [],
+    pricing: pod.engagement || '',
+    minEngagement: "1 month",
+    icon: pod.icon,
+    badge: pod.badge,
+    badgeColor: pod.badgeColor
+  }))
+};
 
 
 
@@ -48,7 +70,7 @@ const { hero, howItWorks, podsGrid, packsGrid, podStrategistCTA, whyWorks, teams
   </div>
 
   <div data-animate="row-staggered" data-base-delay="200" data-card-delay="120" data-row-delay="200" data-columns-per-row="3">
-    <HomePodsSection title={podsGrid.title} subtitle={podsGrid.subtitle} pods={podsGrid.pods} />
+    <HomePodsSection title={homePodsData.title} subtitle={homePodsData.subtitle} pods={homePodsData.pods} />
   </div>
 
   <div data-animate="row-staggered" data-base-delay="200" data-card-delay="120" data-row-delay="200" data-columns-per-row="3">

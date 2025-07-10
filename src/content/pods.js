@@ -56,7 +56,7 @@ export const podsData = {
         id: "ecommerce-engine",
         title: "Ecommerce Engine Pod (ShopPod)",
         description: "Your Dedicated Team for Scalable, High-Converting Ecommerce Experiences",
-        icon: "/assets/features/icon-01.svg",
+        icon: "shopping-cart",
         badge: "Popular",
         badgeColor: "green",
         idealFor: [
@@ -96,14 +96,14 @@ export const podsData = {
           "Wholesale B2B portal with custom pricing workflows",
           "Shopify-based subscription store with referral tracking"
         ],
-        engagement: "Starting at ₹2.5L/month (~$3K/month)",
+        engagement: "Starting at ₹6,00,000/month (~$28,000/month)",
         priceNote: "Includes dev, design, QA, infrastructure, and deployment"
       },
       {
         id: "ar-vr-experience",
         title: "AR/VR Experience Pod (XRPod)",
         description: "Immersive Digital Experiences for Products, Training, and Visualization",
-        icon: "/assets/features/icon-02.svg",
+        icon: "vr-headset",
         badge: "Immersive",
         badgeColor: "purple",
         idealFor: [
@@ -142,14 +142,14 @@ export const podsData = {
           "VR safety training simulation for a manufacturing firm",
           "WebAR product showcase for a launch event"
         ],
-        engagement: "Starting at ₹3L/month (~$3.6K/month)",
+        engagement: "Starting at ₹7,50,000/month (~$35,000/month)",
         priceNote: "Includes full development, 3D assets, testing, and deployment"
       },
       {
         id: "ai-product-studio",
         title: "AI Product Studio Pod (AIPod)",
         description: "Build AI-First Products Without Building a Data Science Team",
-        icon: "/assets/features/icon-03.svg",
+        icon: "brain",
         badge: "AI-Powered",
         badgeColor: "blue",
         idealFor: [
@@ -188,14 +188,14 @@ export const podsData = {
           "Chat-based internal knowledge assistant",
           "Audio transcription and summarization app"
         ],
-        engagement: "Starting at ₹3.5L/month (~$4.2K/month)",
+        engagement: "Starting at ₹8,00,000/month (~$38,000/month)",
         priceNote: "Includes design, dev, infra, and AI pipelines"
       },
       {
         id: "product-launch",
         title: "Product Launch Pod (LaunchPod)",
         description: "Your All-in-One Team for Fast, Confident MVP Delivery",
-        icon: "/assets/features/icon-04.svg",
+        icon: "rocket",
         badge: "Fast",
         badgeColor: "orange",
         idealFor: [
@@ -235,14 +235,14 @@ export const podsData = {
           "Internal CRM tool for early-stage sales",
           "IoT dashboard for field data monitoring"
         ],
-        engagement: "Starts at ₹2.5L/month (~$3K/month)",
+        engagement: "Starts at ₹5,50,000/month (~$25,000/month)",
         priceNote: "Includes dev, design, testing, DevOps & coordination"
       },
       {
         id: "admin-workflow-automation",
         title: "Admin & Workflow Automation Pod (FlowPod)",
         description: "For Teams Looking to Automate Business Operations",
-        icon: "/assets/features/icon-05.svg",
+        icon: "admin-workflow-automation",
         badge: "Automation",
         badgeColor: "indigo",
         idealFor: [
@@ -278,14 +278,14 @@ export const podsData = {
           "Approval workflows for finance teams",
           "Reporting dashboard for executive teams"
         ],
-        engagement: "Starting at ₹2L/month (~$2.4K)",
+        engagement: "Starting at ₹5,00,000/month (~$22,000/month)",
         priceNote: "Includes development, testing, and deployment"
       },
       {
         id: "ai-ml-integration",
         title: "AI/ML Integration Pod (IntegratePod)",
         description: "Integrate Smart Features into Your Product—No Data Science Hiring Needed",
-        icon: "/assets/features/icon-06.svg",
+        icon: "ai-ml-integration",
         badge: "Integration",
         badgeColor: "teal",
         idealFor: [
@@ -320,14 +320,14 @@ export const podsData = {
           "Image OCR and tagging system",
           "Recommendation engine for user engagement"
         ],
-        engagement: "Starts at ₹3L/month (~$3.6K)",
+        engagement: "Starts at ₹7,00,000/month (~$30,000/month)",
         priceNote: "PoC-based pricing also available"
       },
       {
         id: "mobile-first-saas",
         title: "Mobile-First SaaS Pod (AppPod)",
         description: "Your Cross-Platform Team for Beautiful, Functional Mobile SaaS Products",
-        icon: "/assets/features/icon-07.svg",
+        icon: "mobile-app",
         badge: "Mobile",
         badgeColor: "pink",
         idealFor: [
@@ -368,14 +368,14 @@ export const podsData = {
           "Habit tracker SaaS with analytics backend",
           "IoT control app with device sync and notifications"
         ],
-        engagement: "Starting at ₹3L/month (~$3.6K)",
+        engagement: "Starting at ₹6,50,000/month (~$28,000/month)",
         priceNote: "Includes mobile dev, backend dev, design, testing, and deployment"
       },
       {
         id: "devops-infra-automation",
         title: "DevOps & Infra Automation Pod (InfraPod)",
         description: "Scale with Confidence — Reliable Infrastructure, CI/CD, and CloudOps Support",
-        icon: "/assets/features/icon-08.svg",
+        icon: "devops-infra-automation",
         badge: "Infrastructure",
         badgeColor: "gray",
         idealFor: [
@@ -413,7 +413,7 @@ export const podsData = {
           "GitHub → Docker → Production pipeline setup",
           "Multi-tenant SaaS with containerized staging environments"
         ],
-        engagement: "Starting at ₹2L/month (~$2.4K)",
+        engagement: "Starting at ₹4,50,000/month (~$20,000/month)",
         priceNote: "One-time infra setup plans available as well"
       }
     ]

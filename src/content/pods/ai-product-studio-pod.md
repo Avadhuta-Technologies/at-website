@@ -17,8 +17,8 @@ deliverables:
   - "Secure deployment with API rate limiting and analytics"
   - "Conversational UI, dashboard, or widget-based frontend"
 engagement: "minimum 1 month"
-priceINR: "₹3.5L/month"
-priceUSD: "$4.2K/month"
+priceINR: "₹8,00,000/month"
+priceUSD: "$38,000/month"
 hero:
   title: "AI Product Studio Pod"
   subtitle: "Build AI-First Products Without Building a Data Science Team"
@@ -117,5 +117,5 @@ This pod is your go-to team for launching AI-powered products — from design to
 
 ## Pricing
 
-**Starting at ₹3.5L/month (~$4.2K/month)**  
+**Starting at ₹8,00,000/month (~$38,000/month)**  
 Includes design, dev, infra, and AI pipelines 

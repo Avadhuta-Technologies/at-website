@@ -89,13 +89,13 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
       <!-- CTA Buttons -->
       <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 cta-buttons">
         {primaryButton && (
-          <a href={primaryButton.href} class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
+          <a href={primaryButton.href} data-button-label={primaryButton.label} onclick="if(window.handleButtonClick) { window.handleButtonClick(event, this.getAttribute('data-button-label')); } else { console.log('handleButtonClick not available'); }" class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
             <span class="relative z-10">{primaryButton.label}</span>
             <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </a>
         )}
         {secondaryButton && (
-          <a href={secondaryButton.href} class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
+          <a href={secondaryButton.href} data-button-label={secondaryButton.label} onclick="if(window.handleButtonClick) { window.handleButtonClick(event, this.getAttribute('data-button-label')); } else { console.log('handleButtonClick not available'); }" class="group px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-xl hover:border-white hover:text-white transition-all duration-300 transform hover:scale-105 secondary-btn">
             <span class="flex items-center">{secondaryButton.label}</span>
           </a>
         )}
@@ -117,4 +117,83 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
   )}
 </section>
 
- 
+<script>
+  // Use ScrollUtils if available, otherwise use direct implementation
+  function handleButtonClick(event: Event, buttonLabel: string) {
+    console.log('Button clicked:', buttonLabel);
+    
+    // @ts-ignore
+    if (window.ScrollUtils) {
+      console.log('Using ScrollUtils');
+      // @ts-ignore
+      window.ScrollUtils.handleButtonClick(event, buttonLabel);
+    } else {
+      console.log('Using fallback implementation');
+      // Fallback implementation
+      event.preventDefault();
+      
+      const label = buttonLabel.toLowerCase();
+      let sectionId = null;
+      
+      // Map button labels to section IDs
+      if (label.includes('get started with a pod')) {
+        sectionId = 'choose-pod-section';
+      } else if (label.includes('start with a novapod')) {
+        sectionId = 'available-pods';
+      } else if (label.includes('see how it works')) {
+        sectionId = 'how-it-works';
+      }
+      
+      console.log('Mapped section ID:', sectionId);
+      
+      if (sectionId) {
+        // Special handling for available-pods section - navigate to explore-pods page
+        if (sectionId === 'available-pods') {
+          console.log('Navigating to explore-pods page with available-pods section');
+          window.location.href = '/explore-pods#available-pods';
+          return;
+        }
+        
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+          console.log('Found target section, scrolling...');
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        } else {
+          console.warn(`Section with id "${sectionId}" not found, trying again after delay...`);
+          // Try again after a short delay in case the section is still loading
+          setTimeout(() => {
+            const retrySection = document.getElementById(sectionId);
+            if (retrySection) {
+              console.log('Found target section on retry, scrolling...');
+              retrySection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            } else {
+              console.error(`Section with id "${sectionId}" still not found after retry`);
+            }
+          }, 500);
+        }
+      } else {
+        // No matching section, use default navigation
+        const target = event.target as HTMLAnchorElement;
+        const href = target?.href || '#';
+        window.location.href = href;
+      }
+    }
+  }
+
+  // Make function globally available immediately
+  // @ts-ignore
+  window.handleButtonClick = handleButtonClick;
+  
+  // Also make it available on DOMContentLoaded as backup
+  document.addEventListener('DOMContentLoaded', function() {
+    // @ts-ignore
+    window.handleButtonClick = handleButtonClick;
+    console.log('handleButtonClick function made available');
+  });
+</script>

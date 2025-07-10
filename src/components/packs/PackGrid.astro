@@ -1,0 +1,61 @@
+---
+import PackCard from './PackCard.astro';
+
+interface Pack {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  badge: string;
+  badgeColor: string;
+  priceINR?: string;
+  priceUSD?: string;
+  duration?: string;
+  deliverables?: string[];
+  idealFor?: string[];
+  addOns?: string[];
+  whyItWorks?: string;
+  testimonials?: Array<{
+    quote: string;
+    author: string;
+    role: string;
+  }>;
+  cta?: {
+    title: string;
+    subtitle: string;
+    primaryButton: string;
+    secondaryButton: string;
+  };
+}
+
+export interface Props {
+  packs: Pack[];
+  learnMoreUrlPrefix: string;
+
+}
+
+const { packs, learnMoreUrlPrefix } = Astro.props;
+---
+
+<div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+  {packs.map((pack, index) => (
+    <PackCard
+      id={pack.id}
+      title={pack.title}
+      description={pack.description}
+      icon={pack.icon}
+      badge={pack.badge}
+      badgeColor={pack.badgeColor}
+      priceINR={pack.priceINR}
+      priceUSD={pack.priceUSD}
+      duration={pack.duration}
+      deliverables={pack.deliverables || []}
+      idealFor={pack.idealFor || []}
+      addOns={pack.addOns || []}
+      whyItWorks={pack.whyItWorks}
+      testimonials={pack.testimonials || []}
+      cta={pack.cta}
+      learnMoreUrl={`${learnMoreUrlPrefix}/${pack.id}`}
+    />
+  ))}
+</div> 

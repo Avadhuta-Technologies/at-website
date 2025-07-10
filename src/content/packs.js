@@ -7,6 +7,60 @@ export const packsData = {
     secondaryButton: { label: "Build Your Bundle", href: "/contact" }
   },
 
+  faq: {
+    title: "Frequently Asked Questions",
+    subtitle: "Everything you need to know about our Packs",
+    items: [
+      {
+        question: "1. What exactly is a Pack?",
+        answer: "A Pack is a fixed-scope, fixed-cost add-on that extends the capabilities of a Pod. It delivers a specific outcome — like launching your product, adding automation, or improving UX — in a defined time frame."
+      },
+      {
+        question: "2. Do I need to buy a Pod to use a Pack?",
+        answer: "Yes. Packs are designed to enhance or complement a Pod. Think of the Pod as your core service, and Packs as modular boosters that add extra value."
+      },
+      {
+        question: "3. Can I combine multiple Packs with one Pod?",
+        answer: "Absolutely. You can stack multiple Packs with a single Pod — for example, combine a Launch Pack + Web Presence Pack + Brand Starter Pack with the Product Launch Pod."
+      },
+      {
+        question: "4. Are the prices fixed or do they vary?",
+        answer: "All Pack prices are fixed for the defined scope. If you need customizations beyond the listed deliverables, we can scope a Custom Pack for you."
+      },
+      {
+        question: "5. How long does each Pack take to deliver?",
+        answer: "Each Pack comes with a set delivery timeline (e.g., 1–4 weeks depending on the scope). Timelines are listed clearly with each Pack."
+      },
+      {
+        question: "6. What happens after I choose a Pack?",
+        answer: "Once you select a Pack, we'll schedule a short kickoff session to align on requirements. From there, our team gets started and keeps you updated throughout the delivery cycle."
+      },
+      {
+        question: "7. Can I create a custom Pack?",
+        answer: "Yes! If none of the standard Packs fit your needs, you can request a Custom Pack tailored to your goals. Just Talk to a Specialist to get started."
+      },
+      {
+        question: "8. What if I only want a Pack but not a Pod?",
+        answer: "Packs are designed to work with Pods, not independently. If you're unsure which Pod you need, we'll help you choose the right one for your goal."
+      }
+    ]
+  },
+
+  testimonials: {
+    title: "What Customers Are Saying",
+    subtitle: "Real feedback from teams who've used our Packs",
+    items: [
+      {
+        quote: "The Launch Pack helped us go live 3x faster than we planned.\" We had our mobile app ready, but launching it felt like a mountain — website, deployment, store listings... it was a lot. NovaPod's Launch Pack took care of everything with zero back-and-forth. Smooth, fast, and super professional.",
+        author: "CTO, HR Tech Startup"
+      },
+      {
+        quote: "Fixed scope Packs gave us clarity and control.\" As a scaling startup, we were tired of vague proposals and ballooning costs. With NovaPod's Growth and Integration Packs, we knew exactly what we were getting and when. The delivery was solid — on time, on point.",
+        author: "Founder, E-learning Platform"
+      }
+    ]
+  },
+
   availablePacks: {
     title: "Available Project Packs",
     categories: [
@@ -23,8 +77,8 @@ export const packsData = {
             badge: "Popular",
             badgeColor: "green",
             duration: "2 weeks",
-            priceINR: "₹75,000",
-            priceUSD: "$900",
+            priceINR: "₹1,00,000",
+            priceUSD: "$1,500",
             deliverables: [
               "Brand Identity Kit - Logo, color palette, typography, and brand voice—all aligned to tell your story powerfully and consistently.",
               "Go-To-Market Website - Launch-ready website (built on Webflow, Next.js, or your preferred stack) that communicates your value proposition, showcases your offering, and is optimized for conversions.",
@@ -179,8 +233,8 @@ export const packsData = {
             badge: "Growth",
             badgeColor: "orange",
             duration: "3 weeks",
-            priceINR: "₹95,000",
-            priceUSD: "$1,100",
+            priceINR: "₹1,50,000",
+            priceUSD: "$2,200",
             deliverables: [
               "Website Optimization Audit - Detailed review of your website's UX, SEO, speed, and conversion flows—with prioritized action items to boost performance.",
               "Lead Generation Setup - Capture leads through smart forms, popups, landing pages, and integrations with CRM or email tools like HubSpot, Mailchimp, or ConvertKit.",
@@ -802,14 +856,14 @@ export const packsData = {
       {
         authorName: "CTO, HR Tech Startup",
         authorRole: "Technology Leader",
-        message: "🗣️ \"The Launch Pack helped us go live 3x faster than we planned.\" We had our mobile app ready, but launching it felt like a mountain — website, deployment, store listings... it was a lot. NovaPod's Launch Pack took care of everything with zero back-and-forth. Smooth, fast, and super professional.",
+        message: "The Launch Pack helped us go live 3x faster than we planned.\" We had our mobile app ready, but launching it felt like a mountain — website, deployment, store listings... it was a lot. NovaPod's Launch Pack took care of everything with zero back-and-forth. Smooth, fast, and super professional.",
         image: "/assets/testimonials/author-01.jpg",
         caseLink: "/case-studies/hr-tech-launch"
       },
       {
         authorName: "Founder, E-learning Platform",
         authorRole: "Startup Founder",
-        message: "🗣️ \"Fixed scope Packs gave us clarity and control.\" As a scaling startup, we were tired of vague proposals and ballooning costs. With NovaPod's Growth and Integration Packs, we knew exactly what we were getting and when. The delivery was solid — on time, on point.",
+        message: "Fixed scope Packs gave us clarity and control.\" As a scaling startup, we were tired of vague proposals and ballooning costs. With NovaPod's Growth and Integration Packs, we knew exactly what we were getting and when. The delivery was solid — on time, on point.",
         image: "/assets/testimonials/author-02.jpg",
         caseLink: "/case-studies/e-learning-growth"
       }

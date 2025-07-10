@@ -59,7 +59,7 @@ class InteractiveElements {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const href = this.getAttribute('href');
-        if (href) {
+        if (href && href !== '#') {
           const target = document.querySelector(href);
           if (target) {
             // Add offset for fixed headers if needed

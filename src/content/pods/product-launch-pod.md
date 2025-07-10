@@ -18,8 +18,8 @@ deliverables:
   - "DevOps pipeline (Vercel, Render, or Docker)"
   - "QA, documentation, and handoff"
 engagement: "minimum 1 month"
-priceINR: "₹2.5L/month"
-priceUSD: "$3K/month"
+priceINR: "₹5,50,000/month"
+priceUSD: "$25,000/month"
 hero:
   title: "Product Launch Pod"
   subtitle: "Your All-in-One Team for Fast, Confident MVP Delivery"
@@ -119,5 +119,5 @@ This pod is a lean cross-functional unit to take your product from idea to MVP, 
 
 ## Pricing
 
-**Starts at ₹2.5L/month (~$3K/month)**  
+**Starts at ₹5,50,000/month (~$25,000/month)**  
 Includes dev, design, testing, DevOps & coordination 

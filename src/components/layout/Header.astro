@@ -12,6 +12,7 @@ const menuitems = [
       { title: "Our Work", path: "/our-work", description: "Explore our latest projects and achievements" },
       { title: "Portfolio", path: "/portfolio", description: "Browse our comprehensive portfolio" },
       { title: "Case Studies", path: "/case-studies", description: "Real success stories and results" },
+      { title: "Pricing", path: "/pricing", description: "Transparent pricing for all services" },
       { title: "Contact", path: "/contact", description: "Get in touch with our team" }
     ]
   },
@@ -192,13 +193,13 @@ const menuitems = [
       <!-- Action Buttons Container -->
       <div class="flex items-center justify-end gap-2 sm:gap-4 flex-shrink-0 flex-nowrap">
         <!-- Cart Icon - Always visible -->
-        <a href="/cart" class="inline-flex cursor-pointer items-center text-white hover:text-blue-300 transition-colors duration-300 relative flex-shrink-0">
+        <button id="header-cart-toggle" class="inline-flex cursor-pointer items-center text-white hover:text-blue-300 transition-colors duration-300 relative flex-shrink-0">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
           </svg>
           <!-- Cart badge -->
-          <span class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs">0</span>
-        </a>
+          <span class="cart-badge absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs" data-cart-count style="display: none;">0</span>
+        </button>
         
         <!-- Desktop Action Buttons -->
         <div class="hidden sm:flex items-center gap-3 lg:gap-4 flex-shrink-0 flex-nowrap">

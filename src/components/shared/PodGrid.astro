@@ -1,5 +1,5 @@
 ---
-import ProductCard from './ProductCard.astro';
+import PodCard from './PodCard.astro';
 
 interface Product {
   id: string;
@@ -9,6 +9,7 @@ interface Product {
   badge: string;
   badgeColor: string;
   price?: string;
+  engagement?: string;
   priceNote?: string;
   duration?: string;
   teamSize?: number;
@@ -29,19 +30,19 @@ const { products, type, learnMoreUrlPrefix, actionUrl, actionText } = Astro.prop
 
 <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
   {products.map((product, index) => (
-    <ProductCard
+    <PodCard
       id={product.id}
       title={product.title}
       description={product.description}
       icon={product.icon}
       badge={product.badge}
       badgeColor={product.badgeColor}
-      price={product.price}
-      priceNote={product.priceNote}
+      price={product.engagement || product.price}
+      priceNote={product.priceNote || "Includes development, testing, and deployment"}
       duration={product.duration}
-      teamSize={product.teamSize}
-      deliverables={product.deliverables}
-      idealFor={product.idealFor}
+      teamSize={product.teamSize || 3}
+      deliverables={product.deliverables || []}
+      idealFor={product.idealFor || []}
       learnMoreUrl={`${learnMoreUrlPrefix}/${product.id}`}
       actionUrl={actionUrl}
       actionText={actionText}
