@@ -1,97 +1,97 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CartUtility from '../components/shared/CartUtility.astro';
 ---
 
-<Layout title="Reserve My Pod - NovaPod" description="Complete your pod reservation">
-  <CartUtility />
+<Layout title="Checkout - NovaPod.ai" description="Complete your pod reservation">
   
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
     <div class="max-w-6xl mx-auto px-4">
       <!-- Header -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Reserve My Pod</h1>
-        <p class="text-xl text-gray-600 dark:text-gray-400">Complete your reservation</p>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Complete Your Reservation</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">Provide your details to reserve your pod</p>
+      </div>
+
+      <div id="cart-validation-error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-8" style="display: none;">
+        <div class="flex items-center">
+          <svg class="w-6 h-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <div>
+            <h3 class="text-lg font-semibold text-red-800 dark:text-red-200">Cart Validation Error</h3>
+            <p id="validation-message" class="text-red-700 dark:text-red-300"></p>
+          </div>
+        </div>
+        <div class="mt-4">
+          <a href="/add-ons" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Go to Add-ons
+          </a>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Customer Information Form -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Customer Information</h2>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Your Information</h2>
           
           <form id="checkout-form" class="space-y-6">
-            <!-- Personal Information -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
-                <input type="text" id="firstName" name="firstName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-              </div>
-              <div>
-                <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
-                <input type="text" id="lastName" name="lastName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-              </div>
+            <!-- Full Name -->
+            <div>
+              <label for="fullName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
+              <input type="text" id="fullName" name="fullName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
             </div>
 
+            <!-- Work Email -->
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
-              <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              <label for="workEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Work Email *</label>
+              <input type="email" id="workEmail" name="workEmail" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
             </div>
 
+            <!-- Phone Number -->
             <div>
-              <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
-              <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              <label for="phoneNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+              <input type="tel" id="phoneNumber" name="phoneNumber" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
             </div>
 
-            <!-- Company Information -->
+            <!-- Organization Name -->
             <div>
-              <label for="company" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company/Organization</label>
-              <input type="text" id="company" name="company" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              <label for="organizationName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Organization Name *</label>
+              <input type="text" id="organizationName" name="organizationName" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
             </div>
 
+            <!-- Organization Website (Optional) -->
             <div>
-              <label for="website" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Website (if any)</label>
-              <input type="url" id="website" name="website" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              <label for="organizationWebsite" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Organization Website (Optional)</label>
+              <input type="url" id="organizationWebsite" name="organizationWebsite" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white" placeholder="https://example.com">
             </div>
 
-            <!-- Project Information -->
+            <!-- How soon do you want to start? -->
             <div>
-              <label for="projectDescription" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Project Description *</label>
-              <textarea id="projectDescription" name="projectDescription" rows="4" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none"></textarea>
-            </div>
-
-            <div>
-              <label for="timeline" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Expected Timeline *</label>
-              <select id="timeline" name="timeline" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
+              <label for="startTimeline" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">How soon do you want to start? *</label>
+              <select id="startTimeline" name="startTimeline" required class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
                 <option value="">Select timeline</option>
-                <option value="1-3 months">1-3 months</option>
-                <option value="3-6 months">3-6 months</option>
-                <option value="6-12 months">6-12 months</option>
-                <option value="12+ months">12+ months</option>
+                <option value="Immediately">Immediately</option>
+                <option value="Within 1 week">Within 1 week</option>
+                <option value="Within 1 month">Within 1 month</option>
+                <option value="Within 3 months">Within 3 months</option>
+                <option value="More than 3 months">More than 3 months</option>
               </select>
             </div>
 
+            <!-- Anything specific you are looking for? -->
             <div>
-              <label for="budget" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Budget Range</label>
-              <select id="budget" name="budget" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-                <option value="">Select budget range</option>
-                <option value="₹2-3 Lakhs">₹2-3 Lakhs</option>
-                <option value="₹3-5 Lakhs">₹3-5 Lakhs</option>
-                <option value="₹5-10 Lakhs">₹5-10 Lakhs</option>
-                <option value="₹10+ Lakhs">₹10+ Lakhs</option>
-              </select>
-            </div>
-
-            <!-- Additional Information -->
-            <div>
-              <label for="additionalInfo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Additional Information</label>
-              <textarea id="additionalInfo" name="additionalInfo" rows="3" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none" placeholder="Any specific requirements, questions, or additional details..."></textarea>
+              <label for="specificRequirements" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Anything specific you are looking for?</label>
+              <textarea id="specificRequirements" name="specificRequirements" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white resize-none" placeholder="Tell us about your specific requirements, goals, or any particular features you need..."></textarea>
             </div>
 
             <!-- Terms and Conditions -->
             <div class="flex items-start">
-              <input type="checkbox" id="terms" name="terms" required class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-              <label for="terms" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                I agree to the <a href="/terms" class="text-blue-600 hover:text-blue-500">Terms and Conditions</a> and <a href="/privacy" class="text-blue-600 hover:text-blue-500">Privacy Policy</a> *
+              <input type="checkbox" id="contactAgreement" name="contactAgreement" required class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <label for="contactAgreement" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                I agree to be contacted by Novapod for next steps *
               </label>
             </div>
 
@@ -105,7 +105,7 @@ import CartUtility from '../components/shared/CartUtility.astro';
         <!-- Order Summary -->
         <div class="lg:col-span-1">
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-8">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Summary</h3>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Your Cart</h3>
             
             <div id="order-summary" class="space-y-4 mb-6">
               <!-- Summary items will be rendered here -->
@@ -116,21 +116,45 @@ import CartUtility from '../components/shared/CartUtility.astro';
                 <span>Total</span>
                 <span id="total-amount">₹0</span>
               </div>
-
             </div>
 
             <!-- Important Notes -->
             <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Important Notes:</h4>
+              <h4 class="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">What happens next?</h4>
               <ul class="text-xs text-blue-700 dark:text-blue-300 space-y-1">
                 <li>• A NovaPod specialist will contact you within 1 business day</li>
+                <li>• We'll discuss your requirements and finalize the scope</li>
                 <li>• Pod reservation is subject to availability</li>
                 <li>• Final pricing will be confirmed after consultation</li>
-                <li>• 30-day money-back guarantee applies</li>
               </ul>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Popup Modal -->
+  <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 p-8 text-center">
+      <div class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">You're all set!</h3>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">
+        A Novapod Specialist will reach out within 1 business day to discuss your pod and kickstart your journey
+      </p>
+      
+      <div class="space-y-3">
+        <button id="schedule-call-btn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300">
+          Schedule Call
+        </button>
+        <button id="download-brochure-btn" class="w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+          Download Pod Brochure
+        </button>
       </div>
     </div>
   </div>
@@ -140,23 +164,30 @@ import CartUtility from '../components/shared/CartUtility.astro';
   // Checkout functionality
   class Checkout {
     constructor() {
-      this.cart = null;
+      this.cartService = null;
       this.init();
     }
 
     async init() {
-      if (typeof window !== 'undefined' && window.cartUtility) {
-        this.cart = window.cartUtility;
+      if (typeof window !== 'undefined' && window.cartService) {
+        this.cartService = window.cartService;
         await this.renderOrderSummary();
         this.setupEventListeners();
-        this.validatePodSelection();
+        this.validateCart();
+      } else {
+        // Retry after a short delay
+        setTimeout(() => this.init(), 100);
       }
     }
 
     async renderOrderSummary() {
-      const cart = await this.cart.getCart();
+      if (!this.cartService) return;
+
+      const cart = await this.cartService.getCart();
       const summaryDiv = document.getElementById('order-summary');
       const totalDiv = document.getElementById('total-amount');
+      
+      if (!summaryDiv || !totalDiv) return;
       
       if (cart.length === 0) {
         summaryDiv.innerHTML = '<p class="text-gray-500 italic">No items in cart</p>';
@@ -164,25 +195,193 @@ import CartUtility from '../components/shared/CartUtility.astro';
         return;
       }
 
-      const summaryItems = cart.map(item => `
-        <div class="flex justify-between items-center">
-          <div>
-            <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
-            <span class="text-sm text-gray-500"> × ${item.quantity}</span>
+      // Group items by type
+      const podItems = cart.filter(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
+
+      let summaryItems = '';
+
+      // Render pod items
+      podItems.forEach(item => {
+        summaryItems += `
+          <div class="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div>
+              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 mr-2">
+                Pod
+              </span>
+              <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
+            </div>
+            <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
           </div>
-          <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
-        </div>
-      `).join('');
+        `;
+      });
+
+      // Render pack items
+      if (packItems.length > 0) {
+        summaryItems += '<div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">';
+        summaryItems += '<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Packs</h4>';
+        packItems.forEach(item => {
+          summaryItems += `
+            <div class="flex justify-between items-center p-2">
+              <div>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 mr-2">
+                  Pack
+                </span>
+                <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
+              </div>
+              <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
+            </div>
+          `;
+        });
+        summaryItems += '</div>';
+      }
 
       summaryDiv.innerHTML = summaryItems;
       
-      // Calculate total
-      const total = cart.reduce((sum, item) => {
-        const price = this.parsePrice(item.price);
-        return sum + (price * item.quantity);
-      }, 0);
+      // Calculate total (simplified for now)
+      const total = cart.length * 50000; // Placeholder calculation
+      totalDiv.textContent = `₹${(total / 100000).toFixed(1)}L`;
+    }
+
+    validateCart() {
+      if (!this.cartService) return;
+
+      this.cartService.getCart().then(cart => {
+        const podItems = cart.filter(item => item.type === 'pod');
+        const packItems = cart.filter(item => item.type === 'pack');
+        
+        const validationError = document.getElementById('cart-validation-error');
+        const validationMessage = document.getElementById('validation-message');
+        
+        if (cart.length === 0) {
+          if (validationError && validationMessage) {
+            validationMessage.textContent = 'Your cart is empty. Please add items before proceeding to checkout.';
+            validationError.style.display = 'block';
+          } else {
+            alert('Your cart is empty. Please add items before proceeding to checkout.');
+            window.location.href = '/add-ons';
+          }
+        } else if (podItems.length === 0) {
+          if (validationError && validationMessage) {
+            validationMessage.textContent = 'A pod is required to proceed to checkout. Please add a pod to your cart.';
+            validationError.style.display = 'block';
+          } else {
+            alert('A pod is required to proceed to checkout. Please add a pod to your cart.');
+            window.location.href = '/add-ons';
+          }
+        } else if (podItems.length > 1) {
+          if (validationError && validationMessage) {
+            validationMessage.textContent = 'You can only have one pod in your cart at a time.';
+            validationError.style.display = 'block';
+          } else {
+            alert('You can only have one pod in your cart at a time.');
+            window.location.href = '/add-ons';
+          }
+        } else {
+          // Hide validation error if cart is valid
+          if (validationError) {
+            validationError.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    setupEventListeners() {
+      const form = document.getElementById('checkout-form');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.handleCheckout();
+        });
+      }
+
+      // Success modal event listeners
+      document.getElementById('schedule-call-btn')?.addEventListener('click', () => {
+        this.handleScheduleCall();
+      });
+
+      document.getElementById('download-brochure-btn')?.addEventListener('click', () => {
+        this.handleDownloadBrochure();
+      });
+    }
+
+    async handleCheckout() {
+      if (!this.cartService) return;
+
+      const form = document.getElementById('checkout-form');
+      if (!form) return;
+
+      const formData = new FormData(form);
       
-      totalDiv.textContent = this.formatPrice(total);
+      // Validate required fields
+      const requiredFields = ['fullName', 'workEmail', 'phoneNumber', 'organizationName', 'startTimeline', 'contactAgreement'];
+      const missingFields = requiredFields.filter(field => !formData.get(field));
+      
+      if (missingFields.length > 0) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      // Get cart data
+      const cart = await this.cartService.getCart();
+      
+      // Prepare order data
+      const orderData = {
+        customer: {
+          fullName: formData.get('fullName'),
+          workEmail: formData.get('workEmail'),
+          phoneNumber: formData.get('phoneNumber'),
+          organizationName: formData.get('organizationName'),
+          organizationWebsite: formData.get('organizationWebsite')
+        },
+        requirements: {
+          startTimeline: formData.get('startTimeline'),
+          specificRequirements: formData.get('specificRequirements')
+        },
+        order: {
+          items: cart,
+          total: this.calculateTotal(cart),
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      // Store order data in localStorage
+      localStorage.setItem('novapod-order', JSON.stringify(orderData));
+      
+      // Clear cart after successful order
+      await this.cartService.clearCart();
+      
+      // Show success modal
+      this.showSuccessModal();
+    }
+
+    showSuccessModal() {
+      const modal = document.getElementById('success-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    }
+
+    handleScheduleCall() {
+      // Open calendar link or redirect to scheduling page
+      window.open('https://calendly.com/novapod/consultation', '_blank');
+    }
+
+    handleDownloadBrochure() {
+      // Download brochure PDF
+      const link = document.createElement('a');
+      link.href = '/assets/brochures/novapod-brochure.pdf';
+      link.download = 'Novapod-Brochure.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    calculateTotal(cart) {
+      return cart.reduce((sum, item) => {
+        const price = this.parsePrice(item.price);
+        return sum + (price * (item.quantity || 1));
+      }, 0);
     }
 
     parsePrice(price) {
@@ -192,88 +391,6 @@ import CartUtility from '../components/shared/CartUtility.astro';
         return match ? parseFloat(match[0]) * 100000 : 0;
       }
       return 0;
-    }
-
-    formatPrice(amount) {
-      if (amount >= 100000) {
-        return `₹${(amount / 100000).toFixed(1)}L`;
-      } else if (amount >= 1000) {
-        return `₹${(amount / 1000).toFixed(0)}K`;
-      }
-      return `₹${amount.toFixed(0)}`;
-    }
-
-    validatePodSelection() {
-      this.cart.getCart().then(cart => {
-        const hasPod = cart.some(item => item.type === 'pod');
-        if (!hasPod) {
-          alert('You must select a pod before proceeding to checkout.');
-          window.location.href = '/cart';
-        }
-      });
-    }
-
-    setupEventListeners() {
-      document.getElementById('checkout-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        this.handleCheckout();
-      });
-    }
-
-    async handleCheckout() {
-      const form = document.getElementById('checkout-form');
-      const formData = new FormData(form);
-      
-      // Validate required fields
-      const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'projectDescription', 'timeline'];
-      const missingFields = requiredFields.filter(field => !formData.get(field));
-      
-      if (missingFields.length > 0) {
-        alert('Please fill in all required fields.');
-        return;
-      }
-
-      // Get cart data
-      const cart = await this.cart.getCart();
-      
-      // Prepare order data
-      const orderData = {
-        customer: {
-          firstName: formData.get('firstName'),
-          lastName: formData.get('lastName'),
-          email: formData.get('email'),
-          phone: formData.get('phone'),
-          company: formData.get('company'),
-          website: formData.get('website')
-        },
-        project: {
-          description: formData.get('projectDescription'),
-          timeline: formData.get('timeline'),
-          budget: formData.get('budget'),
-          additionalInfo: formData.get('additionalInfo')
-        },
-        order: {
-          items: cart,
-          total: this.calculateTotal(cart),
-          timestamp: new Date().toISOString()
-        }
-      };
-
-      // Store order data in localStorage for the thank you page
-      localStorage.setItem('novapod-order', JSON.stringify(orderData));
-      
-      // Clear cart after successful order
-      await this.cart.clearCart();
-      
-      // Redirect to thank you page
-      window.location.href = '/thank-you';
-    }
-
-    calculateTotal(cart) {
-      return cart.reduce((sum, item) => {
-        const price = this.parsePrice(item.price);
-        return sum + (price * item.quantity);
-      }, 0);
     }
   }
 

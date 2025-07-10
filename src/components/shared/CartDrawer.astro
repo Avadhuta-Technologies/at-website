@@ -49,7 +49,7 @@
       <!-- Action Buttons -->
       <div class="space-y-3">
         <button id="checkout-btn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-          Proceed to Checkout
+          <span id="checkout-btn-text">Start My Pod Journey</span>
         </button>
         <button id="clear-cart-btn" class="w-full border-2 border-red-500 text-red-500 py-2 px-4 rounded-lg font-semibold hover:bg-red-500 hover:text-white transition-all duration-300">
           Clear Cart
@@ -174,6 +174,7 @@
         this.renderCart(cart);
         this.updateCartBadge(cart.length);
         this.updateCheckoutButton(cart.length > 0);
+        this.updateCheckoutButtonText(cart);
         
         // Update header cart badge as well
         this.updateHeaderCartBadge(cart.length);
@@ -307,8 +308,45 @@
       }
     }
 
-    proceedToCheckout() {
-      window.location.href = '/checkout';
+    async proceedToCheckout() {
+      if (!this.cartService) return;
+
+      try {
+        const cart = await this.cartService.getCart();
+        const podItems = cart.filter(item => item.type === 'pod');
+        const packItems = cart.filter(item => item.type === 'pack');
+
+        // Case 1: Both pods and packs present - go directly to checkout
+        if (podItems.length > 0 && packItems.length > 0) {
+          window.location.href = '/checkout';
+          return;
+        }
+
+        // Case 2: Only pod present - go to add-ons for upsell
+        if (podItems.length > 0 && packItems.length === 0) {
+          window.location.href = '/add-ons';
+          return;
+        }
+
+        // Case 3: Only packs present - go to add-ons to require pod
+        if (podItems.length === 0 && packItems.length > 0) {
+          window.location.href = '/add-ons';
+          return;
+        }
+
+        // Case 4: Empty cart - go to add-ons
+        if (cart.length === 0) {
+          window.location.href = '/add-ons';
+          return;
+        }
+
+        // Default fallback
+        window.location.href = '/add-ons';
+      } catch (error) {
+        console.error('Error analyzing cart:', error);
+        // Fallback to add-ons page
+        window.location.href = '/add-ons';
+      }
     }
 
     toggleCart() {
@@ -389,6 +427,26 @@
       const checkoutBtn = document.getElementById('checkout-btn');
       if (checkoutBtn) {
         checkoutBtn.disabled = !hasItems;
+      }
+    }
+
+    updateCheckoutButtonText(cart) {
+      const checkoutBtnText = document.getElementById('checkout-btn-text');
+      if (!checkoutBtnText) return;
+
+      const podItems = cart.filter(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
+
+      if (cart.length === 0) {
+        checkoutBtnText.textContent = 'Start My Pod Journey';
+      } else if (podItems.length > 0 && packItems.length > 0) {
+        checkoutBtnText.textContent = 'Proceed to Checkout';
+      } else if (podItems.length > 0 && packItems.length === 0) {
+        checkoutBtnText.textContent = 'Add Packs & Continue';
+      } else if (podItems.length === 0 && packItems.length > 0) {
+        checkoutBtnText.textContent = 'Select Pod to Continue';
+      } else {
+        checkoutBtnText.textContent = 'Start My Pod Journey';
       }
     }
 

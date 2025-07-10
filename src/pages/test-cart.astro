@@ -1,62 +1,61 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CartUtility from '../components/shared/CartUtility.astro';
 ---
 
-<Layout title="Test Cart - NovaPod" description="Test the IndexedDB cart functionality">
-  <CartUtility />
-  
+<Layout title="Test Cart - NovaPod.ai">
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
     <div class="max-w-4xl mx-auto px-4">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Cart Test Page</h1>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Cart Analysis Test</h1>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Test Add Items -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Test Add Items</h2>
+        <!-- Test Buttons -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Test Cart Scenarios</h2>
           
           <div class="space-y-4">
-            <button 
-              onclick="testAddItem('pod', 'Test Pod', 'This is a test pod', '₹2.5L/month')"
-              class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-              Add Test Pod
+            <button id="test-empty-cart" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+              Test Empty Cart
             </button>
             
-            <button 
-              onclick="testAddItem('pack', 'Test Pack', 'This is a test pack', '₹50K/month')"
-              class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
-              Add Test Pack
+            <button id="test-pod-only" class="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+              Test Pod Only
             </button>
             
-            <button 
-              onclick="testClearCart()"
-              class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors">
+            <button id="test-packs-only" class="w-full bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600">
+              Test Packs Only
+            </button>
+            
+            <button id="test-both" class="w-full bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600">
+              Test Pod + Packs
+            </button>
+            
+            <button id="clear-cart" class="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
               Clear Cart
             </button>
           </div>
         </div>
         
-        <!-- Cart Status -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cart Status</h2>
+        <!-- Current Cart Status -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Current Cart Status</h2>
           
-          <div id="cart-status" class="space-y-2 text-sm">
-            <p>Loading cart status...</p>
+          <div id="cart-status" class="space-y-2">
+            <p class="text-gray-600 dark:text-gray-400">Loading cart status...</p>
           </div>
           
-          <button 
-            onclick="updateCartStatus()"
-            class="mt-4 bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
-            Refresh Status
-          </button>
+          <div class="mt-4">
+            <button id="analyze-cart" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 px-4 rounded hover:from-blue-600 hover:to-purple-700">
+              Analyze Cart & Navigate
+            </button>
+          </div>
         </div>
       </div>
       
-      <!-- Cart Items Display -->
-      <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cart Items</h2>
-        <div id="cart-items-display" class="space-y-2">
-          <p>Loading cart items...</p>
+      <!-- Test Results -->
+      <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Test Results</h2>
+        <div id="test-results" class="text-gray-600 dark:text-gray-400">
+          No tests run yet.
         </div>
       </div>
     </div>
@@ -64,81 +63,176 @@ import CartUtility from '../components/shared/CartUtility.astro';
 </Layout>
 
 <script>
-  async function testAddItem(type, title, description, price) {
-    if (window.cartUtility) {
-      await window.cartUtility.addItem({
-        id: `test-${type}-${Date.now()}`,
-        type: type,
-        title: title,
-        description: description,
-        price: price
+  class CartTest {
+    constructor() {
+      this.cartService = null;
+      this.init();
+    }
+
+    async init() {
+      if (typeof window !== 'undefined' && window.cartService) {
+        this.cartService = window.cartService;
+        this.setupEventListeners();
+        await this.updateCartStatus();
+      } else {
+        setTimeout(() => this.init(), 100);
+      }
+    }
+
+    setupEventListeners() {
+      document.getElementById('test-empty-cart')?.addEventListener('click', () => {
+        this.testEmptyCart();
       });
-      updateCartStatus();
-      updateCartItemsDisplay();
-    } else {
-      alert('Cart utility not available');
+      
+      document.getElementById('test-pod-only')?.addEventListener('click', () => {
+        this.testPodOnly();
+      });
+      
+      document.getElementById('test-packs-only')?.addEventListener('click', () => {
+        this.testPacksOnly();
+      });
+      
+      document.getElementById('test-both')?.addEventListener('click', () => {
+        this.testBoth();
+      });
+      
+      document.getElementById('clear-cart')?.addEventListener('click', () => {
+        this.clearCart();
+      });
+      
+      document.getElementById('analyze-cart')?.addEventListener('click', () => {
+        this.analyzeCart();
+      });
     }
-  }
-  
-  async function testClearCart() {
-    if (window.cartUtility) {
-      await window.cartUtility.clearCart();
-      updateCartStatus();
-      updateCartItemsDisplay();
-    } else {
-      alert('Cart utility not available');
+
+    async testEmptyCart() {
+      await this.cartService.clearCart();
+      await this.updateCartStatus();
+      this.logTestResult('Empty cart test completed');
     }
-  }
-  
-  async function updateCartStatus() {
-    if (window.cartUtility) {
-      const count = await window.cartUtility.getCartCount();
-      const total = await window.cartUtility.getCartTotal();
-      const cart = await window.cartUtility.getCart();
+
+    async testPodOnly() {
+      await this.cartService.clearCart();
+      await this.cartService.addToCart({
+        id: 'test-pod-1',
+        type: 'pod',
+        title: 'Test Pod',
+        price: '₹50,000/month',
+        description: 'A test pod for testing purposes'
+      });
+      await this.updateCartStatus();
+      this.logTestResult('Pod only test completed');
+    }
+
+    async testPacksOnly() {
+      await this.cartService.clearCart();
+      await this.cartService.addToCart({
+        id: 'test-pack-1',
+        type: 'pack',
+        title: 'Test Pack 1',
+        price: '₹25,000',
+        description: 'A test pack for testing purposes'
+      });
+      await this.cartService.addToCart({
+        id: 'test-pack-2',
+        type: 'pack',
+        title: 'Test Pack 2',
+        price: '₹30,000',
+        description: 'Another test pack for testing purposes'
+      });
+      await this.updateCartStatus();
+      this.logTestResult('Packs only test completed');
+    }
+
+    async testBoth() {
+      await this.cartService.clearCart();
+      await this.cartService.addToCart({
+        id: 'test-pod-1',
+        type: 'pod',
+        title: 'Test Pod',
+        price: '₹50,000/month',
+        description: 'A test pod for testing purposes'
+      });
+      await this.cartService.addToCart({
+        id: 'test-pack-1',
+        type: 'pack',
+        title: 'Test Pack 1',
+        price: '₹25,000',
+        description: 'A test pack for testing purposes'
+      });
+      await this.updateCartStatus();
+      this.logTestResult('Pod + Packs test completed');
+    }
+
+    async clearCart() {
+      await this.cartService.clearCart();
+      await this.updateCartStatus();
+      this.logTestResult('Cart cleared');
+    }
+
+    async analyzeCart() {
+      const cart = await this.cartService.getCart();
+      const podItems = cart.filter(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
+
+      let scenario = '';
+      let destination = '';
+
+      if (cart.length === 0) {
+        scenario = 'Empty cart';
+        destination = '/add-ons';
+      } else if (podItems.length > 0 && packItems.length > 0) {
+        scenario = 'Both pods and packs present';
+        destination = '/checkout';
+      } else if (podItems.length > 0 && packItems.length === 0) {
+        scenario = 'Only pod present';
+        destination = '/add-ons (for upsell)';
+      } else if (podItems.length === 0 && packItems.length > 0) {
+        scenario = 'Only packs present';
+        destination = '/add-ons (to require pod)';
+      }
+
+      this.logTestResult(`Cart Analysis: ${scenario} → ${destination}`);
+      
+      // Simulate navigation (don't actually navigate in test)
+      console.log(`Would navigate to: ${destination}`);
+    }
+
+    async updateCartStatus() {
+      const cart = await this.cartService.getCart();
+      const podItems = cart.filter(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
       
       const statusDiv = document.getElementById('cart-status');
-      statusDiv.innerHTML = `
-        <p><strong>Items in cart:</strong> ${count}</p>
-        <p><strong>Total value:</strong> ₹${(total / 100000).toFixed(1)}L</p>
-        <p><strong>Unique items:</strong> ${cart.length}</p>
-        <p><strong>Storage type:</strong> IndexedDB</p>
-      `;
-    }
-  }
-  
-  async function updateCartItemsDisplay() {
-    if (window.cartUtility) {
-      const cart = await window.cartUtility.getCart();
-      const displayDiv = document.getElementById('cart-items-display');
-      
-      if (cart.length === 0) {
-        displayDiv.innerHTML = '<p class="text-gray-500">Cart is empty</p>';
-        return;
+      if (statusDiv) {
+        statusDiv.innerHTML = `
+          <p><strong>Total Items:</strong> ${cart.length}</p>
+          <p><strong>Pods:</strong> ${podItems.length}</p>
+          <p><strong>Packs:</strong> ${packItems.length}</p>
+          <p><strong>Status:</strong> ${this.getCartStatus(cart, podItems, packItems)}</p>
+        `;
       }
-      
-      displayDiv.innerHTML = cart.map(item => `
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="font-semibold text-gray-900 dark:text-white">${item.title}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
-              <p class="text-sm text-gray-500">Type: ${item.type}</p>
-            </div>
-            <div class="text-right">
-              <p class="font-semibold text-gray-900 dark:text-white">${item.price}</p>
-              <p class="text-sm text-gray-500">Qty: ${item.quantity}</p>
-            </div>
-          </div>
-        </div>
-      `).join('');
+    }
+
+    getCartStatus(cart, podItems, packItems) {
+      if (cart.length === 0) return 'Empty';
+      if (podItems.length > 0 && packItems.length > 0) return 'Ready for checkout';
+      if (podItems.length > 0 && packItems.length === 0) return 'Pod only - needs packs';
+      if (podItems.length === 0 && packItems.length > 0) return 'Packs only - needs pod';
+      return 'Unknown';
+    }
+
+    logTestResult(message) {
+      const resultsDiv = document.getElementById('test-results');
+      if (resultsDiv) {
+        const timestamp = new Date().toLocaleTimeString();
+        resultsDiv.innerHTML += `<p>[${timestamp}] ${message}</p>`;
+      }
     }
   }
-  
-  // Initialize status on page load
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      updateCartStatus();
-      updateCartItemsDisplay();
-    }, 1000);
-  });
+
+  // Initialize test
+  if (typeof window !== 'undefined') {
+    window.cartTest = new CartTest();
+  }
 </script> 

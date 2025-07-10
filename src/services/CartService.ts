@@ -29,6 +29,12 @@ class CartService {
 
   // Initialize IndexedDB
   private async initDB(): Promise<void> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('initDB - Not in browser environment, skipping IndexedDB initialization');
+      return;
+    }
+
     return new Promise((resolve, reject) => {
       console.log('initDB - Opening database:', this.DB_NAME);
       const request = indexedDB.open(this.DB_NAME, 1);
@@ -56,6 +62,12 @@ class CartService {
 
   // Get all cart items from IndexedDB
   async getCart(): Promise<CartItem[]> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('getCart - Not in browser environment, returning empty array');
+      return [];
+    }
+
     await this.initDB();
     return new Promise((resolve, reject) => {
       if (!this.db) {
@@ -81,6 +93,12 @@ class CartService {
 
   // Add item to cart with business rules
   async addToCart(item: CartItem): Promise<boolean> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('addToCart - Not in browser environment, returning false');
+      return false;
+    }
+
     try {
       const cart = await this.getCart();
       
@@ -132,6 +150,12 @@ class CartService {
 
   // Store item in IndexedDB
   private async storeItem(item: CartItem): Promise<void> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('storeItem - Not in browser environment, skipping storage');
+      return;
+    }
+
     await this.initDB();
     return new Promise((resolve, reject) => {
       if (!this.db) {
@@ -150,22 +174,18 @@ class CartService {
 
   // Remove item from cart by index
   async removeFromCart(index: number): Promise<boolean> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('removeFromCart - Not in browser environment, returning false');
+      return false;
+    }
+
     try {
       const cart = await this.getCart();
       if (index >= 0 && index < cart.length) {
         const item = cart[index];
         
-        // If removing a pod, also remove all its packs
-        if (item.type === 'pod') {
-          const packsToRemove = cart.filter(cartItem => 
-            cartItem.type === 'pack' && cartItem.podId === item.id
-          );
-          
-          for (const pack of packsToRemove) {
-            await this.removeItemById(pack.id, 'pack');
-          }
-        }
-        
+        // Remove only the specific item, don't automatically remove packs
         await this.removeItemById(item.id, item.type);
         this.updateCartCount();
         
@@ -185,6 +205,12 @@ class CartService {
 
   // Remove item from cart by id and type
   async removeItemById(id: string, type: 'pod' | 'pack'): Promise<boolean> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('removeItemById - Not in browser environment, returning false');
+      return false;
+    }
+
     try {
       await this.initDB();
       return new Promise((resolve, reject) => {
@@ -215,6 +241,12 @@ class CartService {
 
   // Clear entire cart
   async clearCart(): Promise<boolean> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
+      console.log('clearCart - Not in browser environment, returning false');
+      return false;
+    }
+
     try {
       await this.initDB();
       return new Promise((resolve, reject) => {
@@ -317,6 +349,12 @@ class CartService {
 
   // Update cart count in UI
   async updateCartCount(): Promise<void> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      console.log('updateCartCount - Not in browser environment, skipping UI update');
+      return;
+    }
+
     const cartCount = await this.getCartCount();
     const cartBadges = document.querySelectorAll('[data-cart-count], .cart-badge') as NodeListOf<HTMLElement>;
     
@@ -338,6 +376,12 @@ class CartService {
 
   // Show cart notification
   showNotification(message: string, type: 'success' | 'error' = 'success'): void {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      console.log('showNotification - Not in browser environment, skipping notification');
+      return;
+    }
+
     const notification = document.createElement('div');
     const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
     
