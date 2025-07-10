@@ -7,7 +7,14 @@ if (typeof window !== 'undefined') {
   
   // Initialize cart count on page load
   document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing cart service...');
     cartService.init();
+  });
+  
+  // Also update cart count when window loads (for cases where DOMContentLoaded already fired)
+  window.addEventListener('load', () => {
+    console.log('Window loaded, updating cart count...');
+    cartService.updateCartCount();
   });
 }
 

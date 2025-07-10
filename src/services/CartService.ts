@@ -30,17 +30,24 @@ class CartService {
   // Initialize IndexedDB
   private async initDB(): Promise<void> {
     return new Promise((resolve, reject) => {
+      console.log('initDB - Opening database:', this.DB_NAME);
       const request = indexedDB.open(this.DB_NAME, 1);
       
-      request.onerror = () => reject(request.error);
+      request.onerror = () => {
+        console.error('initDB - Error opening database:', request.error);
+        reject(request.error);
+      };
       request.onsuccess = () => {
         this.db = request.result;
+        console.log('initDB - Database opened successfully:', this.db);
         resolve();
       };
       
       request.onupgradeneeded = (event) => {
+        console.log('initDB - Database upgrade needed');
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(this.STORE_NAME)) {
+          console.log('initDB - Creating object store:', this.STORE_NAME);
           db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
         }
       };
@@ -52,6 +59,7 @@ class CartService {
     await this.initDB();
     return new Promise((resolve, reject) => {
       if (!this.db) {
+        console.log('getCart - Database not initialized, returning empty array');
         resolve([]);
         return;
       }
@@ -60,8 +68,14 @@ class CartService {
       const store = transaction.objectStore(this.STORE_NAME);
       const request = store.getAll();
 
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => {
+        console.error('getCart - Error retrieving cart:', request.error);
+        reject(request.error);
+      };
+      request.onsuccess = () => {
+        console.log('getCart - Retrieved items from DB:', request.result);
+        resolve(request.result || []);
+      };
     });
   }
 
@@ -233,8 +247,13 @@ class CartService {
   // Get cart summary with business logic
   async getCartSummary(): Promise<CartSummary> {
     const items = await this.getCart();
+    console.log('getCartSummary - Raw items from DB:', items);
+    
     const podItem = items.find(item => item.type === 'pod');
     const packItems = items.filter(item => item.type === 'pack');
+    
+    console.log('getCartSummary - Pod item:', podItem);
+    console.log('getCartSummary - Pack items:', packItems);
     
     // Calculate total price based on reservation period
     let totalPrice = 0;
@@ -252,15 +271,16 @@ class CartService {
       }
     });
 
-
-
-    return {
+    const summary = {
       items,
       totalItems: items.length,
       totalPrice,
       podItem,
       packItems
     };
+    
+    console.log('getCartSummary - Final summary:', summary);
+    return summary;
   }
 
   // Check if cart is empty
@@ -280,9 +300,15 @@ class CartService {
     const cartCount = await this.getCartCount();
     const cartBadge = document.querySelector('[data-cart-count]') as HTMLElement;
     
+    console.log('Updating cart count:', cartCount);
+    console.log('Cart badge found:', !!cartBadge);
+    
     if (cartBadge) {
       cartBadge.textContent = cartCount.toString();
       cartBadge.style.display = cartCount > 0 ? 'block' : 'none';
+      console.log('Cart badge updated successfully');
+    } else {
+      console.warn('Cart badge not found in DOM');
     }
   }
 
@@ -317,6 +343,7 @@ class CartService {
     const success = await this.addToCart({ ...podData, type: 'pod' });
     if (success) {
       this.showNotification(`Added ${podData.title} to cart!`);
+      await this.updateCartCount(); // Ensure cart count is updated
     }
     return success;
   }
@@ -326,6 +353,7 @@ class CartService {
     const success = await this.addToCart({ ...packData, type: 'pack' });
     if (success) {
       this.showNotification(`Added ${packData.title} to your pod!`);
+      await this.updateCartCount(); // Ensure cart count is updated
     }
     return success;
   }

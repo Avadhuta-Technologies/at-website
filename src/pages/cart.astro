@@ -70,7 +70,10 @@ import Layout from '../layouts/Layout.astro';
 
     // Cart management using the service
     async function loadCart() {
+      console.log('Loading cart...');
       const cartSummary = await cartService.getCartSummary();
+      console.log('Cart summary:', cartSummary);
+      
       const cartItemsContainer = document.getElementById('cart-items');
       const emptyCartDiv = document.getElementById('empty-cart');
       const checkoutBtn = document.getElementById('checkout-btn');
@@ -80,7 +83,11 @@ import Layout from '../layouts/Layout.astro';
         return;
       }
 
+      console.log('Total items in cart:', cartSummary.totalItems);
+      console.log('Cart items:', cartSummary.items);
+
       if (cartSummary.totalItems === 0) {
+        console.log('Cart is empty, showing empty state');
         cartItemsContainer.innerHTML = '';
         emptyCartDiv.classList.remove('hidden');
         checkoutBtn.disabled = true;
@@ -108,12 +115,20 @@ import Layout from '../layouts/Layout.astro';
         `;
 
         podItems.forEach((item, index) => {
+          console.log('Rendering pod item:', item);
+          
           const teamComposition = [
             '1 Full Stack Developer (4+ yrs) – storefront, backend logic, integrations',
             '1 UI/UX Designer – conversion-focused shopping experience',
             '0.5 QA & SEO Engineer – quality, speed, and search optimization',
             'Project Lead / Architect (Shared) – ecommerce strategy and tech guidance',
           ];
+
+          // Safely escape and handle undefined values
+          const title = item.title || 'Development Pod';
+          const description = item.description || 'Complete development team for your project';
+          const price = item.price || '₹6,00,000/month';
+          const reservationMonths = item.reservationMonths || 3;
 
           cartHTML += `
             <div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-600">
@@ -123,8 +138,8 @@ import Layout from '../layouts/Layout.astro';
                     🚀
                   </div>
                   <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${item.title}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${title}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${description}</p>
                   </div>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -174,19 +189,19 @@ import Layout from '../layouts/Layout.astro';
                       class="text-sm border border-gray-300 rounded px-2 py-1"
                     >
                       <option value="1" ${
-                        item.reservationMonths === 1 ? 'selected' : ''
+                        reservationMonths === 1 ? 'selected' : ''
                       }>1 Month</option>
                       <option value="2" ${
-                        item.reservationMonths === 2 ? 'selected' : ''
+                        reservationMonths === 2 ? 'selected' : ''
                       }>2 Months</option>
                       <option value="3" ${
-                        item.reservationMonths === 3 ? 'selected' : ''
+                        reservationMonths === 3 ? 'selected' : ''
                       }>3 Months</option>
                       <option value="6" ${
-                        item.reservationMonths === 6 ? 'selected' : ''
+                        reservationMonths === 6 ? 'selected' : ''
                       }>6 Months</option>
                       <option value="12" ${
-                        item.reservationMonths === 12 ? 'selected' : ''
+                        reservationMonths === 12 ? 'selected' : ''
                       }>12 Months</option>
                     </select>
                   </div>
@@ -195,7 +210,7 @@ import Layout from '../layouts/Layout.astro';
               
               <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
                 <div class="text-right">
-                  <p class="text-lg font-bold text-gray-900 dark:text-white">${item.price}</p>
+                  <p class="text-lg font-bold text-gray-900 dark:text-white">${price}</p>
                 </div>
               </div>
             </div>
@@ -220,16 +235,25 @@ import Layout from '../layouts/Layout.astro';
         `;
 
         packItems.forEach((item) => {
+          console.log('Rendering pack item:', item);
+          
+          // Safely handle undefined values for packs
+          const title = item.title || 'Add-on Pack';
+          const description = item.description || 'Enhancement for your pod';
+          const price = item.price || '₹30,000';
+          const duration = item.duration || '2 weeks';
+          const icon = item.icon || '📦';
+          
           cartHTML += `
             <div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-600">
               <div class="flex items-start justify-between mb-4">
                 <div class="flex items-center space-x-4">
                   <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-                    ${item.icon || '📦'}
+                    ${icon}
                   </div>
                   <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${item.title}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${item.description}</p>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">${title}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${description}</p>
                   </div>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -258,7 +282,7 @@ import Layout from '../layouts/Layout.astro';
               <div class="grid md:grid-cols-2 gap-6 mb-4">
                 <div>
                   <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Duration</h4>
-                  <p class="text-sm text-gray-600 dark:text-gray-400">${item.duration}</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">${duration}</p>
                 </div>
                 <div>
                   <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Add-on Pack</h4>
@@ -268,7 +292,7 @@ import Layout from '../layouts/Layout.astro';
               
               <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
                 <div class="text-right">
-                  <p class="text-lg font-bold text-gray-900 dark:text-white">${item.price}</p>
+                  <p class="text-lg font-bold text-gray-900 dark:text-white">${price}</p>
                 </div>
               </div>
             </div>
@@ -281,7 +305,9 @@ import Layout from '../layouts/Layout.astro';
         `;
       }
 
+      console.log('Final cart HTML length:', cartHTML.length);
       cartItemsContainer.innerHTML = cartHTML;
+      console.log('Cart HTML inserted into DOM');
     }
 
     async function removeFromCart(index) {
