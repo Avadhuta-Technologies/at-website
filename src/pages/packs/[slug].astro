@@ -1,11 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { packsData } from '../../content/packs.js';
+import { catalogUtils } from '../../content/catalog/_index.js';
 
 export async function getStaticPaths() {
-  // Flatten all packs from all categories
-  const allPacks = packsData.availablePacks.categories.flatMap(cat => cat.packs);
-  return allPacks.map((pack) => ({
+  const packs = catalogUtils.getAllProducts('pack');
+  return packs.map((pack) => ({
     params: { slug: pack.id },
     props: { pack },
   }));

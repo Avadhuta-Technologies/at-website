@@ -1,0 +1,36 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    stories: Array<{
+      title: string;
+      description: string;
+      metric: string;
+      metricLabel: string;
+    }>;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-16 bg-white dark:bg-slate-900">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">{data.title}</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400">{data.subtitle}</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {data.stories.map((story, index) => (
+        <div class="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-8 text-center">
+          <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">{story.metric}</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">{story.metricLabel}</div>
+          <h3 class="text-xl font-bold text-dark dark:text-white mb-4">{story.title}</h3>
+          <p class="text-gray-600 dark:text-gray-400">{story.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

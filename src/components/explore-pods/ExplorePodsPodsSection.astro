@@ -1,0 +1,96 @@
+---
+import { catalogUtils } from '../../content/catalog/_index.js';
+
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    featuredPodIds?: string[]; // Optional: specific pod IDs to display
+  };
+}
+
+const { data } = Astro.props;
+
+// Get pods from centralized catalog
+let pods;
+if (data.featuredPodIds) {
+  // Get specific pods by IDs
+  pods = data.featuredPodIds.map(id => catalogUtils.getProductById(id, 'pod')).filter(Boolean);
+} else {
+  // Get all pods
+  pods = catalogUtils.getAllProducts('pod');
+}
+
+// Color mapping for different pod types
+const getColorClasses = (color: string) => {
+  const colorMap: Record<string, { bg: string; border: string; text: string }> = {
+    blue: { bg: 'from-blue-500 to-blue-600', border: 'border-blue-500', text: 'text-blue-600' },
+    purple: { bg: 'from-purple-500 to-purple-600', border: 'border-purple-500', text: 'text-purple-600' },
+    green: { bg: 'from-green-500 to-green-600', border: 'border-green-500', text: 'text-green-600' },
+    pink: { bg: 'from-pink-500 to-pink-600', border: 'border-pink-500', text: 'text-pink-600' },
+    orange: { bg: 'from-orange-500 to-orange-600', border: 'border-orange-500', text: 'text-orange-600' },
+    teal: { bg: 'from-teal-500 to-teal-600', border: 'border-teal-500', text: 'text-teal-600' }
+  };
+  return colorMap[color] || colorMap.blue;
+};
+---
+
+<section class="py-16 bg-white dark:bg-slate-900">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">{data.title}</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400">{data.subtitle}</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+      {pods.map((pod, index) => {
+        const colors = getColorClasses(pod.badgeColor);
+        return (
+          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class={`w-12 h-12 bg-gradient-to-r ${colors.bg} rounded-xl flex items-center justify-center mr-4`}>
+                  <img src={pod.icon} alt={`${pod.title} Icon`} class="w-6 h-6 filter brightness-0 invert" />
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-dark dark:text-white">{pod.title}</h3>
+                  <div class="text-2xl font-bold text-gray-900 dark:text-white">{pod.engagement}</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{pod.priceNote}</div>
+                </div>
+              </div>
+              
+              <p class="text-gray-600 dark:text-gray-300 mb-6">{pod.description}</p>
+              
+              <ul class="space-y-3 mb-6">
+                {pod.idealFor.slice(0, 3).map((feature) => (
+                  <li class="flex items-start text-sm">
+                    <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-gray-600 dark:text-gray-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <div class="flex gap-4">
+                <button 
+                  data-add-to-cart
+                  data-item-id={pod.id}
+                  data-item-type="pod"
+                  data-item-title={pod.title}
+                  data-item-description={pod.description}
+                  data-item-price={pod.engagement}
+                  class={`flex-1 bg-gradient-to-r ${colors.bg} text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-all duration-300`}>
+                  Add to Cart
+                </button>
+                <a href={`/pods/${pod.id}`} class="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3 px-6 rounded-lg hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 text-center">
+                  Learn More
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section> 

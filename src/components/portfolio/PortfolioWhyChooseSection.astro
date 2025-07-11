@@ -1,54 +1,35 @@
 ---
-import { portfolioWhyChooseIcons } from './icons.js';
+import { portfolioWhyChooseData } from '../../content/portfolio/_whyChoose.js';
 
-export interface Props {
-  title: string;
-  points: Array<{
-    title: string;
-    description: string;
-    icon: string;
-  }>;
+interface Props {
+  data?: typeof portfolioWhyChooseData;
   className?: string;
 }
 
-const { title, points, className = "" } = Astro.props;
-
-// Map point titles to icons
-const getWhyChooseIcon = (iconKey: string) => {
-  return portfolioWhyChooseIcons[iconKey as keyof typeof portfolioWhyChooseIcons] || portfolioWhyChooseIcons['complexity-clarity'];
-};
+const { data = portfolioWhyChooseData, className = "" } = Astro.props;
 ---
 
-<section class={`py-16 bg-gradient-to-br from-gray-50 to-white dark:from-dark-2 dark:to-dark ${className}`}>
-  <div class="container mx-auto px-4">
-    <div class="max-w-4xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
-        {title}
-      </h2>
+<section class={`portfolio-why-choose-section ${className}`}>
+  <div class="portfolio-why-choose-container">
+    <div class="portfolio-why-choose-header">
+      <h2 class="portfolio-why-choose-title">{data.title}</h2>
     </div>
     
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {points?.map((point, index) => (
-        <div class="why-choose-card group relative rounded-xl shadow-lg p-8 bg-white dark:bg-dark-2 hover:-translate-y-2 transition-all duration-300 cursor-pointer animate-fade-in-up animation-delay-${(index + 1) * 200}">
-          {/* Icon */}
-          <div class="mb-6">
-            <div class="w-16 h-16 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-              <div set:html={getWhyChooseIcon(point.icon)} />
+    <div class="portfolio-why-choose-grid">
+      {data.points.map((point, index) => (
+        <div class="portfolio-why-choose-card" data-point-index={index}>
+          <div class="portfolio-why-choose-icon">
+            <div class="portfolio-why-choose-icon-wrapper">
+              <svg class="portfolio-why-choose-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
           </div>
           
-          {/* Content */}
-          <div>
-            <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-              {point.title}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300">
-              {point.description}
-            </p>
+          <div class="portfolio-why-choose-content">
+            <h3 class="portfolio-why-choose-point-title">{point.title}</h3>
+            <p class="portfolio-why-choose-point-description">{point.description}</p>
           </div>
-          
-          {/* Hover indicator */}
-          <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
         </div>
       ))}
     </div>
@@ -56,36 +37,78 @@ const getWhyChooseIcon = (iconKey: string) => {
 </section>
 
 <style>
-  .why-choose-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+  .portfolio-why-choose-section {
+    @apply py-20 bg-gray-50 dark:bg-gray-800;
   }
-
-  .why-choose-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+  
+  .portfolio-why-choose-container {
+    @apply container mx-auto px-4;
+    max-width: 1200px;
   }
-
-  /* Animation delays */
-  .animation-delay-200 { animation-delay: 0.2s; }
-  .animation-delay-400 { animation-delay: 0.4s; }
-  .animation-delay-600 { animation-delay: 0.6s; }
-  .animation-delay-800 { animation-delay: 0.8s; }
-  .animation-delay-1000 { animation-delay: 1.0s; }
-
-  /* Fade in animations */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out;
+  
+  .portfolio-why-choose-header {
+    @apply text-center mb-16;
   }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
+  
+  .portfolio-why-choose-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
+  }
+  
+  .portfolio-why-choose-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+  }
+  
+  .portfolio-why-choose-card {
+    @apply bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .portfolio-why-choose-icon {
+    @apply mb-6 flex justify-center;
+  }
+  
+  .portfolio-why-choose-icon-wrapper {
+    @apply w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center;
+  }
+  
+  .portfolio-why-choose-icon-svg {
+    @apply w-8 h-8 text-purple-600 dark:text-purple-400;
+  }
+  
+  .portfolio-why-choose-content {
+    @apply text-center;
+  }
+  
+  .portfolio-why-choose-point-title {
+    @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
+  }
+  
+  .portfolio-why-choose-point-description {
+    @apply text-gray-600 dark:text-gray-300 leading-relaxed;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .portfolio-why-choose-grid {
+      @apply grid-cols-1 gap-6;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    
+    .portfolio-why-choose-card {
+      @apply p-6;
+    }
+    
+    .portfolio-why-choose-title {
+      @apply text-2xl md:text-3xl;
     }
   }
-</style> 
+</style>
+
+<script>
+  // Component-specific animations
+  import { initScrollAnimations } from '../../scripts/scrollAnimations.js';
+  
+  // Initialize scroll animations for this component
+  document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
+  });
+</script> 

@@ -1,0 +1,60 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    packs: Array<{
+      id: string;
+      title: string;
+      price: string;
+      priceUSD: string;
+      features: string[];
+      buttonColor: string;
+      hoverColor: string;
+    }>;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- Add-on Packs -->
+      <div class="mb-12">
+        <h2 class="text-3xl font-bold text-dark dark:text-white mb-8 text-center">{data.title}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {data.packs.map((pack) => (
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-dark dark:text-white mb-2">{pack.title}</h3>
+                <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">{pack.price}</div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{pack.priceUSD}</p>
+              </div>
+              <ul class="space-y-3 mb-6">
+                {pack.features.map((feature) => (
+                  <li class="flex items-start text-sm">
+                    <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-gray-600 dark:text-gray-400">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <button 
+                data-add-to-cart
+                data-item-id={pack.id}
+                data-item-type="pack"
+                data-item-title={pack.title}
+                data-item-description={`Add-on pack for ${pack.title}`}
+                data-item-price={pack.price}
+                class={`w-full bg-gradient-to-r ${pack.buttonColor} text-white font-semibold py-3 px-6 rounded-lg hover:${pack.hoverColor} transition-all duration-300`}>
+                Add to Cart
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 

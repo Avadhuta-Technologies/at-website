@@ -1,368 +1,230 @@
 ---
+import { catalogUtils } from '../../content/catalog/_index.js';
+
 export interface Props {
-  title: string;
-  subtitle: string;
-  pods: Array<{
-    id: string;
+  data: {
     title: string;
     subtitle: string;
-    description: string;
-    idealFor: string;
-    teamComposition: string[];
-    deliverables: string[];
-    pricing: string;
-    minEngagement: string;
-    icon: string;
-    badge: string;
-    badgeColor: string;
-  }>;
-  className?: string;
-}
-
-const { title, subtitle, pods, className = "" } = Astro.props;
-
-// Badge color mapping
-function getBadgeColor(color: string): string {
-  const colorMap: Record<string, string> = {
-    'green': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    'purple': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-    'blue': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    'orange': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-    'indigo': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
-    'teal': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300'
+    featuredPodIds?: string[]; // Optional: specific pod IDs to display
   };
-  return colorMap[color] || 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
 }
 
-function getGradientClass(color: string): string {
-  const colorMap: Record<string, string> = {
-    'green': 'from-green-400 to-emerald-500',
-    'purple': 'from-purple-400 to-pink-500',
-    'blue': 'from-blue-400 to-cyan-500',
-    'orange': 'from-orange-400 to-red-500',
-    'indigo': 'from-indigo-400 to-purple-500',
-    'teal': 'from-teal-400 to-green-500'
+const { data } = Astro.props;
+
+// Get pods from centralized catalog
+let pods;
+if (data.featuredPodIds) {
+  // Get specific pods by IDs
+  pods = data.featuredPodIds.map(id => catalogUtils.getProductById(id, 'pod')).filter(Boolean);
+} else {
+  // Get all pods
+  pods = catalogUtils.getAllProducts('pod');
+}
+
+// Color mapping for different pod types
+const getColorClasses = (color: string) => {
+  const colorMap: Record<string, { bg: string; border: string; text: string }> = {
+    blue: { bg: 'from-blue-500 to-blue-600', border: 'border-blue-500', text: 'text-blue-600' },
+    purple: { bg: 'from-purple-500 to-purple-600', border: 'border-purple-500', text: 'text-purple-600' },
+    green: { bg: 'from-green-500 to-green-600', border: 'border-green-500', text: 'text-green-600' },
+    pink: { bg: 'from-pink-500 to-pink-600', border: 'border-pink-500', text: 'text-pink-600' },
+    orange: { bg: 'from-orange-500 to-orange-600', border: 'border-orange-500', text: 'text-orange-600' },
+    teal: { bg: 'from-teal-500 to-teal-600', border: 'border-teal-500', text: 'text-teal-600' }
   };
-  return colorMap[color] || 'from-blue-400 to-cyan-500';
-}
-
-// SVG Icon Components - Content-based icons for each pod type
-function getSvgIcon(iconType: string) {
-  switch (iconType) {
-    case "shopping-cart":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-      </svg>`;
-    case "vr-headset":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-      </svg>`;
-    case "brain":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-      </svg>`;
-    case "rocket":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-      </svg>`;
-    case "server":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
-      </svg>`;
-    case "mobile-app":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-      </svg>`;
-    case "ai-ml-integration":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-      </svg>`;
-    case "admin-workflow-automation":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-      </svg>`;
-    case "devops-infra-automation":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-      </svg>`;
-    default:
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>`;
-  }
-}
+  return colorMap[color] || colorMap.blue;
+};
 ---
 
-<section id="choose-pod-section" class={`py-16 bg-white dark:bg-slate-900 w-full relative overflow-hidden ${className}`}>
-  <!-- Abstract Background Vectors -->
-  <div class="absolute inset-0 pointer-events-none">
-    <!-- Large gradient circles -->
-    <div class="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-3xl bg-float"></div>
-    <div class="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-br from-purple-400/10 to-pink-500/10 rounded-full blur-3xl bg-float" style="animation-delay: 2s;"></div>
-    <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-to-br from-cyan-400/10 to-blue-500/10 rounded-full blur-3xl bg-float" style="animation-delay: 4s;"></div>
-    
-    <!-- Geometric shapes -->
-    <div class="absolute top-32 right-1/4 w-32 h-32 bg-gradient-to-br from-blue-300/20 to-purple-400/20 transform rotate-45 blur-xl bg-pulse-slow"></div>
-    <div class="absolute bottom-32 left-1/4 w-24 h-24 bg-gradient-to-br from-purple-300/20 to-pink-400/20 transform -rotate-12 blur-xl bg-pulse-slow" style="animation-delay: 1s;"></div>
-    
-    <!-- Floating dots -->
-    <div class="absolute top-1/4 right-1/3 w-3 h-3 bg-blue-400/30 rounded-full animate-pulse"></div>
-    <div class="absolute bottom-1/3 left-1/4 w-2 h-2 bg-purple-400/30 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-    <div class="absolute top-2/3 right-1/5 w-4 h-4 bg-cyan-400/30 rounded-full animate-pulse" style="animation-delay: 2s;"></div>
-    
-    <!-- Abstract lines -->
-    <div class="absolute top-40 left-0 w-32 h-px bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"></div>
-    <div class="absolute bottom-40 right-0 w-40 h-px bg-gradient-to-r from-transparent via-purple-400/30 to-transparent"></div>
-  </div>
-  
-  <div class="w-full px-4 relative z-10 max-w-6xl mx-auto">
-    <!-- Header -->
-    <div class="max-w-4xl mx-auto text-center mb-16">
-      
-      <h2 data-animate="fade-in-up" class="text-3xl md:text-4xl font-bold mb-6 text-dark dark:text-white">
-        {title}
-      </h2>
-      <p data-animate="fade-in-up" class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-        {subtitle}
-      </p>
+<section class="py-16 bg-white dark:bg-slate-900">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">{data.title}</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400">{data.subtitle}</p>
     </div>
     
-    <!-- Pods Grid -->
-    <div data-animate="staggered-children" class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto">
-      {pods && pods.length > 0 ? pods.map((pod, index) => (
-        <div 
-          class="pod-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
-          data-pod-id={pod.id}
-          onclick="handlePodCardClick(event, this.getAttribute('data-pod-id'))"
-        >
-          <!-- Card Content -->
-          <div class="p-6 h-full flex flex-col">
-            <!-- Header with Icon and Badge -->
-            <div class="flex items-center justify-between mb-4">
-              <div class={`w-12 h-12 rounded-xl bg-gradient-to-r ${getGradientClass(pod.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
-                <Fragment set:html={getSvgIcon(pod.icon)} />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {pods.map((pod, index) => {
+        const colors = getColorClasses(pod.badgeColor);
+        return (
+          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class={`w-12 h-12 bg-gradient-to-r ${colors.bg} rounded-xl flex items-center justify-center mr-4`}>
+                  <img src={pod.icon} alt={`${pod.title} Icon`} class="w-6 h-6 filter brightness-0 invert" />
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-dark dark:text-white">{pod.title}</h3>
+                  <div class="text-2xl font-bold text-gray-900 dark:text-white">{pod.engagement}</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{pod.priceNote}</div>
+                </div>
               </div>
-              <span class={`text-xs px-2 py-1 rounded-full font-semibold ${getBadgeColor(pod.badgeColor)}`}>
-                {pod.badge}
-              </span>
-            </div>
-            
-            <!-- Title and Subtitle -->
-            <div class="mb-4">
-              <h3 class="font-bold text-xl mb-2 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                {pod.title}
-              </h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                {pod.subtitle}
-              </p>
-            </div>
-            
-            <!-- Key Highlights (Ideal For) -->
-            <div class="mb-4">
-              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Ideal for:</p>
-              <p class="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{pod.idealFor}</p>
-            </div>
-            
-            <!-- Pricing -->
-            <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
-              <div class="text-center">
-                <p class="text-base font-bold text-gray-900 dark:text-white">{pod.pricing}</p>
-                <p class="text-xs text-gray-600 dark:text-gray-400">Min. {pod.minEngagement}</p>
-              </div>
-            </div>
-            
-            <!-- Action Button -->
-            <div class="mt-auto">
-              <a 
-                href={`/pods/${pod.id}`} 
-                data-pod-id={pod.id}
-                class="group relative inline-flex items-center justify-center w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl cursor-pointer overflow-hidden"
-                style="cursor: pointer;"
-                onmousedown="event.stopPropagation()"
-                onmouseup="event.stopPropagation()"
-                onclick="event.stopPropagation(); handlePodDetailsClick(event, this.getAttribute('data-pod-id'))"
-              >
-                <!-- Hover animation overlay -->
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                <!-- Button content -->
-                <span class="relative z-10 flex items-center">
-                  View Details
-                  <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </span>
-                
-                <!-- Ripple effect -->
-                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl"></div>
-              </a>
+              
+              <p class="text-gray-600 dark:text-gray-300 mb-6">{pod.description}</p>
+              
+              <ul class="space-y-3 mb-6">
+                {pod.idealFor.slice(0, 3).map((feature) => (
+                  <li class="flex items-start text-sm">
+                    <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-gray-600 dark:text-gray-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <button 
+                data-add-to-cart
+                data-item-id={pod.id}
+                data-item-type="pod"
+                data-item-title={pod.title}
+                data-item-description={pod.description}
+                data-item-price={pod.engagement}
+                class={`w-full bg-gradient-to-r ${colors.bg} text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-all duration-300`}>
+                Add to Cart
+              </button>
             </div>
           </div>
-          
-          <!-- Hover effect overlay -->
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 rounded-2xl"></div>
-        </div>
-      )) : (
-        <div class="col-span-full text-center py-12">
-          <p class="text-gray-500 dark:text-gray-400">Pod information is loading...</p>
-        </div>
-      )}
+        );
+      })}
     </div>
-    
-    <!-- Explore All Button -->
-    <div data-animate="fade-in-up" class="text-center mt-12">
-      <a href="/explore-pods" onclick="handleExplorePodsClick(event)" class="inline-flex items-center justify-center py-4 px-8 bg-white dark:bg-slate-800 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 transform hover:scale-105 shadow-lg">
-        Explore All Pods
-        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-        </svg>
-      </a>
-    </div>
-
-<script>
-  function handleExplorePodsClick(event: Event) {
-    event.preventDefault();
-    
-    console.log('Explore pods button clicked');
-    
-    // Use the generic ScrollUtils for cross-page navigation
-    // @ts-ignore
-    if (window.ScrollUtils) {
-      // @ts-ignore
-      window.ScrollUtils.navigateToPageAndSection('/explore-pods', 'available-pods');
-    } else {
-      // Fallback if ScrollUtils is not loaded
-      window.location.href = '/explore-pods#available-pods';
-    }
-  }
-
-  function handlePodCardClick(event: Event, podId: string) {
-    event.preventDefault();
-    
-    console.log('Pod card clicked for:', podId);
-    
-    // Map home page pod IDs to actual pod page IDs (now using actual IDs)
-    const podIdMapping: { [key: string]: string } = {
-      'ecommerce-engine': 'ecommerce-engine',
-      'ar-vr-experience': 'ar-vr-experience', 
-      'ai-product-studio': 'ai-product-studio',
-      'product-launch': 'product-launch',
-      'admin-workflow-automation': 'admin-workflow-automation'
-    };
-    
-    // Get the actual pod page ID
-    const actualPodId = podIdMapping[podId] || podId;
-    console.log('Mapped to actual pod ID:', actualPodId);
-    
-    // Navigate to the specific pod page
-    window.location.href = `/pods/${actualPodId}`;
-  }
-
-  function handlePodDetailsClick(event: Event, podId: string) {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    console.log('Pod details button clicked for:', podId);
-    
-    // Map home page pod IDs to actual pod page IDs (now using actual IDs)
-    const podIdMapping: { [key: string]: string } = {
-      'ecommerce-engine': 'ecommerce-engine',
-      'ar-vr-experience': 'ar-vr-experience', 
-      'ai-product-studio': 'ai-product-studio',
-      'product-launch': 'product-launch',
-      'admin-workflow-automation': 'admin-workflow-automation'
-    };
-    
-    // Get the actual pod page ID
-    const actualPodId = podIdMapping[podId] || podId;
-    console.log('Mapped to actual pod ID:', actualPodId);
-    
-    // Navigate to the specific pod page
-    window.location.href = `/pods/${actualPodId}`;
-  }
-
-  // Make functions globally available
-  // @ts-ignore
-  window.handlePodCardClick = handlePodCardClick;
-  // @ts-ignore
-  window.handlePodDetailsClick = handlePodDetailsClick;
-  // @ts-ignore
-  window.handleExplorePodsClick = handleExplorePodsClick;
-</script>
   </div>
 </section>
 
 <style>
-  /* Background animations */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
+  .home-pods-section {
+    @apply py-20 bg-gray-50 dark:bg-gray-800;
   }
   
-  @keyframes pulse-slow {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.1); }
+  .home-pods-container {
+    @apply container mx-auto px-4;
+    max-width: 1200px;
   }
   
-  /* Button hover animations */
-  @keyframes buttonGlow {
-    0%, 100% { box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3); }
-    50% { box-shadow: 0 15px 35px rgba(147, 51, 234, 0.5); }
+  .home-pods-header {
+    @apply text-center mb-16;
   }
   
-  /* Floating animation for background elements */
-  .bg-float {
-    animation: float 6s ease-in-out infinite;
+  .home-pods-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
   }
   
-  .bg-pulse-slow {
-    animation: pulse-slow 4s ease-in-out infinite;
+  .home-pods-subtitle {
+    @apply text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto;
   }
   
-  /* Card and button hover effects */
-  .pod-card {
-    cursor: pointer !important;
+  .home-pods-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12;
   }
   
-  .pod-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  .home-pod-card {
+    @apply bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
   
-  .pod-card a {
-    cursor: pointer !important;
+  .home-pod-card-header {
+    @apply mb-6;
   }
   
-  .pod-card a:hover {
-    animation: buttonGlow 2s ease-in-out infinite;
-    cursor: pointer !important;
+  .home-pod-badge {
+    @apply inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4;
   }
   
-  /* Mobile optimizations */
+  .home-pod-badge--green {
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+  }
+  
+  .home-pod-badge--blue {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+  }
+  
+  .home-pod-badge--purple {
+    @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200;
+  }
+  
+  .home-pod-title {
+    @apply text-xl font-bold text-gray-900 dark:text-white mb-2;
+  }
+  
+  .home-pod-subtitle {
+    @apply text-gray-600 dark:text-gray-300 text-sm;
+  }
+  
+  .home-pod-content {
+    @apply mb-6;
+  }
+  
+  .home-pod-description {
+    @apply text-gray-600 dark:text-gray-300 mb-4 leading-relaxed;
+  }
+  
+  .home-pod-section-title {
+    @apply text-sm font-semibold text-gray-900 dark:text-white mb-2;
+  }
+  
+  .home-pod-ideal-text {
+    @apply text-sm text-gray-600 dark:text-gray-300;
+  }
+  
+  .home-pod-team-list,
+  .home-pod-deliverables-list {
+    @apply space-y-1;
+  }
+  
+  .home-pod-team-member,
+  .home-pod-deliverable {
+    @apply text-sm text-gray-600 dark:text-gray-300;
+  }
+  
+  .home-pod-footer {
+    @apply flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-600;
+  }
+  
+  .home-pod-pricing {
+    @apply flex flex-col;
+  }
+  
+  .home-pod-price {
+    @apply text-lg font-bold text-gray-900 dark:text-white;
+  }
+  
+  .home-pod-engagement {
+    @apply text-sm text-gray-500 dark:text-gray-400;
+  }
+  
+  .home-pod-cta {
+    @apply inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300;
+  }
+  
+  .home-pods-cta {
+    @apply text-center;
+  }
+  
+  .home-pods-view-all {
+    @apply inline-flex items-center px-8 py-4 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 text-white font-semibold rounded-lg transition-colors duration-300;
+  }
+  
+  /* Responsive adjustments */
   @media (max-width: 768px) {
-    .pod-card {
-      margin-bottom: 1rem;
+    .home-pods-grid {
+      @apply grid-cols-1 gap-6;
     }
     
-    /* Reduce background elements on mobile */
-    .absolute.top-20.left-10,
-    .absolute.bottom-20.right-10,
-    .absolute.top-1\/2.left-1\/3 {
-      display: none;
+    .home-pod-card {
+      @apply p-6;
+    }
+    
+    .home-pods-title {
+      @apply text-2xl md:text-3xl;
     }
   }
+</style>
+
+<script>
+  // Component-specific animations
+  import { initScrollAnimations } from '../../scripts/scrollAnimations.js';
   
-  /* Dark mode adjustments for background */
-  .dark .absolute.top-20.left-10 {
-    background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
-  }
-  
-  .dark .absolute.bottom-20.right-10 {
-    background: linear-gradient(to bottom right, rgba(147, 51, 234, 0.05), rgba(236, 72, 153, 0.05));
-  }
-  
-  .dark .absolute.top-1\/2.left-1\/3 {
-    background: linear-gradient(to bottom right, rgba(34, 211, 238, 0.05), rgba(59, 130, 246, 0.05));
-  }
-</style> 
+  // Initialize scroll animations for this component
+  document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
+  });
+</script> 

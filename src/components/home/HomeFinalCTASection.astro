@@ -1,0 +1,39 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    description: string;
+    primaryButton: {
+      text: string;
+      url: string;
+    };
+    secondaryButton: {
+      text: string;
+      url: string;
+    };
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">{data.title}</h2>
+    <p class="text-xl text-gray-200 mb-6">{data.subtitle}</p>
+    <p class="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">{data.description}</p>
+    
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href={data.primaryButton.url} class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+        <span>{data.primaryButton.text}</span>
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+      <a href={data.secondaryButton.url} class="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-300 font-semibold rounded-xl hover:border-blue-500 hover:text-blue-400 transition-all duration-300">
+        <span>{data.secondaryButton.text}</span>
+      </a>
+    </div>
+  </div>
+</section> 

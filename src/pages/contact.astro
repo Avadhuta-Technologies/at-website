@@ -1,7 +1,14 @@
 ---
-import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import Layout from '../layouts/Layout.astro';
-import Contactsection from '../components/Contactsection.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import ContactHeroSection from '../components/contact/ContactHeroSection.astro';
+import ContactFormSection from '../components/contact/ContactFormSection.astro';
+
+// Import isolated contact content
+import { 
+  contactHeroData,
+  contactFormData
+} from '../content/contact/_index.js';
 ---
 
 <Layout
@@ -11,5 +18,10 @@ import Contactsection from '../components/Contactsection.astro';
   <Breadcrumb>
     <Fragment slot="title">Contact Us</Fragment>
   </Breadcrumb>
-  <Contactsection />
+  
+  <!-- Hero Section -->
+  <ContactHeroSection data={contactHeroData} />
+  
+  <!-- Contact Form Section -->
+  <ContactFormSection data={contactFormData} />
 </Layout>

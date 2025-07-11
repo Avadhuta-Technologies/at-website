@@ -1,52 +1,44 @@
 ---
 import PodCard from './PodCard.astro';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  badge: string;
-  badgeColor: string;
-  price?: string;
-  engagement?: string;
-  priceNote?: string;
-  duration?: string;
-  teamSize?: number;
-  deliverables?: string[];
-  idealFor?: string[];
-}
+import { catalogUtils } from '../../content/catalog/_index.js';
 
 export interface Props {
-  products: Product[];
+  podIds?: string[]; // Optional: specific pod IDs to display
   type: 'pod' | 'pack';
-  learnMoreUrlPrefix: string;
-  actionUrl: string;
-  actionText: string;
+  learnMoreUrlPrefix?: string;
+  actionUrl?: string;
+  actionText?: string;
 }
 
-const { products, type, learnMoreUrlPrefix, actionUrl, actionText } = Astro.props;
+const { podIds, type, learnMoreUrlPrefix, actionUrl, actionText } = Astro.props;
+
+// Get products from centralized catalog
+let products;
+if (podIds) {
+  // Get specific products by IDs
+  products = podIds.map(id => catalogUtils.getProductById(id, type)).filter(Boolean);
+} else {
+  // Get all products of the specified type
+  products = catalogUtils.getAllProducts(type);
+}
+
+// Default URLs if not provided
+const defaultLearnMoreUrlPrefix = type === 'pod' ? '/pods' : '/packs';
+const defaultActionUrl = type === 'pod' ? '/pods' : '/packs';
+const defaultActionText = type === 'pod' ? 'Reserve Pod' : 'Add Pack';
+
+const finalLearnMoreUrlPrefix = learnMoreUrlPrefix || defaultLearnMoreUrlPrefix;
+const finalActionUrl = actionUrl || defaultActionUrl;
+const finalActionText = actionText || defaultActionText;
 ---
 
 <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
   {products.map((product, index) => (
     <PodCard
-      id={product.id}
-      title={product.title}
-      description={product.description}
-      icon={product.icon}
-      badge={product.badge}
-      badgeColor={product.badgeColor}
-      price={product.engagement || product.price}
-      priceNote={product.priceNote || "Includes development, testing, and deployment"}
-      duration={product.duration}
-      teamSize={product.teamSize || 3}
-      deliverables={product.deliverables || []}
-      idealFor={product.idealFor || []}
-      learnMoreUrl={`${learnMoreUrlPrefix}/${product.id}`}
-      actionUrl={actionUrl}
-      actionText={actionText}
-      type={type}
+      podId={product.id}
+      learnMoreUrl={`${finalLearnMoreUrlPrefix}/${product.id}`}
+      actionUrl={finalActionUrl}
+      actionText={finalActionText}
     />
   ))}
 </div> 

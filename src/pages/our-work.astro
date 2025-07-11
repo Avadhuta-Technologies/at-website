@@ -1,33 +1,32 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { ourWorkData } from '../content/our-work.js';
-import HeroSection from '../components/shared/HeroSection.astro';
-import CTASection from '../components/shared/CTASection.astro';
-import IndustryGridSection from '../components/our-work/IndustryGridSection.astro';
-import WhyChooseSection from '../components/shared/WhyChooseSection.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import OurWorkHeroSection from '../components/our-work/OurWorkHeroSection.astro';
+import OurWorkGridSection from '../components/our-work/OurWorkGridSection.astro';
+import OurWorkCTASection from '../components/our-work/OurWorkCTASection.astro';
+
+// Import isolated our-work content
+import { 
+  ourWorkHeroData,
+  ourWorkGridData,
+  ourWorkCTAData
+} from '../content/our-work/_index.js';
 ---
 
-<Layout title="Our Work | Avadhuta Technologies" description="Explore our portfolio of AI, automation, healthcare, eCommerce, and field ops solutions.">
-  <HeroSection 
-    title={ourWorkData.hero.title}
-    subtitle={ourWorkData.hero.subtitle}
-    description={ourWorkData.hero.description}
-  />
-
-  <IndustryGridSection 
-    industries={ourWorkData.industries}
-    moreIndustries={ourWorkData.moreIndustries}
-  />
-
-  <WhyChooseSection 
-    title={ourWorkData.whyChoose.title}
-    points={ourWorkData.whyChoose.points}
-  />
-
-  <CTASection 
-    title={ourWorkData.cta.title}
-    description={ourWorkData.cta.description}
-    buttonText={ourWorkData.cta.buttonText}
-    email={ourWorkData.cta.email}
-  />
+<Layout 
+  description="Explore our portfolio of successful projects across industries, from ecommerce platforms to AI-powered tools and mobile applications."
+  title="Our Work | NovaPod.ai"
+>
+  <Breadcrumb>
+    <Fragment slot="title">Our Work</Fragment>
+  </Breadcrumb>
+  
+  <!-- Hero Section -->
+  <OurWorkHeroSection data={ourWorkHeroData} />
+  
+  <!-- Grid Section -->
+  <OurWorkGridSection data={ourWorkGridData} />
+  
+  <!-- CTA Section -->
+  <OurWorkCTASection data={ourWorkCTAData} />
 </Layout> 

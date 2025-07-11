@@ -1,0 +1,77 @@
+---
+import { portfolioHeroData } from '../../content/portfolio/_hero.js';
+
+interface Props {
+  data?: typeof portfolioHeroData;
+  className?: string;
+}
+
+const { data = portfolioHeroData, className = "" } = Astro.props;
+---
+
+<section class={`portfolio-hero-section ${className}`}>
+  <div class="portfolio-hero-container">
+    <div class="portfolio-hero-content">
+      <h1 class="portfolio-hero-title">{data.title}</h1>
+      
+      {data.subtitle && (
+        <h2 class="portfolio-hero-subtitle">{data.subtitle}</h2>
+      )}
+      
+      {data.description && (
+        <p class="portfolio-hero-description">{data.description}</p>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .portfolio-hero-section {
+    @apply py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800;
+  }
+  
+  .portfolio-hero-container {
+    @apply container mx-auto px-4;
+    max-width: 1200px;
+  }
+  
+  .portfolio-hero-content {
+    @apply text-center max-w-4xl mx-auto;
+  }
+  
+  .portfolio-hero-title {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6;
+    line-height: 1.1;
+  }
+  
+  .portfolio-hero-subtitle {
+    @apply text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-6;
+    line-height: 1.4;
+  }
+  
+  .portfolio-hero-description {
+    @apply text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto;
+    line-height: 1.6;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .portfolio-hero-title {
+      @apply text-3xl md:text-4xl;
+    }
+    
+    .portfolio-hero-subtitle {
+      @apply text-lg md:text-xl;
+    }
+  }
+</style>
+
+<script>
+  // Component-specific animations
+  import { initHeroAnimations } from '../../scripts/scrollAnimations.js';
+  
+  // Initialize hero animations when component loads
+  document.addEventListener('DOMContentLoaded', () => {
+    initHeroAnimations();
+  });
+</script> 

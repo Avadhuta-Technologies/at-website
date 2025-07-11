@@ -1,203 +1,42 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import OrderConfirmationHeroSection from '../components/order-confirmation/OrderConfirmationHeroSection.astro';
+import OrderConfirmationNextStepsSection from '../components/order-confirmation/OrderConfirmationNextStepsSection.astro';
+import CTASection from '../components/shared/CTASection.astro';
+
+// Import isolated order-confirmation content
+import { 
+  orderConfirmationHeroData,
+  orderConfirmationNextStepsData
+} from '../content/order-confirmation/_index.js';
 ---
 
-<Layout title="Order Confirmation - NovaPod.ai" description="Thank you for your reservation">
+<Layout 
+  description="Your order has been confirmed! Here's what happens next and how to get support."
+  title="Order Confirmation | NovaPod.ai"
+>
+  <Breadcrumb>
+    <Fragment slot="title">Order Confirmation</Fragment>
+  </Breadcrumb>
   
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-    <div class="max-w-4xl mx-auto px-4">
-      <!-- Success Message -->
-      <div class="text-center mb-12">
-        <div class="w-20 h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg class="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-        </div>
-        
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">You're all set!</h1>
-        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          A Novapod Specialist will reach out within 1 business day to discuss your pod and kickstart your journey
-        </p>
-      </div>
-
-      <!-- Order Details -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Order Details</h2>
-        <div id="order-details" class="space-y-4">
-          <p class="text-gray-500 dark:text-gray-400">Loading order details...</p>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-        <button id="schedule-call-btn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
-          Schedule Call
-        </button>
-        <button id="download-brochure-btn" class="w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-4 px-6 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">
-          Download Pod Brochure
-        </button>
-      </div>
-
-      <!-- Additional Information -->
-      <div class="mt-12 text-center">
-        <p class="text-gray-600 dark:text-gray-400 mb-4">
-          Have questions? Contact us at <a href="mailto:hello@novapod.ai" class="text-blue-600 hover:text-blue-500">hello@novapod.ai</a>
-        </p>
-        <a href="/" class="inline-flex items-center text-blue-600 hover:text-blue-500">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-          </svg>
-          Back to Home
-        </a>
-      </div>
-    </div>
-  </div>
-</Layout>
-
-<script>
-  class OrderConfirmation {
-    constructor() {
-      this.init();
-    }
-
-    init() {
-      this.loadOrderDetails();
-      this.setupEventListeners();
-    }
-
-    loadOrderDetails() {
-      const orderData = localStorage.getItem('novapod-order');
-      const detailsDiv = document.getElementById('order-details');
-      
-      if (!detailsDiv) return;
-
-      if (!orderData) {
-        detailsDiv.innerHTML = '<p class="text-gray-500 dark:text-gray-400">No order details found.</p>';
-        return;
-      }
-
-      try {
-        const order = JSON.parse(orderData);
-        let detailsHTML = '';
-
-        // Customer Information
-        if (order.customer) {
-          detailsHTML += `
-            <div class="border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Customer Information</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Full Name:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.customer.fullName || 'N/A'}</p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Work Email:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.customer.workEmail || 'N/A'}</p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Phone Number:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.customer.phoneNumber || 'N/A'}</p>
-                </div>
-                <div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Organization:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.customer.organizationName || 'N/A'}</p>
-                </div>
-                ${order.customer.organizationWebsite ? `
-                <div class="md:col-span-2">
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Website:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.customer.organizationWebsite}</p>
-                </div>
-                ` : ''}
-              </div>
-            </div>
-          `;
-        }
-
-        // Requirements
-        if (order.requirements) {
-          detailsHTML += `
-            <div class="border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Requirements</h3>
-              <div class="space-y-3">
-                <div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Start Timeline:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.requirements.startTimeline || 'N/A'}</p>
-                </div>
-                ${order.requirements.specificRequirements ? `
-                <div>
-                  <span class="text-sm text-gray-500 dark:text-gray-400">Specific Requirements:</span>
-                  <p class="font-medium text-gray-900 dark:text-white">${order.requirements.specificRequirements}</p>
-                </div>
-                ` : ''}
-              </div>
-            </div>
-          `;
-        }
-
-        // Order Items
-        if (order.order && order.order.items) {
-          detailsHTML += `
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Selected Items</h3>
-              <div class="space-y-2">
-          `;
-          
-          order.order.items.forEach(item => {
-            const badgeColor = item.type === 'pod' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-            detailsHTML += `
-              <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="flex items-center">
-                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${badgeColor} mr-3">
-                    ${item.type === 'pod' ? 'Pod' : 'Pack'}
-                  </span>
-                  <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
-                </div>
-                <span class="font-medium text-gray-900 dark:text-white">${item.price}</span>
-              </div>
-            `;
-          });
-          
-          detailsHTML += `
-              </div>
-            </div>
-          `;
-        }
-
-        detailsDiv.innerHTML = detailsHTML;
-      } catch (error) {
-        console.error('Error parsing order data:', error);
-        detailsDiv.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Error loading order details.</p>';
-      }
-    }
-
-    setupEventListeners() {
-      document.getElementById('schedule-call-btn')?.addEventListener('click', () => {
-        this.handleScheduleCall();
-      });
-
-      document.getElementById('download-brochure-btn')?.addEventListener('click', () => {
-        this.handleDownloadBrochure();
-      });
-    }
-
-    handleScheduleCall() {
-      // Open calendar link or redirect to scheduling page
-      window.open('https://calendly.com/novapod/consultation', '_blank');
-    }
-
-    handleDownloadBrochure() {
-      // Download brochure PDF
-      const link = document.createElement('a');
-      link.href = '/assets/brochures/novapod-brochure.pdf';
-      link.download = 'Novapod-Brochure.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  }
-
-  // Initialize order confirmation
-  if (typeof window !== 'undefined') {
-    new OrderConfirmation();
-  }
-</script> 
+  <!-- Hero Section -->
+  <OrderConfirmationHeroSection data={orderConfirmationHeroData} />
+  
+  <!-- Next Steps Section -->
+  <OrderConfirmationNextStepsSection data={orderConfirmationNextStepsData} />
+  
+  <!-- Final CTA Section -->
+  <CTASection 
+    title="Ready to Get Started?"
+    subtitle="Your team is being assembled and will contact you soon. In the meantime, explore our resources."
+    primaryButton={{
+      text: "View Resources",
+      url: "/our-work"
+    }}
+    secondaryButton={{
+      text: "Contact Support",
+      url: "/contact"
+    }}
+  />
+</Layout> 

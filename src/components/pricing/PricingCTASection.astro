@@ -1,0 +1,30 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    buttonText: string;
+    buttonUrl: string;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- Contact CTA -->
+      <div class="text-center">
+        <h2 class="text-2xl font-bold text-dark dark:text-white mb-4">{data.title}</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">{data.subtitle}</p>
+        <a href={data.buttonUrl} class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          <span>{data.buttonText}</span>
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section> 

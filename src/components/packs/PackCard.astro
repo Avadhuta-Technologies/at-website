@@ -1,56 +1,50 @@
 ---
 import { getBadgeStyle, getDotColor, getGradientClass } from '../../utils/colorUtils';
+import { catalogUtils } from '../../content/catalog/_index.js';
 
 export interface Props {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  badge: string;
-  badgeColor: string;
-  priceINR?: string;
-  priceUSD?: string;
-  duration?: string;
-  deliverables?: string[];
-  idealFor?: string[];
-  addOns?: string[];
-  whyItWorks?: string;
-  testimonials?: Array<{
-    quote: string;
-    author: string;
-    role: string;
-  }>;
-  cta?: {
-    title: string;
-    subtitle: string;
-    primaryButton: string;
-    secondaryButton: string;
-  };
-  learnMoreUrl: string;
+  packId: string; // Use packId instead of individual props
+  learnMoreUrl?: string;
   actionUrl?: string;
   actionText?: string;
 }
 
-const { 
-  id, 
-  title, 
-  description, 
-  icon, 
-  badge, 
-  badgeColor, 
-  priceINR, 
-  priceUSD, 
-  duration, 
-  deliverables, 
-  idealFor, 
-  addOns, 
-  whyItWorks, 
-  testimonials, 
-  cta, 
-  learnMoreUrl, 
-  actionUrl, 
-  actionText 
-} = Astro.props;
+const { packId, learnMoreUrl, actionUrl, actionText } = Astro.props;
+
+// Get pack data from centralized catalog
+const pack = catalogUtils.getProductById(packId, 'pack');
+
+if (!pack) {
+  throw new Error(`Pack with ID "${packId}" not found in catalog`);
+}
+
+// Extract data from catalog
+const {
+  id,
+  title,
+  description,
+  icon,
+  badge,
+  badgeColor,
+  priceINR,
+  priceUSD,
+  duration,
+  deliverables,
+  idealFor,
+  addOns,
+  whyItWorks,
+  testimonials,
+  cta
+} = pack;
+
+// Default URLs if not provided
+const defaultLearnMoreUrl = `/packs/${id}`;
+const defaultActionUrl = `/packs/${id}`;
+const defaultActionText = 'Add Pack';
+
+const finalLearnMoreUrl = learnMoreUrl || defaultLearnMoreUrl;
+const finalActionUrl = actionUrl || defaultActionUrl;
+const finalActionText = actionText || defaultActionText;
 ---
 
 <div class="pack-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up">
@@ -161,7 +155,7 @@ const {
           class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
           Add Pack
         </button>
-        <a href={learnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm">
+        <a href={finalLearnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm">
           View Details
         </a>
       </div>

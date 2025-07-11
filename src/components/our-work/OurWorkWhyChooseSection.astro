@@ -1,0 +1,114 @@
+---
+import { ourWorkWhyChooseData } from '../../../content/our-work/_whyChoose.js';
+
+interface Props {
+  data?: typeof ourWorkWhyChooseData;
+  className?: string;
+}
+
+const { data = ourWorkWhyChooseData, className = "" } = Astro.props;
+---
+
+<section class={`our-work-why-choose-section ${className}`}>
+  <div class="our-work-why-choose-container">
+    <div class="our-work-why-choose-header">
+      <h2 class="our-work-why-choose-title">{data.title}</h2>
+    </div>
+    
+    <div class="our-work-why-choose-grid">
+      {data.points.map((point, index) => (
+        <div class="our-work-why-choose-card" data-point-index={index}>
+          <div class="our-work-why-choose-icon">
+            <div class="our-work-why-choose-icon-wrapper">
+              <svg class="our-work-why-choose-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          
+          <div class="our-work-why-choose-content">
+            <h3 class="our-work-why-choose-point-title">{point.title}</h3>
+            <p class="our-work-why-choose-point-description">{point.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .our-work-why-choose-section {
+    @apply py-20 bg-gray-50 dark:bg-gray-800;
+  }
+  
+  .our-work-why-choose-container {
+    @apply container mx-auto px-4;
+    max-width: 1200px;
+  }
+  
+  .our-work-why-choose-header {
+    @apply text-center mb-16;
+  }
+  
+  .our-work-why-choose-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
+  }
+  
+  .our-work-why-choose-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+  }
+  
+  .our-work-why-choose-card {
+    @apply bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .our-work-why-choose-icon {
+    @apply mb-6 flex justify-center;
+  }
+  
+  .our-work-why-choose-icon-wrapper {
+    @apply w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center;
+  }
+  
+  .our-work-why-choose-icon-svg {
+    @apply w-8 h-8 text-green-600 dark:text-green-400;
+  }
+  
+  .our-work-why-choose-content {
+    @apply text-center;
+  }
+  
+  .our-work-why-choose-point-title {
+    @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
+  }
+  
+  .our-work-why-choose-point-description {
+    @apply text-gray-600 dark:text-gray-300 leading-relaxed;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .our-work-why-choose-grid {
+      @apply grid-cols-1 gap-6;
+    }
+    
+    .our-work-why-choose-card {
+      @apply p-6;
+    }
+    
+    .our-work-why-choose-title {
+      @apply text-2xl md:text-3xl;
+    }
+  }
+</style>
+
+<script>
+  // Component-specific animations
+  import { initScrollAnimations } from '../../../scripts/scrollAnimations.js';
+  
+  // Initialize scroll animations for this component
+  document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
+  });
+</script> 

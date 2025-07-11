@@ -1,0 +1,155 @@
+---
+import { portfolioProjectsData } from '../../content/portfolio/_projects.js';
+
+interface Props {
+  data?: typeof portfolioProjectsData;
+  className?: string;
+}
+
+const { data = portfolioProjectsData, className = "" } = Astro.props;
+---
+
+<section class={`portfolio-projects-section ${className}`}>
+  <div class="portfolio-projects-container">
+    <div class="portfolio-projects-header">
+      <h2 class="portfolio-projects-title">{data.title}</h2>
+      {data.subtitle && (
+        <p class="portfolio-projects-subtitle">{data.subtitle}</p>
+      )}
+    </div>
+    
+    <div class="portfolio-projects-grid">
+      {data.projects.map((project, index) => (
+        <div class="portfolio-project-card" data-project-id={project.id}>
+          <div class="portfolio-project-header">
+            <div class="portfolio-project-icon">
+              <div class="portfolio-project-icon-wrapper">
+                <svg class="portfolio-project-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div class="portfolio-project-meta">
+              <span class="portfolio-project-industry">{project.industry}</span>
+            </div>
+          </div>
+          
+          <div class="portfolio-project-content">
+            <h3 class="portfolio-project-title">{project.title}</h3>
+            <p class="portfolio-project-overview">{project.overview}</p>
+            
+            <div class="portfolio-project-impact">
+              <h4 class="portfolio-project-impact-title">Impact:</h4>
+              <p class="portfolio-project-impact-text">{project.impact}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .portfolio-projects-section {
+    @apply py-20 bg-white dark:bg-gray-900;
+  }
+  
+  .portfolio-projects-container {
+    @apply container mx-auto px-4;
+    max-width: 1200px;
+  }
+  
+  .portfolio-projects-header {
+    @apply text-center mb-16;
+  }
+  
+  .portfolio-projects-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
+  }
+  
+  .portfolio-projects-subtitle {
+    @apply text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto;
+  }
+  
+  .portfolio-projects-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+  
+  .portfolio-project-card {
+    @apply bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .portfolio-project-header {
+    @apply mb-6;
+  }
+  
+  .portfolio-project-icon {
+    @apply mb-4 flex justify-center;
+  }
+  
+  .portfolio-project-icon-wrapper {
+    @apply w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center;
+  }
+  
+  .portfolio-project-icon-svg {
+    @apply w-8 h-8 text-blue-600 dark:text-blue-400;
+  }
+  
+  .portfolio-project-meta {
+    @apply text-center;
+  }
+  
+  .portfolio-project-industry {
+    @apply inline-block px-3 py-1 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-full;
+  }
+  
+  .portfolio-project-content {
+    @apply space-y-4;
+  }
+  
+  .portfolio-project-title {
+    @apply text-xl font-bold text-gray-900 dark:text-white;
+  }
+  
+  .portfolio-project-overview {
+    @apply text-gray-600 dark:text-gray-300 leading-relaxed;
+  }
+  
+  .portfolio-project-impact {
+    @apply mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg;
+  }
+  
+  .portfolio-project-impact-title {
+    @apply text-sm font-semibold text-blue-700 dark:text-blue-300 mb-2;
+  }
+  
+  .portfolio-project-impact-text {
+    @apply text-sm text-blue-600 dark:text-blue-400 leading-relaxed;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .portfolio-projects-grid {
+      @apply grid-cols-1 gap-6;
+    }
+    
+    .portfolio-project-card {
+      @apply p-6;
+    }
+    
+    .portfolio-projects-title {
+      @apply text-2xl md:text-3xl;
+    }
+  }
+</style>
+
+<script>
+  // Component-specific animations
+  import { initScrollAnimations } from '../../scripts/scrollAnimations.js';
+  
+  // Initialize scroll animations for this component
+  document.addEventListener('DOMContentLoaded', () => {
+    initScrollAnimations();
+  });
+</script> 

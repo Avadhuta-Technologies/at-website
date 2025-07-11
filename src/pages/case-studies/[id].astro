@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumb from '../../components/layout/Breadcrumb.astro';
 import CTASection from '../../components/shared/CTASection.astro';
-import { caseStudiesData } from '../../content/case-studies.js';
+import { caseStudiesData } from '../../content/_case-studies.js';
 
 export async function getStaticPaths() {
   return caseStudiesData.caseStudies.map((study) => ({

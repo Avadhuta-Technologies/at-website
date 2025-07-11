@@ -1,0 +1,52 @@
+ ---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    description?: string;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="relative bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 overflow-hidden py-20 md:py-28">
+  <div class="container mx-auto px-4 text-center">
+    <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm font-semibold rounded-full mb-6 animate-fade-in">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      Case Studies
+    </div>
+    <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight animate-fade-in-up">{data.title}</h1>
+    <h2 class="text-xl md:text-2xl text-gray-200 mb-8 animate-fade-in-up animation-delay-200">{data.subtitle}</h2>
+    {data.description && (
+      <p class="text-lg text-gray-300 max-w-3xl mx-auto animate-fade-in-up animation-delay-400">{data.description}</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .animate-fade-in { 
+    animation: fadeIn 0.8s ease-out; 
+  }
+  .animate-fade-in-up { 
+    animation: fadeInUp 0.8s ease-out; 
+  }
+  .animation-delay-200 { 
+    animation-delay: 0.2s; 
+  }
+  .animation-delay-400 { 
+    animation-delay: 0.4s; 
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style> 
