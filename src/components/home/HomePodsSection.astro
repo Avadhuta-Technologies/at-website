@@ -12,13 +12,14 @@ export interface Props {
 const { data } = Astro.props;
 
 // Get pods from centralized catalog
-let pods;
+let pods: any[] = [];
 if (data.featuredPodIds) {
   // Get specific pods by IDs
   pods = data.featuredPodIds.map(id => catalogUtils.getProductById(id, 'pod')).filter(Boolean);
 } else {
   // Get all pods
-  pods = catalogUtils.getAllProducts('pod');
+  const allProducts = catalogUtils.getAllProducts();
+  pods = allProducts.pods || [];
 }
 
 // Color mapping for different pod types
@@ -43,7 +44,7 @@ const getColorClasses = (color: string) => {
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {pods.map((pod, index) => {
+      {pods.filter(pod => pod !== null).map((pod, index) => {
         const colors = getColorClasses(pod.badgeColor);
         return (
           <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -62,7 +63,7 @@ const getColorClasses = (color: string) => {
               <p class="text-gray-600 dark:text-gray-300 mb-6">{pod.description}</p>
               
               <ul class="space-y-3 mb-6">
-                {pod.idealFor.slice(0, 3).map((feature) => (
+                {pod.idealFor.slice(0, 3).map((feature: string) => (
                   <li class="flex items-start text-sm">
                     <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -86,6 +87,18 @@ const getColorClasses = (color: string) => {
           </div>
         );
       })}
+    </div>
+    
+    <!-- Explore All Pods Button -->
+    <div class="text-center mt-12">
+      <a 
+        href="/explore-pods" 
+        class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        <span>Explore All Pods</span>
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
     </div>
   </div>
 </section>
