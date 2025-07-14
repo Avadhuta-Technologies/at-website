@@ -1,13 +1,17 @@
 export const homeFinalCTAData = {
-  title: "Ready to Build Something Amazing?",
-  subtitle: "Let's discuss your project and create the perfect team for your needs.",
-  description: "Get started with a free consultation to understand how our pods can accelerate your development process.",
+  title: "Ready to Build Smarter?",
+  subtitle: "Ditch slow agencies and scattered freelancers. NovaPod gives you a high-performance pod—expert humans + AI agents—ready to launch your product, feature, or automation in record time.",
+  description: "✅ Outcome-focused ✅ Fast ramp-up ✅ No micromanagement ✅ Fully yours",
   primaryButton: {
-    text: "Get Started",
+    text: "Start With A NovaPod",
     url: "/contact"
   },
   secondaryButton: {
-    text: "Learn More",
+    text: "Talk to a Pod Strategist",
     url: "/explore-pods"
+  },
+  contactInfo: {
+    email1: "vikram@avadhutatech.com",
+    email2: "vinay@avadhutatech.com"
   }
 }; 
