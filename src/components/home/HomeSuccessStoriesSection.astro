@@ -60,10 +60,16 @@ const isCaseStudyFormat = caseStudies.length > 0;
               <div class="p-6 border-b border-gray-100">
                 <div class="flex flex-wrap gap-2 mb-4">
                   <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                    🔖 {item.engagement}
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    {item.engagement}
                   </span>
                   <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                    🔥 {item.success}
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    {item.success}
                   </span>
                 </div>
                 
@@ -86,7 +92,12 @@ const isCaseStudyFormat = caseStudies.length > 0;
               
               <!-- Outcomes -->
               <div class="p-6 bg-gray-50">
-                <h4 class="text-lg font-semibold text-gray-900 mb-4">Outcome</h4>
+                <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Outcome
+                </h4>
                 <div class="space-y-3">
                   {item.outcome.map((outcomeItem: string, itemIndex: number) => (
                     <div class="flex items-start">
@@ -124,10 +135,10 @@ const isCaseStudyFormat = caseStudies.length > 0;
               <div class="p-6">
                 <a 
                   href={item.readMoreLink}
-                  class="btn btn-primary btn-md btn-with-icon group w-full"
+                  class="inline-flex items-center justify-center w-full px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group"
                 >
-                  <span class="btn-text">Read Case Study</span>
-                  <svg class="w-4 h-4 btn-icon-right group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span>Read Case Study</span>
+                  <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                   </svg>
                 </a>
@@ -136,7 +147,7 @@ const isCaseStudyFormat = caseStudies.length > 0;
           ) : (
             // Legacy Stories Format
             <div class="p-8 text-center">
-              <div class="text-4xl font-bold text-blue-600 mb-2">{item.metric}</div>
+              <div class="text-4xl font-bold text-primary-600 mb-2">{item.metric}</div>
               <div class="text-sm text-gray-500 mb-4">{item.metricLabel}</div>
               <h3 class="text-xl font-semibold text-gray-900 mb-4">{item.title}</h3>
               <p class="text-gray-600">{item.description}</p>

@@ -40,7 +40,11 @@ const { data } = Astro.props;
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
         {data.description.split('✅').filter(item => item.trim()).map((benefit, index) => (
           <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-            <div class="text-2xl mb-2">✅</div>
+            <div class="flex items-center justify-center mb-2">
+              <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
             <div class="text-sm font-medium text-white">{benefit.trim()}</div>
           </div>
         ))}
@@ -50,20 +54,20 @@ const { data } = Astro.props;
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
         <a 
           href={data.primaryButton.url}
-          class="btn btn-gradient btn-xl btn-with-icon group"
+          class="inline-flex items-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors duration-200 group"
         >
-          <span class="btn-text">{data.primaryButton.text}</span>
-          <svg class="w-6 h-6 btn-icon-right group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span>{data.primaryButton.text}</span>
+          <svg class="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
           </svg>
         </a>
         
         <a 
           href={data.secondaryButton.url}
-          class="btn btn-secondary btn-xl btn-with-icon group"
+          class="inline-flex items-center px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-colors duration-200 group"
         >
-          <span class="btn-text">{data.secondaryButton.text}</span>
-          <svg class="w-5 h-5 btn-icon-right group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span>{data.secondaryButton.text}</span>
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </a>
@@ -72,7 +76,12 @@ const { data } = Astro.props;
       <!-- Contact Information -->
       {data.contactInfo && (
         <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 max-w-md mx-auto">
-          <div class="text-gray-300 mb-3">📩 Or reach us directly at:</div>
+          <div class="text-gray-300 mb-3 flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            Or reach us directly at:
+          </div>
           <div class="space-y-2">
             <a 
               href={`mailto:${data.contactInfo.email1}`}
