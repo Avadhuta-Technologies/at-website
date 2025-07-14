@@ -9,7 +9,7 @@ export const homePacksData = {
       title: 'UX Audit Pack',
       description:
         'Get a fresh set of expert + AI-powered eyes on your product. Usability, accessibility, and design feedback—delivered fast.',
-      icon: 'rocket',
+      icon: '👀',
       badge: 'Popular',
       badgeColor: 'green',
     },
@@ -18,7 +18,7 @@ export const homePacksData = {
       title: 'LLM Agent Setup Pack',
       description:
         'Want an AI chatbot, assistant, or internal tool? This pack sets up your GPT/Claude agent with prompt engineering + full UI integration.',
-      icon: 'zap',
+      icon: '🤖',
       badge: 'Efficient',
       badgeColor: 'blue',
     },
@@ -27,7 +27,7 @@ export const homePacksData = {
       title: 'QA Automation Pack',
       description:
         'Automate your testing flows across devices and browsers. We integrate Playwright, Cypress, or custom scripts to improve release confidence.',
-      icon: 'chart-line',
+      icon: '🤖',
       badge: 'Growth',
       badgeColor: 'purple',
     },
@@ -36,9 +36,9 @@ export const homePacksData = {
       title: 'SEO & Site Optimization Pack',
       description:
         'Get your product search-ready with structured metadata, performance tuning, and crawl-friendly setup.',
-      icon: 'chart-line',
-      badge: 'Growth',
-      badgeColor: 'purple',
+      icon: '🔍',
+      badge: 'Efficient',
+      badgeColor: 'blue',
     },
   ],
 };
