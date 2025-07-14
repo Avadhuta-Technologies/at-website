@@ -1,5 +1,5 @@
 ---
-import { homeHowItWorksData } from '../../../content/home/_howItWorks.js';
+import { homeHowItWorksData } from '../../content/home/_howItWorks.js';
 
 interface Props {
   data?: typeof homeHowItWorksData;
@@ -9,158 +9,585 @@ interface Props {
 const { data = homeHowItWorksData, className = "" } = Astro.props;
 ---
 
-<section class={`home-how-it-works-section ${className}`}>
-  <div class="home-how-it-works-container">
-    <div class="home-how-it-works-header">
-      <h2 class="home-how-it-works-title">{data.title}</h2>
+<section class={`how-it-works-section ${className}`}>
+  <div class="container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <div class="header-badge">
+        <span class="badge-text">Process</span>
+      </div>
+      <h2 class="section-title">{data.title}</h2>
+      {data.subtitle && <p class="section-description">{data.subtitle}</p>}
     </div>
     
-    <div class="home-how-it-works-steps">
-      {data.steps.map((step, index) => (
-        <div class="home-how-it-works-step" data-step={index + 1}>
-          <div class="home-how-it-works-step-number">
-            <span class="home-how-it-works-step-number-text">{step.number}</span>
-          </div>
-          
-          <div class="home-how-it-works-step-content">
-            <h3 class="home-how-it-works-step-title">{step.title}</h3>
-            <p class="home-how-it-works-step-description">
-              {step.description.split('\n').map((paragraph, i) => (
-                <span>
-                  {paragraph}
-                  {i < step.description.split('\n').length - 1 && <br />}
-                </span>
-              ))}
-            </p>
-          </div>
-          
-          {step.icon && (
-            <div class="home-how-it-works-step-icon">
-              <div class="home-how-it-works-icon-wrapper">
-                <svg class="home-how-it-works-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  {step.icon === "choose-pod" && (
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  )}
-                  {step.icon === "align-outcomes" && (
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  )}
-                  {step.icon === "pod-working" && (
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  )}
-                  {step.icon === "ship-scale" && (
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  )}
+    <!-- Steps Flow -->
+    <div class="steps-flow">
+      
+      <div class="steps-container">
+        {data.steps.map((step, index) => (
+          <div class="step" data-step={index + 1}>
+                        <!-- Step Icon Background -->
+            <div class="step-icon-bg">
+              {step.icon === "choose-pod" && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-              </div>
+              )}
+              {step.icon === "align-outcomes" && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+              {step.icon === "pod-working" && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              )}
+              {step.icon === "ship-scale" && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              )}
             </div>
-          )}
-        </div>
-      ))}
+            
+            <!-- Step Content -->
+            <div class="step-content">
+              <h3 class="step-title"> <div class="step-number">{step.number}</div>{step.title}</h3>
+              <p class="step-description">{step.description}</p>
+              
+              <!-- Step 1: Pod Types -->
+              {step.podTypes && (                
+                <div class="adaptability-items">
+                    {step.podTypes.map((pod) => (
+                      <div class="adaptability-item">
+                        <h5>{pod.name}</h5>
+                        <p>{pod.description}</p>
+                      </div>
+                    ))}
+                </div>
+              )}
+              
+              <!-- Step 2: Benefits -->
+              {step.benefits && (
+                <div class="benefits">
+                  {step.benefits.map((benefit) => (
+                    <div class="benefit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{benefit}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <!-- Step 3: Composition -->
+              {step.composition && (
+                <div class="composition">
+                  <h4>{step.compositionTitle}</h4>
+                  <div class="composition-items">
+                    {step.composition.map((item) => (
+                      <div class="composition-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <!-- Step 4: Adaptability -->
+              {step.adaptabilityFeatures && (
+                <div class="adaptability">
+                  <h4>{step.adaptabilityTitle}</h4>
+                  <div class="adaptability-items">
+                    {step.adaptabilityFeatures.map((feature) => (
+                      <div class="adaptability-item">
+                        <h5>{feature.title}</h5>
+                        <p>{feature.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .home-how-it-works-section {
-    @apply py-20 bg-white dark:bg-gray-900;
+  .how-it-works-section {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
   }
-  
-  .home-how-it-works-container {
-    @apply container mx-auto px-4;
+
+  .container {
     max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
   }
-  
-  .home-how-it-works-header {
-    @apply text-center mb-16;
+
+  /* Section Header */
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
   }
-  
-  .home-how-it-works-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
-  
-  .home-how-it-works-steps {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8;
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    line-height: 1.1;
   }
-  
-  .home-how-it-works-step {
-    @apply relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+
+  .section-description {
+    font-size: 1.125rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
   }
-  
-  .home-how-it-works-step-number {
-    @apply absolute -top-4 -left-4 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg;
+
+  /* Steps Flow */
+  .steps-flow {
+    position: relative;
   }
-  
-  .home-how-it-works-step-number-text {
-    @apply font-bold;
+
+  .flow-path {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
   }
-  
-  .home-how-it-works-step-content {
-    @apply mt-4;
+
+  .flow-line {
+    stroke-dasharray: 10 5;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 1s ease-in-out;
   }
-  
-  .home-how-it-works-step-title {
-    @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
+
+  .flow-dot {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
   }
-  
-  .home-how-it-works-step-description {
-    @apply text-gray-600 dark:text-gray-300 leading-relaxed;
-    white-space: pre-line;
+
+  .flow-line.animate {
+    stroke-dashoffset: 0;
   }
-  
-  .home-how-it-works-step-icon {
-    @apply mt-6 flex justify-center;
+
+  .flow-dot.animate {
+    opacity: 1;
   }
-  
-  .home-how-it-works-icon-wrapper {
-    @apply w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center;
+
+  /* Steps Container */
+  .steps-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+    position: relative;
+    z-index: 2;
   }
-  
-  .home-how-it-works-icon {
-    @apply w-8 h-8 text-blue-600 dark:text-blue-400;
+
+  /* Individual Step */
+  .step {
+    text-align: left;
+    padding: 2rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
-  
-  /* Responsive adjustments */
+
+  .step:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Step Icon Background */
+  .step-icon-bg {
+    position: absolute;
+    bottom: -1rem;
+    right: -1rem;
+    width: 8rem;
+    height: 8rem;
+    opacity: 0.05;
+    color: #3b82f6;
+    z-index: 1;
+  }
+
+  .step-icon-bg svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: #10b981;
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.875rem;
+    margin-right: 0.75rem;
+  }
+
+  .step-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .step-description {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Pod Types */
+  .pod-types {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+  }
+
+  .pod-type {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    font-size: 0.875rem;
+  }
+
+  .pod-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.875rem;
+  }
+
+  .pod-desc {
+    color: #64748b;
+    font-size: 0.75rem;
+  }
+
+  /* Benefits */
+  .benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .benefit {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f0fdf4;
+    border-radius: 0.5rem;
+    border: 1px solid #bbf7d0;
+  }
+
+  .benefit svg {
+    width: 1rem;
+    height: 1rem;
+    color: #10b981;
+    flex-shrink: 0;
+  }
+
+  .benefit span {
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  /* Composition */
+  .composition h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .composition-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .composition-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+  }
+
+  .composition-item svg {
+    width: 1rem;
+    height: 1rem;
+    color: #3b82f6;
+    flex-shrink: 0;
+  }
+
+  .composition-item span {
+    color: #374151;
+    font-size: 0.875rem;
+  }
+
+  /* Adaptability */
+  .adaptability h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .adaptability-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .adaptability-item {
+    padding: 0.75rem;
+    background: #fef3c7;
+    border-radius: 0.5rem;
+    border: 1px solid #fde68a;
+  }
+
+  .adaptability-item h5 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 0.25rem;
+  }
+
+  .adaptability-item p {
+    font-size: 0.75rem;
+    color: #a16207;
+    line-height: 1.4;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .steps-container {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+
   @media (max-width: 768px) {
-    .home-how-it-works-steps {
-      @apply grid-cols-1 gap-6;
+    .steps-container {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
-    
-    .home-how-it-works-step {
-      @apply p-6;
-    }
-    
-    .home-how-it-works-title {
-      @apply text-2xl md:text-3xl;
+
+    .flow-path {
+      display: none;
     }
   }
-  
-  /* Animation classes */
-  .home-how-it-works-step {
+
+  @media (max-width: 768px) {
+    .step {
+      padding: 1.5rem;
+    }
+
+    .step-icon-bg {
+      width: 6rem;
+      height: 6rem;
+      bottom: -0.5rem;
+      right: -0.5rem;
+    }
+
+    .step-title {
+      font-size: 1.125rem;
+    }
+  }
+
+  /* Animations */
+  .step {
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInUp 0.6s ease-out forwards;
+    transition: all 0.6s ease-out;
   }
-  
-  .home-how-it-works-step:nth-child(1) { animation-delay: 0.1s; }
-  .home-how-it-works-step:nth-child(2) { animation-delay: 0.2s; }
-  .home-how-it-works-step:nth-child(3) { animation-delay: 0.3s; }
-  .home-how-it-works-step:nth-child(4) { animation-delay: 0.4s; }
-  
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+  .step.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Dark Mode Support */
+  @media (prefers-color-scheme: dark) {
+    .how-it-works-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    .section-title {
+      color: #f1f5f9;
+    }
+
+    .section-description {
+      color: #94a3b8;
+    }
+
+    .step {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .step-title {
+      color: #f1f5f9;
+    }
+
+    .step-description {
+      color: #94a3b8;
+    }
+
+    .pod-type {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .pod-name {
+      color: #f1f5f9;
+    }
+
+    .pod-desc {
+      color: #94a3b8;
+    }
+
+    .benefit {
+      background: #064e3b;
+      border-color: #065f46;
+    }
+
+    .benefit span {
+      color: #d1fae5;
+    }
+
+    .composition-item {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .composition-item span {
+      color: #e2e8f0;
+    }
+
+    .adaptability-item {
+      background: #451a03;
+      border-color: #78350f;
+    }
+
+    .adaptability-item h5 {
+      color: #fef3c7;
+    }
+
+    .adaptability-item p {
+      color: #fbbf24;
     }
   }
 </style>
 
 <script>
-  // Component-specific scroll animations
-  import { initScrollAnimations } from '../../scripts/scrollAnimations.js';
-  
-  // Initialize scroll animations for this component
-  document.addEventListener('DOMContentLoaded', () => {
-    initScrollAnimations();
-  });
+  // Scroll-triggered animations
+  function initScrollAnimations() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const stepObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+          
+          // Animate flow path progressively
+          setTimeout(() => {
+            const flowLine = document.querySelector('.flow-line');
+            const flowDots = document.querySelectorAll('.flow-dot');
+            
+            if (flowLine) {
+              flowLine.classList.add('animate');
+            }
+            
+            flowDots.forEach((dot, dotIndex) => {
+              if (dotIndex <= index) {
+                setTimeout(() => {
+                  dot.classList.add('animate');
+                }, dotIndex * 200);
+              }
+            });
+          }, index * 300);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all steps
+    document.querySelectorAll('.step').forEach(step => {
+      stepObserver.observe(step);
+    });
+  }
+
+  // Initialize animations when DOM is loaded
+  document.addEventListener('DOMContentLoaded', initScrollAnimations);
 </script> 
