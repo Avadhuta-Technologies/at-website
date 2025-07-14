@@ -1,7 +1,7 @@
 // Pods Grid Section Styles
 // This file will contain pods grid section styles
 
-@use '../base/variables' as vars;
+@use '../base/_variables' as vars;
 
 .pods-grid-section {
   padding: vars.$spacing-4xl 0;
