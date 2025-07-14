@@ -4,23 +4,28 @@ export const homeWhyWorksData = {
   reasons: [
     {
       icon: "⚡",
-      title: "Specialized Teams",
-      description: "Each pod is a cross-functional team with deep expertise in your domain and technology stack."
+      title: "Fast Ramp-Up",
+      description: "Your pod is ready to ship from day one."
     },
     {
       icon: "🔄",
-      title: "Agile Delivery",
-      description: "We use agile methodologies to deliver value quickly, iterate based on feedback, and adapt to changing needs."
+      title: "Modular",
+      description: "Add/remove pods as your project scales."
     },
     {
       icon: "🔍",
-      title: "Transparent Process",
-      description: "You get full visibility into progress, blockers, and outcomes at every stage."
+      title: "AI-Augmented",
+      description: "Smart copilots = fewer bugs, faster code"
     },
     {
       icon: "🎯",
       title: "Outcome Focused",
-      description: "We align our work with your business goals and measure success by real impact."
-    }
+      description: "Pay for results, not hours"
+    },
+    {
+      icon: "🌍",
+      title: "Global Talent",
+      description: "Expert humans from across the world"
+    },
   ]
 }; 
