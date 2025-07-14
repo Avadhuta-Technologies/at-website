@@ -3,7 +3,21 @@ export interface Props {
   data: {
     title: string;
     subtitle: string;
-    stories: Array<{
+    caseStudies?: Array<{
+      title: string;
+      engagement: string;
+      success: string;
+      client: string;
+      challenge: string;
+      outcome: string[];
+      testimonial: {
+        quote: string;
+        author: string;
+        role: string;
+      };
+      readMoreLink: string;
+    }>;
+    stories?: Array<{
       title: string;
       description: string;
       metric: string;
@@ -13,22 +27,112 @@ export interface Props {
 }
 
 const { data } = Astro.props;
+
+// Handle both old and new data formats
+const caseStudies = data.caseStudies || [];
+const stories = data.stories || [];
+
+// Use case studies if available, otherwise fall back to stories
+const displayData = caseStudies.length > 0 ? caseStudies : stories;
+const isCaseStudyFormat = caseStudies.length > 0;
 ---
 
-<section class="py-16 bg-white dark:bg-slate-900">
+<section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
   <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">{data.title}</h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400">{data.subtitle}</p>
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-dark dark:text-white mb-6">{data.title}</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">{data.subtitle}</p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {data.stories.map((story, index) => (
-        <div class="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-8 text-center">
-          <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">{story.metric}</div>
-          <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">{story.metricLabel}</div>
-          <h3 class="text-xl font-bold text-dark dark:text-white mb-4">{story.title}</h3>
-          <p class="text-gray-600 dark:text-gray-400">{story.description}</p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {displayData.map((item: any, index) => (
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          {isCaseStudyFormat ? (
+            // Case Study Format
+            <>
+              <!-- Header with engagement and success badges -->
+              <div class="p-8 border-b border-gray-100 dark:border-slate-700">
+                <div class="flex flex-wrap gap-3 mb-6">
+                  <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-sm font-semibold rounded-full">
+                    🔖 {item.engagement}
+                  </span>
+                  <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-sm font-semibold rounded-full">
+                    🔥 {item.success}
+                  </span>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-dark dark:text-white mb-4">{item.title}</h3>
+                
+                <div class="space-y-4">
+                  <div>
+                    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Client</span>
+                    <p class="text-gray-700 dark:text-gray-300 font-medium">{item.client}</p>
+                  </div>
+                  
+                  <div>
+                    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Challenge</span>
+                    <p class="text-gray-700 dark:text-gray-300">{item.challenge}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Outcomes -->
+              <div class="p-8 bg-gray-50 dark:bg-slate-700">
+                <h4 class="text-lg font-bold text-dark dark:text-white mb-4">Outcome</h4>
+                <ul class="space-y-3">
+                  {item.outcome.map((outcomeItem: string, itemIndex: number) => (
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span class="text-gray-700 dark:text-gray-300">{outcomeItem}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <!-- Testimonial -->
+              <div class="p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+                <div class="relative">
+                  <svg class="w-8 h-8 text-blue-400 mb-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                  </svg>
+                  <blockquote class="text-gray-700 dark:text-gray-300 italic mb-4">
+                    "{item.testimonial.quote}"
+                  </blockquote>
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3">
+                      {item.testimonial.author.split(' ').map((n: string) => n[0]).join('')}
+                    </div>
+                    <div>
+                      <div class="font-semibold text-dark dark:text-white">{item.testimonial.author}</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">{item.testimonial.role}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- CTA -->
+              <div class="p-8 bg-white dark:bg-slate-800">
+                <a 
+                  href={item.readMoreLink}
+                  class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                  <span>Read Case Study</span>
+                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
+              </div>
+            </>
+          ) : (
+            // Legacy Stories Format
+            <div class="p-8 text-center">
+              <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">{item.metric}</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">{item.metricLabel}</div>
+              <h3 class="text-xl font-bold text-dark dark:text-white mb-4">{item.title}</h3>
+              <p class="text-gray-600 dark:text-gray-400">{item.description}</p>
+            </div>
+          )}
         </div>
       ))}
     </div>
