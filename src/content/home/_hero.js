@@ -1,13 +1,13 @@
 export const homeHeroData = {
-  title: 'Build, Launch, and Scale with Modular Product Pods',
-  subtitle: 'AI-powered teams, fixed-scope packs, and outcome-driven delivery for startups and enterprises.',
-  description: 'From MVP to scale, our modular pods combine expert talent, proven workflows, and smart automation to help you launch faster, automate smarter, and grow sustainably.',
+  title: 'Build smarter. Ship faster. With NovaPod.',
+  subtitle: 'Hybrid AI + human delivery pods that get your product built—end-to-end.',
+  description: 'Say goodbye to bloated dev teams and slow outsourcing. NovaPod gives you modular, launch-ready pods combining expert builders and AI agents—designed for speed, precision, and outcomes.',
   primaryButton: {
-    label: 'Explore Pods',
+    label: 'Get Started with a Pod',
     href: '/explore-pods'
   },
   secondaryButton: {
-    label: 'View Packs',
+    label: 'See How it Works',
     href: '/explore-packs'
   }
 }; 
