@@ -166,7 +166,7 @@ hr {
   height: 0;
   border: none;
   border-top: 1px solid vars.$gray-300;
-  margin: vars.$spacing-lg 0;
+  margin: vars.$space-6 0;
 }
 
 pre {
@@ -175,7 +175,7 @@ pre {
   font-size: vars.$font-size-sm;
   line-height: vars.$line-height-normal;
   background: vars.$gray-100;
-  padding: vars.$spacing-md;
+  padding: vars.$space-4;
   border-radius: vars.$border-radius-md;
 }
 
@@ -309,17 +309,17 @@ q:after {
 
 // Focus styles
 :focus {
-  outline: 2px solid vars.$primary;
+  outline: 2px solid vars.$primary-blue;
   outline-offset: 2px;
 }
 
 // Selection styles
 ::selection {
-  background-color: vars.$primary;
+  background-color: vars.$primary-blue;
   color: white;
 }
 
 ::-moz-selection {
-  background-color: vars.$primary;
+  background-color: vars.$primary-blue;
   color: white;
 } 

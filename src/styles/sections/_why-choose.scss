@@ -3,23 +3,23 @@
 @use '../base/_variables' as vars;
 
 .why-choose-section {
-  padding: vars.$spacing-4xl 0;
+  padding: vars.$space-20 0;
   background: vars.$gradient-primary;
   
   &.dark {
-    background: linear-gradient(135deg, vars.$dark 0%, vars.$dark-2 100%);
+    background: linear-gradient(135deg, vars.$bg-dark 0%, vars.$bg-dark-2 100%);
   }
   
   // Section header
   .section-header {
     text-align: center;
-    margin-bottom: vars.$spacing-3xl;
+    margin-bottom: vars.$space-16;
     
     .section-title {
       font-size: clamp(vars.$font-size-3xl, 4vw, vars.$font-size-5xl);
       font-weight: vars.$font-weight-extrabold;
-      color: vars.$dark;
-      margin-bottom: vars.$spacing-md;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-4;
       
       &.dark {
         color: vars.$gray-50;
@@ -38,24 +38,24 @@
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: vars.$spacing-2xl;
+    gap: vars.$space-12;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 vars.$spacing-md;
+    padding: 0 vars.$space-4;
   }
   
   // Individual card
   .why-choose-card {
     position: relative;
     background: vars.$white;
-    border-radius: vars.$border-radius-3xl;
-    padding: vars.$spacing-2xl;
+    border-radius: vars.$border-radius-2xl;
+    padding: vars.$space-12;
     box-shadow: vars.$shadow-lg;
     transition: all vars.$transition-slow;
     overflow: hidden;
     
     &.dark {
-      background: vars.$dark;
+      background: vars.$bg-dark;
       box-shadow: vars.$shadow-2xl;
     }
     
@@ -86,11 +86,11 @@
     .icon-container {
       width: 4rem;
       height: 4rem;
-      border-radius: vars.$border-radius-2xl;
+      border-radius: vars.$border-radius-xl;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: vars.$spacing-xl;
+      margin-bottom: vars.$space-5;
       box-shadow: vars.$shadow-md;
       background: vars.$gradient-secondary;
       
@@ -105,8 +105,8 @@
     .card-title {
       font-size: vars.$font-size-2xl;
       font-weight: vars.$font-weight-bold;
-      color: vars.$dark;
-      margin-bottom: vars.$spacing-md;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-4;
       line-height: 1.3;
       
       &.dark {
@@ -153,11 +153,11 @@
   
   // Gradient variations
   .gradient-blue {
-    --gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    --gradient: linear-gradient(135deg, vars.$primary-500 0%, vars.$primary-700 100%);
   }
   
   .gradient-purple {
-    --gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    --gradient: linear-gradient(135deg, vars.$secondary-purple 0%, vars.$secondary-purple-light 100%);
   }
   
   .gradient-pink {
@@ -165,11 +165,11 @@
   }
   
   .gradient-green {
-    --gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient: linear-gradient(135deg, vars.$secondary-green 0%, vars.$secondary-green-light 100%);
   }
   
   .gradient-orange {
-    --gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --gradient: linear-gradient(135deg, vars.$secondary-orange 0%, vars.$secondary-orange-light 100%);
   }
   
   .gradient-teal {

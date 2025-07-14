@@ -3,23 +3,23 @@
 @use '../base/_variables' as vars;
 
 .how-it-works-section {
-  padding: vars.$spacing-4xl 0;
+  padding: vars.$space-20 0;
   background: linear-gradient(135deg, vars.$gray-50 0%, vars.$white 100%);
   
   &.dark {
-    background: linear-gradient(135deg, vars.$dark 0%, vars.$dark-2 100%);
+    background: linear-gradient(135deg, vars.$bg-dark 0%, vars.$bg-dark-2 100%);
   }
   
   // Section header
   .section-header {
     text-align: center;
-    margin-bottom: vars.$spacing-4xl;
+    margin-bottom: vars.$space-20;
     
     .section-title {
       font-size: clamp(vars.$font-size-3xl, 4vw, vars.$font-size-5xl);
       font-weight: vars.$font-weight-extrabold;
-      color: vars.$dark;
-      margin-bottom: vars.$spacing-md;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-4;
       
       &.dark {
         color: vars.$gray-50;
@@ -41,16 +41,13 @@
   .steps-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 vars.$spacing-md;
+    padding: 0 vars.$space-4;
   }
   
   // Individual step
   .step {
     display: grid;
-    // grid-template-columns: 1fr 1fr;
-    // gap: vars.$spacing-3xl;
-    //align-items: center;
-    margin-bottom: vars.$spacing-4xl;
+    margin-bottom: vars.$space-20;
     
     &:nth-child(even) {
       .step-content {
@@ -74,15 +71,14 @@
       border-radius: 50%;
       font-weight: vars.$font-weight-bold;
       font-size: vars.$font-size-lg;
-      //margin-bottom: vars.$spacing-lg;
     }
     
     // Step title
     .step-title {
       font-size: vars.$font-size-3xl;
       font-weight: vars.$font-weight-bold;
-      color: vars.$dark;
-      margin-bottom: vars.$spacing-lg;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-6;
       line-height: 1.2;
       
       &.dark {
@@ -94,7 +90,7 @@
     .step-description {
       color: vars.$gray-600;
       line-height: vars.$line-height-relaxed;
-      margin-bottom: vars.$spacing-xl;
+      margin-bottom: vars.$space-5;
       
       &.dark {
         color: vars.$gray-300;
@@ -105,19 +101,19 @@
     .pod-types-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: vars.$spacing-lg;
-      margin-top: vars.$spacing-xl;
+      gap: vars.$space-6;
+      margin-top: vars.$space-5;
     }
     
     .pod-type {
       background: vars.$white;
       border-radius: vars.$border-radius-lg;
-      padding: vars.$spacing-lg;
+      padding: vars.$space-6;
       box-shadow: vars.$shadow-md;
       transition: all vars.$transition-normal;
       
       &.dark {
-        background: vars.$dark-2;
+        background: vars.$bg-dark-2;
         box-shadow: vars.$shadow-lg;
       }
       
@@ -128,8 +124,8 @@
       
       .pod-name {
         font-weight: vars.$font-weight-bold;
-        color: vars.$dark;
-        margin-bottom: vars.$spacing-sm;
+        color: vars.$text-primary;
+        margin-bottom: vars.$space-2;
         
         &.dark {
           color: vars.$gray-50;
@@ -151,13 +147,13 @@
     .benefits-list {
       list-style: none;
       padding: 0;
-      margin-top: vars.$spacing-xl;
+      margin-top: vars.$space-5;
     }
     
     .benefit-item {
       display: flex;
       align-items: center;
-      margin-bottom: vars.$spacing-md;
+      margin-bottom: vars.$space-4;
       
       .benefit-icon {
         width: 1.5rem;
@@ -167,7 +163,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: vars.$spacing-md;
+        margin-right: vars.$space-4;
         flex-shrink: 0;
         
         &::before {
@@ -192,19 +188,19 @@
     .pod-composition {
       background: vars.$white;
       border-radius: vars.$border-radius-xl;
-      padding: vars.$spacing-2xl;
+      padding: vars.$space-12;
       box-shadow: vars.$shadow-lg;
-      margin-top: vars.$spacing-xl;
+      margin-top: vars.$space-5;
       
       &.dark {
-        background: vars.$dark-2;
+        background: vars.$bg-dark-2;
         box-shadow: vars.$shadow-2xl;
       }
       
       .composition-title {
         font-weight: vars.$font-weight-bold;
-        color: vars.$dark;
-        margin-bottom: vars.$spacing-lg;
+        color: vars.$text-primary;
+        margin-bottom: vars.$space-6;
         font-size: vars.$font-size-lg;
         
         &.dark {
@@ -215,17 +211,17 @@
       .composition-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: vars.$spacing-md;
+        gap: vars.$space-4;
       }
       
       .composition-item {
         text-align: center;
-        padding: vars.$spacing-md;
+        padding: vars.$space-4;
         background: vars.$gray-50;
         border-radius: vars.$border-radius-md;
         
         &.dark {
-          background: vars.$dark-3;
+          background: vars.$bg-dark-3;
         }
         
         .item-icon {
@@ -236,7 +232,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 auto vars.$spacing-sm;
+          margin: 0 auto vars.$space-2;
           
           &::before {
             content: '';
@@ -249,7 +245,7 @@
         
         .item-name {
           font-weight: vars.$font-weight-semibold;
-          color: vars.$dark;
+          color: vars.$text-primary;
           font-size: vars.$font-size-sm;
           
           &.dark {
@@ -263,19 +259,19 @@
     .adaptability-features {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: vars.$spacing-lg;
-      margin-top: vars.$spacing-xl;
+      gap: vars.$space-6;
+      margin-top: vars.$space-5;
     }
     
     .adaptability-feature {
       background: vars.$white;
       border-radius: vars.$border-radius-lg;
-      padding: vars.$spacing-lg;
+      padding: vars.$space-6;
       box-shadow: vars.$shadow-md;
       transition: all vars.$transition-normal;
       
       &.dark {
-        background: vars.$dark-2;
+        background: vars.$bg-dark-2;
         box-shadow: vars.$shadow-lg;
       }
       
@@ -286,8 +282,8 @@
       
       .feature-title {
         font-weight: vars.$font-weight-bold;
-        color: vars.$dark;
-        margin-bottom: vars.$spacing-sm;
+        color: vars.$text-primary;
+        margin-bottom: vars.$space-2;
         
         &.dark {
           color: vars.$gray-50;
@@ -318,7 +314,7 @@
       max-width: 400px;
       height: 300px;
       background: vars.$gradient-primary;
-      border-radius: vars.$border-radius-3xl;
+      border-radius: vars.$border-radius-2xl;
       display: flex;
       align-items: center;
       justify-content: center;

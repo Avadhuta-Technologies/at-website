@@ -21,9 +21,9 @@
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(circle at 20% 80%, rgba(vars.$brand-indigo, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(vars.$brand-pink, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(vars.$brand-cyan, 0.2) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, rgba(vars.$primary-600, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(vars.$secondary-purple, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(vars.$secondary-green, 0.2) 0%, transparent 50%);
     animation: backgroundShift 20s ease-in-out infinite;
   }
   
@@ -68,29 +68,29 @@
     text-align: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 vars.$spacing-lg;
+    padding: 0 vars.$space-6;
   }
   
   // Badge styles
   .hero-badge {
     display: inline-flex;
     align-items: center;
-    padding: vars.$spacing-md vars.$spacing-xl;
+    padding: vars.$space-4 vars.$space-5;
     background: vars.$gradient-secondary;
     color: white;
     font-size: vars.$font-size-sm;
     font-weight: vars.$font-weight-semibold;
     border-radius: 9999px;
-    margin-bottom: vars.$spacing-2xl;
+    margin-bottom: vars.$space-12;
     box-shadow: vars.$shadow-lg;
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 15px 35px rgba(124, 58, 237, 0.4);
     }
     
     .badge-icon {
-      margin-right: vars.$spacing-xs;
+      margin-right: vars.$space-2;
       width: 1rem;
       height: 1rem;
     }
@@ -98,10 +98,10 @@
   
   // Main heading
   .hero-title {
-    font-size: clamp(vars.$font-size-4xl, 5vw, vars.$font-size-7xl);
+    font-size: clamp(vars.$font-size-4xl, 5vw, vars.$font-size-6xl);
     font-weight: vars.$font-weight-extrabold;
-    color: vars.$dark;
-    margin-bottom: vars.$spacing-xl;
+    color: vars.$text-primary;
+    margin-bottom: vars.$space-5;
     background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #F472B6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -124,7 +124,7 @@
   .hero-subtitle {
     font-size: vars.$font-size-lg;
     color: vars.$gray-600;
-    margin-bottom: vars.$spacing-lg;
+    margin-bottom: vars.$space-6;
     line-height: 1.4;
     
     &.dark {
@@ -136,7 +136,7 @@
   .hero-description {
     font-size: vars.$font-size-base;
     color: vars.$gray-500;
-    margin-bottom: vars.$spacing-2xl;
+    margin-bottom: vars.$space-12;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -168,7 +168,7 @@
     justify-content: center;
     padding: 1rem 2rem;
     background: white;
-    color: #3B82F6;
+    color: vars.$primary-600;
     font-weight: 600;
     border-radius: 0.75rem;
     text-decoration: none;
@@ -208,7 +208,7 @@
     
     &:hover {
       background: white;
-      color: #3B82F6;
+      color: vars.$primary-600;
       transform: translateY(-2px) scale(1.05);
     }
     
@@ -235,14 +235,14 @@
     .stat-item {
       text-align: center;
       
-             .stat-card {
-         background: rgba(255, 255, 255, 0.1);
-         -webkit-backdrop-filter: blur(10px);
-         backdrop-filter: blur(10px);
-         border: 1px solid rgba(255, 255, 255, 0.2);
-         border-radius: 1rem;
-         padding: 1.5rem;
-         transition: all 0.3s ease;
+      .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
         
         &:hover {
           background: rgba(255, 255, 255, 0.2);
@@ -265,7 +265,7 @@
       }
       
       &:hover .stat-value {
-        color: #60A5FA;
+        color: vars.$primary-400;
       }
     }
   }

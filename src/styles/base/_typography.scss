@@ -22,7 +22,6 @@
 .text-4xl { font-size: vars.$font-size-4xl; }
 .text-5xl { font-size: vars.$font-size-5xl; }
 .text-6xl { font-size: vars.$font-size-6xl; }
-.text-7xl { font-size: vars.$font-size-7xl; }
 
 // Font weights
 .font-light { font-weight: vars.$font-weight-light; }
@@ -91,7 +90,6 @@
   .sm\:text-4xl { font-size: vars.$font-size-4xl; }
   .sm\:text-5xl { font-size: vars.$font-size-5xl; }
   .sm\:text-6xl { font-size: vars.$font-size-6xl; }
-  .sm\:text-7xl { font-size: vars.$font-size-7xl; }
 }
 
 @media (min-width: vars.$breakpoint-md) {
@@ -105,7 +103,6 @@
   .md\:text-4xl { font-size: vars.$font-size-4xl; }
   .md\:text-5xl { font-size: vars.$font-size-5xl; }
   .md\:text-6xl { font-size: vars.$font-size-6xl; }
-  .md\:text-7xl { font-size: vars.$font-size-7xl; }
 }
 
 @media (min-width: vars.$breakpoint-lg) {
@@ -119,7 +116,6 @@
   .lg\:text-4xl { font-size: vars.$font-size-4xl; }
   .lg\:text-5xl { font-size: vars.$font-size-5xl; }
   .lg\:text-6xl { font-size: vars.$font-size-6xl; }
-  .lg\:text-7xl { font-size: vars.$font-size-7xl; }
 }
 
 @media (min-width: vars.$breakpoint-xl) {
@@ -133,5 +129,4 @@
   .xl\:text-4xl { font-size: vars.$font-size-4xl; }
   .xl\:text-5xl { font-size: vars.$font-size-5xl; }
   .xl\:text-6xl { font-size: vars.$font-size-6xl; }
-  .xl\:text-7xl { font-size: vars.$font-size-7xl; }
 } 

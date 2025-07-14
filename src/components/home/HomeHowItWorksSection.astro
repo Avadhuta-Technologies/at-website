@@ -1,122 +1,134 @@
 ---
-import { homeHowItWorksData } from '../../content/home/_howItWorks.js';
-
-interface Props {
-  data?: typeof homeHowItWorksData;
-  className?: string;
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    steps: Array<{
+      number: string;
+      title: string;
+      description: string;
+      icon: string;
+      podTypes?: Array<{
+        name: string;
+        description: string;
+      }>;
+      benefits?: string[];
+      compositionTitle?: string;
+      composition?: string[];
+      adaptabilityTitle?: string;
+      adaptabilityFeatures?: Array<{
+        title: string;
+        description: string;
+      }>;
+    }>;
+  };
 }
 
-const { data = homeHowItWorksData, className = "" } = Astro.props;
+const { data } = Astro.props;
 ---
 
-<section class={`how-it-works-section ${className}`}>
-  <div class="container">
-    <!-- Section Header -->
-    <div class="section-header">
-      <div class="header-badge">
-        <span class="badge-text">Process</span>
-      </div>
-      <h2 class="section-title">{data.title}</h2>
-      {data.subtitle && <p class="section-description">{data.subtitle}</p>}
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 leading-relaxed">
+        {data.subtitle}
+      </p>
     </div>
     
-    <!-- Steps Flow -->
-    <div class="steps-flow">
-      
-      <div class="steps-container">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {data.steps.map((step, index) => (
-          <div class="step" data-step={index + 1}>
-                        <!-- Step Icon Background -->
-            <div class="step-icon-bg">
-              {step.icon === "choose-pod" && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-              )}
-              {step.icon === "align-outcomes" && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              )}
-              {step.icon === "pod-working" && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              )}
-              {step.icon === "ship-scale" && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              )}
+          <div class="step bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300">
+            <!-- Step Header -->
+            <div class="flex items-center mb-4">
+              <div class="flex-shrink-0 w-10 h-10 bg-primary-600 text-white font-bold text-lg rounded-full flex items-center justify-center mr-4">
+                {step.number}
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900">
+                {step.title}
+              </h3>
             </div>
             
-            <!-- Step Content -->
-            <div class="step-content">
-              <h3 class="step-title"> <div class="step-number">{step.number}</div>{step.title}</h3>
-              <p class="step-description">{step.description}</p>
-              
-              <!-- Step 1: Pod Types -->
-              {step.podTypes && (                
-                <div class="adaptability-items">
-                    {step.podTypes.map((pod) => (
-                      <div class="adaptability-item">
-                        <h5>{pod.name}</h5>
-                        <p>{pod.description}</p>
+            <!-- Step Description -->
+            <p class="text-gray-600 leading-relaxed mb-6">
+              {step.description}
+            </p>
+            
+            <!-- Pod Types (for step 1) -->
+            {step.podTypes && (
+              <div class="mb-6">
+                <h4 class="font-semibold text-gray-900 mb-3">Available Pods:</h4>
+                <div class="space-y-2">
+                  {step.podTypes.map((pod) => (
+                    <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      <div class="w-2 h-2 bg-primary-600 rounded-full mr-3"></div>
+                      <div>
+                        <div class="font-medium text-gray-900 text-sm">{pod.name}</div>
+                        <div class="text-gray-600 text-xs">{pod.description}</div>
                       </div>
-                    ))}
-                </div>
-              )}
-              
-              <!-- Step 2: Benefits -->
-              {step.benefits && (
-                <div class="benefits">
-                  {step.benefits.map((benefit) => (
-                    <div class="benefit">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{benefit}</span>
                     </div>
                   ))}
                 </div>
-              )}
-              
-              <!-- Step 3: Composition -->
-              {step.composition && (
-                <div class="composition">
-                  <h4>{step.compositionTitle}</h4>
-                  <div class="composition-items">
-                    {step.composition.map((item) => (
-                      <div class="composition-item">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
+              </div>
+            )}
+            
+            <!-- Benefits (for step 2) -->
+            {step.benefits && (
+              <div class="mb-6">
+                <h4 class="font-semibold text-gray-900 mb-3">Key Benefits:</h4>
+                <div class="space-y-2">
+                  {step.benefits.map((benefit) => (
+                    <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
+                      <svg class="w-4 h-4 text-green-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span class="text-gray-700 text-sm">{benefit}</span>
+                    </div>
+                  ))}
                 </div>
-              )}
-              
-              <!-- Step 4: Adaptability -->
-              {step.adaptabilityFeatures && (
-                <div class="adaptability">
-                  <h4>{step.adaptabilityTitle}</h4>
-                  <div class="adaptability-items">
-                    {step.adaptabilityFeatures.map((feature) => (
-                      <div class="adaptability-item">
-                        <h5>{feature.title}</h5>
-                        <p>{feature.description}</p>
-                      </div>
-                    ))}
-                  </div>
+              </div>
+            )}
+            
+            <!-- Composition (for step 3) -->
+            {step.composition && (
+              <div class="mb-6">
+                <h4 class="font-semibold text-gray-900 mb-3">{step.compositionTitle}</h4>
+                <div class="space-y-2">
+                  {step.composition.map((item) => (
+                    <div class="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <svg class="w-4 h-4 text-blue-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                      <span class="text-gray-700 text-sm">{item}</span>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+            
+            <!-- Adaptability Features (for step 4) -->
+            {step.adaptabilityFeatures && (
+              <div class="mb-6">
+                <h4 class="font-semibold text-gray-900 mb-3">{step.adaptabilityTitle}</h4>
+                <div class="space-y-3">
+                  {step.adaptabilityFeatures.map((feature) => (
+                    <div class="p-3 bg-amber-50 rounded-lg border border-amber-200">
+                      <h5 class="font-medium text-amber-900 text-sm mb-1">{feature.title}</h5>
+                      <p class="text-amber-800 text-xs">{feature.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
     </div>
+    
+   
   </div>
 </section>
 

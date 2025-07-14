@@ -37,88 +37,97 @@ const displayData = caseStudies.length > 0 ? caseStudies : stories;
 const isCaseStudyFormat = caseStudies.length > 0;
 ---
 
-<section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+<section class="py-20 bg-white">
   <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-dark dark:text-white mb-6">{data.title}</h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">{data.subtitle}</p>
+    <!-- Section Header -->
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 leading-relaxed">
+        {data.subtitle}
+      </p>
     </div>
     
+    <!-- Case Studies Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {displayData.map((item: any, index) => (
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
           {isCaseStudyFormat ? (
             // Case Study Format
             <>
-              <!-- Header with engagement and success badges -->
-              <div class="p-8 border-b border-gray-100 dark:border-slate-700">
-                <div class="flex flex-wrap gap-3 mb-6">
-                  <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-sm font-semibold rounded-full">
+              <!-- Header -->
+              <div class="p-6 border-b border-gray-100">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
                     🔖 {item.engagement}
                   </span>
-                  <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-sm font-semibold rounded-full">
+                  <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
                     🔥 {item.success}
                   </span>
                 </div>
                 
-                <h3 class="text-2xl font-bold text-dark dark:text-white mb-4">{item.title}</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                  {item.title}
+                </h3>
                 
-                <div class="space-y-4">
+                <div class="space-y-3">
                   <div>
-                    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Client</span>
-                    <p class="text-gray-700 dark:text-gray-300 font-medium">{item.client}</p>
+                    <span class="text-sm font-medium text-gray-500 uppercase tracking-wide">Client</span>
+                    <p class="text-gray-700 font-medium">{item.client}</p>
                   </div>
                   
                   <div>
-                    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Challenge</span>
-                    <p class="text-gray-700 dark:text-gray-300">{item.challenge}</p>
+                    <span class="text-sm font-medium text-gray-500 uppercase tracking-wide">Challenge</span>
+                    <p class="text-gray-700">{item.challenge}</p>
                   </div>
                 </div>
               </div>
               
               <!-- Outcomes -->
-              <div class="p-8 bg-gray-50 dark:bg-slate-700">
-                <h4 class="text-lg font-bold text-dark dark:text-white mb-4">Outcome</h4>
-                <ul class="space-y-3">
+              <div class="p-6 bg-gray-50">
+                <h4 class="text-lg font-semibold text-gray-900 mb-4">Outcome</h4>
+                <div class="space-y-3">
                   {item.outcome.map((outcomeItem: string, itemIndex: number) => (
-                    <li class="flex items-start">
-                      <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-start">
+                      <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                       </svg>
-                      <span class="text-gray-700 dark:text-gray-300">{outcomeItem}</span>
-                    </li>
+                      <span class="text-sm text-gray-700">{outcomeItem}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
               
               <!-- Testimonial -->
-              <div class="p-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+              <div class="p-6 bg-blue-50">
                 <div class="relative">
-                  <svg class="w-8 h-8 text-blue-400 mb-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-6 h-6 text-blue-400 mb-3" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                   </svg>
-                  <blockquote class="text-gray-700 dark:text-gray-300 italic mb-4">
+                  <blockquote class="text-gray-700 italic mb-4 text-sm">
                     "{item.testimonial.quote}"
                   </blockquote>
                   <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3">
                       {item.testimonial.author.split(' ').map((n: string) => n[0]).join('')}
                     </div>
                     <div>
-                      <div class="font-semibold text-dark dark:text-white">{item.testimonial.author}</div>
-                      <div class="text-sm text-gray-500 dark:text-gray-400">{item.testimonial.role}</div>
+                      <div class="font-semibold text-gray-900 text-sm">{item.testimonial.author}</div>
+                      <div class="text-xs text-gray-500">{item.testimonial.role}</div>
                     </div>
                   </div>
                 </div>
               </div>
               
               <!-- CTA -->
-              <div class="p-8 bg-white dark:bg-slate-800">
+              <div class="p-6">
                 <a 
                   href={item.readMoreLink}
-                  class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                  <span>Read Case Study</span>
-                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  class="btn btn-primary btn-md btn-with-icon group w-full"
+                >
+                  <span class="btn-text">Read Case Study</span>
+                  <svg class="w-4 h-4 btn-icon-right group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                   </svg>
                 </a>
@@ -127,10 +136,10 @@ const isCaseStudyFormat = caseStudies.length > 0;
           ) : (
             // Legacy Stories Format
             <div class="p-8 text-center">
-              <div class="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">{item.metric}</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">{item.metricLabel}</div>
-              <h3 class="text-xl font-bold text-dark dark:text-white mb-4">{item.title}</h3>
-              <p class="text-gray-600 dark:text-gray-400">{item.description}</p>
+              <div class="text-4xl font-bold text-blue-600 mb-2">{item.metric}</div>
+              <div class="text-sm text-gray-500 mb-4">{item.metricLabel}</div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-4">{item.title}</h3>
+              <p class="text-gray-600">{item.description}</p>
             </div>
           )}
         </div>

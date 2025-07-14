@@ -4,85 +4,102 @@
 @use '../base/_variables' as vars;
 
 .packs-grid-section {
-  padding: vars.$spacing-4xl 0;
+  padding: vars.$space-20 0;
   background: vars.$gradient-primary;
+  
   &.dark {
-    background: linear-gradient(135deg, vars.$dark 0%, vars.$dark-2 100%);
+    background: linear-gradient(135deg, vars.$bg-dark 0%, vars.$bg-dark-2 100%);
   }
+  
   .section-header {
     text-align: center;
-    margin-bottom: vars.$spacing-3xl;
+    margin-bottom: vars.$space-16;
+    
     .section-title {
       font-size: clamp(vars.$font-size-3xl, 4vw, vars.$font-size-5xl);
       font-weight: vars.$font-weight-extrabold;
-      color: vars.$dark;
-      margin-bottom: vars.$spacing-md;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-4;
+      
       &.dark {
         color: vars.$gray-50;
       }
     }
+    
     .section-description {
       color: vars.$gray-600;
+      
       &.dark {
         color: vars.$gray-200;
       }
     }
   }
+  
   .packs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: vars.$spacing-2xl;
+    gap: vars.$space-12;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 vars.$spacing-md;
+    padding: 0 vars.$space-4;
   }
+  
   .pack-card {
-    border-radius: vars.$border-radius-3xl;
-    padding: vars.$spacing-2xl;
+    border-radius: vars.$border-radius-2xl;
+    padding: vars.$space-12;
     box-shadow: vars.$shadow-lg;
     background: vars.$white;
     transition: all vars.$transition-slow;
+    
     &.dark {
-      background: vars.$dark;
+      background: vars.$bg-dark;
       box-shadow: vars.$shadow-2xl;
     }
+    
     .card-header {
       display: flex;
       align-items: center;
-      margin-bottom: vars.$spacing-xl;
+      margin-bottom: vars.$space-5;
+      
       .icon-container {
         width: 3rem;
         height: 3rem;
-        border-radius: vars.$border-radius-2xl;
+        border-radius: vars.$border-radius-xl;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: vars.$spacing-md;
+        margin-right: vars.$space-4;
         box-shadow: vars.$shadow-md;
         background: vars.$gradient-secondary;
+        
         img {
           width: 1.5rem;
           height: 1.5rem;
           filter: brightness(0) invert(1);
         }
       }
+      
       .card-title {
         font-size: vars.$font-size-2xl;
         font-weight: vars.$font-weight-bold;
-        color: vars.$dark;
-        margin-bottom: vars.$spacing-md;
+        color: vars.$text-primary;
+        margin-bottom: vars.$space-4;
+        
         &.dark {
           color: vars.$gray-50;
         }
       }
     }
+    
     .card-content {
       color: vars.$gray-500;
       line-height: vars.$line-height-relaxed;
+      
       &.dark {
         color: vars.$gray-300;
       }
     }
+    
     &:hover {
       transform: translateY(-8px);
       box-shadow: vars.$shadow-2xl;

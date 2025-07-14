@@ -22,84 +22,73 @@ export interface Props {
 const { data } = Astro.props;
 ---
 
-<section class="py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
-  <!-- Background Pattern -->
-  <div class="absolute inset-0 opacity-10">
-    <div class="absolute top-0 left-0 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-    <div class="absolute top-0 right-0 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
-    <div class="absolute bottom-0 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
-  </div>
-  
-  <div class="container mx-auto px-4 text-center relative z-10">
-    <!-- Main Headline -->
-    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-      {data.title}
-    </h2>
-    
-    <!-- Subtitle with enhanced typography -->
-    <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-4xl mx-auto leading-relaxed">
-      {data.subtitle}
-    </p>
-    
-    <!-- Benefits Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
-      {data.description.split('✅').filter(item => item.trim()).map((benefit, index) => (
-        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-300">
-          <div class="text-2xl mb-2">✅</div>
-          <div class="text-sm font-medium text-white">{benefit.trim()}</div>
-        </div>
-      ))}
-    </div>
-    
-    <!-- CTA Buttons -->
-    <div class="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-      <a 
-        href={data.primaryButton.url} 
-        class="group inline-flex items-center px-10 py-5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25">
-        <span>{data.primaryButton.text}</span>
-        <svg class="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-        </svg>
-      </a>
+<section class="py-20 bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
       
-      <a 
-        href={data.secondaryButton.url} 
-        class="group inline-flex items-center px-10 py-5 border-2 border-white/30 text-white font-bold text-lg rounded-2xl hover:border-blue-400 hover:text-blue-300 transition-all duration-300 backdrop-blur-sm">
-        <span>{data.secondaryButton.text}</span>
-        <svg class="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
-    
-    <!-- Contact Information -->
-    {data.contactInfo && (
-      <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 max-w-md mx-auto">
-        <div class="text-gray-300 mb-3">📩 Or reach us directly at:</div>
-        <div class="space-y-2">
-          <a 
-            href={`mailto:${data.contactInfo.email1}`}
-            class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300"
-          >
-            {data.contactInfo.email1}
-          </a>
-          <a 
-            href={`mailto:${data.contactInfo.email2}`}
-            class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300"
-          >
-            {data.contactInfo.email2}
-          </a>
-        </div>
+      <!-- Main Headline -->
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+        {data.title}
+      </h2>
+      
+      <!-- Subtitle -->
+      <p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+        {data.subtitle}
+      </p>
+      
+      <!-- Benefits Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
+        {data.description.split('✅').filter(item => item.trim()).map((benefit, index) => (
+          <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <div class="text-2xl mb-2">✅</div>
+            <div class="text-sm font-medium text-white">{benefit.trim()}</div>
+          </div>
+        ))}
       </div>
-    )}
+      
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <a 
+          href={data.primaryButton.url}
+          class="btn btn-gradient btn-xl btn-with-icon group"
+        >
+          <span class="btn-text">{data.primaryButton.text}</span>
+          <svg class="w-6 h-6 btn-icon-right group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+        
+        <a 
+          href={data.secondaryButton.url}
+          class="btn btn-secondary btn-xl btn-with-icon group"
+        >
+          <span class="btn-text">{data.secondaryButton.text}</span>
+          <svg class="w-5 h-5 btn-icon-right group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+      
+      <!-- Contact Information -->
+      {data.contactInfo && (
+        <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 max-w-md mx-auto">
+          <div class="text-gray-300 mb-3">📩 Or reach us directly at:</div>
+          <div class="space-y-2">
+            <a 
+              href={`mailto:${data.contactInfo.email1}`}
+              class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300"
+            >
+              {data.contactInfo.email1}
+            </a>
+            <a 
+              href={`mailto:${data.contactInfo.email2}`}
+              class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300"
+            >
+              {data.contactInfo.email2}
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
   </div>
-</section>
-
-<style>
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-  .animation-delay-4000 {
-    animation-delay: 4s;
-  }
-</style> 
+</section> 
