@@ -1,5 +1,7 @@
 // Hero Section Styles
 
+@use '../base/variables' as vars;
+
 .home-hero {
   position: relative;
   min-height: 100vh;
@@ -8,7 +10,7 @@
   justify-content: center;
   
   // Background gradients
-  background: $gradient-primary;
+  background: vars.$gradient-primary;
   
   // Animated background elements
   &::before {
@@ -19,9 +21,9 @@
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(circle at 20% 80%, rgba($brand-indigo, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba($brand-pink, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba($brand-cyan, 0.2) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, rgba(vars.$brand-indigo, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(vars.$brand-pink, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(vars.$brand-cyan, 0.2) 0%, transparent 50%);
     animation: backgroundShift 20s ease-in-out infinite;
   }
   
@@ -29,7 +31,7 @@
   .floating-element {
     position: absolute;
     border-radius: 50%;
-    background: rgba($white, 0.1);
+    background: rgba(vars.$white, 0.1);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     animation: float 6s ease-in-out infinite;
@@ -66,21 +68,21 @@
     text-align: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 $spacing-lg;
+    padding: 0 vars.$spacing-lg;
   }
   
   // Badge styles
   .hero-badge {
     display: inline-flex;
     align-items: center;
-    padding: $spacing-md $spacing-xl;
-    background: $gradient-secondary;
+    padding: vars.$spacing-md vars.$spacing-xl;
+    background: vars.$gradient-secondary;
     color: white;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
+    font-size: vars.$font-size-sm;
+    font-weight: vars.$font-weight-semibold;
     border-radius: 9999px;
-    margin-bottom: $spacing-2xl;
-    box-shadow: $shadow-lg;
+    margin-bottom: vars.$spacing-2xl;
+    box-shadow: vars.$shadow-lg;
     
     &:hover {
       transform: translateY(-2px);
@@ -88,7 +90,7 @@
     }
     
     .badge-icon {
-      margin-right: $spacing-xs;
+      margin-right: vars.$spacing-xs;
       width: 1rem;
       height: 1rem;
     }
@@ -96,10 +98,10 @@
   
   // Main heading
   .hero-title {
-    font-size: clamp($font-size-4xl, 5vw, $font-size-7xl);
-    font-weight: $font-weight-extrabold;
-    color: $dark;
-    margin-bottom: $spacing-xl;
+    font-size: clamp(vars.$font-size-4xl, 5vw, vars.$font-size-7xl);
+    font-weight: vars.$font-weight-extrabold;
+    color: vars.$dark;
+    margin-bottom: vars.$spacing-xl;
     background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #F472B6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -114,34 +116,34 @@
     }
     
     &.dark {
-      color: $gray-50;
+      color: vars.$gray-50;
     }
   }
   
   // Subtitle
   .hero-subtitle {
-    font-size: $font-size-lg;
-    color: $gray-600;
-    margin-bottom: $spacing-lg;
+    font-size: vars.$font-size-lg;
+    color: vars.$gray-600;
+    margin-bottom: vars.$spacing-lg;
     line-height: 1.4;
     
     &.dark {
-      color: $gray-200;
+      color: vars.$gray-200;
     }
   }
   
   // Description
   .hero-description {
-    font-size: $font-size-base;
-    color: $gray-500;
-    margin-bottom: $spacing-2xl;
+    font-size: vars.$font-size-base;
+    color: vars.$gray-500;
+    margin-bottom: vars.$spacing-2xl;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
     
     &.dark {
-      color: $gray-300;
+      color: vars.$gray-300;
     }
   }
   

@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { catalogUtils } from '../../content/catalog/_index.js';
 
 export async function getStaticPaths() {
-  const pods = catalogUtils.getAllProducts('pod');
+  const { pods } = catalogUtils.getAllProducts();
   return pods.map((pod) => ({
     params: { slug: pod.id },
     props: { pod },

@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { catalogUtils } from '../../content/catalog/_index.js';
 
 export async function getStaticPaths() {
-  const packs = catalogUtils.getAllProducts('pack');
+  const { packs } = catalogUtils.getAllProducts();
   return packs.map((pack) => ({
     params: { slug: pack.id },
     props: { pack },

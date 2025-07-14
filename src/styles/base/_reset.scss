@@ -1,5 +1,7 @@
 // CSS Reset and Base Styles
 
+@use 'variables' as vars;
+
 *,
 *::before,
 *::after {
@@ -14,8 +16,6 @@ html {
   text-size-adjust: 100%;
   scroll-behavior: smooth;
 }
-
-@use 'variables' as vars;
 
 body {
   margin: 0;

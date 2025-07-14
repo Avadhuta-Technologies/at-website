@@ -1,5 +1,8 @@
 // Main SCSS file - uses all other SCSS modules
 
+// Import CSS files first
+@import './animations.css';
+
 // Base styles
 @use 'base/reset';
 @use 'base/typography';
@@ -31,7 +34,6 @@
 @use 'animations/fade-in';
 @use 'animations/hover-effects';
 @use 'animations/scroll-triggered';
-@import './animations.css';
 
 // Components
 @use 'components/buttons';

@@ -18,7 +18,8 @@ if (data.featuredPodIds) {
   pods = data.featuredPodIds.map(id => catalogUtils.getProductById(id, 'pod')).filter(Boolean);
 } else {
   // Get all pods
-  pods = catalogUtils.getAllProducts('pod');
+  const allProducts = catalogUtils.getAllProducts();
+  pods = allProducts.pods || [];
 }
 
 // Color mapping for different pod types
@@ -43,7 +44,7 @@ const getColorClasses = (color: string) => {
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      {pods.map((pod, index) => {
+      {pods.filter(pod => pod !== null).map((pod, index) => {
         const colors = getColorClasses(pod.badgeColor);
         return (
           <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -54,15 +55,15 @@ const getColorClasses = (color: string) => {
                 </div>
                 <div>
                   <h3 class="text-xl font-bold text-dark dark:text-white">{pod.title}</h3>
-                  <div class="text-2xl font-bold text-gray-900 dark:text-white">{pod.engagement}</div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">{pod.priceNote}</div>
+                  <div class="text-2xl font-bold text-gray-900 dark:text-white">{pod.engagement || pod.priceINR}</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{pod.priceNote || pod.priceUSD}</div>
                 </div>
               </div>
               
               <p class="text-gray-600 dark:text-gray-300 mb-6">{pod.description}</p>
               
               <ul class="space-y-3 mb-6">
-                {pod.idealFor.slice(0, 3).map((feature) => (
+                {pod.idealFor && pod.idealFor.slice(0, 3).map((feature) => (
                   <li class="flex items-start text-sm">
                     <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -79,7 +80,7 @@ const getColorClasses = (color: string) => {
                   data-item-type="pod"
                   data-item-title={pod.title}
                   data-item-description={pod.description}
-                  data-item-price={pod.engagement}
+                  data-item-price={pod.engagement || pod.priceINR}
                   class={`flex-1 bg-gradient-to-r ${colors.bg} text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-all duration-300`}>
                   Add to Cart
                 </button>

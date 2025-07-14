@@ -1,33 +1,35 @@
 // Why Choose Section Styles
 
+@use '../base/variables' as vars;
+
 .why-choose-section {
-  padding: $spacing-4xl 0;
-  background: $gradient-primary;
+  padding: vars.$spacing-4xl 0;
+  background: vars.$gradient-primary;
   
   &.dark {
-    background: linear-gradient(135deg, $dark 0%, $dark-2 100%);
+    background: linear-gradient(135deg, vars.$dark 0%, vars.$dark-2 100%);
   }
   
   // Section header
   .section-header {
     text-align: center;
-    margin-bottom: $spacing-3xl;
+    margin-bottom: vars.$spacing-3xl;
     
     .section-title {
-      font-size: clamp($font-size-3xl, 4vw, $font-size-5xl);
-      font-weight: $font-weight-extrabold;
-      color: $dark;
-      margin-bottom: $spacing-md;
+      font-size: clamp(vars.$font-size-3xl, 4vw, vars.$font-size-5xl);
+      font-weight: vars.$font-weight-extrabold;
+      color: vars.$dark;
+      margin-bottom: vars.$spacing-md;
       
       &.dark {
-        color: $gray-50;
+        color: vars.$gray-50;
       }
     }
     
     .section-description {
-      color: $gray-600;
+      color: vars.$gray-600;
       &.dark {
-        color: $gray-200;
+        color: vars.$gray-200;
       }
     }
   }
@@ -36,25 +38,25 @@
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: $spacing-2xl;
+    gap: vars.$spacing-2xl;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 $spacing-md;
+    padding: 0 vars.$spacing-md;
   }
   
   // Individual card
   .why-choose-card {
     position: relative;
-    background: $white;
-    border-radius: $border-radius-3xl;
-    padding: $spacing-2xl;
-    box-shadow: $shadow-lg;
-    transition: all $transition-slow;
+    background: vars.$white;
+    border-radius: vars.$border-radius-3xl;
+    padding: vars.$spacing-2xl;
+    box-shadow: vars.$shadow-lg;
+    transition: all vars.$transition-slow;
     overflow: hidden;
     
     &.dark {
-      background: $dark;
-      box-shadow: $shadow-2xl;
+      background: vars.$dark;
+      box-shadow: vars.$shadow-2xl;
     }
     
     // Gradient overlay
@@ -84,13 +86,13 @@
     .icon-container {
       width: 4rem;
       height: 4rem;
-      border-radius: $border-radius-2xl;
+      border-radius: vars.$border-radius-2xl;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: $spacing-xl;
-      box-shadow: $shadow-md;
-      background: $gradient-secondary;
+      margin-bottom: vars.$spacing-xl;
+      box-shadow: vars.$shadow-md;
+      background: vars.$gradient-secondary;
       
       img {
         width: 2rem;
@@ -101,32 +103,32 @@
     
     // Card title
     .card-title {
-      font-size: $font-size-2xl;
-      font-weight: $font-weight-bold;
-      color: $dark;
-      margin-bottom: $spacing-md;
+      font-size: vars.$font-size-2xl;
+      font-weight: vars.$font-weight-bold;
+      color: vars.$dark;
+      margin-bottom: vars.$spacing-md;
       line-height: 1.3;
       
       &.dark {
-        color: $gray-50;
+        color: vars.$gray-50;
       }
     }
     
     // Card description
     .card-description {
-      color: $gray-500;
-      line-height: $line-height-relaxed;
+      color: vars.$gray-500;
+      line-height: vars.$line-height-relaxed;
       flex-grow: 1;
       
       &.dark {
-        color: $gray-300;
+        color: vars.$gray-300;
       }
     }
     
     // Hover effects
     &:hover {
       transform: translateY(-16px) scale(1.02);
-      box-shadow: $shadow-2xl;
+      box-shadow: vars.$shadow-2xl;
       
       .dark & {
         box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.5);
@@ -199,16 +201,6 @@
       
       .card-title {
         font-size: 1.25rem;
-      }
-      
-      .icon-container {
-        width: 3rem;
-        height: 3rem;
-        
-        img {
-          width: 1.5rem;
-          height: 1.5rem;
-        }
       }
     }
   }
