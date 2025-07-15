@@ -1,5 +1,5 @@
 export const ourWorkHeroData = {
   title: "Our Work",
-  subtitle: "A showcase of our expertise and impact",
-  description: "Discover how we've helped clients across industries achieve their goals with innovative digital solutions."
+  subtitle: "Solving Complex Problems Across Industries",
+  description: "From healthcare compliance and AI-driven hiring to immersive 3D visualizations and patrol tracking apps — we build purposeful software that delivers results. Explore how we apply cutting-edge technology to real-world business challenges."
 }; 

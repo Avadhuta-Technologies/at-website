@@ -1,6 +1,7 @@
+// Why Choose Section Content for Our Work page
 export const ourWorkWhyChooseData = {
   title: 'Why Choose Avadhuta Technologies?',
-  points: [
+  features: [
     {
       title: 'Problem-First Approach',
       description: 'We immerse ourselves in your domain before touching code.'
@@ -11,7 +12,7 @@ export const ourWorkWhyChooseData = {
     },
     {
       title: 'Cross-Domain Excellence',
-      description: 'We adapt fast — whether you are in pharma or furniture.'
+      description: 'We adapt fast — whether you\'re in pharma or furniture.'
     }
   ]
 }; 

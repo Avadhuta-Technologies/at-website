@@ -1,0 +1,55 @@
+---
+// Portfolio CTA Section Component for Our Work page
+interface Props {
+  data: {
+    title: string;
+    description: string;
+    buttonText: string;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<!-- Portfolio CTA Section -->
+<section class="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Section Header -->
+      <div class="mb-12">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          {data.title}
+        </h2>
+        <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          {data.description}
+        </p>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="flex justify-center">
+        <a 
+          href="/portfolio" 
+          class="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+        >
+          {data.buttonText}
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Custom styles for the portfolio CTA section */
+  .bg-gradient-to-br {
+    background: linear-gradient(135deg, var(--tw-gradient-stops));
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .bg-gradient-to-br {
+      background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    }
+  }
+</style> 

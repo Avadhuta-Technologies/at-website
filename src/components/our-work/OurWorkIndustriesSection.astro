@@ -1,5 +1,5 @@
  ---
-import { ourWorkIndustriesData } from '../../../content/our-work/_industries.js';
+import { ourWorkIndustriesData } from '../../content/our-work/_industries.js';
 
 interface Props {
   data?: typeof ourWorkIndustriesData;
@@ -36,15 +36,6 @@ const { data = ourWorkIndustriesData, className = "" } = Astro.props;
         </div>
       ))}
     </div>
-    
-    {data.moreIndustries && (
-      <div class="our-work-more-industries">
-        <p class="our-work-more-description">{data.moreIndustries.description}</p>
-        <a href="/portfolio" class="our-work-more-button">
-          {data.moreIndustries.buttonText}
-        </a>
-      </div>
-    )}
   </div>
 </section>
 

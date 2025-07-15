@@ -1,104 +1,75 @@
 ---
-import { ourWorkWhyChooseData } from '../../../content/our-work/_whyChoose.js';
-
+// Why Choose Section Component for Our Work page
 interface Props {
-  data?: typeof ourWorkWhyChooseData;
-  className?: string;
+  data: {
+    title: string;
+    features: Array<{
+      title: string;
+      description: string;
+    }>;
+  };
 }
 
-const { data = ourWorkWhyChooseData, className = "" } = Astro.props;
+const { data } = Astro.props;
 ---
 
-<section class={`our-work-why-choose-section ${className}`}>
-  <div class="our-work-why-choose-container">
-    <div class="our-work-why-choose-header">
-      <h2 class="our-work-why-choose-title">{data.title}</h2>
-    </div>
-    
-    <div class="our-work-why-choose-grid">
-      {data.points.map((point, index) => (
-        <div class="our-work-why-choose-card" data-point-index={index}>
-          <div class="our-work-why-choose-icon">
-            <div class="our-work-why-choose-icon-wrapper">
-              <svg class="our-work-why-choose-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+<!-- Why Choose Section -->
+<section class="py-20 bg-white dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          {data.title}
+        </h2>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="grid md:grid-cols-3 gap-8">
+        {data.features.map((feature, index) => (
+          <div class="group">
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 p-8 rounded-2xl h-full transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 border border-gray-100 dark:border-gray-700">
+              <!-- Feature Icon -->
+              <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-700 transition-colors duration-300">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {index === 0 && (
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                  )}
+                  {index === 1 && (
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  )}
+                  {index === 2 && (
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  )}
+                </svg>
+              </div>
+
+              <!-- Feature Content -->
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  {feature.title}
+                </h3>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
             </div>
           </div>
-          
-          <div class="our-work-why-choose-content">
-            <h3 class="our-work-why-choose-point-title">{point.title}</h3>
-            <p class="our-work-why-choose-point-description">{point.description}</p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .our-work-why-choose-section {
-    @apply py-20 bg-gray-50 dark:bg-gray-800;
+  /* Custom styles for the why choose section */
+  .group:hover .bg-gradient-to-br {
+    background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
   }
   
-  .our-work-why-choose-container {
-    @apply container mx-auto px-4;
-    max-width: 1200px;
-  }
-  
-  .our-work-why-choose-header {
-    @apply text-center mb-16;
-  }
-  
-  .our-work-why-choose-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
-  }
-  
-  .our-work-why-choose-grid {
-    @apply grid grid-cols-1 md:grid-cols-3 gap-8;
-  }
-  
-  .our-work-why-choose-card {
-    @apply bg-white dark:bg-gray-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  
-  .our-work-why-choose-icon {
-    @apply mb-6 flex justify-center;
-  }
-  
-  .our-work-why-choose-icon-wrapper {
-    @apply w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center;
-  }
-  
-  .our-work-why-choose-icon-svg {
-    @apply w-8 h-8 text-green-600 dark:text-green-400;
-  }
-  
-  .our-work-why-choose-content {
-    @apply text-center;
-  }
-  
-  .our-work-why-choose-point-title {
-    @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
-  }
-  
-  .our-work-why-choose-point-description {
-    @apply text-gray-600 dark:text-gray-300 leading-relaxed;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .our-work-why-choose-grid {
-      @apply grid-cols-1 gap-6;
-    }
-    
-    .our-work-why-choose-card {
-      @apply p-6;
-    }
-    
-    .our-work-why-choose-title {
-      @apply text-2xl md:text-3xl;
+  @media (prefers-color-scheme: dark) {
+    .group:hover .bg-gradient-to-br {
+      background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
     }
   }
 </style>

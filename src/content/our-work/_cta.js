@@ -1,13 +1,13 @@
 export const ourWorkCTAData = {
-  title: "Ready to Start Your Project?",
-  subtitle: "Let's discuss your requirements and create something amazing together.",
-  description: "Our team is ready to help you build, scale, and optimize your digital products. Get in touch to start your journey.",
+  title: "Ready to Build Something Exceptional?",
+  subtitle: "Whether you’re exploring an idea, scaling an existing product, or solving a complex workflow — we’re here to help you turn challenges into working software",
+  description: "Let’s talk about what we can build together.",
   primaryButton: {
-    text: "Get Started",
+    text: "Schedule Free Consultation",
     url: "/contact"
   },
   secondaryButton: {
-    text: "View Case Studies",
-    url: "/case-studies"
+    text: "contact@avadhutatech.com",
+    url: "mailto:contact@avadhutatech.com"
   }
 }; 
