@@ -1,0 +1,34 @@
+---
+interface Props {
+  pastUseCases: string[];
+}
+
+const { pastUseCases } = Astro.props;
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Past Use Cases</h2>
+      <p class="text-lg text-gray-600 leading-relaxed">Real projects we've successfully delivered</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      {pastUseCases.map((useCase: string, index: number) => (
+        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+          <div class="flex items-start">
+            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900 text-lg mb-2">Case Study {index + 1}</h3>
+              <p class="text-gray-600 leading-relaxed">{useCase}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

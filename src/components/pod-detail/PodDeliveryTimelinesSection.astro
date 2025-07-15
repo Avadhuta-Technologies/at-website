@@ -1,0 +1,31 @@
+---
+interface Props {
+  deliveryTimelines: string[];
+}
+
+const { deliveryTimelines } = Astro.props;
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Delivery Timelines</h2>
+      <p class="text-lg text-gray-600 leading-relaxed">Clear milestones and delivery schedule</p>
+    </div>
+    
+    <div class="max-w-4xl mx-auto">
+      <div class="space-y-6">
+        {deliveryTimelines.map((timeline: string, index: number) => (
+          <div class="flex items-start">
+            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0 mt-1">
+              <span class="text-primary-600 font-bold text-sm">{index + 1}</span>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-6 flex-1 border border-gray-200">
+              <p class="text-gray-800 leading-relaxed">{timeline}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section> 

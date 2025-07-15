@@ -1,0 +1,55 @@
+---
+interface Props {
+  whatsInPod: {
+    description: string;
+    teamComposition: string[];
+    upgradeNote?: string;
+  };
+}
+
+const { whatsInPod } = Astro.props;
+---
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What's in the Pod?</h2>
+      <p class="text-lg text-gray-600 leading-relaxed mb-8">{whatsInPod.description}</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      {whatsInPod.teamComposition.map((member: string, index: number) => (
+        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+          <div class="flex items-start">
+            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-gray-600 leading-relaxed">{member}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    {whatsInPod.upgradeNote && (
+      <div class="max-w-4xl mx-auto mt-12">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <div class="flex items-start">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-blue-900 mb-2">Upgrade Note</h3>
+              <p class="text-blue-800">{whatsInPod.upgradeNote}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</section> 
