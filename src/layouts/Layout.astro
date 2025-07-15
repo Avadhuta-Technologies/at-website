@@ -162,18 +162,15 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     </script>
     
     <!-- Non-critical JavaScript loaded asynchronously -->
-    <script type="module">
-      // Import and initialize scripts
-      import '../scripts/global-cart-init.ts';
-      import '../scripts/stickymenu.js';
-      import '../scripts/dropdown.js';
-      import '../scripts/darkMode.js';
-      import '../scripts/scrolltop.js';
-      import '../scripts/scrollmenu.js';
-      import '../scripts/testimonial.js';
-      import '../scripts/scrollAnimations.js';
-      import '../scripts/interactiveElements.js';
-      import '../scripts/scrollUtils.js';
-    </script>
+    <script type="module" src="/scripts/global-cart-init.js"></script>
+    <script type="module" src="/scripts/stickymenu.js"></script>
+    <script type="module" src="/scripts/dropdown.js"></script>
+    <script type="module" src="/scripts/darkMode.js"></script>
+    <script type="module" src="/scripts/scrolltop.js"></script>
+    <script type="module" src="/scripts/scrollmenu.js"></script>
+    <script type="module" src="/scripts/testimonial.js"></script>
+    <script type="module" src="/scripts/scrollAnimations.js"></script>
+    <script type="module" src="/scripts/interactiveElements.js"></script>
+    <script type="module" src="/scripts/scrollUtils.js"></script>
   </body>
 </html>
