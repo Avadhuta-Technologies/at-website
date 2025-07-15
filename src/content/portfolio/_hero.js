@@ -1,5 +1,5 @@
 export const portfolioHeroData = {
-  title: "Our Portfolio",
-  subtitle: "Showcasing innovative solutions across industries",
-  description: "Explore our diverse portfolio of successful projects, from ecommerce platforms to AI-powered tools and mobile applications."
+  title: "Project Portfolio",
+  subtitle: "Solving Real Problems Through Thoughtful Software",
+  description: "From AI and 3D visualization to workflow automation and compliance tech — our work spans industries and complexity levels, delivering impactful digital solutions that scale with your business."
 }; 

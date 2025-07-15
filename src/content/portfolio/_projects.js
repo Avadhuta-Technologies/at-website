@@ -1,33 +1,99 @@
-export const portfolioProjectsData = {
-  title: "Our Projects",
-  subtitle: "Showcasing our expertise across different industries and technologies",
-  projects: [
-    {
-      id: "ecommerce-platform",
-      title: "Ecommerce Platform",
-      description: "A scalable ecommerce solution with advanced features",
-      image: "/images/case-studies/placeholder.svg",
-      category: "Ecommerce",
-      technologies: ["React", "Node.js", "MongoDB"],
-      link: "/case-studies/ecommerce-platform"
-    },
-    {
-      id: "ai-powered-tool",
-      title: "AI-Powered Tool",
-      description: "Machine learning solution for data processing",
-      image: "/images/case-studies/placeholder.svg",
-      category: "AI/ML",
-      technologies: ["Python", "TensorFlow", "React"],
-      link: "/case-studies/ai-powered-tool"
-    },
-    {
-      id: "mobile-app",
-      title: "Mobile Application",
-      description: "Cross-platform mobile app with real-time features",
-      image: "/images/case-studies/placeholder.svg",
-      category: "Mobile",
-      technologies: ["React Native", "Firebase", "Node.js"],
-      link: "/case-studies/mobile-app"
-    }
-  ]
-}; 
+export const portfolioProjects = [
+  {
+    id: "ecommerce-storefront-platform",
+    title: "eCommerce Storefront Platform",
+    description: "A customizable eCommerce platform enabling telecom brands to launch and manage their own digital storefronts. The platform integrates seamlessly with backend systems for plan bundling, order management, and customer lifecycle operations.",
+    image: "/images/case-studies/ecommerce-platform.svg",
+    category: "Ecommerce",
+    industry: "eCommerce",
+    overview: "We developed a customizable eCommerce platform enabling telecom brands to launch and manage their own digital storefronts. The platform integrates seamlessly with backend systems for plan bundling, order management, and customer lifecycle operations.",
+    impact: "Allowed multiple brands to go digital swiftly, enabling new revenue streams and improved customer engagement.",
+    technologies: ["React", "Node.js", "MongoDB", "AWS", "Payment Gateway Integration"],
+  },
+  {
+    id: "3d-interior-visualization-tool",
+    title: "Browser-Based 3D Interior Visualization Tool",
+    description: "Built a 3D visualization tool for interior design companies, allowing users to place modular furniture in a virtual space, preview layouts in real-time, and generate specification documents for installation.",
+    image: "/images/case-studies/3d-visualization.svg",
+    category: "Visualization",
+    industry: "Interior Design / Visualization",
+    overview: "Built a 3D visualization tool for interior design companies, allowing users to place modular furniture in a virtual space, preview layouts in real-time, and generate specification documents for installation.",
+    impact: "Enhanced customer decision-making and reduced project lead times by enabling instant design previews.",
+    technologies: ["Three.js", "WebGL", "React", "Node.js", "3D Modeling"],
+  },
+  {
+    id: "ai-room-layout-generator",
+    title: "AI-Driven Room Layout Generator",
+    description: "Created an AI solution that suggests optimal room layouts based on user preferences, dimensions, and available catalog items. The engine supports rapid ideation and personalization.",
+    image: "/images/case-studies/ai-layout.svg",
+    category: "AI/ML",
+    industry: "Interior Design / AI",
+    overview: "Created an AI solution that suggests optimal room layouts based on user preferences, dimensions, and available catalog items. The engine supports rapid ideation and personalization.",
+    impact: "Enabled interior design firms to scale customer consultations while improving design quality.",
+    technologies: ["Python", "TensorFlow", "Machine Learning", "React", "Node.js"],
+  },
+  {
+    id: "regulatory-intelligence-automation",
+    title: "Regulatory Intelligence Workflow Automation",
+    description: "Developed a regulatory intelligence system to help pharma companies track global safety updates, assign tasks to analysts, and maintain a compliance audit trail.",
+    image: "/images/case-studies/regulatory.svg",
+    category: "Automation",
+    industry: "Pharma / Regulatory Compliance",
+    overview: "Developed a regulatory intelligence system to help pharma companies track global safety updates, assign tasks to analysts, and maintain a compliance audit trail.",
+    impact: "Digitized a traditionally manual workflow, significantly improving speed, traceability, and compliance readiness.",
+    technologies: ["Python", "Django", "PostgreSQL", "React", "Workflow Automation"],
+  },
+  {
+    id: "reconciliation-reporting-automation",
+    title: "Reconciliation and Reporting Automation",
+    description: "Engineered a reconciliation system to cross-verify internal records against regulatory submissions, flagging inconsistencies and automating follow-ups.",
+    image: "/images/case-studies/reconciliation.svg",
+    category: "Automation",
+    industry: "Pharma / Data Compliance",
+    overview: "Engineered a reconciliation system to cross-verify internal records against regulatory submissions, flagging inconsistencies and automating follow-ups.",
+    impact: "Improved reporting accuracy and compliance in post-marketing surveillance processes.",
+    technologies: ["Python", "Data Processing", "Automation", "React", "Node.js"],
+  },
+  {
+    id: "security-patrol-tracking-app",
+    title: "Security Guard Patrol & Incident Tracking App",
+    description: "A mobile application for on-ground security staff to log patrols, report incidents, and upload geotagged images. Management can view real-time activity via a control panel.",
+    image: "/images/case-studies/security-app.svg",
+    category: "Mobile",
+    industry: "Security Services",
+    overview: "A mobile application for on-ground security staff to log patrols, report incidents, and upload geotagged images. Management can view real-time activity via a control panel.",
+    impact: "Digitized manual reporting and improved service accountability, leading to higher customer retention for the client.",
+    technologies: ["React Native", "Firebase", "Node.js", "Geolocation", "Real-time Tracking"],
+  },
+  {
+    id: "ai-hiring-assistant-platform",
+    title: "AI-Based Hiring Assistant Platform",
+    description: "We built an AI-powered platform that conducts candidate screenings and interviews, evaluates responses, and shortlists applicants based on job-fit. It's currently used by startups and hiring firms.",
+    image: "/images/case-studies/ai-hiring.svg",
+    category: "AI/ML",
+    industry: "HRTech",
+    overview: "We built an AI-powered platform that conducts candidate screenings and interviews, evaluates responses, and shortlists applicants based on job-fit. It's currently used by startups and hiring firms.",
+    impact: "Processed over 1500 applications and helped hiring teams identify top candidates faster, with better quality assurance.",
+    technologies: ["Python", "AI/ML", "Natural Language Processing", "React", "Node.js"],
+  }
+];
+
+export const portfolioCategories = [
+  "All",
+  "Ecommerce",
+  "Visualization", 
+  "AI/ML",
+  "Automation",
+  "Mobile"
+];
+
+export const portfolioIndustries = [
+  "All",
+  "eCommerce",
+  "Interior Design / Visualization",
+  "Interior Design / AI",
+  "Pharma / Regulatory Compliance",
+  "Pharma / Data Compliance",
+  "Security Services",
+  "HRTech"
+]; 

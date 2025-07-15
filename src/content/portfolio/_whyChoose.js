@@ -1,26 +1,18 @@
 export const portfolioWhyChooseData = {
-  title: "Why Choose Us for Your Portfolio?",
+  title: "Why Teams Work With Us",
   subtitle: "Showcasing innovation, reliability, and results across industries.",
   reasons: [
     {
-      icon: "🚀",
-      title: "Proven Track Record",
-      description: "Our portfolio highlights successful projects delivered for startups, enterprises, and everything in between."
+      title: "Complexity Handled with Clarity",
+      description: "We simplify intricate business requirements into smooth user experiences."
     },
     {
-      icon: "💡",
-      title: "Innovative Solutions",
-      description: "We leverage the latest technologies and creative thinking to solve complex business challenges."
+      title: "Agile and Scalable",
+      description: "We deliver quickly and design with future growth in mind."
     },
     {
-      icon: "🤝",
-      title: "Collaborative Approach",
-      description: "We work closely with clients to ensure their vision is realized and their goals are met."
-    },
-    {
-      icon: "📈",
-      title: "Measurable Impact",
-      description: "Our work drives real business results, from increased revenue to improved efficiency and customer satisfaction."
+      title: "Cross-Domain Expertise",
+      description: "From compliance-heavy pharma tech to real-time 3D experiences, we build versatile, high-impact software"
     }
   ]
 }; 
