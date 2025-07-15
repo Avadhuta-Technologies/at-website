@@ -2,13 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import ExplorePodsHeroSection from '../components/explore-pods/ExplorePodsHeroSection.astro';
-import ExplorePodsPodsSection from '../components/explore-pods/ExplorePodsPodsSection.astro';
+import ExploreAvailablePodsSection from '../components/explore-pods/ExploreAvailablePodsSection.astro';
 import ExplorePodsWhyChooseSection from '../components/explore-pods/ExplorePodsWhyChooseSection.astro';
 
 // Import isolated explore-pods content
 import { 
   explorePodsHeroData,
-  explorePodsPodsData,
+  exploreAvailablePodsData,
   explorePodsWhyChooseData
 } from '../content/explore-pods/_index.js';
 ---
@@ -21,11 +21,14 @@ import {
   
   <!-- Hero Section -->
   <ExplorePodsHeroSection data={explorePodsHeroData} />
-  
-   <!-- Why Choose Section -->
-   <ExplorePodsWhyChooseSection data={explorePodsWhyChooseData} />
+ 
+  <!-- Why Choose Section -->
+  <ExplorePodsWhyChooseSection data={explorePodsWhyChooseData} />
+
   <!-- Pods Section -->
-  <ExplorePodsPodsSection data={explorePodsPodsData} />
+  <ExploreAvailablePodsSection data={exploreAvailablePodsData} />
+
+  
   
  
 </Layout> 

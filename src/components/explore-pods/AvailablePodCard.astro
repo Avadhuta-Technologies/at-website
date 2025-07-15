@@ -1,0 +1,116 @@
+---
+export interface Props {
+  pod: {
+    name: string;
+    tagline: string;
+    idealFor: string[];
+    whatsInPod: {
+      description: string;
+      teamComposition: string[];
+      upgradeNote: string;
+    };
+    whatCanDo: string[];
+    deliveryTimelines: string[];
+    whyTrust: string[];
+    pastUseCases: string[];
+    pricing: string[];
+  };
+  index: number;
+}
+
+const { pod, index } = Astro.props;
+
+// Color mapping for different pod types
+const getColorClasses = (index: number) => {
+  const colors = [
+    { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', badge: 'bg-blue-100 text-blue-800' },
+    { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', badge: 'bg-purple-100 text-purple-800' },
+    { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', badge: 'bg-green-100 text-green-800' },
+    { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-700', badge: 'bg-pink-100 text-pink-800' },
+    { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', badge: 'bg-orange-100 text-orange-800' },
+    { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700', badge: 'bg-teal-100 text-teal-800' }
+  ];
+  return colors[index % colors.length];
+};
+
+const colors = getColorClasses(index);
+
+// Generate a simple ID from the pod name
+const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+---
+
+<div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+  <!-- Card Header -->
+  <div class="p-6 border-b border-gray-100">
+    <div class="flex items-start justify-between mb-4">
+      <div class={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center`}>
+        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+      </div>
+      <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors.badge}`}>
+        Pod
+      </span>
+    </div>
+    
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+      {pod.name}
+    </h3>
+    
+    <p class="text-sm text-gray-600 mb-3">
+      {pod.tagline}
+    </p>
+    
+    <div class="flex items-baseline space-x-2 mb-3">
+      <span class="text-2xl font-bold text-gray-900">
+        {pod.pricing[0]}
+      </span>
+    </div>
+    
+    {pod.pricing[1] && (
+      <p class="text-sm text-gray-500 mb-4">
+        {pod.pricing[1]}
+      </p>
+    )}
+  </div>
+  
+  <!-- Card Body -->
+  <div class="p-6">
+    <p class="text-gray-600 mb-6 leading-relaxed">
+      {pod.whatsInPod.description}
+    </p>
+    
+    <!-- Features List -->
+    <div class="space-y-3 mb-6">
+      {pod.idealFor.slice(0, 3).map((feature: string) => (
+        <div class="flex items-start">
+          <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span class="text-sm text-gray-600">{feature}</span>
+        </div>
+      ))}
+    </div>
+    
+    <div class="flex items-center justify-between">
+      <!-- CTA Button -->
+      <button 
+        data-add-to-cart
+        data-item-id={podId}
+        data-item-type="pod"
+        data-item-title={pod.name}
+        data-item-description={pod.whatsInPod.description}
+        data-item-price={pod.pricing[0]}
+        class="w-full mr-1 inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200">
+        Reserve Pod
+      </button>
+   
+      <a 
+        href={`/pods/${podId}`} 
+        class="w-full ml-1 inline-flex items-center justify-center px-4 py-2 bg-white border border-primary-600 text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors duration-200"
+      >
+        View Details
+      </a>
+    </div>
+  </div>
+</div> 
