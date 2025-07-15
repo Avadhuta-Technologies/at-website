@@ -254,10 +254,10 @@ const getColorClasses = (color: string) => {
 
 <script>
   // Component-specific animations
-  import { initScrollAnimations } from '../../scripts/scrollAnimations.js';
-  
-  // Initialize scroll animations for this component
   document.addEventListener('DOMContentLoaded', () => {
-    initScrollAnimations();
+    // Check if scrollAnimations is available globally
+    if (typeof window.initScrollAnimations === 'function') {
+      window.initScrollAnimations();
+    }
   });
 </script> 

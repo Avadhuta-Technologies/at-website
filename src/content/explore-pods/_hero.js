@@ -1,5 +1,5 @@
 export const explorePodsHeroData = {
-  title: "Explore Our Pods",
+  title: "Explore High-Impact Service Pods Built for Results",
   subtitle: "Find the perfect team for your project",
-  description: "Choose from our specialized development pods, each designed to deliver specific outcomes for your project needs."
+  description: "Modular, outcome-driven pods combining expert talent and smart AI to help you build faster, automate smarter, and grow sustainably — without the chaos of traditional software services."
 }; 
