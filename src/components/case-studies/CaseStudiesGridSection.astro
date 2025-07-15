@@ -1,65 +1,303 @@
 ---
+import { caseStudiesData } from '../../content/case-studies/_case-studies.js';
+
 export interface Props {
-  data: {
+  data?: Array<any> | {
     title: string;
     subtitle: string;
-    caseStudies: Array<{
-      id: string;
-      title: string;
-      description: string;
-      image: string;
-      category: string;
-      duration: string;
-      teamSize: string;
-      link: string;
-    }>;
+    caseStudies?: Array<any>;
   };
 }
 
 const { data } = Astro.props;
+const studies = Array.isArray(data) ? data : (data?.caseStudies || caseStudiesData.caseStudies);
+const title = Array.isArray(data) ? "Case Studies" : ((data as any)?.title || "Case Studies");
+const subtitle = Array.isArray(data) ? "Real solutions, real results" : ((data as any)?.subtitle || "Real solutions, real results");
+
+// Group case studies by industry
+const groupedStudies = studies.reduce((acc, study) => {
+  const industry = study.industry;
+  if (!acc[industry]) {
+    acc[industry] = [];
+  }
+  acc[industry].push(study);
+  return acc;
+}, {} as Record<string, any[]>);
+
+const industries = Object.keys(groupedStudies);
+
+interface ColorClasses {
+  bg: string;
+  border: string;
+  text: string;
+  badge: string;
+}
+
+// Color mapping for different badge colors
+const getColorClasses = (color: string): ColorClasses => {
+  const colorMap: Record<string, ColorClasses> = {
+    blue: { 
+      bg: 'bg-blue-50', 
+      border: 'border-blue-200', 
+      text: 'text-blue-700', 
+      badge: 'bg-blue-100 text-blue-800' 
+    },
+    green: { 
+      bg: 'bg-green-50', 
+      border: 'border-green-200', 
+      text: 'text-green-700', 
+      badge: 'bg-green-100 text-green-800' 
+    },
+    purple: { 
+      bg: 'bg-purple-50', 
+      border: 'border-purple-200', 
+      text: 'text-purple-700', 
+      badge: 'bg-purple-100 text-purple-800' 
+    },
+    pink: { 
+      bg: 'bg-pink-50', 
+      border: 'border-pink-200', 
+      text: 'text-pink-700', 
+      badge: 'bg-pink-100 text-pink-800' 
+    },
+    orange: { 
+      bg: 'bg-orange-50', 
+      border: 'border-orange-200', 
+      text: 'text-orange-700', 
+      badge: 'bg-orange-100 text-orange-800' 
+    },
+    teal: { 
+      bg: 'bg-teal-50', 
+      border: 'border-teal-200', 
+      text: 'text-teal-700', 
+      badge: 'bg-teal-100 text-teal-800' 
+    }
+  };
+  return colorMap[color] || colorMap.blue;
+};
 ---
 
-<section class="py-16 bg-white dark:bg-slate-900">
+<section id="case-studies-grid" class="py-20 bg-white">
   <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-dark dark:text-white mb-4">{data.title}</h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400">{data.subtitle}</p>
+    <!-- Section Header -->
+    <div class="max-w-3xl mx-auto text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        {title}
+      </h2>
+      <p class="text-lg text-gray-600 leading-relaxed">
+        {subtitle}
+      </p>
     </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {data.caseStudies.map((study, index) => (
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-          <div class="relative overflow-hidden rounded-t-2xl">
-            <img 
-              src={study.image} 
-              alt={study.title}
-              class="w-full h-48 object-cover"
-              loading="lazy"
-            />
-            <div class="absolute top-4 left-4">
-              <span class="px-3 py-1 bg-blue-500 text-white text-sm font-medium rounded-full">
-                {study.category}
-              </span>
+
+    <!-- Tabs Navigation -->
+    <div class="flex flex-wrap justify-center mb-16">
+      <div class="flex flex-wrap gap-2 md:gap-4 justify-center">
+        <button 
+          class="tab-button active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-lg transition-all duration-200 bg-primary-600 text-white hover:bg-primary-700"
+          data-tab="all"
+        >
+          All Industries
+        </button>
+        {industries.map((industry) => (
+          <button 
+            class="tab-button px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-lg transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200"
+            data-tab={industry.toLowerCase().replace(/\s+/g, '-')}
+          >
+            {industry}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content" data-tab="all">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {studies.map((study: any, index: number) => {
+          const colors = getColorClasses(study.badgeColor);
+          return (
+            <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+              <!-- Card Header -->
+              <div class="p-6 border-b border-gray-100">
+                <div class="flex items-start justify-between mb-4">
+                  <div class={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center`}>
+                    <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                  </div>
+                  <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors.badge}`}>
+                    {study.badge}
+                  </span>
+                </div>
+                
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                  {study.title}
+                </h3>
+                
+                <div class="flex items-baseline space-x-2 mb-3">
+                  <span class="text-sm text-gray-500">
+                    {study.industry}
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Card Body -->
+              <div class="p-6">
+                <p class="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                  {study.problemStatement}
+                </p>
+                
+                <!-- Project Details -->
+                <div class="space-y-3 mb-6">
+                  <div class="flex items-start">
+                    <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-sm text-gray-600">{study.duration}</span>
+                  </div>
+                  <div class="flex items-start">
+                    <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="text-sm text-gray-600">{study.teamComposition}</span>
+                  </div>
+                </div>
+                
+                <!-- CTA Button -->
+                <a href={`/case-studies/${study.id}`} class="w-full inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group">
+                  <span>View Case Study</span>
+                  <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
+              </div>
             </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-dark dark:text-white mb-3">{study.title}</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-4">{study.description}</p>
-            
-            <div class="flex items-center justify-between mb-4 text-sm text-gray-500 dark:text-gray-400">
-              <span>Duration: {study.duration}</span>
-              <span>Team: {study.teamSize}</span>
-            </div>
-            
-            <a href={study.link} class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
-              <span>View Case Study</span>
-              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-              </svg>
-            </a>
-          </div>
+          );
+        })}
+      </div>
+    </div>
+
+    {industries.map((industry) => (
+      <div class="tab-content hidden" data-tab={industry.toLowerCase().replace(/\s+/g, '-')}>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {groupedStudies[industry].map((study: any, index: number) => {
+            const colors = getColorClasses(study.badgeColor);
+            return (
+              <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <!-- Card Header -->
+                <div class="p-6 border-b border-gray-100">
+                  <div class="flex items-start justify-between mb-4">
+                    <div class={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center`}>
+                      <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                    <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors.badge}`}>
+                      {study.badge}
+                    </span>
+                  </div>
+                  
+                  <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                    {study.title}
+                  </h3>
+                  
+                  <div class="flex items-baseline space-x-2 mb-3">
+                    <span class="text-sm text-gray-500">
+                      {study.industry}
+                    </span>
+                  </div>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="p-6">
+                  <p class="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                    {study.problemStatement}
+                  </p>
+                  
+                  <!-- Project Details -->
+                  <div class="space-y-3 mb-6">
+                    <div class="flex items-start">
+                      <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <span class="text-sm text-gray-600">{study.duration}</span>
+                    </div>
+                    <div class="flex items-start">
+                      <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      </svg>
+                      <span class="text-sm text-gray-600">{study.teamComposition}</span>
+                    </div>
+                  </div>
+                  
+                  <!-- CTA Button -->
+                  <a href={`/case-studies/${study.id}`} class="w-full inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group">
+                    <span>View Case Study</span>
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      ))}
-    </div>
+      </div>
+    ))}
   </div>
-</section> 
+</section>
+
+<script>
+  // Tab functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+        
+        // Update button states
+        tabButtons.forEach(btn => {
+          btn.classList.remove('active', 'bg-primary-600', 'text-white');
+          btn.classList.add('bg-gray-100', 'text-gray-700');
+        });
+        button.classList.add('active', 'bg-primary-600', 'text-white');
+        button.classList.remove('bg-gray-100', 'text-gray-700');
+        
+        // Show/hide tab content
+        tabContents.forEach(content => {
+          content.classList.add('hidden');
+          if (content.getAttribute('data-tab') === targetTab) {
+            content.classList.remove('hidden');
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Responsive tab adjustments */
+  @media (max-width: 768px) {
+    .tab-button {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+</style>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style> 

@@ -4,7 +4,7 @@ export const caseStudiesData = {
     subtitle: "Real solutions, real results",
     description: "Explore our portfolio of successful projects across industries, from ecommerce platforms to AI-powered tools and mobile applications."
   },
-  caseStudies: [
+  caseStudies: [ 
     {
       id: "reach-ecommerce-store",
       title: "Reach Ecommerce Store",
