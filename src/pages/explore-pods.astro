@@ -4,31 +4,39 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import ExplorePodsHeroSection from '../components/explore-pods/ExplorePodsHeroSection.astro';
 import ExploreAvailablePodsSection from '../components/explore-pods/ExploreAvailablePodsSection.astro';
 import ExplorePodsWhyChooseSection from '../components/explore-pods/ExplorePodsWhyChooseSection.astro';
+import ExplorePodsFAQSection from '../components/explore-pods/ExplorePodsFAQSection.astro';
+import ExplorePodsCTASection from '../components/explore-pods/ExplorePodsCTASection.astro';
+import { explorePodsFAQData } from '../content/explore-pods/_index.js';
 
 // Import isolated explore-pods content
-import { 
+import {
   explorePodsHeroData,
   exploreAvailablePodsData,
-  explorePodsWhyChooseData
+  explorePodsWhyChooseData,
 } from '../content/explore-pods/_index.js';
+import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPodSection.astro';
 ---
 
-<Layout 
+<Layout
   description="Explore our specialized development pods. Find the perfect team for your project with our AI/ML, ecommerce, mobile, and product launch pods."
   title="Explore Pods | NovaPod.ai"
 >
-
-  
   <!-- Hero Section -->
   <ExplorePodsHeroSection data={explorePodsHeroData} />
- 
+
   <!-- Why Choose Section -->
   <ExplorePodsWhyChooseSection data={explorePodsWhyChooseData} />
 
   <!-- Pods Section -->
   <ExploreAvailablePodsSection data={exploreAvailablePodsData} />
 
-  
-  
- 
-</Layout> 
+  <!-- Custom Pod Section -->
+  <ExploreCustomPodSection />
+
+  <!-- FAQ Section -->
+  <ExplorePodsFAQSection data={explorePodsFAQData} />
+
+  <!-- CTA Section -->
+  <ExplorePodsCTASection />
+</Layout>
+
