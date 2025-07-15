@@ -9,29 +9,56 @@ interface Props {
 const { data = ourWorkIndustriesData, className = "" } = Astro.props;
 ---
 
-<section class={`our-work-industries-section ${className}`}>
-  <div class="our-work-industries-container">
-    <div class="our-work-industries-header">
-      <h2 class="our-work-industries-title">{data.title}</h2>
+<section id="industries-section" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        {data.title}
+      </h2>
       {data.subtitle && (
-        <p class="our-work-industries-subtitle">{data.subtitle}</p>
+        <p class="text-lg text-gray-600 leading-relaxed">
+          {data.subtitle}
+        </p>
       )}
     </div>
     
-    <div class="our-work-industries-grid">
+    <!-- Industries Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
       {data.industries.map((industry, industryIndex) => (
-        <div class="our-work-industry-card" data-industry-index={industryIndex}>
-          <div class="our-work-industry-header">
-            <h3 class="our-work-industry-title">{industry.name}</h3>
+        <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+          <!-- Industry Header -->
+          <div class="p-6 border-b border-gray-100">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                {industry.name}
+              </span>
+            </div>
+            
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+              {industry.name}
+            </h3>
           </div>
           
-          <div class="our-work-industry-projects">
-            {industry.projects.map((project, projectIndex) => (
-              <div class="our-work-project-item" data-project-index={projectIndex}>
-                <h4 class="our-work-project-title">{project.title}</h4>
-                <p class="our-work-project-description">{project.description}</p>
-              </div>
-            ))}
+          <!-- Industry Projects -->
+          <div class="p-6">
+            <div class="space-y-4">
+              {industry.projects.map((project, projectIndex) => (
+                <div class="bg-gray-50 rounded-lg p-4">
+                  <h4 class="text-lg font-semibold text-gray-900 mb-2">
+                    {project.title}
+                  </h4>
+                  <p class="text-sm text-gray-600 leading-relaxed">
+                    {project.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       ))}
@@ -39,102 +66,4 @@ const { data = ourWorkIndustriesData, className = "" } = Astro.props;
   </div>
 </section>
 
-<style>
-  .our-work-industries-section {
-    @apply py-20 bg-white dark:bg-gray-900;
-  }
-  
-  .our-work-industries-container {
-    @apply container mx-auto px-4;
-    max-width: 1200px;
-  }
-  
-  .our-work-industries-header {
-    @apply text-center mb-16;
-  }
-  
-  .our-work-industries-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4;
-  }
-  
-  .our-work-industries-subtitle {
-    @apply text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto;
-  }
-  
-  .our-work-industries-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-8 mb-16;
-  }
-  
-  .our-work-industry-card {
-    @apply bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 shadow-lg;
-  }
-  
-  .our-work-industry-header {
-    @apply mb-6;
-  }
-  
-  .our-work-industry-title {
-    @apply text-2xl font-bold text-gray-900 dark:text-white mb-4;
-  }
-  
-  .our-work-industry-projects {
-    @apply space-y-6;
-  }
-  
-  .our-work-project-item {
-    @apply bg-white dark:bg-gray-700 rounded-xl p-6 shadow-sm;
-  }
-  
-  .our-work-project-title {
-    @apply text-lg font-semibold text-gray-900 dark:text-white mb-3;
-  }
-  
-  .our-work-project-description {
-    @apply text-gray-600 dark:text-gray-300 leading-relaxed;
-  }
-  
-  .our-work-more-industries {
-    @apply text-center;
-  }
-  
-  .our-work-more-description {
-    @apply text-lg text-gray-600 dark:text-gray-300 mb-6;
-  }
-  
-  .our-work-more-button {
-    @apply inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300;
-  }
-  
-  .our-work-more-button:hover {
-    @apply bg-blue-700;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .our-work-industries-grid {
-      @apply grid-cols-1 gap-6;
-    }
-    
-    .our-work-industry-card {
-      @apply p-6;
-    }
-    
-    .our-work-project-item {
-      @apply p-4;
-    }
-    
-    .our-work-industries-title {
-      @apply text-2xl md:text-3xl;
-    }
-  }
-</style>
-
-<script>
-  // Component-specific animations
-  import { initScrollAnimations } from '../../scripts/scrollAnimations.js';
-  
-  // Initialize scroll animations for this component
-  document.addEventListener('DOMContentLoaded', () => {
-    initScrollAnimations();
-  });
-</script> 
+ 
