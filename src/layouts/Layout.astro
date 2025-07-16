@@ -3,6 +3,7 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import BackToTop from '../components/layout/BackToTop.astro';
 import MadeWithButton from '../components/layout/MadeWithButton.astro';
+import CartDrawer from '../components/shared/CartDrawer.astro';
 
 
 
@@ -77,6 +78,9 @@ const { description, title, image, theme = 'auto' } = Astro.props;
         line-height: 1.6;
         margin: 0;
         padding: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
       }
       
       /* Dark mode support */
@@ -138,6 +142,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     
     <!-- Utility Components -->
     <BackToTop />
+    <CartDrawer />
     
     <!-- Theme Script (loads early for better UX) -->
     <script>
