@@ -151,6 +151,11 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
 
   // Monitor cart events
   if (typeof window !== 'undefined') {
+    // Listen for cart service ready event
+    window.addEventListener('cart-service-ready', () => {
+      console.log('🔵 [AvailablePodCard] Cart service ready event received');
+    });
+
     window.addEventListener('cart-updated', (event) => {
       const customEvent = event as CustomEvent;
       console.log('🔵 [AvailablePodCard] Cart updated event received:', customEvent.detail);

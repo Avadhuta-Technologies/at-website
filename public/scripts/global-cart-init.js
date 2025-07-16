@@ -1,10 +1,40 @@
 // Initialize cart functionality globally
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('Initializing global cart functionality...');
+  console.log('🟢 [GlobalCartInit] Initializing global cart functionality...');
   
   try {
-    // Initialize cart service
-    // Note: CartService import will need to be handled differently in browser context
+    // Create a mock CartService if the real one isn't available
+    if (!window.cartService) {
+      console.log('🟢 [GlobalCartInit] Creating mock CartService for fallback');
+      window.cartService = {
+        async addToCart(item) {
+          console.log('🟢 [GlobalCartInit] Mock CartService.addToCart called with:', item);
+          // Store in localStorage as fallback
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          cart.push({ ...item, quantity: 1, timestamp: Date.now() });
+          localStorage.setItem('novapod-cart', JSON.stringify(cart));
+          return true;
+        },
+        async updateCartCount() {
+          console.log('🟢 [GlobalCartInit] Mock CartService.updateCartCount called');
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          const count = cart.length;
+          const cartCountElements = document.querySelectorAll('[data-cart-count]');
+          cartCountElements.forEach(element => {
+            if (element instanceof HTMLElement) {
+              element.textContent = count.toString();
+              element.style.display = count > 0 ? 'block' : 'none';
+            }
+          });
+        },
+        showNotification(message, type = 'success') {
+          console.log('🟢 [GlobalCartInit] Mock CartService.showNotification:', message);
+          showNotification(message, type);
+        }
+      };
+    }
+    
+    console.log('🟢 [GlobalCartInit] CartService available, proceeding with initialization');
     
     // Set up event listeners for add-to-cart buttons
     document.addEventListener('click', async (e) => {
@@ -12,6 +42,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const addToCartBtn = target.closest('[data-add-to-cart]');
       
       if (addToCartBtn) {
+        console.log('🟢 [GlobalCartInit] Add to cart button clicked!');
+        console.log('🟢 [GlobalCartInit] Button element:', addToCartBtn);
+        console.log('🟢 [GlobalCartInit] Button classes:', addToCartBtn.className);
+        
         e.preventDefault();
         
         // Get product data from button attributes
@@ -21,12 +55,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         const itemDescription = addToCartBtn.getAttribute('data-item-description');
         const itemPrice = addToCartBtn.getAttribute('data-item-price');
         
+        console.log('🟢 [GlobalCartInit] Extracted data attributes:', {
+          itemId,
+          itemType,
+          itemTitle,
+          itemDescription,
+          itemPrice
+        });
+        
         if (!itemId || !itemType) {
-          console.error('Missing required data attributes for add to cart');
+          console.error('🟢 [GlobalCartInit] Missing required data attributes for add to cart');
+          console.error('🟢 [GlobalCartInit] itemId:', itemId, 'itemType:', itemType);
           return;
         }
 
-        console.log('Adding to cart:', { itemId, itemType, itemTitle, itemDescription, itemPrice });
+        console.log('🟢 [GlobalCartInit] Adding to cart:', { itemId, itemType, itemTitle, itemDescription, itemPrice });
         
         // Create cart item with minimal data (catalog will provide the rest)
         const cartItem = {
@@ -38,37 +81,47 @@ document.addEventListener('DOMContentLoaded', async () => {
           reservationMonths: itemType === 'pod' ? 3 : undefined
         };
         
+        console.log('🟢 [GlobalCartInit] Created cart item object:', cartItem);
+        
         // Add to cart using CartService if available
         if (window.cartService) {
           try {
+            console.log('🟢 [GlobalCartInit] Calling cartService.addToCart...');
             const success = await window.cartService.addToCart(cartItem);
+            console.log('🟢 [GlobalCartInit] cartService.addToCart result:', success);
+            
             if (success) {
-              console.log('Successfully added to cart');
+              console.log('🟢 [GlobalCartInit] Successfully added to cart');
               
               // Show success message
-              showNotification(
-                itemType === 'pod' 
-                  ? `Added ${itemTitle || 'Pod'} to cart!` 
-                  : `Added ${itemTitle || 'Pack'} to your pod!`
-              );
+              const notificationMessage = itemType === 'pod' 
+                ? `Added ${itemTitle || 'Pod'} to cart!` 
+                : `Added ${itemTitle || 'Pack'} to your pod!`;
+              
+              console.log('🟢 [GlobalCartInit] Showing notification:', notificationMessage);
+              showNotification(notificationMessage);
               
               // Update cart count
+              console.log('🟢 [GlobalCartInit] Updating cart count...');
               await window.cartService.updateCartCount();
+              console.log('🟢 [GlobalCartInit] Cart count updated');
               
               // Dispatch cart updated event to open drawer
+              console.log('🟢 [GlobalCartInit] Dispatching cart-updated event...');
               window.dispatchEvent(new CustomEvent('cart-updated', { 
-                detail: { action: 'add' } 
+                detail: { action: 'add', item: cartItem } 
               }));
             } else {
-              console.error('Failed to add to cart');
+              console.error('🟢 [GlobalCartInit] Failed to add to cart');
+              console.error('🟢 [GlobalCartInit] This could be due to business rules or validation errors');
               showNotification('Failed to add item to cart', 'error');
             }
           } catch (error) {
-            console.error('Error adding to cart:', error);
+            console.error('🟢 [GlobalCartInit] Error adding to cart:', error);
             showNotification('Error adding item to cart', 'error');
           }
         } else {
-          console.log('CartService not available, logging cart item:', cartItem);
+          console.log('🟢 [GlobalCartInit] CartService not available, logging cart item:', cartItem);
           showNotification(
             itemType === 'pod' 
               ? `Added ${itemTitle || 'Pod'} to cart!` 
@@ -78,9 +131,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
     
-    console.log('Global cart functionality initialized successfully');
+    // Set up cart count updates
+    window.addEventListener('cart-updated', async (event) => {
+      console.log('🟢 [GlobalCartInit] Cart updated event received:', event.detail);
+      console.log('🟢 [GlobalCartInit] Updating cart count from event...');
+      if (window.cartService) {
+        await window.cartService.updateCartCount();
+      }
+    });
+    
+    console.log('🟢 [GlobalCartInit] Global cart functionality initialized successfully');
   } catch (error) {
-    console.error('Error initializing cart functionality:', error);
+    console.error('🟢 [GlobalCartInit] Error initializing cart functionality:', error);
   }
 });
 
