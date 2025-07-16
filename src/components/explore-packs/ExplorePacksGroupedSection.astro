@@ -1,0 +1,131 @@
+---
+import PackCard from './PackCard.astro';
+
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    categories: Array<{
+      id: string;
+      title: string;
+      description: string;
+      packs: Array<{
+        id: string;
+        title: string;
+        description: string;
+        price: string;
+        priceUSD: string;
+        duration: string;
+        badge: string;
+        badgeColor: string;
+        icon: string;
+        features: string[];
+        idealFor: string[];
+        addOns: string[];
+        whyItWorks: string;
+        testimonials: Array<{
+          quote: string;
+          author: string;
+          role: string;
+        }>;
+        cta: {
+          title: string;
+          subtitle: string;
+          primaryButton: string;
+          secondaryButton: string;
+        };
+      }>;
+    }>;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section id="packs-section" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="max-w-4xl mx-auto text-center mb-16">
+      <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        {data.title}
+      </h2>
+      <p class="text-xl text-gray-600 leading-relaxed">
+        {data.subtitle}
+      </p>
+    </div>
+    
+    <!-- Categories -->
+    <div class="space-y-16">
+      {data.categories.map((category) => (
+        <div class="category-section">
+          <!-- Category Header -->
+          <div class="text-center mb-12">
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">
+              {category.title}
+            </h3>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+              {category.description}
+            </p>
+          </div>
+          
+          <!-- Packs Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {category.packs.map((pack) => (
+              <PackCard pack={pack} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Explore All Packs Button -->
+    <div class="text-center mt-16">
+      <a 
+        href="/explore-packs" 
+        class="inline-flex items-center px-8 py-4 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 group shadow-lg"
+      >
+        <span>Explore All Packs</span>
+        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .category-section {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // Add animation on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = '0.2s';
+        entry.target.classList.add('animate-fade-in-up');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all category sections
+  document.querySelectorAll('.category-section').forEach(section => {
+    observer.observe(section);
+  });
+</script> 

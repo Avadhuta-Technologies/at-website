@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import ExplorePacksHeroSection from '../components/explore-packs/ExplorePacksHeroSection.astro';
-import ExplorePacksPacksSection from '../components/explore-packs/ExplorePacksPacksSection.astro';
+import ExplorePacksGroupedSection from '../components/explore-packs/ExplorePacksGroupedSection.astro';
 import ExplorePacksWhyChooseSection from '../components/explore-packs/ExplorePacksWhyChooseSection.astro';
 import ExplorePacksWhyChooseFixedScopeSection from '../components/explore-packs/ExplorePacksWhyChooseFixedScopeSection.astro';
 import ExplorePacksHowItWorksFixedScopeSection from '../components/explore-packs/ExplorePacksHowItWorksFixedScopeSection.astro';
@@ -10,7 +10,7 @@ import ExplorePacksHowItWorksFixedScopeSection from '../components/explore-packs
 // Import isolated explore-packs content
 import { 
   explorePacksHeroData,
-  explorePacksPacksData,
+  exploreAvailablePacksData,
   explorePacksWhyChooseData,
   whyChooseFixedScopeData,
   howItWorksFixedScopeData
@@ -33,7 +33,7 @@ import {
   <ExplorePacksHowItWorksFixedScopeSection data={howItWorksFixedScopeData} />
 
   <!-- Packs Section -->
-  <ExplorePacksPacksSection data={explorePacksPacksData} />
+  <ExplorePacksGroupedSection data={exploreAvailablePacksData} />
   
   <!-- Why Choose Section -->
   <ExplorePacksWhyChooseSection data={explorePacksWhyChooseData} />

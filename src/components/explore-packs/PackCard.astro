@@ -1,0 +1,97 @@
+---
+export interface Props {
+  pack: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    priceUSD: string;
+    duration: string;
+    badge: string;
+    badgeColor: string;
+    icon: string;
+  };
+}
+
+const { pack } = Astro.props;
+
+// Color mapping for different badge types
+const getBadgeColorClasses = (color: string) => {
+  const colorMap: Record<string, string> = {
+    green: 'bg-green-100 text-green-800',
+    blue: 'bg-blue-100 text-blue-800',
+    purple: 'bg-purple-100 text-purple-800',
+    orange: 'bg-orange-100 text-orange-800',
+    teal: 'bg-teal-100 text-teal-800',
+    pink: 'bg-pink-100 text-pink-800',
+    indigo: 'bg-indigo-100 text-indigo-800',
+    cyan: 'bg-cyan-100 text-cyan-800',
+    violet: 'bg-violet-100 text-violet-800',
+    emerald: 'bg-emerald-100 text-emerald-800',
+    amber: 'bg-amber-100 text-amber-800',
+    rose: 'bg-rose-100 text-rose-800'
+  };
+  return colorMap[color] || colorMap.blue;
+};
+---
+
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
+  <!-- Card Header -->
+  <div class="p-6 border-b border-gray-100">
+    <div class="flex items-start justify-between mb-4">
+      <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <span class="text-2xl">{pack.icon}</span>
+      </div>
+      <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getBadgeColorClasses(pack.badgeColor)}`}>
+        {pack.badge}
+      </span>
+    </div>
+    
+    <h4 class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-200">
+      {pack.title}
+    </h4>
+    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+      {pack.description}
+    </p>
+    
+    <!-- Price and Duration -->
+    <div class="flex items-center justify-between text-sm text-gray-500">
+      <span class="flex items-center">
+        <span class="mr-1">🕒</span>
+        {pack.duration}
+      </span>
+      <span class="flex items-center font-semibold text-gray-900">
+        <span class="mr-1">💰</span>
+        {pack.price} / {pack.priceUSD}
+      </span>
+    </div>
+  </div>
+  
+  <!-- Card Footer -->
+  <div class="p-6">
+    <div class="flex gap-3">
+      <a 
+        href={`/packs/${pack.id}`}
+        class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm"
+      >
+        View Details
+        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+        </svg>
+      </a>
+      <button 
+        data-add-to-cart
+        data-item-id={pack.id}
+        data-item-type="pack"
+        data-item-title={pack.title}
+        data-item-description={pack.description}
+        class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm"
+      >
+        Add to Pod
+        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div> 
