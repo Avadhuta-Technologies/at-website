@@ -39,7 +39,7 @@ const colors = getColorClasses(index);
 const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 ---
 
-<div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+<div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
   <!-- Card Header -->
   <div class="p-6 border-b border-gray-100">
     <div class="flex items-start justify-between mb-4">
@@ -75,24 +75,27 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
   </div>
   
   <!-- Card Body -->
-  <div class="p-6">
-    <p class="text-gray-600 mb-6 leading-relaxed">
-      {pod.whatsInPod.description}
-    </p>
-    
-    <!-- Features List -->
-    <div class="space-y-3 mb-6">
-      {pod.idealFor.slice(0, 3).map((feature: string) => (
-        <div class="flex items-start">
-          <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          <span class="text-sm text-gray-600">{feature}</span>
-        </div>
-      ))}
+  <div class="p-6 flex-1 flex flex-col">
+    <div class="flex-1">
+      <p class="text-gray-600 mb-6 leading-relaxed">
+        {pod.whatsInPod.description}
+      </p>
+      
+      <!-- Features List -->
+      <div class="space-y-3 mb-6">
+        {pod.idealFor.slice(0, 3).map((feature: string) => (
+          <div class="flex items-start">
+            <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span class="text-sm text-gray-600">{feature}</span>
+          </div>
+        ))}
+      </div>
     </div>
     
-    <div class="flex items-center justify-between">
+    <!-- CTA Buttons - Always at bottom -->
+    <div class="flex items-center justify-between mt-auto">
       <!-- CTA Button -->
       <button 
         data-add-to-cart
@@ -101,7 +104,8 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
         data-item-title={pod.name}
         data-item-description={pod.whatsInPod.description}
         data-item-price={pod.pricing[0]}
-        class="w-full mr-1 inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200">
+        class="w-full mr-1 inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200"
+        onclick="console.log('🔵 [AvailablePodCard] Reserve Pod button clicked for:', '{{pod.name}}', 'with ID:', '{{podId}}'); console.log('🔵 [AvailablePodCard] Button data attributes:', { id: '{{podId}}', type: 'pod', title: '{{pod.name}}', description: '{{pod.whatsInPod.description}}', price: '{{pod.pricing[0]}}' });">
         Reserve Pod
       </button>
    
@@ -113,4 +117,47 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
       </a>
     </div>
   </div>
-</div> 
+</div>
+
+<script>
+  // Debug logging for AvailablePodCard component
+  console.log('🔵 [AvailablePodCard] Component loaded for pod:', '{{pod.name}}');
+  console.log('🔵 [AvailablePodCard] Generated podId:', '{{podId}}');
+  console.log('🔵 [AvailablePodCard] Pod data:', {
+    name: '{{pod.name}}',
+    tagline: '{{pod.tagline}}',
+    pricing: ['{{pod.pricing[0]}}', '{{pod.pricing[1]}}'],
+    description: '{{pod.whatsInPod.description}}',
+    idealFor: ['{{pod.idealFor[0]}}', '{{pod.idealFor[1]}}', '{{pod.idealFor[2]}}']
+  });
+
+  // Monitor cart service availability
+  const checkCartService = () => {
+    if (typeof window !== 'undefined') {
+      if ((window as any).cartService) {
+        console.log('🔵 [AvailablePodCard] CartService is available');
+        return true;
+      } else {
+        console.log('🔵 [AvailablePodCard] CartService not yet available, retrying...');
+        setTimeout(checkCartService, 100);
+        return false;
+      }
+    }
+    return false;
+  };
+
+  // Check cart service on load
+  checkCartService();
+
+  // Monitor cart events
+  if (typeof window !== 'undefined') {
+    window.addEventListener('cart-updated', (event) => {
+      const customEvent = event as CustomEvent;
+      console.log('🔵 [AvailablePodCard] Cart updated event received:', customEvent.detail);
+    });
+
+    window.addEventListener('cart-drawer-ready', () => {
+      console.log('🔵 [AvailablePodCard] Cart drawer is ready');
+    });
+  }
+</script> 

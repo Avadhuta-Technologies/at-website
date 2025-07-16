@@ -1,6 +1,7 @@
 export const podsCatalog = {  
   availablePods: [
     {
+      id: "ecommerce-engine",
       name: "Ecommerce Engine Pod (ShopPod)",
       tagline: "Your Dedicated Team for Scalable, High-Converting Ecommerce Experiences",
       idealFor: [
@@ -49,6 +50,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "ar-vr-experience",
       name: "AR/VR Experience Pod (XRPod)",
       tagline: "Immersive Digital Experiences for Products, Training, and Visualization",
       idealFor: [
@@ -96,6 +98,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "ai-product-studio",
       name: "AI Product Studio Pod (AIPod)",
       tagline: "Build AI-First Products Without Building a Data Science Team",
       idealFor: [
@@ -143,6 +146,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "product-launch",
       name: "Product Launch Pod (LaunchPod)",
       tagline: "Your All-in-One Team for Fast, Confident MVP Delivery",
       idealFor: [
@@ -190,6 +194,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "admin-workflow-automation",
       name: "Admin & Workflow Automation Pod (FlowPod)",
       tagline: "For Teams Looking to Automate Business Operations",
       idealFor: [
@@ -233,6 +238,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "ai-ml-integration",
       name: "AI/ML Integration Pod (IntegratePod)",
       tagline: "Integrate Smart Features into Your Product—No Data Science Hiring Needed",
       idealFor: [
@@ -276,6 +282,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "mobile-first-saas",
       name: "Mobile-First SaaS Pod (AppPod)",
       tagline: "Your Cross-Platform Team for Beautiful, Functional Mobile SaaS Products",
       idealFor: [
@@ -324,6 +331,7 @@ export const podsCatalog = {
       ]
     },
     {
+      id: "devops-infra-automation",
       name: "DevOps & Infra Automation Pod (InfraPod)",
       tagline: "Scale with Confidence — Reliable Infrastructure, CI/CD, and CloudOps Support",
       idealFor: [

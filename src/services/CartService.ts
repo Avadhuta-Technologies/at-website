@@ -95,39 +95,54 @@ class CartService {
 
   // Add item to cart with business rules using centralized catalog
   async addToCart(item: CartItem): Promise<boolean> {
+    console.log('🟡 [CartService] addToCart called with item:', item);
+    
     // Check if we're in a browser environment
     if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
-      console.log('addToCart - Not in browser environment, returning false');
+      console.log('🟡 [CartService] addToCart - Not in browser environment, returning false');
       return false;
     }
 
     try {
+      console.log('🟡 [CartService] Validating product exists in catalog...');
       // Validate product exists in catalog
       if (!catalogUtils.productExists(item.id, item.type)) {
+        console.error('🟡 [CartService] Product not found in catalog:', item.id, item.type);
         this.showNotification(`Invalid ${item.type}: ${item.id}`, 'error');
         return false;
       }
+      console.log('🟡 [CartService] Product validated in catalog');
 
+      console.log('🟡 [CartService] Getting current cart...');
       const cart = await this.getCart();
+      console.log('🟡 [CartService] Current cart items:', cart);
       
       if (item.type === 'pod') {
+        console.log('🟡 [CartService] Processing POD item...');
+        
         // Rule 1: Only one pod at a time
         const existingPod = cart.find(cartItem => cartItem.type === 'pod');
         if (existingPod) {
+          console.error('🟡 [CartService] Business rule violation: Only one pod allowed. Existing pod:', existingPod);
           this.showNotification('You can only reserve one pod at a time. Please remove the existing pod first.', 'error');
           return false;
         }
+        console.log('🟡 [CartService] No existing pod found, proceeding...');
         
         // Get pod data from catalog
+        console.log('🟡 [CartService] Getting pod data from catalog for ID:', item.id);
         const podData = catalogUtils.getProductForCart(item.id, 'pod');
         if (!podData) {
+          console.error('🟡 [CartService] Pod not found in catalog for ID:', item.id);
           this.showNotification('Pod not found in catalog', 'error');
           return false;
         }
+        console.log('🟡 [CartService] Pod data retrieved from catalog:', podData);
 
         // Set default reservation period if not specified
         if (!item.reservationMonths) {
           item.reservationMonths = 3;
+          console.log('🟡 [CartService] Set default reservation period to 3 months');
         }
         
         // Calculate price based on reservation period
@@ -135,6 +150,7 @@ class CartService {
           const totalPrice = podData.basePrice * item.reservationMonths;
           item.price = catalogUtils.formatPrice(totalPrice, 'INR') + `/month (~$${Math.round(totalPrice / 75)}/month)`;
           item.basePrice = podData.basePrice;
+          console.log('🟡 [CartService] Calculated price:', item.price, 'for', item.reservationMonths, 'months');
         }
 
         // Copy data from catalog
@@ -145,23 +161,33 @@ class CartService {
           badge: podData.badge,
           badgeColor: podData.badgeColor
         });
+        console.log('🟡 [CartService] Pod item enriched with catalog data:', item);
+        
       } else if (item.type === 'pack') {
+        console.log('🟡 [CartService] Processing PACK item...');
+        
         // Rule 3: Must have a pod before adding packs
         const existingPod = cart.find(cartItem => cartItem.type === 'pod');
         if (!existingPod) {
+          console.error('🟡 [CartService] Business rule violation: No pod in cart. Cannot add pack without pod.');
           this.showNotification('Please add a pod to your cart before adding packs.', 'error');
           return false;
         }
+        console.log('🟡 [CartService] Found existing pod:', existingPod);
         
         // Get pack data from catalog
+        console.log('🟡 [CartService] Getting pack data from catalog for ID:', item.id);
         const packData = catalogUtils.getProductForCart(item.id, 'pack');
         if (!packData) {
+          console.error('🟡 [CartService] Pack not found in catalog for ID:', item.id);
           this.showNotification('Pack not found in catalog', 'error');
           return false;
         }
+        console.log('🟡 [CartService] Pack data retrieved from catalog:', packData);
 
         // Rule 2: Multiple packs allowed for same pod
         item.podId = existingPod.id;
+        console.log('🟡 [CartService] Set pack podId to:', item.podId);
 
         // Copy data from catalog
         Object.assign(item, {
@@ -175,20 +201,28 @@ class CartService {
           badge: packData.badge,
           badgeColor: packData.badgeColor
         });
+        console.log('🟡 [CartService] Pack item enriched with catalog data:', item);
       }
 
       // Store in IndexedDB
+      console.log('🟡 [CartService] Storing item in IndexedDB...');
       await this.storeItem(item);
+      console.log('🟡 [CartService] Item stored successfully');
+      
+      console.log('🟡 [CartService] Updating cart count...');
       this.updateCartCount();
+      console.log('🟡 [CartService] Cart count updated');
       
       // Dispatch cart updated event
       if (typeof window !== 'undefined') {
+        console.log('🟡 [CartService] Dispatching cart-updated event...');
         window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'add' } }));
       }
       
+      console.log('🟡 [CartService] addToCart completed successfully');
       return true;
     } catch (error) {
-      console.error('Error adding item to cart:', error);
+      console.error('🟡 [CartService] Error adding item to cart:', error);
       return false;
     }
   }
@@ -451,11 +485,13 @@ class CartService {
 
   // Get product details from catalog
   async getPodDetails(podId: string): Promise<CartItem | null> {
-    return catalogUtils.getProductForCart(podId, 'pod');
+    const result = catalogUtils.getProductForCart(podId, 'pod');
+    return result as CartItem | null;
   }
 
   async getPackDetails(packId: string): Promise<CartItem | null> {
-    return catalogUtils.getProductForCart(packId, 'pack');
+    const result = catalogUtils.getProductForCart(packId, 'pack');
+    return result as CartItem | null;
   }
 }
 

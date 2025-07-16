@@ -1,5 +1,6 @@
 ---
 import { catalogUtils } from '../../content/catalog/_index.js';
+import AvailablePodCard from '../explore-pods/AvailablePodCard.astro';
 
 export interface Props {
   data: {
@@ -7,7 +8,7 @@ export interface Props {
     subtitle: string;
     featuredPodIds?: string[]; // Optional: specific pod IDs to display
   };
-}
+} 
 
 const { data } = Astro.props;
 
@@ -18,9 +19,33 @@ if (data.featuredPodIds) {
   pods = data.featuredPodIds.map(id => catalogUtils.getProductById(id, 'pod')).filter(Boolean);
 } else {
   // Get all pods
-  const allProducts = catalogUtils.getAllProducts();
-  pods = allProducts.pods || [];
+  const allProducts = catalogUtils.getAllProducts().pods;
+  pods = allProducts || [];
+  console.log("🚀 ~ pods:", pods)
 }
+
+const validPods = pods.filter(pod => 
+  pod && 
+  typeof pod === 'object' && 
+  'name' in pod && 
+  'tagline' in pod && 
+  'idealFor' in pod && 
+  'whatsInPod' in pod
+) as Array<{
+  name: string;
+  tagline: string;
+  idealFor: string[];
+  whatsInPod: {
+    description: string;
+    teamComposition: string[];
+    upgradeNote: string;
+  };
+  whatCanDo: string[];
+  deliveryTimelines: string[];
+  whyTrust: string[];
+  pastUseCases: string[];
+  pricing: string[];
+}>;
 
 // Color mapping for different pod types
 const getColorClasses = (color: string) => {
@@ -74,78 +99,18 @@ const getColorClasses = (color: string) => {
         {data.title}
       </h2>
       <p class="text-lg text-gray-600 leading-relaxed">
-        {data.subtitle}
+        {data.subtitle} {validPods.length}
       </p>
     </div>
     
     <!-- Pods Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-      {pods.filter(pod => pod !== null).map((pod, index) => {
-        const colors = getColorClasses(pod.badgeColor);
-        return (
-          <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <!-- Card Header -->
-            <div class="p-6 border-b border-gray-100">
-              <div class="flex items-start justify-between mb-4">
-                <div class={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center`}>
-                  <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                  </svg>
-                </div>
-                <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors.badge}`}>
-                  {pod.badge}
-                </span>
-              </div>
-              
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                {pod.title}
-              </h3>
-              
-              <div class="flex items-baseline space-x-2 mb-3">
-                <span class="text-2xl font-bold text-gray-900">
-                  {pod.engagement}
-                </span>
-              </div>
-              
-              <p class="text-sm text-gray-500 mb-4">
-                {pod.priceNote}
-              </p>
-            </div>
-            
-            <!-- Card Body -->
-            <div class="p-6">
-              <p class="text-gray-600 mb-6 leading-relaxed">
-                {pod.description}
-              </p>
-              
-              <!-- Features List -->
-              <div class="space-y-3 mb-6">
-                {pod.idealFor.slice(0, 3).map((feature: string) => (
-                  <div class="flex items-start">
-                    <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span class="text-sm text-gray-600">{feature}</span>
-                  </div>
-                ))}
-              </div>
-              
-              <!-- CTA Button -->
-              <button 
-                data-add-to-cart
-                data-item-id={pod.id}
-                data-item-type="pod"
-                data-item-title={pod.title}
-                data-item-description={pod.description}
-                data-item-price={pod.engagement}
-                class="w-full inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200">
-                Reserve Pod
-              </button>
-            </div>
-          </div>
-        );
-      })}
+      {validPods?.slice(0, 6).map((pod, index) => (
+        <AvailablePodCard pod={pod} index={index} />
+      ))}
     </div>
+    
+  
     
     <!-- Explore All Pods Button -->
     <div class="text-center">
@@ -251,13 +216,3 @@ const getColorClasses = (color: string) => {
     @apply flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-600;
   }
 </style>
-
-<script>
-  // Component-specific animations
-  document.addEventListener('DOMContentLoaded', () => {
-    // Check if scrollAnimations is available globally
-    if (typeof window.initScrollAnimations === 'function') {
-      window.initScrollAnimations();
-    }
-  });
-</script> 
