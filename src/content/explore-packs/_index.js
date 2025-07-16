@@ -4,4 +4,5 @@ export { explorePacksPacksData } from './_packs.js';
 export { explorePacksWhyChooseData } from './_whyChoose.js';
 export { explorePacksHowItWorksData } from './_howItWorks.js';
 export { explorePacksTestimonialsData } from './_testimonials.js';
-export { explorePacksFAQData } from './_faq.js'; 
+export { explorePacksFAQData } from './_faq.js';
+export { whyChooseFixedScopeData } from './_whyChooseFixedScope.js'; 

@@ -4,12 +4,14 @@ import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import ExplorePacksHeroSection from '../components/explore-packs/ExplorePacksHeroSection.astro';
 import ExplorePacksPacksSection from '../components/explore-packs/ExplorePacksPacksSection.astro';
 import ExplorePacksWhyChooseSection from '../components/explore-packs/ExplorePacksWhyChooseSection.astro';
+import ExplorePacksWhyChooseFixedScopeSection from '../components/explore-packs/ExplorePacksWhyChooseFixedScopeSection.astro';
 
 // Import isolated explore-packs content
 import { 
   explorePacksHeroData,
   explorePacksPacksData,
-  explorePacksWhyChooseData
+  explorePacksWhyChooseData,
+  whyChooseFixedScopeData
 } from '../content/explore-packs/_index.js';
 ---
 
@@ -21,12 +23,16 @@ import {
   
   <!-- Hero Section -->
   <ExplorePacksHeroSection data={explorePacksHeroData} />
+   
+  <!-- Why Choose Fixed Scope Section -->
+  <ExplorePacksWhyChooseFixedScopeSection data={whyChooseFixedScopeData} />
   
   <!-- Packs Section -->
   <ExplorePacksPacksSection data={explorePacksPacksData} />
   
   <!-- Why Choose Section -->
   <ExplorePacksWhyChooseSection data={explorePacksWhyChooseData} />
+ 
 </Layout>
 
 <style>

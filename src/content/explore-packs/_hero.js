@@ -1,5 +1,5 @@
 export const explorePacksHeroData = {
-  title: "Explore Our Packs",
-  subtitle: "Pre-configured solutions for common development needs",
-  description: "Choose from our specialized development packs, each designed to deliver specific outcomes for your project needs."
+  title: "Add Power to Your Pod with Fixed-Scope Packs",
+  subtitle: "Clear outcomes, fixed pricing, faster delivery.",
+  description: "Modular Packs that extend your Pod’s capabilities — from launching your product to automating operations, boosting growth, or integrating AI. "
 }; 
