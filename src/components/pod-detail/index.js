@@ -1,0 +1,10 @@
+export { default as PodHeroSection } from './PodHeroSection.astro';
+export { default as PodIdealForSection } from './PodIdealForSection.astro';
+export { default as PodWhatsInSection } from './PodWhatsInSection.astro';
+export { default as PodWhatYouGetSection } from './PodWhatYouGetSection.astro';
+export { default as PodDeliveryTimelinesSection } from './PodDeliveryTimelinesSection.astro';
+export { default as PodWhyTrustSection } from './PodWhyTrustSection.astro';
+export { default as PodPastUseCasesSection } from './PodPastUseCasesSection.astro';
+export { default as PodPricingSection } from './PodPricingSection.astro';
+export { default as PodAddPacksSection } from './PodAddPacksSection.astro';
+export { default as PodReadyToLaunchSection } from './PodReadyToLaunchSection.astro'; 
