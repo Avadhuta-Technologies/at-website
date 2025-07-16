@@ -5,13 +5,15 @@ import ExplorePacksHeroSection from '../components/explore-packs/ExplorePacksHer
 import ExplorePacksPacksSection from '../components/explore-packs/ExplorePacksPacksSection.astro';
 import ExplorePacksWhyChooseSection from '../components/explore-packs/ExplorePacksWhyChooseSection.astro';
 import ExplorePacksWhyChooseFixedScopeSection from '../components/explore-packs/ExplorePacksWhyChooseFixedScopeSection.astro';
+import ExplorePacksHowItWorksFixedScopeSection from '../components/explore-packs/ExplorePacksHowItWorksFixedScopeSection.astro';
 
 // Import isolated explore-packs content
 import { 
   explorePacksHeroData,
   explorePacksPacksData,
   explorePacksWhyChooseData,
-  whyChooseFixedScopeData
+  whyChooseFixedScopeData,
+  howItWorksFixedScopeData
 } from '../content/explore-packs/_index.js';
 ---
 
@@ -27,6 +29,9 @@ import {
   <!-- Why Choose Fixed Scope Section -->
   <ExplorePacksWhyChooseFixedScopeSection data={whyChooseFixedScopeData} />
   
+  <!-- How It Works Fixed Scope Section -->
+  <ExplorePacksHowItWorksFixedScopeSection data={howItWorksFixedScopeData} />
+
   <!-- Packs Section -->
   <ExplorePacksPacksSection data={explorePacksPacksData} />
   
