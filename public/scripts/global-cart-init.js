@@ -38,20 +38,43 @@ document.addEventListener('DOMContentLoaded', async () => {
           reservationMonths: itemType === 'pod' ? 3 : undefined
         };
         
-        // For now, just log the cart item
-        console.log('Cart item created:', cartItem);
-        
-        // Show success message
-        showNotification(
-          itemType === 'pod' 
-            ? `Added ${itemTitle || 'Pod'} to cart!` 
-            : `Added ${itemTitle || 'Pack'} to your pod!`
-        );
-        
-        // Optional: Redirect to checkout after a delay
-        setTimeout(() => {
-          window.location.href = '/checkout';
-        }, 1500);
+        // Add to cart using CartService if available
+        if (window.cartService) {
+          try {
+            const success = await window.cartService.addToCart(cartItem);
+            if (success) {
+              console.log('Successfully added to cart');
+              
+              // Show success message
+              showNotification(
+                itemType === 'pod' 
+                  ? `Added ${itemTitle || 'Pod'} to cart!` 
+                  : `Added ${itemTitle || 'Pack'} to your pod!`
+              );
+              
+              // Update cart count
+              await window.cartService.updateCartCount();
+              
+              // Dispatch cart updated event to open drawer
+              window.dispatchEvent(new CustomEvent('cart-updated', { 
+                detail: { action: 'add' } 
+              }));
+            } else {
+              console.error('Failed to add to cart');
+              showNotification('Failed to add item to cart', 'error');
+            }
+          } catch (error) {
+            console.error('Error adding to cart:', error);
+            showNotification('Error adding item to cart', 'error');
+          }
+        } else {
+          console.log('CartService not available, logging cart item:', cartItem);
+          showNotification(
+            itemType === 'pod' 
+              ? `Added ${itemTitle || 'Pod'} to cart!` 
+              : `Added ${itemTitle || 'Pack'} to your pod!`
+          );
+        }
       }
     });
     
@@ -62,28 +85,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Simple notification function
-function showNotification(message) {
+function showNotification(message, type = 'success') {
   // Create a simple notification
   const notification = document.createElement('div');
   notification.textContent = message;
+  const bgColor = type === 'success' ? '#10b981' : '#ef4444';
   notification.style.cssText = `
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #10b981;
+    background: ${bgColor};
     color: white;
     padding: 12px 24px;
     border-radius: 8px;
     z-index: 10000;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
   `;
   
   document.body.appendChild(notification);
   
+  // Animate in
+  setTimeout(() => {
+    notification.style.transform = 'translateX(0)';
+  }, 100);
+  
   // Remove after 3 seconds
   setTimeout(() => {
-    if (notification.parentNode) {
-      notification.parentNode.removeChild(notification);
-    }
+    notification.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
   }, 3000);
 } 

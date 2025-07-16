@@ -56,10 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           // Update cart count
           await cartService.updateCartCount();
           
-          // Optional: Redirect to checkout after a delay
-          setTimeout(() => {
-            window.location.href = '/checkout';
-          }, 1500);
+          // Cart drawer will automatically open via cart-updated event
         } else {
           console.error('Failed to add to cart');
         }

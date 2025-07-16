@@ -3,8 +3,8 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import BackToTop from '../components/layout/BackToTop.astro';
 import MadeWithButton from '../components/layout/MadeWithButton.astro';
-import CartUtility from '../components/shared/CartUtility.astro';
-import CartDrawer from '../components/shared/CartDrawer.astro';
+
+
 
 interface Props {
   description: string;
@@ -138,8 +138,6 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     
     <!-- Utility Components -->
     <BackToTop />
-    <CartUtility />
-    <CartDrawer />
     
     <!-- Theme Script (loads early for better UX) -->
     <script>

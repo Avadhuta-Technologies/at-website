@@ -2,7 +2,7 @@
 // Global Cart Drawer Component
 ---
 
-<div id="cart-drawer" class="fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 border-l border-gray-200 dark:border-gray-700">
+<div id="cart-drawer" class="fixed top-0 right-0 h-full w-80 bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-[9999] border-l border-gray-200 dark:border-gray-700">
   <!-- Drawer Header -->
   <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
     <div class="flex items-center">
@@ -59,16 +59,10 @@
   </div>
 </div>
 
-<!-- Cart Toggle Button (Fixed) -->
-<button id="cart-toggle" class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110">
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-  </svg>
-  <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold" style="display: none;">0</span>
-</button>
+
 
 <!-- Overlay -->
-<div id="cart-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+<div id="cart-overlay" class="fixed inset-0 bg-black/50 z-[9998] hidden"></div>
 
 <style>
   .cart-item {
@@ -127,8 +121,8 @@
     }
 
     setupEventListeners() {
-      // Cart toggle button
-      document.getElementById('cart-toggle')?.addEventListener('click', () => {
+      // Cart toggle button (header cart button)
+      document.getElementById('header-cart-toggle')?.addEventListener('click', () => {
         this.toggleCart();
       });
 
@@ -142,7 +136,7 @@
         this.toggleMinimize();
       });
 
-      // Overlay click
+      // Overlay click - close drawer when clicking outside
       document.getElementById('cart-overlay')?.addEventListener('click', () => {
         this.closeCart();
       });
@@ -152,16 +146,32 @@
         this.clearCart();
       });
 
-      // Checkout button
+      // Checkout button - only navigation to checkout
       document.getElementById('checkout-btn')?.addEventListener('click', () => {
         this.proceedToCheckout();
       });
 
-      // Listen for cart updates
+      // Listen for cart updates - open drawer when items are added
       window.addEventListener('cart-updated', (event) => {
         this.loadCart();
         if (event && event.detail && event.detail.action === 'add') {
           this.openCart();
+        }
+      });
+
+      // Global click handler for outside clicks
+      document.addEventListener('click', (e) => {
+        if (this.isOpen) {
+          const drawer = document.getElementById('cart-drawer');
+          const overlay = document.getElementById('cart-overlay');
+          const headerCartToggle = document.getElementById('header-cart-toggle');
+          
+          // Check if click is outside drawer and not on cart toggle
+          if (drawer && !drawer.contains(e.target) && 
+              overlay && !overlay.contains(e.target) && 
+              headerCartToggle && !headerCartToggle.contains(e.target)) {
+            this.closeCart();
+          }
         }
       });
     }
@@ -313,39 +323,13 @@
 
       try {
         const cart = await this.cartService.getCart();
-        const podItems = cart.filter(item => item.type === 'pod');
-        const packItems = cart.filter(item => item.type === 'pack');
-
-        // Case 1: Both pods and packs present - go directly to checkout
-        if (podItems.length > 0 && packItems.length > 0) {
-          window.location.href = '/checkout';
-          return;
-        }
-
-        // Case 2: Only pod present - go to add-ons for upsell
-        if (podItems.length > 0 && packItems.length === 0) {
-          window.location.href = '/add-ons';
-          return;
-        }
-
-        // Case 3: Only packs present - go to add-ons to require pod
-        if (podItems.length === 0 && packItems.length > 0) {
-          window.location.href = '/add-ons';
-          return;
-        }
-
-        // Case 4: Empty cart - go to add-ons
-        if (cart.length === 0) {
-          window.location.href = '/add-ons';
-          return;
-        }
-
-        // Default fallback
-        window.location.href = '/add-ons';
+        
+        // Always navigate to checkout page
+        window.location.href = '/checkout';
       } catch (error) {
-        console.error('Error analyzing cart:', error);
-        // Fallback to add-ons page
-        window.location.href = '/add-ons';
+        console.error('Error navigating to checkout:', error);
+        // Fallback to checkout page
+        window.location.href = '/checkout';
       }
     }
 
@@ -434,19 +418,10 @@
       const checkoutBtnText = document.getElementById('checkout-btn-text');
       if (!checkoutBtnText) return;
 
-      const podItems = cart.filter(item => item.type === 'pod');
-      const packItems = cart.filter(item => item.type === 'pack');
-
       if (cart.length === 0) {
         checkoutBtnText.textContent = 'Start My Pod Journey';
-      } else if (podItems.length > 0 && packItems.length > 0) {
-        checkoutBtnText.textContent = 'Proceed to Checkout';
-      } else if (podItems.length > 0 && packItems.length === 0) {
-        checkoutBtnText.textContent = 'Add Packs & Continue';
-      } else if (podItems.length === 0 && packItems.length > 0) {
-        checkoutBtnText.textContent = 'Select Pod to Continue';
       } else {
-        checkoutBtnText.textContent = 'Start My Pod Journey';
+        checkoutBtnText.textContent = 'Proceed to Checkout';
       }
     }
 
