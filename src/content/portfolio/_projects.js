@@ -1,4 +1,4 @@
-export const portfolioProjects = [
+export const portfolioProjectsData = [
   {
     id: "ecommerce-storefront-platform",
     title: "eCommerce Storefront Platform",

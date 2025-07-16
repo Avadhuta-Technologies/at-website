@@ -1,5 +1,5 @@
 ---
-import { portfolioProjects, portfolioCategories, portfolioIndustries } from '../../content/portfolio/_projects.js';
+import { portfolioProjectsData, portfolioCategories, portfolioIndustries } from '../../content/portfolio/_projects.js';
 
 interface Props {
   data?: {
@@ -15,7 +15,7 @@ const {
   data = {
     title: "Our Projects",
     subtitle: "Showcasing our expertise across different industries and technologies",
-    projects: portfolioProjects,
+    projects: portfolioProjectsData,
     categories: portfolioCategories
   },
   className = "" 
