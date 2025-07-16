@@ -7,6 +7,7 @@ import ExplorePacksWhyChooseSection from '../components/explore-packs/ExplorePac
 import ExplorePacksWhyChooseFixedScopeSection from '../components/explore-packs/ExplorePacksWhyChooseFixedScopeSection.astro';
 import ExplorePacksHowItWorksFixedScopeSection from '../components/explore-packs/ExplorePacksHowItWorksFixedScopeSection.astro';
 import ExplorePacksTestimonialsSection from '../components/explore-packs/ExplorePacksTestimonialsSection.astro';
+import FAQSection from '../components/shared/FAQSection.astro';
 
 // Import isolated explore-packs content
 import { 
@@ -15,7 +16,8 @@ import {
   explorePacksWhyChooseData,
   whyChooseFixedScopeData,
   howItWorksFixedScopeData,
-  explorePacksTestimonialsData
+  explorePacksTestimonialsData,
+  explorePacksFAQData
 } from '../content/explore-packs/_index.js';
 ---
 
@@ -40,8 +42,8 @@ import {
   <!-- Testimonials Section -->
   <ExplorePacksTestimonialsSection data={explorePacksTestimonialsData} />
   
-  <!-- Why Choose Section -->
-  <ExplorePacksWhyChooseSection data={explorePacksWhyChooseData} />
+  <!-- FAQ Section -->
+  <FAQSection data={explorePacksFAQData} />
  
 </Layout>
 

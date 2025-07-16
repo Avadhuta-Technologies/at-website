@@ -28,7 +28,7 @@ export const explorePacksFAQData = {
     },
     {
       question: "Can I create a custom Pack?",
-      answer: "Yes! If none of the standard Packs fit your needs, you can request a Custom Pack tailored to your goals. Just Talk to a Specialist to get started."
+      answer: "Yes! If none of the standard Packs fit your needs, you can request a Custom Pack tailored to your goals. Just [Talk to a Specialist] to get started."
     },
     {
       question: "What if I only want a Pack but not a Pod?",
