@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import CheckoutHeroSection from '../components/checkout/CheckoutHeroSection.astro';
 import CheckoutFormSection from '../components/checkout/CheckoutFormSection.astro';
+import SelectedItemsDisplay from '../components/shared/SelectedItemsDisplay.astro';
 import { catalogUtils } from '../content/catalog/_index.js';
 
 // Import isolated checkout content
@@ -11,7 +12,7 @@ import {
   checkoutFormData
 } from '../content/checkout/_index.js';
 ---
-
+ 
 <Layout 
   description="Complete your order securely. Review your cart and provide your information to get started with your pod."
   title="Checkout | NovaPod.ai"
@@ -21,8 +22,24 @@ import {
   <!-- Hero Section -->
   <CheckoutHeroSection data={checkoutHeroData} />
   
-  <!-- Checkout Form Section -->
-  <CheckoutFormSection data={checkoutFormData} />
+  <!-- Main Content -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Selected Items Display -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8">
+            <SelectedItemsDisplay />
+          </div>
+        </div>
+        
+        <!-- Checkout Form Section -->
+        <div class="lg:col-span-2">
+          <CheckoutFormSection data={checkoutFormData} />
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>
 
 <script>

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import AddOnsHeroSection from '../components/add-ons/AddOnsHeroSection.astro';
 import AddOnsServicesSection from '../components/add-ons/AddOnsServicesSection.astro';
+import SelectedItemsDisplay from '../components/shared/SelectedItemsDisplay.astro';
 import CTASection from '../components/shared/CTASection.astro';
 
 // Import isolated add-ons content
@@ -21,20 +22,36 @@ import {
   <!-- Hero Section -->
   <AddOnsHeroSection data={addOnsHeroData} />
   
-  <!-- Services Section -->
-  <AddOnsServicesSection data={addOnsServicesData} />
+  <!-- Main Content -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Selected Items Display -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8">
+            <SelectedItemsDisplay />
+          </div>
+        </div>
+        
+        <!-- Services Section -->
+        <div class="lg:col-span-2">
+          <AddOnsServicesSection data={addOnsServicesData} />
+        </div>
+      </div>
+    </div>
+  </section>
   
   <!-- Final CTA Section -->
   <CTASection 
     title="Ready to Enhance Your Pod?"
     subtitle="Choose the add-ons that align with your project needs and let's build something amazing together."
     primaryButton={{
-      text: "Get Started",
-      url: "/contact"
+      label: "Get Started",
+      href: "/contact"
     }}
     secondaryButton={{
-      text: "Learn More",
-      url: "/explore-pods"
+      label: "Learn More",
+      href: "/explore-pods"
     }}
   />
 </Layout> 

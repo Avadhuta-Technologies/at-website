@@ -1,0 +1,248 @@
+---
+// Component to display selected pods and packs
+---
+
+<div id="selected-items-display" class="bg-white rounded-lg border border-gray-200 shadow-sm">
+  <!-- Header -->
+  <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+    <h3 class="text-lg font-semibold text-gray-900">Your Selection</h3>
+    <p class="text-sm text-gray-600">Review your selected pod and packs</p>
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <!-- Loading State -->
+    <div id="loading-state" class="text-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-4"></div>
+      <p class="text-gray-500">Loading your selection...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="text-center py-8 hidden">
+      <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+      </svg>
+      <p class="text-gray-500 mb-2">No items selected</p>
+      <p class="text-sm text-gray-400">Add a pod and packs to get started</p>
+    </div>
+
+    <!-- Items List -->
+    <div id="items-list" class="space-y-4 hidden">
+      <!-- Pod Section -->
+      <div id="pod-section" class="hidden">
+        <div class="flex items-center mb-3">
+          <h4 class="text-md font-semibold text-gray-900">Selected Pod</h4>
+          <span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+            Pod
+          </span>
+        </div>
+        <div id="pod-item" class="bg-primary-50 border border-primary-200 rounded-lg p-4">
+          <!-- Pod content will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Packs Section -->
+      <div id="packs-section" class="hidden">
+        <div class="flex items-center mb-3">
+          <h4 class="text-md font-semibold text-gray-900">Selected Packs</h4>
+          <span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            Packs
+          </span>
+        </div>
+        <div id="packs-list" class="space-y-3">
+          <!-- Pack items will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div id="summary-section" class="hidden pt-4 border-t border-gray-200">
+        <div class="flex justify-between items-center">
+          <span class="text-sm font-medium text-gray-700">Total Items:</span>
+          <span id="total-items" class="text-sm font-semibold text-gray-900">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  class SelectedItemsDisplay {
+    constructor() {
+      this.cartService = null;
+      this.init();
+    }
+
+    async init() {
+      // Wait for cart service to be available
+      if (typeof window !== 'undefined' && window.cartService) {
+        this.cartService = window.cartService;
+        this.loadSelectedItems();
+        
+        // Listen for cart updates
+        window.addEventListener('cart-updated', () => {
+          this.loadSelectedItems();
+        });
+      } else {
+        // Retry after a short delay
+        setTimeout(() => this.init(), 100);
+      }
+    }
+
+    async loadSelectedItems() {
+      if (!this.cartService) return;
+
+      try {
+        this.showLoading();
+        const cart = await this.cartService.getCart();
+        this.renderItems(cart);
+      } catch (error) {
+        console.error('Error loading selected items:', error);
+        this.showEmpty();
+      }
+    }
+
+    showLoading() {
+      document.getElementById('loading-state')?.classList.remove('hidden');
+      document.getElementById('empty-state')?.classList.add('hidden');
+      document.getElementById('items-list')?.classList.add('hidden');
+    }
+
+    showEmpty() {
+      document.getElementById('loading-state')?.classList.add('hidden');
+      document.getElementById('empty-state')?.classList.remove('hidden');
+      document.getElementById('items-list')?.classList.add('hidden');
+    }
+
+    renderItems(cart) {
+      if (cart.length === 0) {
+        this.showEmpty();
+        return;
+      }
+
+      document.getElementById('loading-state')?.classList.add('hidden');
+      document.getElementById('empty-state')?.classList.add('hidden');
+      document.getElementById('items-list')?.classList.remove('hidden');
+
+      // Separate pods and packs
+      const podItems = cart.filter(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
+
+      // Render pod
+      if (podItems.length > 0) {
+        this.renderPod(podItems[0]);
+      }
+
+      // Render packs
+      if (packItems.length > 0) {
+        this.renderPacks(packItems);
+      }
+
+      // Update summary
+      this.updateSummary(cart.length);
+    }
+
+    renderPod(pod) {
+      const podSection = document.getElementById('pod-section');
+      const podItem = document.getElementById('pod-item');
+      
+      if (podSection && podItem) {
+        podSection.classList.remove('hidden');
+        
+        podItem.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="flex items-center mb-2">
+                <h5 class="text-lg font-semibold text-gray-900">${pod.title}</h5>
+              </div>
+              <p class="text-sm text-gray-600 mb-3 line-clamp-2">${pod.description}</p>
+              <div class="flex items-center justify-between">
+                <span class="text-lg font-bold text-primary-600">${pod.price}</span>
+                ${pod.reservationMonths ? `<span class="text-sm text-gray-500">${pod.reservationMonths} months</span>` : ''}
+              </div>
+            </div>
+            <button 
+              onclick="removeFromCart('${pod.id}', 'pod')" 
+              class="ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+              title="Remove pod"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    renderPacks(packs) {
+      const packsSection = document.getElementById('packs-section');
+      const packsList = document.getElementById('packs-list');
+      
+      if (packsSection && packsList) {
+        packsSection.classList.remove('hidden');
+        
+        packsList.innerHTML = packs.map(pack => `
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center mb-2">
+                  <h5 class="text-lg font-semibold text-gray-900">${pack.title}</h5>
+                </div>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${pack.description}</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-lg font-bold text-green-600">${pack.price}</span>
+                  ${pack.duration ? `<span class="text-sm text-gray-500">${pack.duration}</span>` : ''}
+                </div>
+              </div>
+              <button 
+                onclick="removeFromCart('${pack.id}', 'pack')" 
+                class="ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+                title="Remove pack"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    updateSummary(totalItems) {
+      const summarySection = document.getElementById('summary-section');
+      const totalItemsElement = document.getElementById('total-items');
+      
+      if (summarySection && totalItemsElement) {
+        summarySection.classList.remove('hidden');
+        totalItemsElement.textContent = totalItems.toString();
+      }
+    }
+  }
+
+  // Global function for removing items
+  window.removeFromCart = async function(itemId, itemType) {
+    if (typeof window !== 'undefined' && window.cartService) {
+      try {
+        await window.cartService.removeItemById(itemId, itemType);
+        window.cartService.showNotification('Item removed from selection');
+      } catch (error) {
+        console.error('Error removing item:', error);
+      }
+    }
+  };
+
+  // Initialize the component
+  if (typeof window !== 'undefined') {
+    window.selectedItemsDisplay = new SelectedItemsDisplay();
+  }
+</script>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style> 

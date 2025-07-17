@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import EnhancePodHeroSection from '../components/enhance-pod/EnhancePodHeroSection.astro';
 import EnhancePodEnhancementsSection from '../components/enhance-pod/EnhancePodEnhancementsSection.astro';
+import SelectedItemsDisplay from '../components/shared/SelectedItemsDisplay.astro';
 import CTASection from '../components/shared/CTASection.astro';
 
 // Import isolated enhance-pod content
@@ -15,26 +16,28 @@ import {
 <Layout 
   description="Enhance your existing pod with additional team members and specialized skills. Take your project to the next level with our enhancement options."
   title="Enhance Pod | NovaPod.ai"
->
+> 
 
   
   <!-- Hero Section -->
   <EnhancePodHeroSection data={enhancePodHeroData} />
   
-  <!-- Enhancements Section -->
-  <EnhancePodEnhancementsSection data={enhancePodEnhancementsData} />
-  
-  <!-- Final CTA Section -->
-  <CTASection 
-    title="Ready to Enhance Your Pod?"
-    subtitle="Choose the enhancements that align with your project needs and let's accelerate your success."
-    primaryButton={{
-      text: "Get Started",
-      url: "/contact"
-    }}
-    secondaryButton={{
-      text: "Learn More",
-      url: "/explore-pods"
-    }}
-  />
+  <!-- Main Content -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Selected Items Display -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8">
+            <SelectedItemsDisplay />
+          </div>
+        </div>
+        
+        <!-- Enhancements Section -->
+        <div class="lg:col-span-2">
+          <EnhancePodEnhancementsSection data={enhancePodEnhancementsData} />
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout> 
