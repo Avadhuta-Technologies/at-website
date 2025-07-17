@@ -86,7 +86,18 @@ module.exports = {
         'success-light': '#dcfce7',
         'warning': '#f59e0b',
         'warning-light': '#fef3c7',
-        'error': '#ef4444',
+        'error': {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
+        },
         'error-light': '#fee2e2',
         'info': '#0ea5e9',
         'info-light': '#e0f2fe',
@@ -115,10 +126,6 @@ module.exports = {
       },
       
       fontFamily: {
-        // Geometric fonts for headings - subtle
-        'satoshi': ['Satoshi', 'sans-serif'],
-        'manrope': ['Manrope', 'sans-serif'],
-        'space-grotesk': ['Space Grotesk', 'sans-serif'],
         // Clean fonts for body text
         'inter': ['Inter', 'sans-serif'],
         'dm-sans': ['DM Sans', 'sans-serif'],
@@ -171,6 +178,11 @@ module.exports = {
         '16': '4rem',     // 64px
         '20': '5rem',     // 80px
         '24': '6rem',     // 96px
+        '32': '8rem',     // 128px
+      },
+
+      // Height utilities
+      minHeight: {
         '32': '8rem',     // 128px
       },
       
@@ -265,5 +277,23 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.resize-vertical': {
+          'resize': 'vertical',
+        },
+        '.resize-horizontal': {
+          'resize': 'horizontal',
+        },
+        '.resize-both': {
+          'resize': 'both',
+        },
+        '.resize-none': {
+          'resize': 'none',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 }

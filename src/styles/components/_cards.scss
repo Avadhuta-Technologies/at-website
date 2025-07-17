@@ -8,37 +8,61 @@
 
 // Glass Card - Primary Glassmorphism
 .card-glass {
-  @apply glass;
-  @apply hover:glass-strong hover:scale-105;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   @apply transition-all duration-300 ease-out;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    @apply scale-105;
+  }
 }
 
 // Glass Card with Hover Effects
 .card-glass-hover {
-  @apply glass;
-  @apply hover:glass-strong hover:scale-105 hover:-translate-y-1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   @apply transition-all duration-300 ease-out;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    @apply scale-105 -translate-y-1;
+  }
 }
 
 // Card Variants
 .card-primary {
-  @apply card-glass border-mint-200/30;
-  @apply hover:border-mint-300/50;
+  @apply card-glass border-mint-200;
+  @apply hover:border-mint-300;
 }
 
 .card-secondary {
-  @apply card-glass border-cerulean-200/30;
-  @apply hover:border-cerulean-300/50;
+  @apply card-glass border-cerulean-200;
+  @apply hover:border-cerulean-300;
 }
 
 .card-outline {
-  @apply card-glass border-graphite-200/50;
-  @apply hover:border-graphite-300/70;
+  @apply card-glass border-graphite-200;
+  @apply hover:border-graphite-300;
 }
 
 .card-ghost {
   @apply card-glass border-transparent;
-  @apply hover:border-graphite-200/50;
+  @apply hover:border-graphite-200;
 }
 
 // Card Content
@@ -47,11 +71,11 @@
 }
 
 .card-header {
-  @apply pb-4 border-b border-graphite-100/50;
+  @apply pb-4 border-b border-graphite-100;
 }
 
 .card-title {
-  @apply font-manrope font-semibold text-graphite-900 text-lg leading-tight;
+  @apply  font-semibold text-graphite-900 text-lg leading-tight;
 }
 
 .card-subtitle {
@@ -67,7 +91,7 @@
 }
 
 .card-footer {
-  @apply pt-4 border-t border-graphite-100/50;
+  @apply pt-4 border-t border-graphite-100;
 }
 
 // Card with Image
@@ -85,8 +109,13 @@
 
 // Card with Icon
 .card-icon {
-  @apply w-12 h-12 rounded-lg glass flex items-center justify-center mb-4;
-  @apply border-graphite-200/50;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply w-12 h-12 rounded-lg flex items-center justify-center mb-4;
+  @apply border-graphite-200;
 }
 
 // Card Stats
@@ -97,7 +126,7 @@
     @apply text-center;
     
     .stat-value {
-      @apply font-manrope font-bold text-2xl;
+      @apply  font-bold text-2xl;
       
       &.stat-primary {
         @apply text-mint-600;
@@ -120,13 +149,18 @@
 
 // Card Actions
 .card-actions {
-  @apply flex items-center justify-between mt-4 pt-4 border-t border-graphite-100/50;
+  @apply flex items-center justify-between mt-4 pt-4 border-t border-graphite-100;
 }
 
 // Card Badge
 .card-badge {
-  @apply inline-flex items-center px-2 py-1 glass rounded-full text-xs font-medium;
-  @apply border-graphite-200/50 text-graphite-700;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  @apply border-graphite-200 text-graphite-700;
 }
 
 // Card Loading State
@@ -135,7 +169,7 @@
   
   &::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent;
     @apply animate-pulse;
   }
 }
@@ -188,11 +222,11 @@
   
   .card-header,
   .card-footer {
-    @apply border-graphite-700/50;
+    @apply border-graphite-700;
   }
   
   .card-badge {
-    @apply border-graphite-600/50 text-graphite-300;
+    @apply border-graphite-600 text-graphite-300;
   }
   
   .card-stats .stat-label {

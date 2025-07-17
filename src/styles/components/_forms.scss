@@ -11,11 +11,15 @@
 }
 
 .form-input {
-  @apply w-full px-4 py-3 glass border-graphite-200/50 rounded-lg;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply w-full px-4 py-3 border-graphite-200 rounded-lg;
   @apply font-inter text-graphite-900 placeholder-graphite-500;
-  @apply focus:outline-none focus:ring-2 focus:ring-mint-500/50 focus:border-mint-500/50;
-  @apply hover:border-graphite-300/70 transition-all duration-200;
-  @apply backdrop-filter backdrop-blur-sm;
+  @apply focus:outline-none focus:ring-2 focus:ring-mint-500 focus:border-mint-500;
+  @apply hover:border-graphite-300 transition-all duration-200;
   
   &::placeholder {
     @apply text-graphite-400;
@@ -51,28 +55,28 @@
 
 // Form Input Variants
 .form-input-primary {
-  @apply border-mint-200/50 focus:border-mint-500/50 focus:ring-mint-500/50;
+  @apply border-mint-200 focus:border-mint-500 focus:ring-mint-500;
 }
 
 .form-input-secondary {
-  @apply border-cerulean-200/50 focus:border-cerulean-500/50 focus:ring-cerulean-500/50;
+  @apply border-cerulean-200 focus:border-cerulean-500 focus:ring-cerulean-500;
 }
 
 .form-input-outline {
-  @apply border-graphite-200/50 focus:border-graphite-500/50 focus:ring-graphite-500/50;
+  @apply border-graphite-200 focus:border-graphite-500 focus:ring-graphite-500;
 }
 
 // Form Validation States
 .form-input-error {
-  @apply border-error/50 focus:border-error/50 focus:ring-error/50;
+  @apply border-error-200 focus:border-error-200 focus:ring-error-200;
 }
 
 .form-input-success {
-  @apply border-mint-500/50 focus:border-mint-500/50 focus:ring-mint-500/50;
+  @apply border-mint-500 focus:border-mint-500 focus:ring-mint-500;
 }
 
 .form-input-warning {
-  @apply border-lavender-500/50 focus:border-lavender-500/50 focus:ring-lavender-500/50;
+  @apply border-lavender-500 focus:border-lavender-500 focus:ring-lavender-500;
 }
 
 // Form Messages
@@ -108,13 +112,17 @@
   
   &::before {
     content: '';
-    @apply w-5 h-5 glass border-graphite-200/50 rounded mr-3;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    @apply w-5 h-5 border-graphite-200 rounded mr-3;
     @apply flex-shrink-0 transition-all duration-200;
-    @apply backdrop-filter backdrop-blur-sm;
   }
   
   &:hover::before {
-    @apply border-graphite-300/70;
+    @apply border-graphite-300;
   }
 }
 
@@ -142,9 +150,13 @@
   
   &::before {
     content: '';
-    @apply w-11 h-6 glass border-graphite-200/50 rounded-full mr-3;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    @apply w-11 h-6 border-graphite-200 rounded-full mr-3;
     @apply flex-shrink-0 transition-all duration-200 relative;
-    @apply backdrop-filter backdrop-blur-sm;
     
     &::after {
       content: '';
@@ -154,7 +166,7 @@
   }
   
   &:hover::before {
-    @apply border-graphite-300/70;
+    @apply border-graphite-300;
   }
 }
 
@@ -168,12 +180,16 @@
 
 // Form Fieldset
 .form-fieldset {
-  @apply border border-graphite-200/50 rounded-lg p-6 glass;
-  @apply backdrop-filter backdrop-blur-sm;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply border border-graphite-200 rounded-lg p-6;
 }
 
 .form-legend {
-  @apply font-manrope font-semibold text-graphite-900 px-2;
+  @apply  font-semibold text-graphite-900 px-2;
 }
 
 // Form Grid
@@ -191,11 +207,11 @@
 
 // Form Actions
 .form-actions {
-  @apply flex items-center justify-between pt-6 border-t border-graphite-200/50;
+  @apply flex items-center justify-between pt-6 border-t border-graphite-200;
 }
 
 .form-actions-center {
-  @apply flex items-center justify-center gap-4 pt-6 border-t border-graphite-200/50;
+  @apply flex items-center justify-center gap-4 pt-6 border-t border-graphite-200;
 }
 
 // Form Loading State
@@ -204,7 +220,7 @@
   
   &::before {
     content: '';
-    @apply absolute inset-0 bg-white/50 backdrop-blur-sm rounded-lg;
+    @apply absolute inset-0 bg-white backdrop-blur-sm rounded-lg;
     @apply flex items-center justify-center;
   }
   
@@ -238,29 +254,29 @@
   
   .form-input {
     @apply text-white placeholder-graphite-400;
-    @apply border-graphite-600/50 hover:border-graphite-500/70;
+    @apply border-graphite-600 hover:border-graphite-500;
   }
   
   .form-checkbox-label::before,
   .form-radio-label::before {
-    @apply border-graphite-600/50;
+    @apply border-graphite-600;
   }
   
   .form-checkbox-label:hover::before,
   .form-radio-label:hover::before {
-    @apply border-graphite-500/70;
+    @apply border-graphite-500;
   }
   
   .form-switch-label::before {
-    @apply border-graphite-600/50;
+    @apply border-graphite-600;
   }
   
   .form-switch-label:hover::before {
-    @apply border-graphite-500/70;
+    @apply border-graphite-500;
   }
   
   .form-fieldset {
-    @apply border-graphite-600/50;
+    @apply border-graphite-600;
   }
   
   .form-legend {
@@ -268,10 +284,10 @@
   }
   
   .form-actions {
-    @apply border-graphite-600/50;
+    @apply border-graphite-600;
   }
   
   .form-actions-center {
-    @apply border-graphite-600/50;
+    @apply border-graphite-600;
   }
 } 

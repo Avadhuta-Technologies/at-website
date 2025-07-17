@@ -26,10 +26,14 @@
 
 // Primary Button - Muted Mint Glassmorphism
 .btn-primary {
-  @apply glass bg-mint-500/20 border-mint-500/30 text-mint-700;
-  @apply hover:bg-mint-500/30 hover:border-mint-500/50 hover:scale-105;
-  @apply focus:ring-mint-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-mint-100 border-mint-500 text-mint-700;
+  @apply hover:bg-mint-200 hover:border-mint-500 hover:scale-105;
+  @apply focus:ring-mint-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -38,10 +42,14 @@
 
 // Secondary Button - Cerulean Glassmorphism
 .btn-secondary {
-  @apply glass bg-cerulean-500/20 border-cerulean-500/30 text-cerulean-700;
-  @apply hover:bg-cerulean-500/30 hover:border-cerulean-500/50 hover:scale-105;
-  @apply focus:ring-cerulean-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-cerulean-100 border-cerulean-500 text-cerulean-700;
+  @apply hover:bg-cerulean-200 hover:border-cerulean-500 hover:scale-105;
+  @apply focus:ring-cerulean-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -50,10 +58,14 @@
 
 // Outline Button - Clean Glassmorphism
 .btn-outline {
-  @apply glass border-graphite-300/50 text-graphite-700;
-  @apply hover:bg-graphite-50/50 hover:border-graphite-400/70 hover:scale-105;
-  @apply focus:ring-graphite-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply border-graphite-300 text-graphite-700;
+  @apply hover:bg-graphite-100 hover:border-graphite-400 hover:scale-105;
+  @apply focus:ring-graphite-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -62,10 +74,14 @@
 
 // Ghost Button - Subtle Glassmorphism
 .btn-ghost {
-  @apply glass border-transparent text-graphite-700;
-  @apply hover:bg-graphite-50/30 hover:border-graphite-200/50 hover:scale-105;
-  @apply focus:ring-graphite-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply border-transparent text-graphite-700;
+  @apply hover:bg-graphite-100 hover:border-graphite-200 hover:scale-105;
+  @apply focus:ring-graphite-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -74,10 +90,14 @@
 
 // Success Button - Mint Glassmorphism
 .btn-success {
-  @apply glass bg-mint-500/20 border-mint-500/30 text-mint-700;
-  @apply hover:bg-mint-500/30 hover:border-mint-500/50 hover:scale-105;
-  @apply focus:ring-mint-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-mint-100 border-mint-500 text-mint-700;
+  @apply hover:bg-mint-200 hover:border-mint-500 hover:scale-105;
+  @apply focus:ring-mint-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -86,10 +106,14 @@
 
 // Warning Button - Lavender Glassmorphism
 .btn-warning {
-  @apply glass bg-lavender-500/20 border-lavender-500/30 text-lavender-700;
-  @apply hover:bg-lavender-500/30 hover:border-lavender-500/50 hover:scale-105;
-  @apply focus:ring-lavender-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-lavender-100 border-lavender-500 text-lavender-700;
+  @apply hover:bg-lavender-200 hover:border-lavender-500 hover:scale-105;
+  @apply focus:ring-lavender-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -98,10 +122,14 @@
 
 // Danger Button - Error Glassmorphism
 .btn-danger {
-  @apply glass bg-error/20 border-error/30 text-error-700;
-  @apply hover:bg-error/30 hover:border-error/50 hover:scale-105;
-  @apply focus:ring-error/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-error-100 border-error-200 text-error-700;
+  @apply hover:bg-error-200 hover:border-error-300 hover:scale-105;
+  @apply focus:ring-error-200 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -110,10 +138,14 @@
 
 // Gradient Button - Mint to Cerulean Glassmorphism
 .btn-gradient {
-  @apply glass bg-gradient-to-r from-mint-500/20 to-cerulean-500/20 border-mint-500/30 text-graphite-700;
-  @apply hover:from-mint-500/30 hover:to-cerulean-500/30 hover:border-mint-500/50 hover:scale-105;
-  @apply focus:ring-mint-500/50 focus:ring-offset-white;
-  @apply backdrop-filter backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply bg-gradient-to-r from-mint-100 to-cerulean-100 border-mint-500 text-graphite-700;
+  @apply hover:from-mint-200 hover:to-cerulean-200 hover:border-mint-500 hover:scale-105;
+  @apply focus:ring-mint-500 focus:ring-offset-white;
   
   &:active {
     @apply transform scale-95;
@@ -122,9 +154,14 @@
 
 // Icon Button - Compact Glassmorphism
 .btn-icon {
-  @apply p-2 rounded-lg glass border-graphite-200/50;
-  @apply hover:bg-graphite-50/30 hover:border-graphite-300/70 hover:scale-105;
-  @apply backdrop-filter backdrop-blur-md transition-all duration-300;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  @apply p-2 rounded-lg border-graphite-200;
+  @apply hover:bg-graphite-100 hover:border-graphite-300 hover:scale-105;
+  @apply transition-all duration-300;
   
   &.btn-icon-sm {
     @apply p-1.5;
@@ -180,22 +217,7 @@
   }
 }
 
-// Glassmorphism Utilities
-.glass {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
 
-.glass-strong {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
 
 // Responsive Button Sizes
 @media (max-width: 640px) {
@@ -207,13 +229,23 @@
 // Dark Mode Support - Clean Minimalistic
 .dark {
   .btn-outline {
-    @apply glass border-graphite-600/50 text-graphite-300;
-    @apply hover:bg-graphite-800/50 hover:border-graphite-500/70;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    @apply border-graphite-600 text-graphite-300;
+    @apply hover:bg-graphite-800 hover:border-graphite-500 hover:scale-105;
   }
   
   .btn-ghost {
-    @apply glass border-transparent text-graphite-300;
-    @apply hover:bg-graphite-800/30 hover:border-graphite-700/50;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    @apply border-transparent text-graphite-300;
+    @apply hover:bg-graphite-800 hover:border-graphite-700 hover:scale-105;
   }
   
   .glass {
