@@ -15,6 +15,46 @@ document.addEventListener('DOMContentLoaded', async () => {
           localStorage.setItem('novapod-cart', JSON.stringify(cart));
           return true;
         },
+        async getCart() {
+          console.log('🟢 [GlobalCartInit] Mock CartService.getCart called');
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          return cart;
+        },
+        async getCartSummary() {
+          console.log('🟢 [GlobalCartInit] Mock CartService.getCartSummary called');
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          const podItem = cart.find(item => item.type === 'pod');
+          const packItems = cart.filter(item => item.type === 'pack');
+          
+          // Calculate total price (simplified)
+          const totalPrice = cart.reduce((sum, item) => {
+            const price = item.price ? parseFloat(item.price.replace(/[^\d.]/g, '')) : 0;
+            return sum + price;
+          }, 0);
+          
+          return {
+            items: cart,
+            totalItems: cart.length,
+            totalPrice: totalPrice,
+            podItem: podItem,
+            packItems: packItems
+          };
+        },
+        async removeFromCart(index) {
+          console.log('🟢 [GlobalCartInit] Mock CartService.removeFromCart called with index:', index);
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          if (index >= 0 && index < cart.length) {
+            cart.splice(index, 1);
+            localStorage.setItem('novapod-cart', JSON.stringify(cart));
+            return true;
+          }
+          return false;
+        },
+        async clearCart() {
+          console.log('🟢 [GlobalCartInit] Mock CartService.clearCart called');
+          localStorage.removeItem('novapod-cart');
+          return true;
+        },
         async updateCartCount() {
           console.log('🟢 [GlobalCartInit] Mock CartService.updateCartCount called');
           const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');

@@ -166,7 +166,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     
     <!-- Non-critical JavaScript loaded asynchronously -->
     <script type="module" src="/scripts/global-cart-init.js"></script>
-    <script src="/scripts/cart-service-init.js"></script>
+    <script src="/scripts/cart-service-init.js" is:inline></script>
     <script type="module" src="/scripts/stickymenu.js"></script>
     <script type="module" src="/scripts/dropdown.js"></script>
     <script type="module" src="/scripts/darkMode.js"></script>
