@@ -352,12 +352,12 @@
       try {
         const cart = await this.cartService.getCart();
         
-        // Always navigate to checkout page
-        window.location.href = '/checkout';
+        // Navigate to enhance-pod page
+        window.location.href = '/enhance-pod';
       } catch (error) {
-        console.error('Error navigating to checkout:', error);
-        // Fallback to checkout page
-        window.location.href = '/checkout';
+        console.error('Error navigating to enhance-pod:', error);
+        // Fallback to enhance-pod page
+        window.location.href = '/enhance-pod';
       }
     }
 
@@ -446,11 +446,7 @@
       const checkoutBtnText = document.getElementById('checkout-btn-text');
       if (!checkoutBtnText) return;
 
-      if (cart.length === 0) {
-        checkoutBtnText.textContent = 'Start My Pod Journey';
-      } else {
-        checkoutBtnText.textContent = 'Proceed to Checkout';
-      }
+      checkoutBtnText.textContent = 'Start My Pod Journey';
     }
 
     showNotification(message, type = 'success') {
