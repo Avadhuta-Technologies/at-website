@@ -16,28 +16,33 @@ export interface Props {
 
 const { data } = Astro.props;
 
-// Color mapping for different badge types
+// Color mapping for different badge types - updated to use our color palette
 const getBadgeColorClasses = (color: string) => {
   const colorMap: Record<string, string> = {
-    blue: 'bg-blue-100 text-blue-800',
-    purple: 'bg-purple-100 text-purple-800',
-    green: 'bg-green-100 text-green-800',
-    pink: 'bg-pink-100 text-pink-800',
-    orange: 'bg-orange-100 text-orange-800',
-    teal: 'bg-teal-100 text-teal-800'
+    mint: 'bg-mint-100 text-mint-700 border-mint-200',
+    cerulean: 'bg-cerulean-100 text-cerulean-700 border-cerulean-200',
+    lavender: 'bg-lavender-100 text-lavender-700 border-lavender-200',
+    graphite: 'bg-graphite-100 text-graphite-700 border-graphite-200'
   };
-  return colorMap[color] || colorMap.blue;
+  return colorMap[color] || colorMap.mint;
 };
 ---
 
-<section id="packs-section" class="py-20 bg-gray-50">
-  <div class="container mx-auto px-4">
+<section id="packs-section" class="py-20 bg-gradient-to-br from-graphite-50 via-white to-mint-50/30 relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23f1f3f4" fill-opacity="0.4"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+  
+  <!-- Floating Glass Elements -->
+  <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-mint-200/20 to-cerulean-200/20 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-cerulean-200/20 to-lavender-200/20 rounded-full blur-3xl"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
     <!-- Section Header -->
     <div class="max-w-3xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      <h2 class="text-3xl md:text-4xl font-manrope font-bold text-graphite-900 mb-4">
         {data.title}
       </h2>
-      <p class="text-lg text-gray-600 leading-relaxed">
+      <p class="text-lg text-graphite-600 leading-relaxed font-inter">
         {data.subtitle}
       </p>
     </div>
@@ -46,32 +51,38 @@ const getBadgeColorClasses = (color: string) => {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
       {data.packs.map((pack, index) => {
         return (
-          <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <!-- Card Header -->
-            <div class="p-6 border-b border-gray-100">
-              <div class="flex items-start justify-between mb-4">
-                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                  </svg>
+          <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+            <!-- Glass Card Background -->
+            <div class="absolute inset-0 bg-gradient-to-br from-white/80 to-white/60 backdrop-blur-md border border-white/20 rounded-xl shadow-sm group-hover:shadow-lg transition-all duration-300"></div>
+            
+            <!-- Card Content -->
+            <div class="relative p-6 flex flex-col h-full">
+              <!-- Card Header -->
+              <div class="mb-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-12 h-12 bg-gradient-to-br from-mint-100 to-cerulean-100 rounded-lg flex items-center justify-center border border-mint-200/50">
+                    <svg class="w-6 h-6 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                  </div>
+                  {pack.badge && (
+                    <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getBadgeColorClasses(pack.badgeColor || 'mint')}`}>
+                      {pack.badge}
+                    </span>
+                  )}
                 </div>
-                {pack.badge && (
-                  <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getBadgeColorClasses(pack.badgeColor || 'blue')}`}>
-                    {pack.badge}
-                  </span>
-                )}
+                
+                <h3 class="text-xl font-manrope font-semibold text-graphite-900 mb-4">
+                  {pack.title}
+                </h3>
               </div>
               
-              <h3 class="text-xl font-semibold text-gray-900 mb-4">
-                {pack.title}
-              </h3>
-            </div>
-            
-            <!-- Card Body -->
-            <div class="p-6">
-              <p class="text-gray-600 mb-6 leading-relaxed">
-                {pack.description}
-              </p>
+              <!-- Card Body -->
+              <div class="flex-1 mb-6">
+                <p class="text-graphite-600 leading-relaxed font-inter">
+                  {pack.description}
+                </p>
+              </div>
               
               <!-- CTA Button -->
               <button 
@@ -80,7 +91,7 @@ const getBadgeColorClasses = (color: string) => {
                 data-item-type="pack"
                 data-item-title={pack.title}
                 data-item-description={pack.description}
-                class="w-full inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200">
+                class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md">
                 Add to Pod
               </button>
             </div>
@@ -93,7 +104,7 @@ const getBadgeColorClasses = (color: string) => {
     <div class="text-center">
       <a 
         href="/explore-packs" 
-        class="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 group"
+        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-white/80 to-white/60 backdrop-blur-md text-graphite-700 font-inter font-semibold rounded-lg border border-white/20 hover:from-white/90 hover:to-white/70 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md group"
       >
         <span>Explore All Packs</span>
         <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
