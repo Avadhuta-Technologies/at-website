@@ -1,0 +1,102 @@
+---
+interface Props {
+  text: string;
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  icon?: string;
+  className?: string;
+}
+
+const { 
+  text, 
+  href, 
+  variant = 'primary', 
+  size = 'md',
+  icon,
+  className = ""
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'px-3 py-2 text-sm',
+  md: 'px-4 py-2.5 text-base',
+  lg: 'px-6 py-3 text-lg'
+};
+
+const variantClasses = {
+  primary: 'glass bg-mint-500/20 border-mint-500/30 text-mint-700 hover:bg-mint-500/30 hover:border-mint-500/50',
+  secondary: 'glass bg-cerulean-500/20 border-cerulean-500/30 text-cerulean-700 hover:bg-cerulean-500/30 hover:border-cerulean-500/50',
+  outline: 'glass border-graphite-300/50 text-graphite-700 hover:bg-graphite-50/50 hover:border-graphite-400/70',
+  ghost: 'glass border-transparent text-graphite-700 hover:bg-graphite-50/30 hover:border-graphite-200/50'
+};
+---
+
+{href ? (
+  <a href={href} class={`glass-button ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}>
+    {icon && <span class="mr-2">{icon}</span>}
+    {text}
+  </a>
+) : (
+  <button class={`glass-button ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}>
+    {icon && <span class="mr-2">{icon}</span>}
+    {text}
+  </button>
+)}
+
+<style>
+  .glass-button {
+    @apply inline-flex items-center justify-center font-inter font-medium rounded-lg transition-all duration-300 ease-out;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+  
+  .glass-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .glass-button:active {
+    transform: translateY(0);
+  }
+  
+  .glass-button:focus {
+    outline: 2px solid rgba(34, 197, 94, 0.5);
+    outline-offset: 2px;
+  }
+  
+  /* Primary variant enhancements */
+  .glass-button.glass.bg-mint-500\/20 {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
+  }
+  
+  .glass-button.glass.bg-mint-500\/20:hover {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%);
+  }
+  
+  /* Secondary variant enhancements */
+  .glass-button.glass.bg-cerulean-500\/20 {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0.08) 100%);
+  }
+  
+  .glass-button.glass.bg-cerulean-500\/20:hover {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(14, 165, 233, 0.15) 100%);
+  }
+  
+  /* Outline variant enhancements */
+  .glass-button.glass.border-graphite-300\/50 {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  }
+  
+  .glass-button.glass.border-graphite-300\/50:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  }
+  
+  /* Ghost variant enhancements */
+  .glass-button.glass.border-transparent {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  }
+  
+  .glass-button.glass.border-transparent:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+  }
+</style> 

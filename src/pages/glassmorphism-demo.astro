@@ -1,0 +1,191 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassCard from '../components/ui/GlassCard.astro';
+import GlassButton from '../components/ui/GlassButton.astro';
+---
+
+<Layout title="Glassmorphism Demo - Clean Minimalistic Design" description="Explore our clean, minimalistic glassmorphism design system with subtle glass effects and elegant interactions.">
+  
+  <!-- Hero Section with Glassmorphism -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 clean-pattern"></div>
+    
+    <!-- Floating Glass Elements -->
+    <div class="absolute top-20 left-20 w-32 h-32 glass rounded-full opacity-30 animate-float"></div>
+    <div class="absolute top-40 right-32 w-24 h-24 glass rounded-full opacity-20 animate-float-delayed"></div>
+    <div class="absolute bottom-32 left-32 w-40 h-40 glass rounded-full opacity-25 animate-float"></div>
+    <div class="absolute bottom-20 right-20 w-28 h-28 glass rounded-full opacity-30 animate-float-delayed"></div>
+    
+    <!-- Main Content -->
+    <div class="relative z-10 text-center max-w-4xl mx-auto px-6">
+      <div class="glass-strong rounded-2xl p-12 mb-8">
+        <h1 class="text-5xl md:text-6xl font-manrope font-bold text-graphite-900 mb-6">
+          Clean Glassmorphism
+        </h1>
+        <p class="text-xl md:text-2xl font-inter text-graphite-700 mb-8 leading-relaxed">
+          Elegant, minimalistic design with subtle glass effects that enhance user experience without overwhelming the interface.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <GlassButton text="Explore Components" href="#components" variant="primary" size="lg" />
+          <GlassButton text="View Examples" href="#examples" variant="outline" size="lg" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Components Section -->
+  <section id="components" class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-manrope font-bold text-graphite-900 mb-4">
+          Glassmorphism Components
+        </h2>
+        <p class="text-lg font-inter text-graphite-700 max-w-2xl mx-auto">
+          Reusable components with clean glass effects that maintain visual hierarchy and improve usability.
+        </p>
+      </div>
+      
+      <!-- Glass Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <GlassCard 
+          title="Glass Cards"
+          description="Elegant cards with subtle backdrop blur and smooth hover effects."
+          icon="✨"
+          variant="light"
+        />
+        <GlassCard 
+          title="Interactive Elements"
+          description="Buttons and links with glassmorphism effects that respond to user interaction."
+          icon="🎯"
+          variant="mint"
+        />
+        <GlassCard 
+          title="Navigation"
+          description="Clean navigation with glass effects that maintain readability and accessibility."
+          icon="🧭"
+          variant="cerulean"
+        />
+      </div>
+      
+      <!-- Button Showcase -->
+      <div class="text-center mb-16">
+        <h3 class="text-2xl font-manrope font-semibold text-graphite-900 mb-8">
+          Button Variants
+        </h3>
+        <div class="flex flex-wrap justify-center gap-4">
+          <GlassButton text="Primary" variant="primary" />
+          <GlassButton text="Secondary" variant="secondary" />
+          <GlassButton text="Outline" variant="outline" />
+          <GlassButton text="Ghost" variant="ghost" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Examples Section -->
+  <section id="examples" class="py-20 px-6 bg-graphite-50/30">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-manrope font-bold text-graphite-900 mb-4">
+          Real-World Examples
+        </h2>
+        <p class="text-lg font-inter text-graphite-700 max-w-2xl mx-auto">
+          See how glassmorphism enhances different interface elements while maintaining clean aesthetics.
+        </p>
+      </div>
+      
+      <!-- Feature Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div class="glass-strong rounded-2xl p-8">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 glass rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">🎨</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-manrope font-semibold text-graphite-900 mb-3">
+                Design System
+              </h3>
+              <p class="text-graphite-700 mb-4">
+                Consistent glassmorphism effects across all components with carefully chosen opacity levels and blur values.
+              </p>
+              <GlassButton text="Learn More" variant="outline" size="sm" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="glass-strong rounded-2xl p-8">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 glass rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">⚡</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-manrope font-semibold text-graphite-900 mb-3">
+                Performance
+              </h3>
+              <p class="text-graphite-700 mb-4">
+                Optimized backdrop-filter effects that maintain smooth performance across all devices and browsers.
+              </p>
+              <GlassButton text="View Metrics" variant="outline" size="sm" />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="glass rounded-xl p-6 text-center">
+          <div class="text-3xl font-manrope font-bold text-mint-600 mb-2">95%</div>
+          <div class="text-graphite-700 font-inter">User Satisfaction</div>
+        </div>
+        <div class="glass rounded-xl p-6 text-center">
+          <div class="text-3xl font-manrope font-bold text-cerulean-600 mb-2">60%</div>
+          <div class="text-graphite-700 font-inter">Faster Loading</div>
+        </div>
+        <div class="glass rounded-xl p-6 text-center">
+          <div class="text-3xl font-manrope font-bold text-lavender-600 mb-2">100%</div>
+          <div class="text-graphite-700 font-inter">Accessibility</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="glass-strong rounded-2xl p-12">
+        <h2 class="text-3xl md:text-4xl font-manrope font-bold text-graphite-900 mb-6">
+          Ready to Implement?
+        </h2>
+        <p class="text-lg font-inter text-graphite-700 mb-8 max-w-2xl mx-auto">
+          Start using our clean glassmorphism design system to create elegant, professional interfaces that users love.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <GlassButton text="Get Started" href="/explore-pods" variant="primary" size="lg" />
+          <GlassButton text="View Documentation" href="/contact" variant="outline" size="lg" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+</style> 

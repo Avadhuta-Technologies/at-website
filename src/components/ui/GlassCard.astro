@@ -1,0 +1,133 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  icon?: string;
+  href?: string;
+  variant?: 'light' | 'dark' | 'mint' | 'cerulean';
+  className?: string;
+}
+
+const { 
+  title = "Glass Card", 
+  description = "A clean, minimalistic glassmorphism card component", 
+  icon = "✨",
+  href,
+  variant = 'light',
+  className = ""
+} = Astro.props;
+
+const variantClasses = {
+  light: 'glass',
+  dark: 'glass-dark',
+  mint: 'glass border-mint-200/30',
+  cerulean: 'glass border-cerulean-200/30'
+};
+
+const variantHoverClasses = {
+  light: 'hover:glass-strong',
+  dark: 'hover:glass-dark-strong',
+  mint: 'hover:border-mint-300/50 hover:bg-mint-50/20',
+  cerulean: 'hover:border-cerulean-300/50 hover:bg-cerulean-50/20'
+};
+---
+
+<div class={`glass-card ${variantClasses[variant]} ${variantHoverClasses[variant]} ${className}`}>
+  <div class="glass-card-content">
+    {icon && (
+      <div class="glass-card-icon">
+        <span class="text-2xl">{icon}</span>
+      </div>
+    )}
+    
+    {title && (
+      <h3 class="glass-card-title font-manrope font-semibold text-graphite-900">
+        {title}
+      </h3>
+    )}
+    
+    {description && (
+      <p class="glass-card-description font-inter text-graphite-700">
+        {description}
+      </p>
+    )}
+    
+    {href && (
+      <a href={href} class="glass-card-link">
+        <span class="text-mint-600 hover:text-mint-700 font-medium transition-colors">
+          Learn more →
+        </span>
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .glass-card {
+    @apply relative overflow-hidden rounded-xl p-6 transition-all duration-300 ease-out;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .glass-card:hover::before {
+    opacity: 1;
+  }
+  
+  .glass-card-content {
+    @apply relative z-10 space-y-4;
+  }
+  
+  .glass-card-icon {
+    @apply w-12 h-12 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .glass-card-title {
+    @apply text-lg leading-tight;
+  }
+  
+  .glass-card-description {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .glass-card-link {
+    @apply inline-flex items-center mt-4;
+  }
+  
+  /* Dark variant */
+  .glass-card.glass-dark {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-card.glass-dark .glass-card-title {
+    @apply text-white;
+  }
+  
+  .glass-card.glass-dark .glass-card-description {
+    @apply text-gray-300;
+  }
+  
+  .glass-card.glass-dark .glass-card-icon {
+    @apply bg-black/20 border-black/30;
+  }
+</style> 

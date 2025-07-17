@@ -4,59 +4,126 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary Colors - Professional & Trustworthy
-        'primary-blue': '#2563EB',
-        'primary-dark': '#1D4ED8',
-        'primary-light': '#DBEAFE',
+        // Clean Minimalistic Color Palette
+        // Soft Black & Graphite Base
+        'graphite': {
+          50: '#f8f9fa',
+          100: '#f1f3f4',
+          200: '#e8eaed',
+          300: '#dadce0',
+          400: '#bdc1c6',
+          500: '#9aa0a6',
+          600: '#80868b',
+          700: '#5f6368',
+          800: '#3c4043',
+          900: '#202124', // Soft black base
+          950: '#171717', // Deep graphite
+        },
+        
+        // Muted Accents
+        'mint': {
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+        },
+        
+        'lavender': {
+          50: '#fafafa',
+          100: '#f4f4f5',
+          200: '#e4e4e7',
+          300: '#d4d4d8',
+          400: '#a1a1aa',
+          500: '#71717a',
+          600: '#52525b',
+          700: '#3f3f46',
+          800: '#27272a',
+          900: '#18181b',
+        },
+        
+        'cerulean': {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        
+        // Primary Colors - Clean & Minimal
         'primary': {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          800: '#1E40AF',
-          900: '#1E3A8A',
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e', // Muted mint
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
         },
         
         // Secondary Colors - Supporting
-        'secondary-purple': '#7C3AED',
-        'secondary-purple-light': '#A78BFA',
-        'secondary-green': '#059669',
-        'secondary-green-light': '#34D399',
-        'secondary-orange': '#EA580C',
-        'secondary-orange-light': '#FB923C',
+        'secondary': {
+          'mint': '#22c55e',
+          'lavender': '#71717a',
+          'cerulean': '#0ea5e9',
+        },
         
         // Semantic Colors
-        'success': '#059669',
-        'success-light': '#D1FAE5',
-        'warning': '#D97706',
-        'warning-light': '#FEF3C7',
-        'error': '#DC2626',
-        'error-light': '#FEE2E2',
-        'info': '#2563EB',
-        'info-light': '#DBEAFE',
+        'success': '#22c55e',
+        'success-light': '#dcfce7',
+        'warning': '#f59e0b',
+        'warning-light': '#fef3c7',
+        'error': '#ef4444',
+        'error-light': '#fee2e2',
+        'info': '#0ea5e9',
+        'info-light': '#e0f2fe',
         
         // Text Colors
-        'text-primary': '#111827',
-        'text-secondary': '#4B5563',
-        'text-muted': '#6B7280',
-        'text-white': '#FFFFFF',
-        'text-dark': '#111827',
+        'text-primary': '#202124',
+        'text-secondary': '#5f6368',
+        'text-muted': '#9aa0a6',
+        'text-white': '#ffffff',
+        'text-dark': '#202124',
         
         // Background Colors
-        'bg-primary': '#FFFFFF',
-        'bg-secondary': '#F9FAFB',
-        'bg-dark': '#111827',
-        'bg-dark-2': '#1F2937',
-        'bg-dark-3': '#374151',
+        'bg-primary': '#ffffff',
+        'bg-secondary': '#f8f9fa',
+        'bg-tertiary': '#f1f3f4',
+        'bg-dark': '#202124',
+        'bg-dark-2': '#3c4043',
+        'bg-dark-3': '#5f6368',
+        
+        // Glass morphism colors - subtle
+        'glass': {
+          'primary': 'rgba(255, 255, 255, 0.8)',
+          'secondary': 'rgba(255, 255, 255, 0.6)',
+          'tertiary': 'rgba(255, 255, 255, 0.4)',
+        },
       },
       
       fontFamily: {
-        'primary': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        'secondary': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        // Geometric fonts for headings - subtle
+        'satoshi': ['Satoshi', 'sans-serif'],
+        'manrope': ['Manrope', 'sans-serif'],
+        'space-grotesk': ['Space Grotesk', 'sans-serif'],
+        // Clean fonts for body text
+        'inter': ['Inter', 'sans-serif'],
+        'dm-sans': ['DM Sans', 'sans-serif'],
+        'primary': ['Inter', 'sans-serif'],
+        'secondary': ['DM Sans', 'sans-serif'],
         'mono': ['JetBrains Mono', 'Fira Code', 'Monaco', 'Cascadia Code', 'monospace'],
       },
       
@@ -117,13 +184,14 @@ module.exports = {
       },
       
       boxShadow: {
+        // Clean, subtle shadows
         'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         'sm': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
         'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        'focus': '0 0 0 3px rgba(37, 99, 235, 0.1)',
+        'focus': '0 0 0 3px rgba(34, 197, 94, 0.1)',
       },
       
       transitionDuration: {
@@ -133,7 +201,8 @@ module.exports = {
       },
       
       transitionTimingFunction: {
-        'bounce': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'smooth': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'gentle': 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
       
       zIndex: {
@@ -144,6 +213,55 @@ module.exports = {
         'modal': '1050',
         'popover': '1060',
         'tooltip': '1070',
+      },
+      
+      // Clean animations for microinteractions
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'scale-in': 'scaleIn 0.2s ease-out',
+        'slide-up': 'slideUp 0.3s ease-out',
+      },
+      
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
+      
+      // Backdrop blur for subtle glass effects
+      backdropBlur: {
+        'xs': '2px',
+        'sm': '4px',
+        'md': '8px',
+        'lg': '12px',
+        'xl': '16px',
+        '2xl': '24px',
+        '3xl': '40px',
+      },
+      
+      // Glassmorphism utilities
+      backgroundImage: {
+        'glass': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+        'glass-strong': 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
+        'glass-dark': 'linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
+        'glass-dark-strong': 'linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.08) 100%)',
+      },
+      
+      // Glassmorphism border utilities
+      borderColor: {
+        'glass': 'rgba(255, 255, 255, 0.2)',
+        'glass-strong': 'rgba(255, 255, 255, 0.3)',
+        'glass-dark': 'rgba(0, 0, 0, 0.1)',
+        'glass-dark-strong': 'rgba(0, 0, 0, 0.15)',
       },
     },
   },

@@ -49,18 +49,46 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <!-- Preload Critical Resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+    
+    <!-- Clean Minimalistic Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" />
+    
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" />
+    
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" />
+    
+    <!-- Satoshi Font (self-hosted) -->
+    <link rel="preload" href="/fonts/satoshi.css" as="style" />
+    <link rel="stylesheet" href="/fonts/satoshi.css" />
     
     <!-- Critical CSS -->
     <style is:global>
       /* Critical CSS for above-the-fold content */
       :root {
-        --primary-500: #3b82f6;
-        --primary-600: #2563eb;
-        --gray-900: #111827;
-        --gray-50: #f9fafb;
-        --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        /* Clean Minimalistic Color Variables */
+        --primary-500: #22c55e;
+        --primary-600: #16a34a;
+        --graphite-900: #202124;
+        --graphite-800: #3c4043;
+        --graphite-700: #5f6368;
+        --mint-500: #22c55e;
+        --lavender-500: #71717a;
+        --cerulean-500: #0ea5e9;
+        
+        /* Font Families */
+        --font-family-satoshi: 'Satoshi', sans-serif;
+        --font-family-manrope: 'Manrope', sans-serif;
+        --font-family-space-grotesk: 'Space Grotesk', sans-serif;
+        --font-family-inter: 'Inter', sans-serif;
+        --font-family-dm-sans: 'DM Sans', sans-serif;
+        --font-family-primary: 'Inter', sans-serif;
+        --font-family-secondary: 'DM Sans', sans-serif;
       }
       
       * {
@@ -69,36 +97,56 @@ const { description, title, image, theme = 'auto' } = Astro.props;
       
       html {
         scroll-behavior: smooth;
+        background: #ffffff;
       }
       
       body {
         font-family: var(--font-family-primary);
-        background-color: var(--bg-primary, #ffffff);
-        color: var(--text-primary, var(--gray-900));
+        background: #ffffff;
+        color: #202124;
         line-height: 1.6;
         margin: 0;
         padding: 0;
         overflow-x: hidden;
         overflow-y: auto;
         position: relative;
+        min-height: 100vh;
       }
       
-      /* Dark mode support */
-      @media (prefers-color-scheme: dark) {
+      /* Clean Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f8f9fa;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #dadce0;
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #bdc1c6;
+      }
+      
+      /* Light mode support - clean minimalistic theme */
+      @media (prefers-color-scheme: light) {
         :root {
-          --bg-primary: #111827;
-          --text-primary: #f9fafb;
+          --bg-primary: #ffffff;
+          --text-primary: #202124;
         }
       }
       
-      [data-theme="dark"] {
-        --bg-primary: #111827;
-        --text-primary: #f9fafb;
+      [data-theme="light"], [data-theme="dark"], [data-theme="auto"] {
+        --bg-primary: #ffffff;
+        --text-primary: #202124;
       }
       
       /* Focus styles for accessibility */
       :focus-visible {
-        outline: 2px solid var(--primary-500);
+        outline: 2px solid var(--mint-500);
         outline-offset: 2px;
       }
       
@@ -107,16 +155,83 @@ const { description, title, image, theme = 'auto' } = Astro.props;
         position: absolute;
         top: -40px;
         left: 6px;
-        background: var(--primary-500);
+        background: var(--mint-500);
         color: white;
         padding: 8px;
         text-decoration: none;
         border-radius: 4px;
         z-index: 10000;
+        font-weight: 600;
       }
       
       .skip-link:focus {
         top: 6px;
+      }
+      
+      /* Clean background patterns */
+      .clean-pattern {
+        background-image: 
+          radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
+        background-size: 200px 200px, 300px 300px;
+        background-position: 0 0, 100px 100px;
+      }
+      
+      /* Clean Glassmorphism Utilities */
+      .glass {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      
+      .glass-strong {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      
+      .glass-dark {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      
+      .glass-dark-strong {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.08) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      
+      /* Glassmorphism hover effects */
+      .glass-hover {
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      
+      .glass-hover:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        backdrop-filter: blur(16px);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      /* Clean hover effects */
+      .hover-lift {
+        transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      
+      .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Loading animation */
+      .loading-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       }
     </style>
     
@@ -125,7 +240,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <noscript><link rel="stylesheet" href="/src/styles/main.scss" /></noscript>
   </head>
   
-  <body>
+  <body class="clean-pattern">
     <!-- Accessibility: Skip to main content -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
@@ -146,20 +261,28 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     
     <!-- Theme Script (loads early for better UX) -->
     <script>
-      // Theme management
+      // Theme management - clean minimalistic theme
       (function() {
-        const theme = document.documentElement.getAttribute('data-theme');
+        document.documentElement.setAttribute('data-theme', 'light');
         
-        if (theme === 'auto') {
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-        }
+        // Add clean pattern effect to body
+        document.body.classList.add('clean-pattern');
         
-        // Listen for theme changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-          if (theme === 'auto') {
-            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-          }
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = anchor.getAttribute('href');
+            if (href) {
+              const target = document.querySelector(href);
+              if (target) {
+                target.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }
+          });
         });
       })();
     </script>
@@ -173,7 +296,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <script type="module" src="/scripts/scrolltop.js"></script>
     <script type="module" src="/scripts/scrollmenu.js"></script>
     <script type="module" src="/scripts/testimonial.js"></script>
-    <script type="module" src="/scripts/scrollAnimations.js"></script>
+    <script type="module" src="/scripts/scrollAnimations.js"></script> 
     <script type="module" src="/scripts/interactiveElements.js"></script>
     <script type="module" src="/scripts/scrollUtils.js"></script>
   </body>
