@@ -4,47 +4,55 @@ export interface Props {
     title: string;
     volumeDiscounts: {
       title: string;
-      items: Array<{ period: string; discount: string }>;
+      items: Array<{
+        period: string;
+        discount: string;
+      }>;
     };
     bundleDiscounts: {
       title: string;
-      items: Array<{ bundle: string; discount: string }>;
+      items: Array<{
+        bundle: string;
+        discount: string;
+      }>;
     };
   };
+  className?: string;
 }
 
-const { data } = Astro.props;
+const { data, className = "" } = Astro.props;
 ---
 
-<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
   <div class="container mx-auto px-4">
-    <div class="max-w-6xl mx-auto">
-      <!-- Discounts & Special Offers -->
-      <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg p-8 mb-12 text-white">
-        <h2 class="text-2xl font-bold mb-6">{data.title}</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h3 class="text-lg font-semibold mb-4">{data.volumeDiscounts.title}</h3>
-            <ul class="space-y-2">
-              {data.volumeDiscounts.items.map((item) => (
-                <li class="flex items-center">
-                  <span class="font-semibold mr-2">{item.period}:</span>
-                  <span>{item.discount}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold mb-4">{data.bundleDiscounts.title}</h3>
-            <ul class="space-y-2">
-              {data.bundleDiscounts.items.map((item) => (
-                <li class="flex items-center">
-                  <span class="font-semibold mr-2">{item.bundle}:</span>
-                  <span>{item.discount}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-dark mb-4">{data.title}</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Volume Discounts -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">{data.volumeDiscounts.title}</h3>
+        <div class="space-y-4">
+          {data.volumeDiscounts.items.map((item) => (
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+              <span class="font-medium text-gray-900">{item.period}</span>
+              <span class="text-green-600 font-bold">{item.discount}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <!-- Bundle Discounts -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">{data.bundleDiscounts.title}</h3>
+        <div class="space-y-4">
+          {data.bundleDiscounts.items.map((item) => (
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+              <span class="font-medium text-gray-900">{item.bundle}</span>
+              <span class="text-green-600 font-bold">{item.discount}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

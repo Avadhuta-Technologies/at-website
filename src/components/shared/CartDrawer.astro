@@ -1,23 +1,18 @@
 ---
-// Global Cart Drawer Component
+// Cart Drawer Component
 ---
 
-<div id="cart-drawer" class="fixed top-0 bottom-0 right-0 w-80 bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-[9999] border-l border-gray-200 dark:border-gray-700 flex flex-col">
-  <!-- Drawer Header -->
-  <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white flex-shrink-0">
-    <div class="flex items-center">
-      <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-      </svg>
-      <h3 class="text-lg font-semibold">Your Cart</h3>
-    </div>
+<div id="cart-drawer" class="fixed top-0 bottom-0 right-0 w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-[9999] border-l border-gray-200 flex flex-col">
+  <!-- Header -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-white text-gray-900 flex-shrink-0">
+    <h3 class="text-lg font-semibold">Your Cart</h3>
     <div class="flex items-center space-x-2">
-      <button id="minimize-cart" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors">
+      <button id="minimize-cart" class="p-1 hover:bg-gray-100 rounded transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
         </svg>
       </button>
-      <button id="close-cart" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors">
+      <button id="close-cart" class="p-1 hover:bg-gray-100 rounded transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -25,104 +20,47 @@
     </div>
   </div>
 
-  <!-- Cart Items Container - Scrollable -->
-  <div id="cart-items" class="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
-    <!-- Cart items will be dynamically inserted here -->
-    <div id="empty-cart" class="text-center py-8">
-      <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-      </svg>
-      <p class="text-gray-500 dark:text-gray-400">Your cart is empty</p>
-      <p class="text-sm text-gray-400 dark:text-gray-500">Add a pod and packs to get started</p>
+  <!-- Cart Content -->
+  <div class="flex-1 overflow-y-auto">
+    <div id="cart-content" class="p-4">
+      <!-- Loading State -->
+      <div id="cart-loading" class="text-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p class="text-gray-500">Loading cart...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="cart-empty" class="text-center py-8 hidden">
+        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+        </svg>
+        <p class="text-gray-500">Your cart is empty</p>
+        <p class="text-sm text-gray-400">Add a pod and packs to get started</p>
+      </div>
+
+      <!-- Cart Items -->
+      <div id="cart-items" class="space-y-4 hidden">
+        <!-- Items will be dynamically inserted here -->
+      </div>
     </div>
   </div>
 
-  <!-- Cart Summary - Fixed at Bottom -->
-  <div id="cart-summary" class="border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800 flex-shrink-0">
-    
-    
-    <!-- Action Buttons -->
-    <div class="space-y-3 d-flex flex-wrap align-items-center">
-              <button id="checkout-btn" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-          <span id="checkout-btn-text">Start My Pod Journey</span>
-        </button>
-      <button id="clear-cart-btn" class="w-full border-2 border-red-500 text-red-500 py-2 px-4 rounded-lg font-semibold hover:bg-red-500 hover:text-white transition-all duration-300">
-        Clear Cart
-      </button>
+  <!-- Cart Summary -->
+  <div id="cart-summary" class="border-t border-gray-200 p-4 bg-gray-50 flex-shrink-0">
+    <div class="flex justify-between items-center mb-4">
+      <span class="text-sm font-medium text-gray-700">Total Items:</span>
+      <span id="cart-total-items" class="text-sm font-semibold text-gray-900">0</span>
     </div>
+    
+    <button 
+      id="checkout-btn"
+      class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+      disabled
+    >
+      Continue to Checkout
+    </button>
   </div>
 </div>
-
-<!-- Overlay -->
-<div id="cart-overlay" class="fixed inset-0 bg-black/50 z-popover hidden"></div>
-
-<style>
-  .cart-item {
-    animation: slideIn 0.3s ease-out;
-  }
-  
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  
-  .cart-item-removing {
-    animation: slideOut 0.3s ease-in;
-  }
-  
-  @keyframes slideOut {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-  }
-
-  /* Ensure proper scroll behavior */
-  #cart-items {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-  }
-
-  #cart-items::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  #cart-items::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  #cart-items::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.5);
-    border-radius: 3px;
-  }
-
-  #cart-items::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(156, 163, 175, 0.7);
-  }
-
-  /* Dark mode scrollbar */
-  .dark #cart-items {
-    scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
-  }
-
-  .dark #cart-items::-webkit-scrollbar-thumb {
-    background-color: rgba(75, 85, 99, 0.5);
-  }
-
-  .dark #cart-items::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(75, 85, 99, 0.7);
-  }
-</style>
 
 <script>
   class CartDrawer {
@@ -138,10 +76,12 @@
       if (typeof window !== 'undefined' && window.cartService) {
         this.cartService = window.cartService;
         this.setupEventListeners();
-        await this.loadCart();
+        this.loadCart();
         
-        // Dispatch ready event
-        window.dispatchEvent(new CustomEvent('cart-drawer-ready'));
+        // Listen for cart updates
+        window.addEventListener('cart-updated', () => {
+          this.loadCart();
+        });
       } else {
         // Retry after a short delay
         setTimeout(() => this.init(), 100);
@@ -149,14 +89,9 @@
     }
 
     setupEventListeners() {
-      // Cart toggle button (header cart button)
-      document.getElementById('header-cart-toggle')?.addEventListener('click', () => {
-        this.toggleCart();
-      });
-
       // Close button
       document.getElementById('close-cart')?.addEventListener('click', () => {
-        this.closeCart();
+        this.close();
       });
 
       // Minimize button
@@ -164,42 +99,23 @@
         this.toggleMinimize();
       });
 
-      // Overlay click - close drawer when clicking outside
-      document.getElementById('cart-overlay')?.addEventListener('click', () => {
-        this.closeCart();
-      });
-
-      // Clear cart button
-      document.getElementById('clear-cart-btn')?.addEventListener('click', () => {
-        this.clearCart();
-      });
-
-      // Checkout button - only navigation to checkout
+      // Checkout button
       document.getElementById('checkout-btn')?.addEventListener('click', () => {
-        this.proceedToCheckout();
+        window.location.href = '/checkout';
       });
 
-      // Listen for cart updates - open drawer when items are added
-      window.addEventListener('cart-updated', (event) => {
-        this.loadCart();
-        if (event && event.detail && event.detail.action === 'add') {
-          this.openCart();
+      // Close on backdrop click
+      document.addEventListener('click', (e) => {
+        const drawer = document.getElementById('cart-drawer');
+        if (e.target === drawer) {
+          this.close();
         }
       });
 
-      // Global click handler for outside clicks
-      document.addEventListener('click', (e) => {
-        if (this.isOpen) {
-          const drawer = document.getElementById('cart-drawer');
-          const overlay = document.getElementById('cart-overlay');
-          const headerCartToggle = document.getElementById('header-cart-toggle');
-          
-          // Check if click is outside drawer and not on cart toggle
-          if (drawer && !drawer.contains(e.target) && 
-              overlay && !overlay.contains(e.target) && 
-              headerCartToggle && !headerCartToggle.contains(e.target)) {
-            this.closeCart();
-          }
+      // Close on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.isOpen) {
+          this.close();
         }
       });
     }
@@ -210,84 +126,96 @@
       try {
         const cart = await this.cartService.getCart();
         this.renderCart(cart);
-        this.updateCartBadge(cart.length);
-        this.updateCheckoutButton(cart.length > 0);
-        this.updateCheckoutButtonText(cart);
-        
-        // Update header cart badge as well
-        this.updateHeaderCartBadge(cart.length);
       } catch (error) {
         console.error('Error loading cart:', error);
+        this.showEmpty();
       }
     }
 
     renderCart(cart) {
-      const cartItemsContainer = document.getElementById('cart-items');
-      const emptyCart = document.getElementById('empty-cart');
-      
-      if (!cartItemsContainer) return;
+      const loadingEl = document.getElementById('cart-loading');
+      const emptyEl = document.getElementById('cart-empty');
+      const itemsEl = document.getElementById('cart-items');
+      const totalItemsEl = document.getElementById('cart-total-items');
+      const checkoutBtn = document.getElementById('checkout-btn');
 
       if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '';
-        if (emptyCart) {
-          cartItemsContainer.appendChild(emptyCart);
+        loadingEl?.classList.add('hidden');
+        emptyEl?.classList.remove('hidden');
+        itemsEl?.classList.add('hidden');
+        
+        if (totalItemsEl) totalItemsEl.textContent = '0';
+        if (checkoutBtn) {
+          checkoutBtn.disabled = true;
+          checkoutBtn.textContent = 'Cart is Empty';
         }
         return;
       }
 
-      // Remove empty cart message
-      if (emptyCart) {
-        emptyCart.remove();
-      }
+      loadingEl?.classList.add('hidden');
+      emptyEl?.classList.add('hidden');
+      itemsEl?.classList.remove('hidden');
 
-      // Group items by type
+      // Separate pods and packs
       const podItems = cart.filter(item => item.type === 'pod');
       const packItems = cart.filter(item => item.type === 'pack');
 
       let html = '';
 
       // Render pod items
-      podItems.forEach(item => {
-        html += this.renderCartItem(item);
-      });
+      if (podItems.length > 0) {
+        html += '<div class="mb-6">';
+        html += '<h4 class="text-sm font-semibold text-gray-700 mb-3">Pod</h4>';
+        podItems.forEach(item => {
+          html += this.renderCartItem(item);
+        });
+        html += '</div>';
+      }
 
       // Render pack items
       if (packItems.length > 0) {
-        html += '<div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">';
-        html += '<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Packs</h4>';
+        html += '<div class="border-t border-gray-200 pt-4 mt-4">';
+        html += '<h4 class="text-sm font-semibold text-gray-700 mb-3">Packs</h4>';
         packItems.forEach(item => {
           html += this.renderCartItem(item);
         });
         html += '</div>';
       }
 
-      cartItemsContainer.innerHTML = html;
+      if (itemsEl) itemsEl.innerHTML = html;
+
+      // Update summary
+      if (totalItemsEl) totalItemsEl.textContent = cart.length.toString();
+      
+      if (checkoutBtn) {
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = 'Continue to Checkout';
+      }
 
       // Add remove event listeners
-      this.addRemoveEventListeners();
+      this.addRemoveListeners();
     }
 
     renderCartItem(item) {
-      const itemType = item.type === 'pod' ? 'Pod' : 'Pack';
       const itemColor = item.type === 'pod' ? 'blue' : 'green';
       
       return `
-        <div class="cart-item bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4" data-item-id="${item.id}" data-item-type="${item.type}">
+        <div class="cart-item bg-white rounded-lg border border-gray-200 p-4" data-item-id="${item.id}" data-item-type="${item.type}">
           <div class="flex items-start justify-between">
             <div class="flex-1">
               <div class="flex items-center mb-2">
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-${itemColor}-100 text-${itemColor}-800 dark:bg-${itemColor}-900 dark:text-${itemColor}-200 mr-2">
-                  ${itemType}
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-${itemColor}-100 text-${itemColor}-800 mr-2">
+                  ${item.type === 'pod' ? 'Pod' : 'Pack'}
                 </span>
-                <h4 class="text-sm font-semibold text-gray-900 dark:text-white">${item.title}</h4>
+                <h4 class="text-sm font-semibold text-gray-900">${item.title}</h4>
               </div>
-              <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">${item.description}</p>
-              <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-900 dark:text-white">${item.price}</span>
-                ${item.duration ? `<span class="text-xs text-gray-500">${item.duration}</span>` : ''}
-              </div>
+              <p class="text-xs text-gray-600 mb-2 line-clamp-2">${item.description}</p>
+              <span class="text-sm font-medium text-gray-900">${item.price}</span>
             </div>
-            <button class="remove-item-btn ml-3 p-1 text-gray-400 hover:text-red-500 transition-colors" data-item-id="${item.id}" data-item-type="${item.type}">
+            <button 
+              class="remove-item-btn ml-2 p-1 text-gray-400 hover:text-red-500 transition-colors"
+              title="Remove item"
+            >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -297,178 +225,64 @@
       `;
     }
 
-    addRemoveEventListeners() {
-      document.querySelectorAll('.remove-item-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+    addRemoveListeners() {
+      const removeBtns = document.querySelectorAll('.remove-item-btn');
+      removeBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
           e.preventDefault();
-          const itemId = btn.getAttribute('data-item-id');
-          const itemType = btn.getAttribute('data-item-type');
-          this.removeItem(itemId, itemType);
+          const cartItem = btn.closest('.cart-item');
+          if (cartItem) {
+            const itemId = cartItem.getAttribute('data-item-id');
+            const itemType = cartItem.getAttribute('data-item-type');
+            
+            if (itemId && itemType && this.cartService) {
+              await this.cartService.removeItemById(itemId, itemType);
+            }
+          }
         });
       });
     }
 
-    async removeItem(itemId, itemType) {
-      if (!this.cartService) return;
-
-      try {
-        const cart = await this.cartService.getCart();
-        const itemIndex = cart.findIndex(item => item.id === itemId && item.type === itemType);
-        
-        if (itemIndex !== -1) {
-          await this.cartService.removeFromCart(itemIndex);
-          this.showNotification('Item removed from cart');
-          
-          // Reload cart to update the display
-          await this.loadCart();
-          
-          // Dispatch cart updated event
-          window.dispatchEvent(new CustomEvent('cart-updated'));
-        }
-      } catch (error) {
-        console.error('Error removing item:', error);
-        this.showNotification('Error removing item', 'error');
-      }
-    }
-
-    async clearCart() {
-      if (!this.cartService) return;
-
-      if (confirm('Are you sure you want to clear your cart?')) {
-        try {
-          await this.cartService.clearCart();
-          this.showNotification('Cart cleared');
-          this.closeCart();
-        } catch (error) {
-          console.error('Error clearing cart:', error);
-          this.showNotification('Error clearing cart', 'error');
-        }
-      }
-    }
-
-    async proceedToCheckout() {
-      if (!this.cartService) return;
-
-      try {
-        const cart = await this.cartService.getCart();
-        
-        // Navigate to enhance-pod page
-        window.location.href = '/enhance-pod';
-      } catch (error) {
-        console.error('Error navigating to enhance-pod:', error);
-        // Fallback to enhance-pod page
-        window.location.href = '/enhance-pod';
-      }
-    }
-
-    toggleCart() {
-      if (this.isOpen) {
-        this.closeCart();
-      } else {
-        this.openCart();
-      }
-    }
-
-    openCart() {
-      const drawer = document.getElementById('cart-drawer');
-      const overlay = document.getElementById('cart-overlay');
+    showEmpty() {
+      const loadingEl = document.getElementById('cart-loading');
+      const emptyEl = document.getElementById('cart-empty');
+      const itemsEl = document.getElementById('cart-items');
       
-      if (drawer && overlay) {
+      loadingEl?.classList.add('hidden');
+      emptyEl?.classList.remove('hidden');
+      itemsEl?.classList.add('hidden');
+    }
+
+    open() {
+      const drawer = document.getElementById('cart-drawer');
+      if (drawer) {
         drawer.classList.remove('translate-x-full');
-        overlay.classList.remove('hidden');
         this.isOpen = true;
-        this.isMinimized = false;
+        document.body.style.overflow = 'hidden';
       }
     }
 
-    closeCart() {
+    close() {
       const drawer = document.getElementById('cart-drawer');
-      const overlay = document.getElementById('cart-overlay');
-      
-      if (drawer && overlay) {
+      if (drawer) {
         drawer.classList.add('translate-x-full');
-        overlay.classList.add('hidden');
         this.isOpen = false;
+        document.body.style.overflow = '';
       }
     }
 
     toggleMinimize() {
       const drawer = document.getElementById('cart-drawer');
-      
       if (drawer) {
         if (this.isMinimized) {
           drawer.classList.remove('w-16');
           drawer.classList.add('w-80');
-          this.isMinimized = false;
         } else {
           drawer.classList.remove('w-80');
           drawer.classList.add('w-16');
-          this.isMinimized = true;
         }
+        this.isMinimized = !this.isMinimized;
       }
-    }
-
-    updateCartBadge(count) {
-      const badge = document.getElementById('cart-badge');
-      if (badge) {
-        badge.textContent = count.toString();
-        badge.style.display = count > 0 ? 'flex' : 'none';
-      }
-    }
-
-    updateHeaderCartBadge(count) {
-      const headerCartToggle = document.getElementById('header-cart-toggle');
-      if (headerCartToggle) {
-        // Remove existing badge
-        const existingBadge = headerCartToggle.querySelector('.cart-badge');
-        if (existingBadge) {
-          existingBadge.remove();
-        }
-        
-        // Add new badge if count > 0
-        if (count > 0) {
-          const badge = document.createElement('span');
-          badge.className = 'cart-badge absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-[10px] sm:text-xs font-bold';
-          badge.textContent = count.toString();
-          headerCartToggle.appendChild(badge);
-        }
-      }
-    }
-
-    updateCheckoutButton(hasItems) {
-      const checkoutBtn = document.getElementById('checkout-btn');
-      if (checkoutBtn) {
-        checkoutBtn.disabled = !hasItems;
-      }
-    }
-
-    updateCheckoutButtonText(cart) {
-      const checkoutBtnText = document.getElementById('checkout-btn-text');
-      if (!checkoutBtnText) return;
-
-      checkoutBtnText.textContent = 'Start My Pod Journey';
-    }
-
-    showNotification(message, type = 'success') {
-      const notification = document.createElement('div');
-      const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-      notification.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;
-      notification.textContent = message;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-      }, 100);
-      
-      setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-          if (document.body.contains(notification)) {
-            document.body.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
     }
   }
 
@@ -476,4 +290,11 @@
   if (typeof window !== 'undefined') {
     window.cartDrawer = new CartDrawer();
   }
+
+  // Global function to open cart drawer
+  window.openCartDrawer = function() {
+    if (window.cartDrawer) {
+      window.cartDrawer.open();
+    }
+  };
 </script> 

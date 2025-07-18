@@ -113,9 +113,6 @@ module.exports = {
         'bg-primary': '#ffffff',
         'bg-secondary': '#f8f9fa',
         'bg-tertiary': '#f1f3f4',
-        'bg-dark': '#202124',
-        'bg-dark-2': '#3c4043',
-        'bg-dark-3': '#5f6368',
         
         // Glass morphism colors - subtle
         'glass': {
@@ -264,16 +261,14 @@ module.exports = {
       backgroundImage: {
         'glass': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
         'glass-strong': 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%)',
-        'glass-dark': 'linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
-        'glass-dark-strong': 'linear-gradient(135deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.08) 100%)',
+
       },
       
       // Glassmorphism border utilities
       borderColor: {
         'glass': 'rgba(255, 255, 255, 0.2)',
         'glass-strong': 'rgba(255, 255, 255, 0.3)',
-        'glass-dark': 'rgba(0, 0, 0, 0.1)',
-        'glass-dark-strong': 'rgba(0, 0, 0, 0.15)',
+
       },
     },
   },

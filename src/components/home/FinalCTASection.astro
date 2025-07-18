@@ -1,102 +1,83 @@
 ---
+import { finalCTAData } from '../../content/home/_finalCTA.js';
+
 export interface Props {
-  title?: string;
-  description?: string;
-  checklist?: string[];
-  buttons?: Array<{ label: string; href: string }>;
-  contactInfo?: {
-    email1: string;
-    email2: string;
-  };
+  data?: any;
+  className?: string;
 }
 
-const defaultTitle = "Ready to Build Smarter?";
-const defaultDescription = "Ditch slow agencies and scattered freelancers. NovaPod gives you a high-performance pod—expert humans + AI agents—ready to launch your product, feature, or automation in record time.";
-const defaultChecklist = [
-  "Outcome-focused",
-  "Fast ramp-up", 
-  "No micromanagement",
-  "Fully yours"
-];
-const defaultButtons = [
-  { label: "Start With A NovaPod", href: "#" },
-  { label: "Talk to a Pod Strategist", href: "#" }
-];
-const defaultContactInfo = {
-  email1: "vikram@avadhutatech.com",
-  email2: "vinay@avadhutatech.com"
-};
+const { data = finalCTAData, className = "" } = Astro.props;
 
-const {
-  title = defaultTitle,
-  description = defaultDescription,
-  checklist = defaultChecklist,
-  buttons = defaultButtons,
-  contactInfo = defaultContactInfo
-} = Astro.props;
+// Contact information
+const contactInfo = {
+  email1: "hello@avadhutatech.com",
+  email2: "partnerships@avadhutatech.com"
+};
 ---
-<section class="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 relative overflow-hidden">
+
+<section class="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 relative overflow-hidden">
   <!-- Background Elements -->
-  <div class="absolute inset-0">
-    <div class="absolute top-0 left-0 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl"></div>
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 right-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-1/3 w-72 h-72 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
   </div>
-  
+
   <div class="container mx-auto px-4 relative z-10">
     <div class="max-w-4xl mx-auto text-center">
-      <!-- Main Content -->
-      <div data-animate="scale-in" class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm rounded-3xl shadow-2xl p-12 border border-white/20">
-        <h2 data-animate="fade-in-up" class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
-          {title}
+      <!-- Main CTA Card -->
+      <div data-animate="scale-in" class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-12 border border-white/20">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
+          {data.title}
         </h2>
         
-        <p data-animate="fade-in-up" class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
-          {description}
+        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+          {data.subtitle}
         </p>
-        
-        <!-- Benefits Grid -->
-        <div data-animate="staggered-children" data-delay="200" data-stagger-delay="80" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-2xl mx-auto">
-          {checklist.map((item) => (
-            <div class="flex items-center justify-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 rounded-xl border border-green-200 dark:border-green-800">
-              <svg class="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span class="text-sm font-semibold text-green-800 dark:text-green-200">{item}</span>
+
+        <!-- Success Metrics -->
+        <div class="flex items-center justify-center p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 mb-8">
+          <div class="flex items-center space-x-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">500+</div>
+              <div class="text-sm text-gray-600">Projects Delivered</div>
             </div>
-          ))}
+            <div class="w-px h-8 bg-green-200"></div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">98%</div>
+              <div class="text-sm text-gray-600">Client Satisfaction</div>
+            </div>
+            <div class="w-px h-8 bg-green-200"></div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">24/7</div>
+              <div class="text-sm text-gray-600">Support Available</div>
+            </div>
+          </div>
         </div>
-        
-        <!-- Primary CTA Buttons -->
-        <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          {buttons.map((btn, index) => (
-            <a 
-              href={btn.href} 
-              class={`px-8 py-4 font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 ${
-                index === 0 
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-green-500/25 hover:shadow-green-500/40' 
-                  : 'bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 hover:border-gray-300 shadow-white/25 hover:shadow-white/40'
-              }`}
-            >
-              {btn.label}
-            </a>
-          ))}
-        </div>
-        
-        <!-- Contact Info -->
-        <div data-animate="fade-in-up" class="flex items-center justify-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
-          <span class="flex items-center">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <a href="/contact" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+            Start Your Project
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
             </svg>
-            Or reach us directly at
-          </span>
-          <div class="flex space-x-4">
-            <a href={`mailto:${contactInfo.email1}`} class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
+          </a>
+          
+          <a href="/explore-pods" class="inline-flex items-center justify-center px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:text-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+            Explore Our Pods
+          </a>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="text-center">
+          <p class="text-gray-600 mb-4">Ready to discuss your project?</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center text-sm">
+            <a href={`mailto:${contactInfo.email1}`} class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
               {contactInfo.email1}
             </a>
-            <span class="text-gray-400">or</span>
-            <a href={`mailto:${contactInfo.email2}`} class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
+            <span class="hidden sm:inline text-gray-400">|</span>
+            <a href={`mailto:${contactInfo.email2}`} class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
               {contactInfo.email2}
             </a>
           </div>
@@ -104,4 +85,33 @@ const {
       </div>
     </div>
   </div>
-</section> 
+</section>
+
+<style>
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+</style> 

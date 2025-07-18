@@ -4,345 +4,136 @@
 
 .how-it-works-section {
   padding: vars.$space-20 0;
-  background: linear-gradient(135deg, vars.$gray-50 0%, vars.$white 100%);
-  
-  &.dark {
-    background: linear-gradient(135deg, vars.$bg-dark 0%, vars.$bg-dark-2 100%);
-  }
+  background: vars.$gradient-primary;
   
   // Section header
   .section-header {
     text-align: center;
-    margin-bottom: vars.$space-20;
+    margin-bottom: vars.$space-16;
     
     .section-title {
       font-size: clamp(vars.$font-size-3xl, 4vw, vars.$font-size-5xl);
       font-weight: vars.$font-weight-extrabold;
       color: vars.$text-primary;
       margin-bottom: vars.$space-4;
-      
-      &.dark {
-        color: vars.$gray-50;
-      }
     }
     
     .section-description {
       color: vars.$gray-600;
-      max-width: 800px;
-      margin: 0 auto;
-      
-      &.dark {
-        color: vars.$gray-200;
-      }
     }
   }
   
-  // Steps container
-  .steps-container {
+  // Steps grid
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: vars.$space-12;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 vars.$space-4;
   }
   
-  // Individual step
-  .step {
-    display: grid;
-    margin-bottom: vars.$space-20;
-    
-    &:nth-child(even) {
-      .step-content {
-        order: 1;
-      }
-      
-      .step-visual {
-        order: 2;
-      }
-    }
+  // Individual step card
+  .step-card {
+    position: relative;
+    background: vars.$white;
+    border-radius: vars.$border-radius-2xl;
+    padding: vars.$space-12;
+    box-shadow: vars.$shadow-lg;
+    transition: all vars.$transition-slow;
+    overflow: hidden;
     
     // Step number
     .step-number {
-      display: inline-flex;
+      width: 4rem;
+      height: 4rem;
+      border-radius: vars.$border-radius-xl;
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 3rem;
-      height: 3rem;
-      background: vars.$gradient-primary;
+      margin-bottom: vars.$space-5;
+      background: vars.$gradient-secondary;
       color: vars.$white;
-      border-radius: 50%;
+      font-size: vars.$font-size-2xl;
       font-weight: vars.$font-weight-bold;
-      font-size: vars.$font-size-lg;
+      box-shadow: vars.$shadow-md;
     }
     
     // Step title
     .step-title {
-      font-size: vars.$font-size-3xl;
+      font-size: vars.$font-size-2xl;
       font-weight: vars.$font-weight-bold;
       color: vars.$text-primary;
-      margin-bottom: vars.$space-6;
-      line-height: 1.2;
-      
-      &.dark {
-        color: vars.$gray-50;
-      }
+      margin-bottom: vars.$space-4;
+      line-height: 1.3;
     }
     
     // Step description
     .step-description {
-      color: vars.$gray-600;
+      color: vars.$gray-500;
       line-height: vars.$line-height-relaxed;
-      margin-bottom: vars.$space-5;
-      
-      &.dark {
-        color: vars.$gray-300;
-      }
+      margin-bottom: vars.$space-6;
     }
     
-    // Pod types grid (for step 1)
-    .pod-types-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: vars.$space-6;
-      margin-top: vars.$space-5;
-    }
-    
-    .pod-type {
-      background: vars.$white;
-      border-radius: vars.$border-radius-lg;
-      padding: vars.$space-6;
-      box-shadow: vars.$shadow-md;
-      transition: all vars.$transition-normal;
-      
-      &.dark {
-        background: vars.$bg-dark-2;
-        box-shadow: vars.$shadow-lg;
-      }
-      
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: vars.$shadow-lg;
-      }
-      
-      .pod-name {
-        font-weight: vars.$font-weight-bold;
-        color: vars.$text-primary;
-        margin-bottom: vars.$space-2;
-        
-        &.dark {
-          color: vars.$gray-50;
-        }
-      }
-      
-      .pod-description {
-        color: vars.$gray-600;
-        font-size: vars.$font-size-sm;
-        line-height: vars.$line-height-normal;
-        
-        &.dark {
-          color: vars.$gray-300;
-        }
-      }
-    }
-    
-    // Benefits list (for step 2)
-    .benefits-list {
+    // Step features
+    .step-features {
       list-style: none;
       padding: 0;
-      margin-top: vars.$space-5;
-    }
-    
-    .benefit-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: vars.$space-4;
+      margin-bottom: vars.$space-6;
       
-      .benefit-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        background: vars.$gradient-success;
-        border-radius: 50%;
+      li {
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-right: vars.$space-4;
-        flex-shrink: 0;
+        margin-bottom: vars.$space-2;
+        color: vars.$gray-600;
+        font-size: vars.$font-size-sm;
         
         &::before {
           content: '✓';
-          color: vars.$white;
+          color: vars.$success;
           font-weight: vars.$font-weight-bold;
-          font-size: vars.$font-size-sm;
-        }
-      }
-      
-      .benefit-text {
-        color: vars.$gray-700;
-        font-weight: vars.$font-weight-medium;
-        
-        &.dark {
-          color: vars.$gray-200;
+          margin-right: vars.$space-2;
         }
       }
     }
     
-    // Pod composition (for step 3)
-    .pod-composition {
-      background: vars.$white;
-      border-radius: vars.$border-radius-xl;
-      padding: vars.$space-12;
-      box-shadow: vars.$shadow-lg;
-      margin-top: vars.$space-5;
-      
-      &.dark {
-        background: vars.$bg-dark-2;
-        box-shadow: vars.$shadow-2xl;
-      }
-      
-      .composition-title {
-        font-weight: vars.$font-weight-bold;
-        color: vars.$text-primary;
-        margin-bottom: vars.$space-6;
-        font-size: vars.$font-size-lg;
-        
-        &.dark {
-          color: vars.$gray-50;
-        }
-      }
-      
-      .composition-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: vars.$space-4;
-      }
-      
-      .composition-item {
-        text-align: center;
-        padding: vars.$space-4;
-        background: vars.$gray-50;
-        border-radius: vars.$border-radius-md;
-        
-        &.dark {
-          background: vars.$bg-dark-3;
-        }
-        
-        .item-icon {
-          width: 2rem;
-          height: 2rem;
-          background: vars.$gradient-primary;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto vars.$space-2;
-          
-          &::before {
-            content: '';
-            width: 1rem;
-            height: 1rem;
-            background: vars.$white;
-            border-radius: 50%;
-          }
-        }
-        
-        .item-name {
-          font-weight: vars.$font-weight-semibold;
-          color: vars.$text-primary;
-          font-size: vars.$font-size-sm;
-          
-          &.dark {
-            color: vars.$gray-50;
-          }
-        }
-      }
-    }
-    
-    // Adaptability features (for step 4)
-    .adaptability-features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: vars.$space-6;
-      margin-top: vars.$space-5;
-    }
-    
-    .adaptability-feature {
-      background: vars.$white;
+    // Step duration
+    .step-duration {
+      background: vars.$primary-50;
+      border: 1px solid vars.$primary-200;
       border-radius: vars.$border-radius-lg;
-      padding: vars.$space-6;
-      box-shadow: vars.$shadow-md;
-      transition: all vars.$transition-normal;
+      padding: vars.$space-4;
+      margin-bottom: vars.$space-6;
       
-      &.dark {
-        background: vars.$bg-dark-2;
-        box-shadow: vars.$shadow-lg;
-      }
-      
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: vars.$shadow-lg;
-      }
-      
-      .feature-title {
-        font-weight: vars.$font-weight-bold;
-        color: vars.$text-primary;
-        margin-bottom: vars.$space-2;
-        
-        &.dark {
-          color: vars.$gray-50;
-        }
-      }
-      
-      .feature-description {
-        color: vars.$gray-600;
+      .duration-label {
         font-size: vars.$font-size-sm;
-        line-height: vars.$line-height-normal;
-        
-        &.dark {
-          color: vars.$gray-300;
-        }
+        font-weight: vars.$font-weight-semibold;
+        color: vars.$primary-700;
+        margin-bottom: vars.$space-1;
+      }
+      
+      .duration-value {
+        font-size: vars.$font-size-lg;
+        font-weight: vars.$font-weight-bold;
+        color: vars.$primary-600;
       }
     }
-  }
-  
-  // Step visual (right side)
-  .step-visual {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     
-    .visual-container {
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-      height: 300px;
-      background: vars.$gradient-primary;
-      border-radius: vars.$border-radius-2xl;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    // Hover effects
+    &:hover {
+      transform: translateY(-8px);
       box-shadow: vars.$shadow-2xl;
       
-      &.dark {
-        background: vars.$gradient-secondary;
-      }
-      
-      .visual-icon {
-        width: 4rem;
-        height: 4rem;
-        background: vars.$white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: vars.$shadow-lg;
-        
-        &::before {
-          content: '';
-          width: 2rem;
-          height: 2rem;
-          background: vars.$gradient-primary;
-          border-radius: 50%;
-        }
+      .step-number {
+        transform: scale(1.1);
       }
     }
+    
+    // Animation delays for staggered entrance
+    &:nth-child(1) { animation-delay: 0.1s; }
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.3s; }
+    &:nth-child(4) { animation-delay: 0.4s; }
   }
 }
 
@@ -351,40 +142,14 @@
   .how-it-works-section {
     padding: 3rem 0;
     
-    .step {
+    .steps-grid {
       grid-template-columns: 1fr;
-      gap: 2rem;
-      
-      &:nth-child(even) {
-        .step-content,
-        .step-visual {
-          order: unset;
-        }
-      }
+      gap: 1.5rem;
+      padding: 0 1rem;
     }
     
-    .pod-types-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .composition-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .adaptability-features {
-      grid-template-columns: 1fr;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .how-it-works-section {
-    .composition-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .step-visual .visual-container {
-      height: 200px;
+    .step-card {
+      padding: 1.5rem;
     }
   }
 } 

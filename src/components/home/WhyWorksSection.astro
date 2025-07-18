@@ -1,30 +1,55 @@
 ---
+import { whyWorksData } from '../../content/home/_whyWorks.js';
+
 export interface Props {
-  title?: string;
-  items?: { icon: string; title: string; description: string }[];
+  data?: any;
+  className?: string;
 }
 
-const defaultItems = [
-  { icon: "/assets/features/icon-01.svg", title: "Fast Ramp-Up", description: "You need a ready-to-go team for your project" },
-  { icon: "/assets/features/icon-02.svg", title: "AI-Augmented", description: "Smart logistics + Code bots, fewer cycles" },
-  { icon: "/assets/features/icon-03.svg", title: "Global Talent", description: "Expert builders from across the world" },
-  { icon: "/assets/features/icon-04.svg", title: "Modular Automation", description: "Pods as your project evolves" },
-  { icon: "/assets/features/icon-01.svg", title: "Customer Focused", description: "Pay for results, not hours" }
-];
-
-const { title = "Why NovaPod Works", items = defaultItems } = Astro.props;
+const { data = whyWorksData, className = "" } = Astro.props;
 ---
-<section class="py-16 bg-gradient-to-br from-green-50 to-blue-50 dark:from-slate-800 dark:to-slate-900">
+
+<section class="py-16 bg-gradient-to-br from-green-50 to-blue-50">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark dark:text-white">{title}</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
-      {items.map((item) => (
-        <div class="flex flex-col items-center text-center p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-lg h-full transition-transform duration-300 hover:-translate-y-2 group">
-          <div class="mb-4 w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 shadow-lg">
-            <img src={item.icon} alt={item.title + ' icon'} class="w-8 h-8" />
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        {data.subtitle}
+      </p>
+    </div>
+
+    <!-- Why It Works Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {data.reasons.map((reason, index) => (
+        <div class="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-lg h-full transition-transform duration-300 hover:-translate-y-2 group">
+          <!-- Icon -->
+          <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <img src={reason.icon} alt={reason.title} class="w-10 h-10 filter brightness-0 invert" />
           </div>
-          <h3 class="text-lg font-bold text-dark dark:text-white mb-2">{item.title}</h3>
-          <p class="text-gray-600 dark:text-gray-300 text-base">{item.description}</p>
+
+          <!-- Content -->
+          <h3 class="text-xl font-bold text-gray-900 mb-4">
+            {reason.title}
+          </h3>
+          
+          <p class="text-gray-600 leading-relaxed">
+            {reason.description}
+          </p>
+
+          <!-- Features -->
+          <ul class="mt-6 space-y-2 w-full">
+            {reason.features.map((feature) => (
+              <li class="flex items-center text-gray-600 text-sm">
+                <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </div>

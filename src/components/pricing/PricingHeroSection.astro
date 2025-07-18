@@ -3,23 +3,20 @@ export interface Props {
   data: {
     title: string;
     subtitle: string;
-    description?: string;
   };
+  className?: string;
 }
 
-const { data } = Astro.props;
+const { data, className = "" } = Astro.props;
 ---
 
-<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
   <div class="container mx-auto px-4">
-    <div class="max-w-6xl mx-auto">
-      <!-- Pricing Header -->
-      <div class="text-center mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold text-dark dark:text-white mb-6">{data.title}</h1>
-        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-          {data.subtitle}
-        </p>
-      </div>
+    <div class="text-center max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold text-dark mb-6">{data.title}</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        {data.subtitle}
+      </p>
     </div>
   </div>
 </section> 

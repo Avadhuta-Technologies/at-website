@@ -1,179 +1,84 @@
 ---
+import { builtForData } from '../../content/home/_builtFor.js';
+
 export interface Props {
-  title?: string;
-  audiences?: Array<{
-    id: string;
-    title: string;
-    subtitle: string;
-    icon: string;
-    avatar: string;
-  }>;
-  cta?: {
-    question: string;
-    button: {
-      label: string;
-      href: string;
-    };
-  };
+  data?: any;
+  className?: string;
 }
 
-const defaultAudiences = [
-  {
-    id: "startup-founders",
-    title: "Startup Founders",
-    subtitle: "Bring your idea to life—faster and smarter.",
-    icon: "rocket",
-    avatar: "/assets/team/team-01.png"
-  },
-  {
-    id: "ai-innovators",
-    title: "AI Innovators",
-    subtitle: "Turn prompts into products.",
-    icon: "brain",
-    avatar: "/assets/team/team-02.png"
-  },
-  {
-    id: "ctos-tech-leads",
-    title: "CTOs & Tech Leads",
-    subtitle: "Get specialist pods without the recruiting grind.",
-    icon: "users",
-    avatar: "/assets/team/team-03.png"
-  },
-  {
-    id: "product-teams",
-    title: "Product Teams",
-    subtitle: "Add velocity without adding headcount.",
-    icon: "lightning",
-    avatar: "/assets/team/team-04.png"
-  },
-  {
-    id: "ecommerce-builders",
-    title: "Ecommerce Builders",
-    subtitle: "From store to growth engine.",
-    icon: "shopping-cart",
-    avatar: "/assets/team/team-01.png"
-  },
-  {
-    id: "digital-agencies",
-    title: "Digital Agencies & Studios",
-    subtitle: "Scale delivery. Keep your brand.",
-    icon: "paint-brush",
-    avatar: "/assets/team/team-02.png"
-  }
-];
-
-const defaultCTA = {
-  question: "Wondering if NovaPod fits your use case?",
-  button: {
-    label: "Book a 15-min strategy call",
-    href: "#"
-  }
-};
-
-const { 
-  title = "NovaPod is built for fast-moving teams and visionary founders who need outcomes—not overhead.", 
-  audiences = defaultAudiences,
-  cta = defaultCTA
-} = Astro.props;
-
-// SVG Icon Components - Relevant to audience content
-function getSvgIcon(iconType: string) {
-  switch (iconType) {
-    case "rocket":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-      </svg>`;
-    case "brain":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-      </svg>`;
-    case "users":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-      </svg>`;
-    case "lightning":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-      </svg>`;
-    case "shopping-cart":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-      </svg>`;
-    case "paint-brush":
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
-      </svg>`;
-    default:
-      return `<svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>`;
-  }
-}
+const { data = builtForData, className = "" } = Astro.props;
 ---
 
-<section class="py-16 bg-gradient-to-br from-slate-50 to-gray-50 dark:from-slate-900 dark:to-slate-800 w-full relative overflow-hidden">
-  <!-- Abstract Background Vectors -->
-  <div class="absolute inset-0 pointer-events-none">
-    <!-- Large gradient circles -->
-    <div class="absolute top-20 left-10 w-96 h-96 bg-gradient-to-br from-blue-400/5 to-purple-500/5 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-br from-purple-400/5 to-pink-500/5 rounded-full blur-3xl"></div>
-    
-    <!-- Geometric shapes -->
-    <div class="absolute top-32 right-1/4 w-32 h-32 bg-gradient-to-br from-blue-300/10 to-purple-400/10 transform rotate-45 blur-xl"></div>
-    <div class="absolute bottom-32 left-1/4 w-24 h-24 bg-gradient-to-br from-purple-300/10 to-pink-400/10 transform -rotate-12 blur-xl"></div>
+<section class="py-16 bg-gradient-to-br from-slate-50 to-gray-50 w-full relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-green-100 rounded-full opacity-20 blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-100 rounded-full opacity-10 blur-3xl"></div>
   </div>
-  
-  <div class="w-full px-4 relative z-10 max-w-6xl mx-auto">
-    <div data-animate="fade-in-up" class="max-w-4xl mx-auto text-center mb-16">
-      <h3 class="text-2xl md:text-3xl font-semibold mb-6 text-dark dark:text-white">{title}</h3>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        {data.subtitle}
+      </p>
     </div>
-    
-    <!-- Audiences Grid -->
-    <div data-animate="staggered-children" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-      {audiences.map((audience, index) => (
-        <div class="audience-card group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 transition-all duration-500 hover:-translate-y-2 hover-lift">
-          <!-- Card Content -->
-          <div class="p-6 h-full flex flex-col">
-            <!-- Header with Avatar and Icon -->
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center space-x-3">
-              
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
-                  <Fragment set:html={getSvgIcon(audience.icon)} />
-                </div>
+
+    <!-- Audience Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {data.audiences.map((audience, index) => (
+        <div class="audience-card group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 transition-all duration-500 hover:-translate-y-2 hover-lift">
+          <!-- Card Header -->
+          <div class="p-8">
+            <div class="flex items-center mb-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                <img src={audience.icon} alt={audience.title} class="w-8 h-8 filter brightness-0 invert" />
+              </div>
+              <div>
+                <h3 class="font-bold text-xl mb-3 text-dark group-hover:text-blue-600 transition-colors duration-300">
+                  {audience.title}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                  {audience.subtitle}
+                </p>
               </div>
             </div>
-            
-            <!-- Title and Subtitle -->
-            <div class="flex-1">
-              <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                {audience.title}
-              </h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                {audience.subtitle}
-              </p>
-            </div>
+
+            <!-- Card Content -->
+            <p class="text-gray-600 mb-6 leading-relaxed">
+              {audience.description}
+            </p>
+
+            <!-- Features List -->
+            <ul class="space-y-3 mb-8">
+              {audience.features.map((feature) => (
+                <li class="flex items-center text-gray-600">
+                  <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <!-- CTA Button -->
+            <a href={audience.cta.url} class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+              {audience.cta.text}
+              <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
           </div>
-          
-          <!-- Hover effect overlay -->
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 rounded-2xl"></div>
+
+          <!-- Decorative Elements -->
+          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-bl-full opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+          <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-br from-green-100 to-blue-100 rounded-tr-full opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
         </div>
       ))}
-    </div>
-    
-    <!-- CTA Section -->
-    <div data-animate="fade-in-up" class="text-center">
-      <div class="p-8 max-w-2xl mx-auto">
-        <h3 class="text-xl font-semibold text-dark dark:text-white mb-4">
-          {cta.question}
-        </h3>
-        <a href={cta.button.href} class="inline-flex items-center justify-center py-3 px-8 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-          {cta.button.label}
-          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
     </div>
   </div>
 </section>

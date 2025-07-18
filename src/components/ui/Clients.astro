@@ -1,47 +1,37 @@
 ---
 export interface Props {
   title?: string;
-  industries?: string[];
+  clients: Array<{
+    name: string;
+    logo: string;
+    logoDark?: string;
+  }>;
+  className?: string;
 }
-const { title, industries } = Astro.props;
+
+const { title, clients, className = "" } = Astro.props;
 ---
 
-<section class="pb-20 dark:bg-dark">
-  <div class="container px-4">
-    {industries ? (
-      <>
-        <div class="mx-auto mb-[60px] max-w-[485px] text-center">
-          {title && <h2 class="mb-4 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.2]">{title}</h2>}
-        </div>
-        <ul class="flex flex-wrap justify-center gap-4 text-gray-700 text-base mb-8">
-          {industries.map((industry, idx) => (
-            <li key={idx}>{industry}</li>
+<section class="pb-20">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-wrap -mx-4">
+      <div class="w-full px-4">
+        {title && <h2 class="mb-4 text-3xl font-bold text-dark sm:text-4xl md:text-[40px] md:leading-[1.2]">{title}</h2>}
+        
+        <div class="flex flex-wrap items-center justify-center">
+          {clients.map((client) => (
+            <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-8">
+              <div class="flex items-center justify-center">
+                <img
+                  src={client.logo}
+                  alt={client.name}
+                  class="h-12 opacity-60 hover:opacity-100 transition-opacity duration-300"
+                />
+              </div>
+            </div>
           ))}
-        </ul>
-      </>
-    ) : (
-      <div class="-mx-4 flex flex-wrap items-center justify-center gap-8 xl:gap-11">
-        {
-          clients.map(client => (
-            <a
-              href={client.ref}
-              target="_blank"
-              rel="nofollow noopner"
-            >
-              <img
-                src={client.image}
-                alt={client.name}
-                class="dark:hidden"
-              />
-              <img
-                src={client.whiteImage}
-                alt={client.name}
-                class="hidden dark:block"
-              />
-            </a>
-          ))
-        }
+        </div>
       </div>
-    )}
+    </div>
   </div>
 </section>

@@ -133,12 +133,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.glass-effect-dark {
-  background: rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
+
 
 /* Gradient text */
 .gradient-text {
@@ -177,7 +172,7 @@
 
 /* Card styles */
 .card {
-  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700;
+  @apply bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100;
 }
 
 .card-hover {
@@ -190,36 +185,36 @@
 }
 
 .badge-blue {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+  @apply bg-blue-100 text-blue-800;
 }
 
 .badge-purple {
-  @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200;
+  @apply bg-purple-100 text-purple-800;
 }
 
 .badge-green {
-  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+  @apply bg-green-100 text-green-800;
 }
 
 .badge-orange {
-  @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200;
+  @apply bg-orange-100 text-orange-800;
 }
 
 .badge-teal {
-  @apply bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200;
+  @apply bg-teal-100 text-teal-800;
 }
 
 .badge-indigo {
-  @apply bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200;
+  @apply bg-indigo-100 text-indigo-800;
 }
 
 .badge-cyan {
-  @apply bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200;
+  @apply bg-cyan-100 text-cyan-800;
 }
 
 /* Loading states */
 .loading {
-  @apply animate-pulse bg-gray-200 dark:bg-gray-700;
+  @apply animate-pulse bg-gray-200;
 }
 
 .loading-text {
@@ -232,7 +227,7 @@
 
 /* Focus styles */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 }
 
 /* Responsive utilities */
@@ -248,10 +243,7 @@
   @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl;
 }
 
-/* Dark mode utilities */
-.dark-mode-toggle {
-  @apply fixed bottom-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:scale-110;
-}
+
 
 /* Scroll utilities */
 .scroll-smooth {
@@ -305,7 +297,7 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .card {
-    @apply border-2 border-black dark:border-white;
+    @apply border-2 border-black;
   }
   
   .btn-primary {

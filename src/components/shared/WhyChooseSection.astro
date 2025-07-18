@@ -1,58 +1,50 @@
 ---
-import { whyChooseIcons } from '../our-work/icons.js';
-
-export interface Props {
-  title: string;
-  points: Array<{
+interface Props {
+  data: {
     title: string;
-    description: string;
-  }>;
+    subtitle: string;
+    features: Array<{
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
   className?: string;
 }
 
-const { title, points, className = "" } = Astro.props;
-
-// Map point titles to icons
-const getWhyChooseIcon = (pointTitle: string) => {
-  const iconMap: Record<string, string> = {
-    'Problem-First Approach': whyChooseIcons.problemFirst,
-    'Tech That Scales': whyChooseIcons.techScales,
-    'Cross-Domain Excellence': whyChooseIcons.crossDomain
-  };
-  return iconMap[pointTitle] || whyChooseIcons.problemFirst;
-};
+const { data, className = "" } = Astro.props;
 ---
 
-<section class={`py-16 bg-gradient-to-br from-gray-50 to-white dark:from-dark-2 dark:to-dark ${className}`}>
+<section class={`py-16 bg-gradient-to-br from-gray-50 to-white ${className}`}>
   <div class="container mx-auto px-4">
-    <div class="max-w-4xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
-        {title}
+    <!-- Section Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark animate-fade-in-up">
+        {data.title}
       </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+        {data.subtitle}
+      </p>
     </div>
-    
-    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {points?.map((point, index) => (
-        <div class="why-choose-card group relative rounded-xl shadow-lg p-8 bg-white dark:bg-dark-2 hover:-translate-y-2 transition-all duration-300 cursor-pointer animate-fade-in-up animation-delay-${(index + 1) * 200}">
-          {/* Icon */}
-          <div class="mb-6">
-            <div class="w-16 h-16 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-              <Fragment set:html={getWhyChooseIcon(point.title)} />
-            </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {data.features.map((feature, index) => (
+        <div class="why-choose-card group relative rounded-xl shadow-lg p-8 bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer animate-fade-in-up animation-delay-${(index + 1) * 200}">
+          <!-- Icon -->
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={feature.icon}></path>
+            </svg>
           </div>
-          
-          {/* Content */}
-          <div>
-            <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-              {point.title}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300">
-              {point.description}
-            </p>
-          </div>
-          
-          {/* Hover indicator */}
-          <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+
+          <!-- Content -->
+          <h3 class="font-bold text-xl mb-3 transition-colors duration-300 text-dark group-hover:text-blue-600">
+            {feature.title}
+          </h3>
+          <p class="text-gray-600 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">
+            {feature.description}
+          </p>
         </div>
       ))}
     </div>

@@ -1,7 +1,7 @@
 export const explorePacksFAQData = {
   title: "Frequently Asked Questions",
   subtitle: "Everything you need to know about our Packs",
-  items: [
+  faqs: [
     {
       question: "What exactly is a Pack?",
       answer: "A Pack is a fixed-scope, fixed-cost add-on that extends the capabilities of a Pod. It delivers a specific outcome — like launching your product, adding automation, or improving UX — in a defined time frame."

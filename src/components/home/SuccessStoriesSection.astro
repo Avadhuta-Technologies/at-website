@@ -1,118 +1,88 @@
 ---
+import { successStoriesData } from '../../content/home/_successStories.js';
+
 export interface Props {
-  title?: string;
-  cases?: Array<{
-    logo: string;
-    title: string;
-    client: string;
-    engagement: string;
-    success: string;
-    challenge: string;
-    outcomes: string[];
-    quote: string;
-    quoteAuthor: string;
-    button: { label: string; href: string };
-  }>;
+  data?: any;
+  className?: string;
 }
 
-const defaultCases = [
-  {
-    logo: "/assets/testimonials/author-01.jpg",
-    title: "Security Patrol App Revamp — With Ongoing Feature Delivery",
-    client: "B2B SaaS Company in Security Tech",
-    engagement: "👥 Full-Stack Dev Pod",
-    success: "🔄 Legacy Modernization & Continuous Delivery",
-    challenge: "Rewrite legacy Cordova app, improve stability & launch face-recognition attendance",
-    outcomes: [
-      "Rebuilt app in Ionic + Capacitor",
-      "Delivered weekly features with full QA",
-      "Recovered lost clients within 2 months"
-    ],
-    quote: "It's like having a product team on demand — we've shipped more in 3 months than we did in the last year.",
-    quoteAuthor: "CEO",
-    button: { label: "Read Case Study", href: "#" }
-  },
-  {
-    logo: "/assets/testimonials/author-02.jpg",
-    title: "E-commerce Feature Expansion — Payments + Analytics",
-    client: "Regional Retail Brand Entering D2C",
-    engagement: "🎯 Feature Add-On Pack",
-    success: "💸 Revenue-Ready Feature Rollout",
-    challenge: "Add Razorpay integration + product usage analytics",
-    outcomes: [
-      "Delivered & deployed in 2.5 weeks",
-      "Enabled full checkout flow & customer tracking",
-      "Now working on mobile app pack"
-    ],
-    quote: "Their pack-based approach gave us clarity and speed — no back and forth, just delivery.",
-    quoteAuthor: "Tech Lead",
-    button: { label: "Read Case Study", href: "#" }
-  }
-];
-
-const { title = "Success Stories", cases = defaultCases } = Astro.props;
+const { data = successStoriesData, className = "" } = Astro.props;
 ---
-<section class="py-16 bg-gradient-to-br from-blue-50 to-green-50 dark:from-slate-800 dark:to-slate-900">
+
+<section class="py-16 bg-gradient-to-br from-blue-50 to-green-50">
   <div class="container mx-auto px-4">
-    <h2 data-animate="fade-in-up" class="text-3xl md:text-4xl font-bold text-center mb-12 text-dark dark:text-white">{title}</h2>
-    <div data-animate="staggered-children" class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-      {cases.map((c) => (
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 group border border-gray-100 dark:border-slate-700 hover-lift">
-          <!-- Header with Logo and Client -->
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        {data.subtitle}
+      </p>
+    </div>
+
+    <!-- Success Stories Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {data.stories.map((story, index) => (
+        <div class="bg-white rounded-2xl shadow-lg p-8 flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 group border border-gray-100 hover-lift">
+          <!-- Story Header -->
           <div class="flex items-center mb-6">
-            <img src={c.logo} alt={c.client + ' logo'} class="w-16 h-16 rounded-full mr-4 shadow-lg" />
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+              <img src={story.icon} alt={story.title} class="w-8 h-8 filter brightness-0 invert" />
+            </div>
             <div>
-              <div class="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">{c.client}</div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">{c.engagement}</div>
+              <h3 class="font-bold text-xl text-gray-900 mb-1">
+                {story.title}
+              </h3>
+              <p class="text-sm text-gray-500">
+                {story.industry}
+              </p>
             </div>
           </div>
-          
-          <!-- Title -->
-          <h3 class="text-xl font-bold mb-4 text-dark dark:text-white leading-tight">{c.title}</h3>
-          
-          <!-- Success Badge -->
-          {c.success && (
-            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 mb-4 w-fit">
-              {c.success}
+
+          <!-- Story Content -->
+          <div class="flex-1">
+            <p class="text-gray-600 mb-6 leading-relaxed">
+              {story.description}
+            </p>
+
+            <!-- Key Results -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-6 flex-1">
+              <h4 class="font-semibold text-gray-900 mb-3">Key Results:</h4>
+              <ul class="space-y-2">
+                {story.results.map((result) => (
+                  <li class="flex items-center text-gray-600">
+                    <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    {result}
+                  </li>
+                ))}
+              </ul>
             </div>
-          )}
-          
-          <!-- Challenge -->
-          {c.challenge && (
-            <div class="mb-4">
-              <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Challenge:</h4>
-              <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{c.challenge}</p>
+
+            <!-- Technologies Used -->
+            <div class="mb-6">
+              <h4 class="font-semibold text-gray-900 mb-3">Technologies:</h4>
+              <div class="flex flex-wrap gap-2">
+                {story.technologies.map((tech) => (
+                  <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    {tech}
+                  </span>
+                ))}
+              </div>
             </div>
-          )}
-          
-          <!-- Outcomes -->
-          <div class="mb-6">
-            <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Outcome:</h4>
-            <ul class="space-y-1">
-              {c.outcomes && c.outcomes.map((outcome) => (
-                <li class="flex items-start text-sm text-gray-600 dark:text-gray-400">
-                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                  {outcome}
-                </li>
-              ))}
-            </ul>
           </div>
-          
-          <!-- Quote -->
-          {c.quote && (
-            <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-4 mb-6 flex-1">
-              <div class="text-sm text-gray-700 dark:text-gray-300 italic mb-2">"{c.quote}"</div>
-              <div class="text-xs font-medium text-gray-600 dark:text-gray-400">— {c.quoteAuthor}</div>
-            </div>
-          )}
-          
+
           <!-- CTA Button -->
-          <a href={c.button.href} class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-            {c.button.label}
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
+          <div class="mt-auto">
+            <a href={story.cta.url} class="inline-flex items-center justify-center w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              {story.cta.text}
+              <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       ))}
     </div>

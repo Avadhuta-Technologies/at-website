@@ -28,20 +28,20 @@ const title = data?.title || titleProp;
 const cards = data?.cards || cardsProp;
 ---
 
-<section class={`py-16 bg-gradient-to-br from-gray-50 to-white dark:from-dark-2 dark:to-dark ${className}`}>
+<section class={`py-16  ${className}`}>
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark  animate-fade-in-up">
         {title}
       </h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+      <p class="text-lg text-gray-600  max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
         Why choose our specialized project pods for your tech needs
       </p>
     </div>
     
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {cards?.map((card, index) => (
-        <div class="why-choose-card group relative rounded-xl shadow-lg p-8 bg-white dark:bg-dark-2 hover:-translate-y-2 transition-all duration-300 cursor-pointer animate-fade-in-up animation-delay-${(index + 1) * 200}">
+        <div class="why-choose-card group relative rounded-xl shadow-lg p-8 bg-white  hover:-translate-y-2 transition-all duration-300 cursor-pointer animate-fade-in-up animation-delay-${(index + 1) * 200}">
           {/* Icon */}
           <div class="mb-6">
             <div class={`w-16 h-16 rounded-xl ${card.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
@@ -51,10 +51,10 @@ const cards = data?.cards || cardsProp;
           
           {/* Content */}
           <div>
-            <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+            <h3 class="font-bold text-xl mb-3 text-dark  group-hover:text-blue-600  transition-colors duration-300">
               {card.title}
             </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors duration-300">
+            <p class="text-gray-600 leading-relaxed group-hover:text-gray-800  transition-colors duration-300">
               {card.description}
             </p>
           </div>

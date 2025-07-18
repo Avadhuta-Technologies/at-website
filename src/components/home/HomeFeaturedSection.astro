@@ -1,154 +1,87 @@
 ---
+import { homeFeaturedData } from '../../content/home/_featured.js';
+
 export interface Props {
-  title: string;
-  subtitle: string;
-  pods: Array<{
-    id: string;
-    title: string;
-    description: string;
-    icon: string;
-    badge: string;
-    badgeColor: string;
-    teamComposition: string[];
-    deliverables: string[];
-    engagement: string;
-    priceINR: string;
-    priceUSD: string;
-  }>;
-  packs: Array<{
-    id: string;
-    title: string;
-    description: string;
-    icon: string;
-    badge: string;
-    badgeColor: string;
-    deliverables: string[];
-    timeline: string;
-    priceINR: string;
-    priceUSD: string;
-  }>;
+  data?: any;
   className?: string;
 }
 
-const { title, subtitle, pods, packs, className = "" } = Astro.props;
-
-// Utility functions
-function getBadgeStyle(color: string): string {
-  const colorMap: Record<string, string> = {
-    'blue': 'bg-blue-100 text-blue-800',
-    'purple': 'bg-purple-100 text-purple-800',
-    'orange': 'bg-orange-100 text-orange-800',
-    'teal': 'bg-teal-100 text-teal-800',
-    'green': 'bg-green-100 text-green-800',
-    'indigo': 'bg-indigo-100 text-indigo-800',
-    'cyan': 'bg-cyan-100 text-cyan-800'
-  };
-  return colorMap[color] || 'bg-blue-100 text-blue-800';
-}
-
-function getGradientClass(color: string): string {
-  const colorMap: Record<string, string> = {
-    'blue': 'from-blue-500 to-cyan-500',
-    'purple': 'from-purple-500 to-pink-500',
-    'orange': 'from-orange-500 to-red-500',
-    'teal': 'from-teal-500 to-green-500',
-    'green': 'from-green-500 to-emerald-500',
-    'indigo': 'from-indigo-500 to-purple-500',
-    'cyan': 'from-cyan-500 to-blue-500'
-  };
-  return colorMap[color] || 'from-blue-500 to-cyan-500';
-}
+const { data = homeFeaturedData, className = "" } = Astro.props;
 ---
 
-<section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3 ${className}`}>
+<section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 ${className}`}>
   <div class="container mx-auto px-4">
-    <div class="max-w-4xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
-        {title}
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900">
+        {data.title}
       </h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-        {subtitle}
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        {data.subtitle}
       </p>
     </div>
 
     <!-- Featured Pods -->
-    <div class="mb-20">
-      <h3 class="text-2xl md:text-3xl font-bold text-center mb-12 text-dark dark:text-white">
-        Popular Project Pods
+    <div class="mb-16">
+      <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">
+        {data.podsSection.title}
       </h3>
-      <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {pods.map((pod, index) => (
-          <div class={`pod-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200}`}>
-            <div class="relative z-10 flex flex-col h-full p-8">
-              {/* Header */}
-              <div class="flex items-center justify-between mb-6">
-                <div class={`w-16 h-16 rounded-2xl bg-gradient-to-r ${getGradientClass(pod.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
-                  <img src={pod.icon} alt={`${pod.title} Icon`} class="w-8 h-8 filter brightness-0 invert" />
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {data.podsSection.pods.map((pod, index) => (
+          <div class={`pod-card group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200}`}>
+            <!-- Card Header -->
+            <div class="p-8 flex-1">
+              <div class="flex items-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <img src={pod.icon} alt={pod.title} class="w-8 h-8 filter brightness-0 invert" />
                 </div>
-                <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeStyle(pod.badgeColor)} transform transition-all duration-300 group-hover:scale-105`}>
-                  {pod.badge}
-                </span>
-              </div>
-              
-              {/* Title and Description */}
-              <div class="mb-6">
-                <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                  {pod.title}
-                </h3>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {pod.description}
-                </p>
-              </div>
-              
-              {/* Team Composition */}
-              <div class="mb-6">
-                <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-                  <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                  </svg>
-                  Team Composition
-                </h4>
-                <ul class="space-y-2">
-                  {pod.teamComposition.slice(0, 2).map((member) => (
-                    <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
-                      <span class="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span class="leading-relaxed">{member}</span>
-                    </li>
-                  ))}
-                  {pod.teamComposition.length > 2 && (
-                    <li class="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                      +{pod.teamComposition.length - 2} more team members
-                    </li>
-                  )}
-                </ul>
-              </div>
-              
-              {/* Pricing and Engagement - Fixed at bottom */}
-              <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-2 mb-3">
-                  <span class={`text-xs px-3 py-1 rounded-full font-medium ${getBadgeStyle(pod.badgeColor)}`}>
-                    <b>Engagement:</b> {pod.engagement}
+                <div>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {pod.badge}
                   </span>
                 </div>
-                <div class="mb-4">
-                  <div class="font-bold text-2xl text-dark dark:text-white">{pod.priceINR}</div>
-                  <div class="font-semibold text-lg text-gray-600 dark:text-gray-400">{pod.priceUSD}</div>
-                </div>
-                
-                {/* Action Buttons */}
-                <div class="flex gap-3">
-                  <a href="#" class="flex-1 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl">
-                    Get Started
-                  </a>
-                  <a href={`/pods/${pod.id}`} class="flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20">
-                    Details
-                  </a>
-                </div>
               </div>
+              
+              <h3 class="font-bold text-xl mb-3 text-dark group-hover:text-blue-600 transition-colors duration-300">
+                {pod.title}
+              </h3>
+              
+              <p class="text-gray-600 mb-6 leading-relaxed">
+                {pod.description}
+              </p>
+              
+              <!-- Features -->
+              <ul class="space-y-3 mb-6">
+                {pod.features.map((feature) => (
+                  <li class="flex items-center text-gray-600">
+                    <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </div>
             
-            {/* Hover effect overlay */}
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 rounded-2xl"></div>
+            <!-- Card Footer -->
+            <div class="mt-auto pt-6 border-t border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-2xl font-bold text-blue-600">
+                  {pod.price}
+                </div>
+                <div class="text-sm text-gray-500">
+                  {pod.duration}
+                </div>
+              </div>
+              
+              <a href={pod.cta.url} class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                {pod.cta.text}
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </a>
+            </div>
           </div>
         ))}
       </div>
@@ -156,102 +89,67 @@ function getGradientClass(color: string): string {
 
     <!-- Featured Packs -->
     <div>
-      <h3 class="text-2xl md:text-3xl font-bold text-center mb-12 text-dark dark:text-white">
-        Featured Project Packs
+      <h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">
+        {data.packsSection.title}
       </h3>
-      <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {packs.map((pack, index) => (
-          <div class={`pack-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200}`}>
-            <div class="relative z-10 flex flex-col h-full p-8">
-              {/* Header */}
-              <div class="flex items-center justify-between mb-6">
-                <div class={`w-16 h-16 rounded-2xl bg-gradient-to-r ${getGradientClass(pack.badgeColor)} flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg`}>
-                  <img src={pack.icon} alt={`${pack.title} Icon`} class="w-8 h-8 filter brightness-0 invert" />
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {data.packsSection.packs.map((pack, index) => (
+          <div class={`pack-card group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200}`}>
+            <!-- Card Header -->
+            <div class="p-8 flex-1">
+              <div class="flex items-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <img src={pack.icon} alt={pack.title} class="w-8 h-8 filter brightness-0 invert" />
                 </div>
-                <span class={`text-xs px-3 py-1 rounded-full font-semibold ${getBadgeStyle(pack.badgeColor)} transform transition-all duration-300 group-hover:scale-105`}>
-                  {pack.badge}
-                </span>
-              </div>
-              
-              {/* Title and Description */}
-              <div class="mb-6">
-                <h3 class="font-bold text-xl mb-3 text-dark dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-300">
-                  {pack.title}
-                </h3>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {pack.description}
-                </p>
-              </div>
-              
-              {/* Deliverables */}
-              <div class="mb-6">
-                <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-                  <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Key Deliverables
-                </h4>
-                <ul class="space-y-2">
-                  {pack.deliverables.slice(0, 3).map((deliverable) => (
-                    <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
-                      <span class="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span class="leading-relaxed">{deliverable}</span>
-                    </li>
-                  ))}
-                  {pack.deliverables.length > 3 && (
-                    <li class="text-xs text-green-600 dark:text-green-400 font-medium">
-                      +{pack.deliverables.length - 3} more deliverables
-                    </li>
-                  )}
-                </ul>
-              </div>
-              
-              {/* Timeline and Pricing - Fixed at bottom */}
-              <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-2 mb-3">
-                  <span class={`text-xs px-3 py-1 rounded-full font-medium ${getBadgeStyle(pack.badgeColor)}`}>
-                    <b>Timeline:</b> {pack.timeline}
+                <div>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    {pack.badge}
                   </span>
                 </div>
-                <div class="mb-4">
-                  <div class="font-bold text-2xl text-dark dark:text-white">{pack.priceINR}</div>
-                  <div class="font-semibold text-lg text-gray-600 dark:text-gray-400">{pack.priceUSD}</div>
-                </div>
-                
-                {/* Action Buttons */}
-                <div class="flex gap-3">
-                  <a href="#" class="flex-1 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl">
-                    Get Started
-                  </a>
-                  <a href={`/packs/${pack.id}`} class="flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20">
-                    Details
-                  </a>
-                </div>
               </div>
+              
+              <h3 class="font-bold text-xl mb-3 text-dark group-hover:text-green-600 transition-colors duration-300">
+                {pack.title}
+              </h3>
+              
+              <p class="text-gray-600 mb-6 leading-relaxed">
+                {pack.description}
+              </p>
+              
+              <!-- Features -->
+              <ul class="space-y-3 mb-6">
+                {pack.features.map((feature) => (
+                  <li class="flex items-center text-gray-600">
+                    <svg class="w-5 h-5 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </div>
             
-            {/* Hover effect overlay */}
-            <div class="absolute inset-0 bg-gradient-to-br from-green-500/0 to-emerald-500/0 group-hover:from-green-500/5 group-hover:to-emerald-500/5 transition-all duration-500 rounded-2xl"></div>
+            <!-- Card Footer -->
+            <div class="mt-auto pt-6 border-t border-gray-100">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-2xl font-bold text-green-600">
+                  {pack.price}
+                </div>
+                <div class="text-sm text-gray-500">
+                  {pack.duration}
+                </div>
+              </div>
+              
+              <a href={pack.cta.url} class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                {pack.cta.text}
+                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </a>
+            </div>
           </div>
         ))}
-      </div>
-    </div>
-
-    <!-- View All Button -->
-    <div class="text-center mt-16 animate-fade-in-up animation-delay-800">
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/explore-pods" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-          View All Pods
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-          </svg>
-        </a>
-        <a href="/explore-packs" class="inline-flex items-center px-8 py-4 border-2 border-green-500 text-green-600 rounded-xl font-semibold hover:bg-green-500 hover:text-white transition-all duration-300 transform hover:scale-105">
-          View All Packs
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-          </svg>
-        </a>
       </div>
     </div>
   </div>
