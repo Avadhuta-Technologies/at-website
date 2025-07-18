@@ -19,101 +19,140 @@ export interface Props {
 }
 
 const { pod, index } = Astro.props;
+
+// Get contextually appropriate icon based on pod name and content
+const getPodIcon = (pod: any) => {
+  const name = pod.name.toLowerCase();
+  
+  // AI & ML related pods
+  if (name.includes('ai') || name.includes('ml') || name.includes('machine learning')) return '🤖';
+  if (name.includes('product studio')) return '🎨';
+  if (name.includes('workflow automation')) return '⚙️';
+  
+  // Development pods
+  if (name.includes('full stack') || name.includes('web')) return '🌐';
+  if (name.includes('mobile') || name.includes('app')) return '📱';
+  if (name.includes('backend') || name.includes('api')) return '🔧';
+  if (name.includes('frontend') || name.includes('ui')) return '🎨';
+  
+  // Specialized pods
+  if (name.includes('data') || name.includes('analytics')) return '📊';
+  if (name.includes('ecommerce') || name.includes('shop')) return '🛒';
+  if (name.includes('fintech') || name.includes('finance')) return '💰';
+  if (name.includes('health') || name.includes('medical')) return '🏥';
+  if (name.includes('education') || name.includes('learning')) return '📚';
+  if (name.includes('social') || name.includes('community')) return '👥';
+  
+  // Default icon
+  return '🚀';
+};
+
+// Color mapping for different pod types
+const getPodColorClasses = (pod: any) => {
+  const name = pod.name.toLowerCase();
+  
+  if (name.includes('ai') || name.includes('ml')) return 'from-purple-500/10 to-pink-500/10 border-purple-200/30';
+  if (name.includes('product')) return 'from-blue-500/10 to-cyan-500/10 border-blue-200/30';
+  if (name.includes('automation')) return 'from-indigo-500/10 to-purple-500/10 border-indigo-200/30';
+  if (name.includes('full stack') || name.includes('web')) return 'from-green-500/10 to-blue-500/10 border-green-200/30';
+  if (name.includes('mobile')) return 'from-orange-500/10 to-red-500/10 border-orange-200/30';
+  if (name.includes('data')) return 'from-teal-500/10 to-cyan-500/10 border-teal-200/30';
+  
+  return 'from-blue-500/10 to-purple-500/10 border-blue-200/30';
+};
 ---
 
-<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1">
-  <!-- Enhanced Glass Card Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-white/70 backdrop-blur-xl border border-white/30 rounded-xl shadow-lg group-hover:shadow-2xl group-hover:border-white/50 transition-all duration-500"></div>
+<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer">
+  <!-- Card Background with Gradient -->
+  <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
   <!-- Decorative Background Elements -->
-  <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-mint-100/20 to-cerulean-100/20 rounded-full -translate-y-12 translate-x-12 blur-xl group-hover:scale-110 transition-transform duration-500"></div>
-  <div class="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-lavender-100/20 to-mint-100/20 rounded-full translate-y-10 -translate-x-10 blur-lg group-hover:scale-110 transition-transform duration-500"></div>
+  <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
+  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
   
   <!-- Card Content -->
   <div class="relative p-6 flex flex-col h-full">
-    <!-- Compact Card Header -->
-    <div class="mb-4">
-      <h3 class="text-lg font-manrope font-bold text-graphite-900 mb-2 leading-tight group-hover:text-graphite-800 transition-colors duration-300">
+    <!-- Icon and Title Row -->
+    <div class="flex items-start justify-between mb-5">
+      <div class={`w-14 h-14 bg-gradient-to-br ${getPodColorClasses(pod)} rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300`}>
+        <span class="text-2xl">{getPodIcon(pod)}</span>
+      </div>
+      
+      <!-- Pod Type Badge -->
+      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
+        Pod
+      </span>
+    </div>
+    
+    <!-- Title and Tagline -->
+    <div class="mb-5">
+      <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-300 leading-tight">
         {pod.name}
       </h3>
-      <p class="text-graphite-600 text-sm font-inter leading-relaxed line-clamp-2">
+      <p class="text-gray-600 leading-relaxed text-sm line-clamp-2">
         {pod.tagline}
       </p>
     </div>
     
-    <!-- Compact Content Layout -->
-    <div class="flex-1 space-y-4">
-      <!-- Quick Overview -->
-      <div class="overview-section">
-        <div class="bg-gradient-to-r from-graphite-50/50 to-white/30 rounded-lg p-3 border border-graphite-100/30">
-          <p class="text-graphite-700 text-sm font-inter leading-relaxed line-clamp-2">
-            {pod.whatsInPod.description}
-          </p>
-        </div>
+    <!-- Quick Overview -->
+    <div class="mb-5">
+      <div class="bg-gradient-to-r from-gray-50/80 to-white/60 rounded-lg p-3 border border-gray-100/50 backdrop-blur-sm">
+        <p class="text-gray-700 text-sm leading-relaxed line-clamp-2">
+          {pod.whatsInPod.description}
+        </p>
       </div>
-
-      <!-- Vertical Highlights Layout -->
-      <div class="highlights-container">
-        <!-- Ideal For -->
-        <div class="highlight-item-vertical">
-          <div class="highlight-icon-row">
-            <svg class="w-4 h-4 text-cerulean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-          </div>
-          <div class="highlight-content-vertical">
-            <div class="highlight-label font-manrope text-xs font-semibold text-graphite-700">Ideal For</div>
-            <div class="highlight-text font-inter text-sm text-graphite-600 line-clamp-2">
-              {pod.idealFor[0]}
-            </div>
-          </div>
+    </div>
+    
+    <!-- Vertical Highlights Layout -->
+    <div class="grid grid-cols-3 gap-3 mb-5">
+      <!-- Ideal For -->
+      <div class="highlight-item-vertical">
+        <div class="highlight-icon-row">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
         </div>
-
-        <!-- Team Size -->
-        <div class="highlight-item-vertical">
-          <div class="highlight-icon-row">
-            <svg class="w-4 h-4 text-lavender-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-            </svg>
-          </div>
-          <div class="highlight-content-vertical">
-            <div class="highlight-label font-manrope text-xs font-semibold text-graphite-700">Team</div>
-            <div class="highlight-text font-inter text-sm text-graphite-600 line-clamp-2">
-              {pod.whatsInPod.teamComposition.length} members
-            </div>
-          </div>
-        </div>
-
-        <!-- Timeline -->
-        <div class="highlight-item-vertical">
-          <div class="highlight-icon-row">
-            <svg class="w-4 h-4 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <div class="highlight-content-vertical">
-            <div class="highlight-label font-manrope text-xs font-semibold text-graphite-700">Timeline</div>
-            <div class="highlight-text font-inter text-sm text-graphite-600 line-clamp-2">
-              {pod.deliveryTimelines?.[0] || 'Custom'}
-            </div>
+        <div class="highlight-content-vertical">
+          <div class="highlight-label">Ideal For</div>
+          <div class="highlight-text line-clamp-2">
+            {pod.idealFor[0]}
           </div>
         </div>
       </div>
 
-      <!-- Compact Quick Actions -->
-      <div class="quick-actions">
-        <div class="action-tags">
-          {pod.idealFor.slice(0, 2).map((item) => (
-            <span class="action-tag inline-flex items-center px-2.5 py-1 bg-gradient-to-r from-white/80 to-white/60 backdrop-blur-sm border border-white/40 rounded-md text-xs font-inter text-graphite-700 transition-all duration-300 hover:from-white/90 hover:to-white/70 hover:scale-105 hover:shadow-sm">
-              {item}
-            </span>
-          ))}
+      <!-- Team Size -->
+      <div class="highlight-item-vertical">
+        <div class="highlight-icon-row">
+          <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+          </svg>
+        </div>
+        <div class="highlight-content-vertical">
+          <div class="highlight-label">Team</div>
+          <div class="highlight-text">
+            {pod.whatsInPod.teamComposition.length} members
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="highlight-item-vertical">
+        <div class="highlight-icon-row">
+          <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="highlight-content-vertical">
+          <div class="highlight-label">Timeline</div>
+          <div class="highlight-text line-clamp-2">
+            {pod.deliveryTimelines?.[0] || 'Custom'}
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Fixed Bottom Action Row -->
-    <div class="mt-6 flex items-center gap-3">
+    <!-- Action Buttons -->
+    <div class="mt-auto flex items-center gap-3 pt-4 border-t border-gray-100/50">
       <!-- Reserve Pod Button -->
       <button 
         data-add-to-cart
@@ -121,7 +160,7 @@ const { pod, index } = Astro.props;
         data-item-type="pod"
         data-item-title={pod.name}
         data-item-description={pod.tagline}
-        class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm">
+        class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm">
         <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -129,9 +168,9 @@ const { pod, index } = Astro.props;
       </button>
       
       <!-- Details Link -->
-      <a href={`/pods/${pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`} class="inline-flex items-center justify-center px-4 py-2.5 text-mint-600 hover:text-mint-700 font-inter font-semibold transition-colors flex items-center group/link border border-mint-200 rounded-lg hover:bg-mint-50 text-sm">
+      <a href={`/pods/${pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`} class="inline-flex items-center justify-center px-4 py-2.5 text-gray-600 hover:text-gray-700 font-semibold transition-colors border border-gray-200 rounded-lg hover:bg-gray-50 text-sm">
         Details
-        <svg class="w-3.5 h-3.5 ml-1 group-hover/link:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
       </a>
@@ -140,18 +179,24 @@ const { pod, index } = Astro.props;
 </div>
 
 <style>
-  /* Compact Layout */
-  .overview-section {
-    margin-bottom: 0;
+  /* Enhanced Card Animations */
+  .pod-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .highlights-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    margin-bottom: 0;
+  .pod-card.animate {
+    opacity: 1;
+    transform: translateY(0);
   }
 
+  /* Hover Effects */
+  .pod-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Highlight Items */
   .highlight-item-vertical {
     display: flex;
     flex-direction: column;
@@ -194,7 +239,7 @@ const { pod, index } = Astro.props;
   .highlight-label {
     font-size: 0.625rem;
     font-weight: 600;
-    color: #202124;
+    color: #374151;
     margin-bottom: 0.125rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -202,18 +247,8 @@ const { pod, index } = Astro.props;
 
   .highlight-text {
     font-size: 0.75rem;
-    color: #5f6368;
+    color: #6b7280;
     line-height: 1.2;
-  }
-
-  .quick-actions {
-    margin-top: 0;
-  }
-
-  .action-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
   }
 
   /* Text Clamping */
@@ -238,21 +273,9 @@ const { pod, index } = Astro.props;
     -webkit-line-clamp: 3;
   }
 
-  /* Enhanced Card Animations */
-  .pod-card {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .pod-card.animate {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
   /* Responsive Design */
   @media (max-width: 768px) {
-    .highlights-container {
+    .grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 0.5rem;
     }
@@ -269,43 +292,6 @@ const { pod, index } = Astro.props;
 
     .highlight-text {
       font-size: 0.75rem;
-    }
-  }
-
-  /* Dark Mode Support */
-  @media (prefers-color-scheme: dark) {
-    .highlight-item-vertical {
-      background: rgba(32, 33, 36, 0.6);
-      border-color: rgba(241, 243, 244, 0.1);
-    }
-
-    .highlight-item-vertical:hover {
-      background: rgba(32, 33, 36, 0.8);
-      border-color: rgba(241, 243, 244, 0.2);
-    }
-
-    .highlight-icon-row {
-      background: rgba(32, 33, 36, 0.9);
-      border-color: rgba(241, 243, 244, 0.1);
-    }
-
-    .highlight-label {
-      color: #e8eaed;
-    }
-
-    .highlight-text {
-      color: #9aa0a6;
-    }
-
-    .action-tag {
-      background: rgba(32, 33, 36, 0.6);
-      border-color: rgba(241, 243, 244, 0.1);
-      color: #9aa0a6;
-    }
-
-    .action-tag:hover {
-      background: rgba(32, 33, 36, 0.8);
-      border-color: rgba(241, 243, 244, 0.2);
     }
   }
 </style> 

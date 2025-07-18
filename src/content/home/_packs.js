@@ -1,44 +1,21 @@
+import { packsCatalog } from '../catalog/_packs.js';
+
 export const homePacksData = {
-  title: 'Add-on Packs',
-  subtitle: 'Supercharge any pod with specialized services.',
-  description:
-    'NovaPods are powerful on their own—but with Add-On Packs, you can enhance performance, quality, and capabilities exactly where you need them.',
-  packs: [
-    {
-      id: 'ux-audit-pack',
-      title: 'UX Audit Pack',
-      description:
-        'Get a fresh set of expert + AI-powered eyes on your product. Usability, accessibility, and design feedback—delivered fast.',
-      icon: '👀',
-      badge: 'Popular',
-      badgeColor: 'green',
-    },
-    {
-      id: 'llm-agent-setup-pack',
-      title: 'LLM Agent Setup Pack',
-      description:
-        'Want an AI chatbot, assistant, or internal tool? This pack sets up your GPT/Claude agent with prompt engineering + full UI integration.',
-      icon: '🤖',
-      badge: 'Efficient',
-      badgeColor: 'blue',
-    },
-    {
-      id: 'qa-automation-pack',
-      title: 'QA Automation Pack',
-      description:
-        'Automate your testing flows across devices and browsers. We integrate Playwright, Cypress, or custom scripts to improve release confidence.',
-      icon: '🤖',
-      badge: 'Growth',
-      badgeColor: 'purple',
-    },
-    {
-      id: 'seo-and-site-optimization-pack',
-      title: 'SEO & Site Optimization Pack',
-      description:
-        'Get your product search-ready with structured metadata, performance tuning, and crawl-friendly setup.',
-      icon: '🔍',
-      badge: 'Efficient',
-      badgeColor: 'blue',
-    },
-  ],
+  title: "Ready-to-Use Packs",
+  subtitle: "Pre-built solutions for common startup needs. Each pack is designed to solve specific challenges and get you results fast.",
+  featuredPackIds: [], // We'll get one from each segment instead
+  showSegmentName: true // New flag to show segment names in cards
+};
+
+// Get one pack from each segment for the home page
+export const getHomePacks = () => {
+  return packsCatalog.packCategories.map(category => {
+    // Get the first pack from each category
+    const pack = category.packs[0];
+    return {
+      ...pack,
+      segmentName: category.title, // Add segment name to the pack data
+      segmentId: category.id
+    };
+  });
 };
