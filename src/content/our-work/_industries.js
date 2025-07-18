@@ -1,6 +1,6 @@
 export const ourWorkIndustriesData = {
-  title: "Industries We Serve",
-  subtitle: "Cross-domain expertise that delivers results",
+  title: "",
+  subtitle: "",
   industries: [
     {
       name: 'AI & Automation',

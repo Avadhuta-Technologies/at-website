@@ -401,6 +401,44 @@ const { description, title, image, theme = 'auto' } = Astro.props;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
       
+      /* Gradient Title Styling - Summary Page Style */
+      .gradient-title {
+        color: #202124; /* graphite-900 */
+      }
+      
+      .gradient-title .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #0ea5e9); /* from-mint-600 to-cerulean-600 */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      /* Alternative gradient variations */
+      .gradient-title-purple .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #8b5cf6); /* mint to purple */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      .gradient-title-orange .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #f97316); /* mint to orange */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      .gradient-title-pink .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #ec4899); /* mint to pink */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
       /* Loading animation */
       .loading-pulse {
         animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
