@@ -2,7 +2,7 @@
 // Component to display selected pods and packs
 ---
 
-<div id="selected-items-display" class="bg-white rounded-lg border border-gray-200 shadow-sm">
+<div id="selected-items-display" class="sticky top-4 bg-white rounded-lg border border-gray-200 shadow-sm">
   <!-- Header -->
   <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
     <h3 class="text-lg font-semibold text-gray-900">Your Selection</h3>
@@ -23,7 +23,10 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
       </svg>
       <p class="text-gray-500 mb-2">No items selected</p>
-      <p class="text-sm text-gray-400">Add a pod and packs to get started</p>
+      <p class="text-sm text-gray-400 mb-4">Add a pod and packs to get started</p>
+      <a href="/explore-pods" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+        Explore Pods
+      </a>
     </div>
 
     <!-- Items List -->
@@ -41,6 +44,25 @@
         </div>
       </div>
 
+      <!-- No Pod State -->
+      <div id="no-pod-state" class="hidden">
+        <div class="flex items-center mb-3">
+          <h4 class="text-md font-semibold text-gray-900">Selected Pod</h4>
+          <span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+            Pod
+          </span>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+          <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          <p class="text-gray-600 mb-3">No pod selected</p>
+          <a href="/explore-pods" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+            Choose a Pod
+          </a>
+        </div>
+      </div>
+
       <!-- Packs Section -->
       <div id="packs-section" class="hidden">
         <div class="flex items-center mb-3">
@@ -54,12 +76,40 @@
         </div>
       </div>
 
+      <!-- No Packs State -->
+      <div id="no-packs-state" class="hidden">
+        <div class="flex items-center mb-3">
+          <h4 class="text-md font-semibold text-gray-900">Selected Packs</h4>
+          <span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            Packs
+          </span>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+          <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+          </svg>
+          <p class="text-gray-600 mb-3">No packs selected</p>
+          <a href="/explore-packs" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
+            Choose Packs
+          </a>
+        </div>
+      </div>
+
       <!-- Summary -->
       <div id="summary-section" class="hidden pt-4 border-t border-gray-200">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center mb-4">
           <span class="text-sm font-medium text-gray-700">Total Items:</span>
           <span id="total-items" class="text-sm font-semibold text-gray-900">0</span>
         </div>
+        
+        <!-- Continue Button -->
+        <button 
+          id="continue-btn"
+          class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          disabled
+        >
+          Continue
+        </button>
       </div>
     </div>
   </div>
@@ -67,36 +117,55 @@
 
 <script>
   class SelectedItemsDisplay {
+    private cartService: any;
+
     constructor() {
       this.cartService = null;
       this.init();
     }
 
     async init() {
+      console.log('🟡 [SelectedItemsDisplay] Initializing...');
+      
       // Wait for cart service to be available
-      if (typeof window !== 'undefined' && window.cartService) {
-        this.cartService = window.cartService;
-        this.loadSelectedItems();
+      if (typeof window !== 'undefined' && (window as any).cartService) {
+        console.log('🟡 [SelectedItemsDisplay] CartService found, initializing...');
+        this.cartService = (window as any).cartService;
+        await this.loadSelectedItems();
         
         // Listen for cart updates
         window.addEventListener('cart-updated', () => {
+          console.log('🟡 [SelectedItemsDisplay] Cart updated event received');
           this.loadSelectedItems();
         });
+        
+        console.log('🟡 [SelectedItemsDisplay] Initialization complete');
       } else {
+        console.log('🟡 [SelectedItemsDisplay] CartService not available, retrying in 100ms...');
         // Retry after a short delay
         setTimeout(() => this.init(), 100);
       }
     }
 
     async loadSelectedItems() {
-      if (!this.cartService) return;
+      console.log('🟡 [SelectedItemsDisplay] loadSelectedItems called');
+      
+      if (!this.cartService) {
+        console.error('🟡 [SelectedItemsDisplay] CartService not available');
+        return;
+      }
 
       try {
+        console.log('🟡 [SelectedItemsDisplay] Showing loading state...');
         this.showLoading();
+        
+        console.log('🟡 [SelectedItemsDisplay] Getting cart from service...');
         const cart = await this.cartService.getCart();
+        console.log('🟡 [SelectedItemsDisplay] Cart received:', cart);
+        
         this.renderItems(cart);
       } catch (error) {
-        console.error('Error loading selected items:', error);
+        console.error('🟡 [SelectedItemsDisplay] Error loading selected items:', error);
         this.showEmpty();
       }
     }
@@ -113,7 +182,7 @@
       document.getElementById('items-list')?.classList.add('hidden');
     }
 
-    renderItems(cart) {
+    renderItems(cart: any[]) {
       if (cart.length === 0) {
         this.showEmpty();
         return;
@@ -123,31 +192,57 @@
       document.getElementById('empty-state')?.classList.add('hidden');
       document.getElementById('items-list')?.classList.remove('hidden');
 
-      // Separate pods and packs
-      const podItems = cart.filter(item => item.type === 'pod');
-      const packItems = cart.filter(item => item.type === 'pack');
+            // Separate pods and packs
+      const podItems = cart.filter((item: any) => item.type === 'pod');
+      const packItems = cart.filter((item: any) => item.type === 'pack');
 
-      // Render pod
-      if (podItems.length > 0) {
-        this.renderPod(podItems[0]);
-      }
+      // Render pod section
+      this.renderPodSection(podItems);
 
-      // Render packs
-      if (packItems.length > 0) {
-        this.renderPacks(packItems);
-      }
+      // Render packs section
+      this.renderPacksSection(packItems);
 
-      // Update summary
+      // Update summary and continue button
       this.updateSummary(cart.length);
+      this.updateContinueButton(podItems.length > 0);
     }
 
-    renderPod(pod) {
+    renderPodSection(podItems: any[]) {
       const podSection = document.getElementById('pod-section');
+      const noPodState = document.getElementById('no-pod-state');
+      
+      if (podItems.length > 0) {
+        // Show pod item
+        podSection?.classList.remove('hidden');
+        noPodState?.classList.add('hidden');
+        this.renderPod(podItems[0]);
+      } else {
+        // Show no pod state
+        podSection?.classList.add('hidden');
+        noPodState?.classList.remove('hidden');
+      }
+    }
+
+    renderPacksSection(packItems: any[]) {
+      const packsSection = document.getElementById('packs-section');
+      const noPacksState = document.getElementById('no-packs-state');
+      
+      if (packItems.length > 0) {
+        // Show packs list
+        packsSection?.classList.remove('hidden');
+        noPacksState?.classList.add('hidden');
+        this.renderPacks(packItems);
+      } else {
+        // Show no packs state
+        packsSection?.classList.add('hidden');
+        noPacksState?.classList.remove('hidden');
+      }
+    }
+
+    renderPod(pod: any) {
       const podItem = document.getElementById('pod-item');
       
-      if (podSection && podItem) {
-        podSection.classList.remove('hidden');
-        
+      if (podItem) {
         podItem.innerHTML = `
           <div class="flex items-start justify-between">
             <div class="flex-1">
@@ -161,9 +256,10 @@
               </div>
             </div>
             <button 
-              onclick="removeFromCart('${pod.id}', 'pod')" 
-              class="ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+              class="remove-pod-btn ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
               title="Remove pod"
+              data-item-id="${pod.id}"
+              data-item-type="pod"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -171,17 +267,29 @@
             </button>
           </div>
         `;
+        
+        // Add event listener to the remove button
+        const removeBtn = podItem.querySelector('.remove-pod-btn');
+        if (removeBtn) {
+          removeBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const itemId = removeBtn.getAttribute('data-item-id');
+            const itemType = removeBtn.getAttribute('data-item-type');
+            console.log('🟡 [SelectedItemsDisplay] Remove pod button clicked:', { itemId, itemType });
+            
+            if (itemId && itemType) {
+              await (window as any).removeFromCart(itemId, itemType);
+            }
+          });
+        }
       }
     }
 
-    renderPacks(packs) {
-      const packsSection = document.getElementById('packs-section');
+    renderPacks(packs: any[]) {
       const packsList = document.getElementById('packs-list');
       
-      if (packsSection && packsList) {
-        packsSection.classList.remove('hidden');
-        
-        packsList.innerHTML = packs.map(pack => `
+      if (packsList) {
+        packsList.innerHTML = packs.map((pack: any) => `
           <div class="bg-green-50 border border-green-200 rounded-lg p-4">
             <div class="flex items-start justify-between">
               <div class="flex-1">
@@ -195,9 +303,10 @@
                 </div>
               </div>
               <button 
-                onclick="removeFromCart('${pack.id}', 'pack')" 
-                class="ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+                class="remove-pack-btn ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
                 title="Remove pack"
+                data-item-id="${pack.id}"
+                data-item-type="pack"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -206,10 +315,25 @@
             </div>
           </div>
         `).join('');
+        
+        // Add event listeners to all remove pack buttons
+        const removeBtns = packsList.querySelectorAll('.remove-pack-btn');
+        removeBtns.forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const itemId = btn.getAttribute('data-item-id');
+            const itemType = btn.getAttribute('data-item-type');
+            console.log('🟡 [SelectedItemsDisplay] Remove pack button clicked:', { itemId, itemType });
+            
+            if (itemId && itemType) {
+              await (window as any).removeFromCart(itemId, itemType);
+            }
+          });
+        });
       }
     }
 
-    updateSummary(totalItems) {
+    updateSummary(totalItems: number) {
       const summarySection = document.getElementById('summary-section');
       const totalItemsElement = document.getElementById('total-items');
       
@@ -218,23 +342,81 @@
         totalItemsElement.textContent = totalItems.toString();
       }
     }
+
+    updateContinueButton(hasPod: boolean) {
+      const continueBtn = document.getElementById('continue-btn') as HTMLButtonElement;
+      if (continueBtn) {
+        if (hasPod) {
+          continueBtn.disabled = false;
+          continueBtn.textContent = 'Continue';
+          continueBtn.onclick = () => {
+            window.location.href = '/checkout';
+          };
+        } else {
+          continueBtn.disabled = true;
+          continueBtn.textContent = 'Select a Pod to Continue';
+        }
+      }
+    }
   }
 
   // Global function for removing items
-  window.removeFromCart = async function(itemId, itemType) {
-    if (typeof window !== 'undefined' && window.cartService) {
-      try {
-        await window.cartService.removeItemById(itemId, itemType);
-        window.cartService.showNotification('Item removed from selection');
-      } catch (error) {
-        console.error('Error removing item:', error);
+  (window as any).removeFromCart = async function(itemId: string, itemType: string) {
+    console.log('🟡 [SelectedItemsDisplay] removeFromCart called with:', { itemId, itemType });
+    
+    if (typeof window === 'undefined') {
+      console.error('🟡 [SelectedItemsDisplay] Window is undefined');
+      return;
+    }
+    
+    const cartService = (window as any).cartService;
+    if (!cartService) {
+      console.error('🟡 [SelectedItemsDisplay] CartService not available on window');
+      return;
+    }
+    
+    try {
+      console.log('🟡 [SelectedItemsDisplay] Calling cartService.removeItemById...');
+      const result = await cartService.removeItemById(itemId, itemType);
+      console.log('🟡 [SelectedItemsDisplay] removeItemById result:', result);
+      
+      if (result) {
+        cartService.showNotification('Item removed from selection');
+        console.log('🟡 [SelectedItemsDisplay] Item removed successfully');
+      } else {
+        console.error('🟡 [SelectedItemsDisplay] Failed to remove item');
+        cartService.showNotification('Failed to remove item', 'error');
       }
+    } catch (error) {
+      console.error('🟡 [SelectedItemsDisplay] Error removing item:', error);
+      cartService.showNotification('Error removing item', 'error');
     }
   };
 
   // Initialize the component
   if (typeof window !== 'undefined') {
-    window.selectedItemsDisplay = new SelectedItemsDisplay();
+    console.log('🟡 [SelectedItemsDisplay] Creating component instance...');
+    (window as any).selectedItemsDisplay = new SelectedItemsDisplay();
+    console.log('🟡 [SelectedItemsDisplay] Component instance created');
+    
+    // Add a test function for debugging
+    (window as any).testRemoveFromCart = async function() {
+      console.log('🟡 [SelectedItemsDisplay] Test remove function called');
+      const cartService = (window as any).cartService;
+      if (cartService) {
+        const cart = await cartService.getCart();
+        console.log('🟡 [SelectedItemsDisplay] Current cart:', cart);
+        if (cart.length > 0) {
+          const firstItem = cart[0];
+          console.log('🟡 [SelectedItemsDisplay] Removing first item:', firstItem);
+          await (window as any).removeFromCart(firstItem.id, firstItem.type);
+        } else {
+          console.log('🟡 [SelectedItemsDisplay] Cart is empty');
+        }
+      } else {
+        console.error('🟡 [SelectedItemsDisplay] CartService not available');
+      }
+    };
   }
 </script>
 
