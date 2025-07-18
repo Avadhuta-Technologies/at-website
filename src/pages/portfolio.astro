@@ -6,23 +6,23 @@ import PortfolioWhyChooseSection from '../components/portfolio/PortfolioWhyChoos
 import PortfolioCTASection from '../components/portfolio/PortfolioCTASection.astro';
 
 // Import portfolio content
-import { 
+import {
   portfolioHeroData,
   portfolioProjectsData,
   portfolioWhyChooseData,
-  portfolioCTAData
+  portfolioCTAData,
 } from '../content/portfolio/_index.js';
 
 // Page metadata
 const pageTitle = 'Portfolio - Avadhuta Tech';
-const pageDescription = 'Explore our portfolio of successful projects across various industries including AI, eCommerce, 3D visualization, and workflow automation.';
+const pageDescription =
+  'Explore our portfolio of successful projects across various industries including AI, eCommerce, 3D visualization, and workflow automation.';
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
-  <main>
-    <PortfolioHeroSection data={portfolioHeroData} />
-    <PortfolioProjectsSection data={portfolioProjectsData} />
-    <PortfolioWhyChooseSection data={portfolioWhyChooseData} />
-    <PortfolioCTASection data={portfolioCTAData} />
-  </main>
-</Layout> 
+  <PortfolioHeroSection data={portfolioHeroData} />
+  <PortfolioProjectsSection />
+  <PortfolioWhyChooseSection data={portfolioWhyChooseData} />
+  <PortfolioCTASection data={portfolioCTAData} />
+</Layout>
+
