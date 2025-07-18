@@ -47,7 +47,7 @@ const finalActionUrl = actionUrl || defaultActionUrl;
 const finalActionText = actionText || defaultActionText;
 ---
 
-<div class="pack-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up">
+<div class="pack-card group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up">
   <div class="relative z-10 flex flex-col h-full p-6">
     <!-- Header with Icon and Badge -->
     <div class="flex items-center justify-between mb-6">
@@ -61,10 +61,10 @@ const finalActionText = actionText || defaultActionText;
     
     <!-- Title and Description -->
     <div class="mb-6">
-      <h3 class="font-bold text-lg mb-3 transition-colors duration-300 text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+      <h3 class="font-bold text-lg mb-3 transition-colors duration-300 text-dark group-hover:text-blue-600 ">
         {title}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
+      <p class="text-gray-600 leading-relaxed text-sm">
         {description}
       </p>
     </div>
@@ -72,7 +72,7 @@ const finalActionText = actionText || defaultActionText;
     <!-- Ideal For Section -->
     {idealFor && idealFor.length > 0 && (
       <div class="mb-6">
-        <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+        <h4 class="font-semibold text-sm text-gray-700  mb-3 flex items-center">
           <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
@@ -80,7 +80,7 @@ const finalActionText = actionText || defaultActionText;
         </h4>
         <ul class="space-y-2">
           {idealFor.slice(0, 2).map((item) => (
-            <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
+            <li class="flex items-start text-sm text-gray-600  group/item">
               <span class="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
               <span class="leading-relaxed">{item}</span>
             </li>
@@ -92,7 +92,7 @@ const finalActionText = actionText || defaultActionText;
     <!-- Deliverables Section -->
     {deliverables && deliverables.length > 0 && (
       <div class="mb-6">
-        <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+        <h4 class="font-semibold text-sm text-gray-700  mb-3 flex items-center">
           <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
@@ -100,13 +100,13 @@ const finalActionText = actionText || defaultActionText;
         </h4>
         <ul class="space-y-1">
           {deliverables.slice(0, 2).map((item) => (
-            <li class="flex items-start text-xs text-gray-500 dark:text-gray-400">
+            <li class="flex items-start text-xs text-gray-500 ">
               <span class="w-2 h-2 bg-green-500 rounded-full mr-2 mt-1 flex-shrink-0"></span>
               <span>{item.split(' - ')[0]}</span>
             </li>
           ))}
           {deliverables.length > 2 && (
-            <li class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+            <li class="text-xs text-blue-600  font-medium">
               +{deliverables.length - 2} more
             </li>
           )}
@@ -117,13 +117,13 @@ const finalActionText = actionText || defaultActionText;
     <!-- Duration Section -->
     {duration && (
       <div class="mb-6">
-        <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+        <h4 class="font-semibold text-sm text-gray-700  mb-3 flex items-center">
           <svg class="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           Timeline
         </h4>
-        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+        <div class="flex items-center text-sm text-gray-600 ">
           <span class={`w-2 h-2 rounded-full mr-3 ${getDotColor(badgeColor)}`}></span>
           <span>{duration}</span>
         </div>
@@ -131,11 +131,11 @@ const finalActionText = actionText || defaultActionText;
     )}
     
     <!-- Pricing and Action Buttons -->
-    <div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
+    <div class="mt-auto pt-4 border-t border-gray-100 ">
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
           <div>
-            {priceINR && <span class="font-bold text-base text-dark dark:text-white">{priceINR}</span>}
+            {priceINR && <span class="font-bold text-base text-dark ">{priceINR}</span>}
             {priceUSD && <span class="text-xs text-gray-500 ml-2">({priceUSD})</span>}
           </div>
           {duration && <span class="text-xs text-gray-500">{duration}</span>}
@@ -155,7 +155,8 @@ const finalActionText = actionText || defaultActionText;
           class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
           Add Pack
         </button>
-        <a href={finalLearnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm">
+        <a href={finalLearnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50
+          text-sm">
           View Details
         </a>
       </div>
