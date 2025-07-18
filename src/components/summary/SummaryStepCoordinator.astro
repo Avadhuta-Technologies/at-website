@@ -327,15 +327,20 @@
     }
 
     async initializeStep3() {
+      console.log('🔍 Initializing Step 3...');
       const cart = await this.shared.getCart();
       const selectedPod = cart.find(item => item.type === 'pod');
       const selectedPacks = cart.filter(item => item.type === 'pack');
+      
+      console.log('🔍 Step 3 - Selected pod:', selectedPod);
+      console.log('🔍 Step 3 - Selected packs:', selectedPacks);
       
       if (selectedPod) {
         this.updateFinalSummary(selectedPod, selectedPacks);
       }
       
       this.addStep3EventListeners();
+      console.log('🔍 Step 3 initialization complete');
     }
 
     async showSelectedPod(podItem) {
@@ -686,15 +691,20 @@
     }
 
     addStep3EventListeners() {
+      console.log('🔍 Adding Step 3 event listeners...');
+      
       // Back button
       document.addEventListener('click', (e) => {
         if (e.target && e.target.matches('#back-btn')) {
+          console.log('🔍 Back button clicked in Step 3');
           this.shared.previousStep();
         }
       });
 
       // Form submission
+      console.log('🔍 Calling shared.addFormListeners()...');
       this.shared.addFormListeners();
+      console.log('🔍 Step 3 event listeners added');
     }
   }
 

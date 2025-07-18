@@ -276,14 +276,33 @@ export class SummaryShared {
   // Form handling
   async handleFormSubmission() {
     try {
+      console.log('🔍 Starting form submission...');
       const form = document.getElementById('reservation-form');
-      if (!form) return;
+      if (!form) {
+        console.error('🔍 Form not found');
+        return;
+      }
+
+      // Check form validity
+      if (!form.checkValidity()) {
+        console.log('🔍 Form validation failed');
+        form.reportValidity();
+        this.showNotification('Please fill in all required fields', 'error');
+        return;
+      }
 
       const formData = new FormData(form);
       const cart = await this.getCart();
       
+      // Validate that we have a pod selected
+      const selectedPod = cart.find(item => item.type === 'pod');
+      if (!selectedPod) {
+        this.showNotification('Please select a pod before submitting', 'error');
+        return;
+      }
+
       const reservationData = {
-        pod: cart.find(item => item.type === 'pod'),
+        pod: selectedPod,
         packs: cart.filter(item => item.type === 'pack'),
         contact: {
           name: formData.get('name'),
@@ -295,21 +314,46 @@ export class SummaryShared {
         timestamp: new Date().toISOString()
       };
 
-      console.log('Reservation data:', reservationData);
+      console.log('🔍 Reservation data:', reservationData);
+      
+      // Show loading state
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Here you would typically send this to your backend
       // For now, we'll just show a success message
-      this.showNotification('Reservation submitted successfully!', 'success');
+      this.showNotification('Reservation submitted successfully! We\'ll contact you within 24 hours.', 'success');
       
       // Clear cart after successful submission
       if (this.cartService) {
         await this.cartService.clearCart();
       }
       
+      // Reset button
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      
+      // Redirect to order confirmation page
+      setTimeout(() => {
+        window.location.href = '/order-confirmation';
+      }, 2000);
+      
       return reservationData;
     } catch (error) {
-      console.error('Error submitting form:', error);
-      this.showNotification('Failed to submit reservation', 'error');
+      console.error('🔍 Error submitting form:', error);
+      this.showNotification('Failed to submit reservation. Please try again.', 'error');
+      
+      // Reset button on error
+      const submitBtn = form?.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.textContent = 'Reserve My NovaPod';
+        submitBtn.disabled = false;
+      }
     }
   }
 
@@ -326,10 +370,22 @@ export class SummaryShared {
   addFormListeners() {
     const form = document.getElementById('reservation-form');
     if (form) {
+      console.log('🔍 Adding form listeners to reservation form');
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('🔍 Form submission triggered');
         await this.handleFormSubmission();
       });
+      
+      // Also add click listener to the submit button for debugging
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.addEventListener('click', (e) => {
+          console.log('🔍 Submit button clicked');
+        });
+      }
+    } else {
+      console.error('🔍 Reservation form not found');
     }
   }
 
