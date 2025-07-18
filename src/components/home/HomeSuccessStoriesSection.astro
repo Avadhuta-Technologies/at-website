@@ -1,4 +1,6 @@
 ---
+import HomeSuccessStoryCard from './HomeSuccessStoryCard.astro';
+
 export interface Props {
   data: {
     title: string;
@@ -34,13 +36,12 @@ const stories = data.stories || [];
 
 // Use case studies if available, otherwise fall back to stories
 const displayData = caseStudies.length > 0 ? caseStudies : stories;
-const isCaseStudyFormat = caseStudies.length > 0;
 ---
 
-<section class="py-20 ">
+<section class="py-16">
   <div class="container mx-auto px-4">
     <!-- Section Header -->
-    <div class="max-w-3xl mx-auto text-center mb-16">
+    <div class="max-w-3xl mx-auto text-center mb-12">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
         {data.title}
       </h2>
@@ -49,112 +50,40 @@ const isCaseStudyFormat = caseStudies.length > 0;
       </p>
     </div>
     
-    <!-- Case Studies Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Success Stories Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {displayData.map((item: any, index) => (
-        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
-          {isCaseStudyFormat ? (
-            // Case Study Format
-            <>
-              <!-- Header -->
-              <div class="p-6 border-b border-gray-100">
-                <div class="flex flex-wrap gap-2 mb-4">
-                  <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    {item.engagement}
-                  </span>
-                  <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                    {item.success}
-                  </span>
-                </div>
-                
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">
-                  {item.title}
-                </h3>
-                
-                <div class="space-y-3">
-                  <div>
-                    <span class="text-sm font-medium text-gray-500 uppercase tracking-wide">Client</span>
-                    <p class="text-gray-700 font-medium">{item.client}</p>
-                  </div>
-                  
-                  <div>
-                    <span class="text-sm font-medium text-gray-500 uppercase tracking-wide">Challenge</span>
-                    <p class="text-gray-700">{item.challenge}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Outcomes -->
-              <div class="p-6 bg-gray-50">
-                <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  Outcome
-                </h4>
-                <div class="space-y-3">
-                  {item.outcome.map((outcomeItem: string, itemIndex: number) => (
-                    <div class="flex items-start">
-                      <svg class="w-4 h-4 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                      <span class="text-sm text-gray-700">{outcomeItem}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <!-- Testimonial -->
-              <div class="p-6 bg-blue-50">
-                <div class="relative">
-                  <svg class="w-6 h-6 text-blue-400 mb-3" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                  </svg>
-                  <blockquote class="text-gray-700 italic mb-4 text-sm">
-                    "{item.testimonial.quote}"
-                  </blockquote>
-                  <div class="flex items-center">
-                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3">
-                      {item.testimonial.author.split(' ').map((n: string) => n[0]).join('')}
-                    </div>
-                    <div>
-                      <div class="font-semibold text-gray-900 text-sm">{item.testimonial.author}</div>
-                      <div class="text-xs text-gray-500">{item.testimonial.role}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- CTA -->
-              <div class="p-6">
-                <a 
-                  href={item.readMoreLink}
-                  class="inline-flex items-center justify-center w-full px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group"
-                >
-                  <span>Read Case Study</span>
-                  <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                  </svg>
-                </a>
-              </div>
-            </>
-          ) : (
-            // Legacy Stories Format
-            <div class="p-8 text-center">
-              <div class="text-4xl font-bold text-primary-600 mb-2">{item.metric}</div>
-              <div class="text-sm text-gray-500 mb-4">{item.metricLabel}</div>
-              <h3 class="text-xl font-semibold text-gray-900 mb-4">{item.title}</h3>
-              <p class="text-gray-600">{item.description}</p>
-            </div>
-          )}
-        </div>
+        <HomeSuccessStoryCard item={item} index={index} />
       ))}
     </div>
   </div>
-</section> 
+</section>
+
+<script>
+  // Scroll-triggered animations for success story cards
+  function initScrollAnimations() {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Add delay for staggered animation
+          setTimeout(() => {
+            entry.target.classList.add('animate');
+          }, index * 100);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all success story cards
+    document.querySelectorAll('.success-story-card').forEach(card => {
+      cardObserver.observe(card);
+    });
+  }
+
+  // Initialize animations when DOM is loaded
+  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+</script> 

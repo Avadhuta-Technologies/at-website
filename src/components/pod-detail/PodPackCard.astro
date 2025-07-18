@@ -4,14 +4,12 @@ export interface Props {
     id: string;
     title: string;
     description: string;
-    price: string;
+    priceINR: string;
     priceUSD: string;
     duration: string;
     badge: string;
     badgeColor: string;
-    icon: string;
-    deliverables?: string[];
-    features?: string[];
+    deliverables: string[];
   };
   index?: number;
 }
@@ -57,12 +55,12 @@ const getColorClasses = (color: string): ColorClasses => {
       badge: 'bg-orange-100/90 text-orange-800 backdrop-blur-sm',
       iconBg: 'bg-orange-100/80'
     },
-    teal: { 
-      bg: 'bg-teal-50/80', 
-      border: 'border-teal-200/50', 
-      text: 'text-teal-700', 
-      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
-      iconBg: 'bg-teal-100/80'
+    indigo: { 
+      bg: 'bg-indigo-50/80', 
+      border: 'border-indigo-200/50', 
+      text: 'text-indigo-700', 
+      badge: 'bg-indigo-100/90 text-indigo-800 backdrop-blur-sm',
+      iconBg: 'bg-indigo-100/80'
     },
     pink: { 
       bg: 'bg-pink-50/80', 
@@ -71,47 +69,12 @@ const getColorClasses = (color: string): ColorClasses => {
       badge: 'bg-pink-100/90 text-pink-800 backdrop-blur-sm',
       iconBg: 'bg-pink-100/80'
     },
-    indigo: { 
-      bg: 'bg-indigo-50/80', 
-      border: 'border-indigo-200/50', 
-      text: 'text-indigo-700', 
-      badge: 'bg-indigo-100/90 text-indigo-800 backdrop-blur-sm',
-      iconBg: 'bg-indigo-100/80'
-    },
-    cyan: { 
-      bg: 'bg-cyan-50/80', 
-      border: 'border-cyan-200/50', 
-      text: 'text-cyan-700', 
-      badge: 'bg-cyan-100/90 text-cyan-800 backdrop-blur-sm',
-      iconBg: 'bg-cyan-100/80'
-    },
-    violet: { 
-      bg: 'bg-violet-50/80', 
-      border: 'border-violet-200/50', 
-      text: 'text-violet-700', 
-      badge: 'bg-violet-100/90 text-violet-800 backdrop-blur-sm',
-      iconBg: 'bg-violet-100/80'
-    },
-    emerald: { 
-      bg: 'bg-emerald-50/80', 
-      border: 'border-emerald-200/50', 
-      text: 'text-emerald-700', 
-      badge: 'bg-emerald-100/90 text-emerald-800 backdrop-blur-sm',
-      iconBg: 'bg-emerald-100/80'
-    },
-    amber: { 
-      bg: 'bg-amber-50/80', 
-      border: 'border-amber-200/50', 
-      text: 'text-amber-700', 
-      badge: 'bg-amber-100/90 text-amber-800 backdrop-blur-sm',
-      iconBg: 'bg-amber-100/80'
-    },
-    rose: { 
-      bg: 'bg-rose-50/80', 
-      border: 'border-rose-200/50', 
-      text: 'text-rose-700', 
-      badge: 'bg-rose-100/90 text-rose-800 backdrop-blur-sm',
-      iconBg: 'bg-rose-100/80'
+    teal: { 
+      bg: 'bg-teal-50/80', 
+      border: 'border-teal-200/50', 
+      text: 'text-teal-700', 
+      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
+      iconBg: 'bg-teal-100/80'
     }
   };
   return colorMap[color] || colorMap.blue;
@@ -123,6 +86,7 @@ const colors = getColorClasses(pack.badgeColor);
 const getPackIcon = (pack: any) => {
   const title = pack.title.toLowerCase();
   const description = pack.description.toLowerCase();
+  const deliverables = pack.deliverables.join(' ').toLowerCase();
   const badge = pack.badge.toLowerCase();
   
   // Launch & Go-to-Market icons
@@ -197,7 +161,7 @@ const getPackIcon = (pack: any) => {
     return '📢';
   }
   
-  return pack.icon || '📦';
+  return '📦';
 };
 ---
 
@@ -222,62 +186,50 @@ const getPackIcon = (pack: any) => {
     </div>
     
     <!-- Title -->
-    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-200">
+    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">
       {pack.title}
-    </h4>
+    </h3>
+    
+    <!-- Pricing -->
+    <div class="flex items-baseline space-x-2 mb-2">
+      <span class="text-2xl font-bold text-gray-900">
+        {pack.priceINR}
+      </span>
+    </div>
+    
+    <p class="text-sm text-gray-500 mb-4">
+      {pack.duration} • {pack.priceUSD}
+    </p>
     
     <!-- Description -->
     <div class="flex-1 mb-6">
-      <p class="text-gray-600 text-sm leading-relaxed pack-description">
+      <p class="text-gray-600 leading-relaxed text-sm pack-description">
         {pack.description}
       </p>
     </div>
     
-    <!-- Price and Duration -->
-    <div class="flex items-center justify-between text-sm text-gray-500 mb-6">
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-blue-100/80 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
+    <!-- Features List -->
+    <div class="space-y-3 mb-6">
+      {pack.deliverables.slice(0, 3).map((deliverable: string) => (
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-green-100/80 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-600 font-medium">{deliverable.split(' - ')[0]}</span>
         </div>
-        <span class="font-medium">{pack.duration}</span>
-      </div>
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-green-100/80 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-          </svg>
-        </div>
-        <span class="font-semibold text-gray-900">{pack.price} / {pack.priceUSD}</span>
-      </div>
+      ))}
     </div>
     
     <!-- Expandable Content (Hidden by default) -->
     <div class="pack-details hidden mt-4 space-y-4">
-      <!-- Features List -->
-      {pack.features && pack.features.length > 0 && (
+      <!-- All Deliverables -->
+      {pack.deliverables.length > 3 && (
         <div>
-          <h4 class="text-sm font-semibold text-gray-800 mb-2">Key Features</h4>
+          <h4 class="text-sm font-semibold text-gray-800 mb-2">All Deliverables</h4>
           <ul class="space-y-1">
-            {pack.features.slice(0, 3).map((feature: string) => (
-              <li class="flex items-start text-xs text-gray-600">
-                <svg class="w-3 h-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      
-      <!-- Deliverables -->
-      {pack.deliverables && pack.deliverables.length > 0 && (
-        <div>
-          <h4 class="text-sm font-semibold text-gray-800 mb-2">Deliverables</h4>
-          <ul class="space-y-1">
-            {pack.deliverables.slice(0, 3).map((deliverable: string) => (
+            {pack.deliverables.slice(3).map((deliverable: string) => (
               <li class="flex items-start text-xs text-gray-600">
                 <svg class="w-3 h-3 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
@@ -289,13 +241,26 @@ const getPackIcon = (pack: any) => {
         </div>
       )}
       
-      <!-- Pricing Breakdown -->
+      <!-- Duration Details -->
+      <div>
+        <h4 class="text-sm font-semibold text-gray-800 mb-2">Timeline</h4>
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-blue-100/80 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-600 font-medium">{pack.duration}</span>
+        </div>
+      </div>
+      
+      <!-- Pricing Details -->
       <div>
         <h4 class="text-sm font-semibold text-gray-800 mb-2">Pricing</h4>
         <div class="space-y-1">
           <div class="flex items-center justify-between text-xs">
             <span class="text-gray-600">INR:</span>
-            <span class="font-medium text-gray-800">{pack.price}</span>
+            <span class="font-medium text-gray-800">{pack.priceINR}</span>
           </div>
           <div class="flex items-center justify-between text-xs">
             <span class="text-gray-600">USD:</span>
@@ -327,19 +292,19 @@ const getPackIcon = (pack: any) => {
         </div>
       </div>
       
-      <!-- Prominent Add to Pod Button -->
+      <!-- Prominent Add Pack Button -->
       <button 
         data-add-to-cart
         data-item-id={pack.id}
         data-item-type="pack"
         data-item-title={pack.title}
         data-item-description={pack.description}
-        data-item-price={pack.price}
+        data-item-price={pack.priceINR}
         class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 group-hover:shadow-lg">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        <span>Add to Pod</span>
+        <span>Add Pack</span>
       </button>
     </div>
   </div>
