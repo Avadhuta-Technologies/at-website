@@ -93,7 +93,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
       
       body {
         font-family: var(--font-family-primary);
-        background: #ffffff;
+        background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #f0f9ff 100%);
         color: #202124;
         line-height: 1.6;
         margin: 0;
@@ -102,6 +102,199 @@ const { description, title, image, theme = 'auto' } = Astro.props;
         overflow-y: auto;
         position: relative;
         min-height: 100vh;
+      }
+      
+      /* Global Animated Background */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      
+      body::before {
+        background: 
+          radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 40% 60%, rgba(113, 113, 122, 0.1) 0%, transparent 50%);
+        animation: backgroundFloat 20s ease-in-out infinite;
+      }
+      
+      @keyframes backgroundFloat {
+        0%, 100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(-10px, -10px) scale(1.05);
+        }
+        66% {
+          transform: translate(10px, 10px) scale(0.95);
+        }
+      }
+      
+      /* Animated Background Circles */
+      .animated-bg-circles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      
+      .animated-bg-circles::before,
+      .animated-bg-circles::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+        filter: blur(40px);
+        animation: pulse 4s ease-in-out infinite;
+      }
+      
+      .animated-bg-circles::before {
+        top: 10%;
+        left: 10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(34, 197, 94, 0.2);
+        animation-delay: 0s;
+      }
+      
+      .animated-bg-circles::after {
+        top: 60%;
+        right: 10%;
+        width: 250px;
+        height: 250px;
+        background: rgba(14, 165, 233, 0.2);
+        animation-delay: 2s;
+      }
+      
+      /* Additional floating elements */
+      .animated-bg-circles .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+        filter: blur(30px);
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      .animated-bg-circles .floating-element:nth-child(1) {
+        top: 30%;
+        right: 20%;
+        width: 200px;
+        height: 200px;
+        background: rgba(113, 113, 122, 0.15);
+        animation-delay: 1s;
+      }
+      
+      .animated-bg-circles .floating-element:nth-child(2) {
+        bottom: 20%;
+        left: 20%;
+        width: 180px;
+        height: 180px;
+        background: rgba(34, 197, 94, 0.1);
+        animation-delay: 3s;
+      }
+      
+      .animated-bg-circles .floating-element:nth-child(3) {
+        top: 70%;
+        left: 60%;
+        width: 120px;
+        height: 120px;
+        background: rgba(14, 165, 233, 0.12);
+        animation-delay: 4s;
+      }
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px) scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translateY(-20px) scale(1.1);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+      }
+      
+      /* Responsive optimizations for animated background */
+      @media (max-width: 768px) {
+        .animated-bg-circles::before {
+          width: 200px;
+          height: 200px;
+          top: 5%;
+          left: 5%;
+        }
+        
+        .animated-bg-circles::after {
+          width: 150px;
+          height: 150px;
+          top: 70%;
+          right: 5%;
+        }
+        
+        .animated-bg-circles .floating-element:nth-child(1) {
+          width: 120px;
+          height: 120px;
+          top: 40%;
+          right: 10%;
+        }
+        
+        .animated-bg-circles .floating-element:nth-child(2) {
+          width: 100px;
+          height: 100px;
+          bottom: 10%;
+          left: 10%;
+        }
+        
+        .animated-bg-circles .floating-element:nth-child(3) {
+          width: 80px;
+          height: 80px;
+          top: 80%;
+          left: 70%;
+        }
+        
+        /* Reduce animation intensity on mobile for better performance */
+        body::before {
+          animation-duration: 30s;
+        }
+        
+        .animated-bg-circles::before,
+        .animated-bg-circles::after {
+          animation-duration: 6s;
+        }
+        
+        .animated-bg-circles .floating-element {
+          animation-duration: 8s;
+        }
+      }
+      
+      /* Reduce motion for users who prefer it */
+      @media (prefers-reduced-motion: reduce) {
+        body::before,
+        .animated-bg-circles::before,
+        .animated-bg-circles::after,
+        .animated-bg-circles .floating-element {
+          animation: none;
+        }
       }
       
       /* Clean Scrollbar */
@@ -220,6 +413,13 @@ const { description, title, image, theme = 'auto' } = Astro.props;
   </head>
   
   <body class="clean-pattern">
+    <!-- Animated Background Circles -->
+    <div class="animated-bg-circles">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+    </div>
+    
     <!-- Accessibility: Skip to main content -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
     
@@ -246,6 +446,37 @@ const { description, title, image, theme = 'auto' } = Astro.props;
         
         // Add clean pattern effect to body
         document.body.classList.add('clean-pattern');
+        
+        // Initialize animated background
+        function initAnimatedBackground() {
+          const animatedBg = document.querySelector('.animated-bg-circles');
+          if (animatedBg) {
+            // Ensure background is visible
+            animatedBg.style.display = 'block';
+            
+            // Add performance optimization for animations
+            if ('IntersectionObserver' in window) {
+              const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                  } else {
+                    entry.target.style.animationPlayState = 'paused';
+                  }
+                });
+              }, { threshold: 0.1 });
+              
+              observer.observe(animatedBg);
+            }
+          }
+        }
+        
+        // Initialize background when DOM is ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAnimatedBackground);
+        } else {
+          initAnimatedBackground();
+        }
         
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
