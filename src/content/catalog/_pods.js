@@ -399,15 +399,15 @@ export const podsCatalog = {
     return {
       id: pod.id,
       type: "pod",
-      title: pod.title,
-      description: pod.description,
-      price: pod.engagement,
-      priceUSD: pod.priceUSD,
-      basePrice: pod.basePrice,
-      icon: pod.icon,
-      badge: pod.badge,
-      badgeColor: pod.badgeColor,
-      duration: "Monthly subscription"
+      title: pod.name,
+      description: pod.tagline,
+      price: pod.pricing ? pod.pricing[0] : 'Contact Us',
+      basePrice: 250000, // Default base price, can be customized per pod
+      icon: "🚀", // Default icon
+      badge: "Popular",
+      badgeColor: "green",
+      duration: "Monthly subscription",
+      reservationMonths: 3
     };
   }
 };

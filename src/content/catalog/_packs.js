@@ -719,6 +719,24 @@ export const packsCatalog = {
       badge: pack.badge,
       badgeColor: pack.badgeColor
     };
+  },
+
+  // Get recommended packs for a specific pod
+  getRecommendedPacksForPod: (podId) => {
+    // Define pod-to-pack recommendations based on pod types
+    const recommendations = {
+      "ecommerce-engine": ["launch-pack", "web-presence-pack", "brand-starter-pack", "growth-pack"],
+      "ar-vr-experience": ["launch-pack", "brand-starter-pack", "web-presence-pack"],
+      "ai-product-studio": ["launch-pack", "growth-pack", "data-insights-pack"],
+      "product-launch": ["launch-pack", "web-presence-pack", "brand-starter-pack"],
+      "admin-workflow-automation": ["growth-pack", "data-insights-pack", "compliance-pack"],
+      "ai-ml-integration": ["data-insights-pack", "growth-pack", "compliance-pack"],
+      "mobile-first-saas": ["launch-pack", "growth-pack", "web-presence-pack"],
+      "devops-infra-automation": ["growth-pack", "data-insights-pack", "compliance-pack"]
+    };
+
+    const recommendedPackIds = recommendations[podId] || [];
+    return packsCatalog.availablePacks.filter(pack => recommendedPackIds.includes(pack.id));
   }
 };
 

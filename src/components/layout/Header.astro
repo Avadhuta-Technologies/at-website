@@ -433,9 +433,45 @@ const menuitems = [
     });
   }
 
+  // Cart functionality
+  function initCart() {
+    const cartToggle = document.getElementById('header-cart-toggle');
+    const cartBadge = document.querySelector('.cart-badge');
+    
+    if (cartToggle) {
+      cartToggle.addEventListener('click', () => {
+        // Navigate to summary page instead of opening drawer
+        window.location.href = '/summary';
+      });
+    }
+    
+    // Update cart badge count
+    function updateCartBadge() {
+      if (typeof window !== 'undefined' && (window as any).cartService) {
+        (window as any).cartService.getCartCount().then((count: number) => {
+          if (cartBadge) {
+            if (count > 0) {
+              cartBadge.textContent = count.toString();
+              cartBadge.style.display = 'flex';
+            } else {
+              cartBadge.style.display = 'none';
+            }
+          }
+        });
+      }
+    }
+    
+    // Listen for cart updates
+    window.addEventListener('cart-updated', updateCartBadge);
+    
+    // Initial update
+    updateCartBadge();
+  }
+
   // Initialize
   initDropdowns();
   initMegamenu();
+  initCart();
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('load', handleScroll);
 </script>
