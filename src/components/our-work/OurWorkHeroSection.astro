@@ -11,62 +11,41 @@ const { data } = Astro.props;
 ---
 
 <section class="relativee overflow-hidden">
-
-  <div class="relative z-10 container mx-auto px-4 py-20 md:py-32">
-    <div class="max-w-4xl mx-auto text-center">
-      
+  <div class="container relative z-10 mx-auto px-4 py-20 md:py-32">
+    <div class="mx-auto max-w-4xl text-center">
       <!-- Badge -->
-      <div class="inline-flex items-center px-4 py-2 bg-primary-50 text-primary-700 text-sm font-semibold rounded-full mb-8 border border-primary-200">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      <div
+        class="mb-8 inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700"
+      >
+        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
         </svg>
-        Our Work
+         Our Work
       </div>
-      
+
       <!-- Main Headline -->
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+      <h1 class="mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-5xl lg:text-6xl">
         {data.title}
       </h1>
-      
+
       <!-- Subtitle -->
-      <h2 class="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
+      <h2 class="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl">
         {data.subtitle}
       </h2>
-      
+
       <!-- Description (if provided) -->
-      {data.description && (
-        <p class="text-lg text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed">
-          {data.description}
-        </p>
-      )}
-      
-      <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a 
-          href="#industries-section" 
-          class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group"
-          onclick="scrollToSection(event, 'industries-section')"
-        >
-          <span>Explore Industries</span>
-          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-          </svg>
-        </a>
-        
-        <a 
-          href="#portfolio-section" 
-          class="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 group"
-          onclick="scrollToSection(event, 'portfolio-section')"
-        >
-          <span>View Portfolio</span>
-          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-          </svg>
-        </a>
-      </div>
-      
-      
+      {
+        data.description && (
+          <p class="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-gray-500">
+            {data.description}
+          </p>
+        )
+      }
     </div>
   </div>
 </section>
@@ -75,16 +54,17 @@ const { data } = Astro.props;
   .animation-delay-2000 {
     animation-delay: 2s;
   }
-  
+
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.7;
     }
     50% {
       opacity: 0.4;
     }
   }
-  
+
   .animate-pulse {
     animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
@@ -97,8 +77,9 @@ const { data } = Astro.props;
     if (section) {
       section.scrollIntoView({
         behavior: 'smooth',
-        block: 'start'
+        block: 'start',
       });
     }
   }
-</script> 
+</script>
+
