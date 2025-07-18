@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import OurWorkHeroSection from '../components/our-work/OurWorkHeroSection.astro';
 import OurWorkGridSection from '../components/our-work/OurWorkGridSection.astro';
-import OurWorkPortfolioCTASection from '../components/our-work/OurWorkPortfolioCTASection.astro';
+import OurWorkCaseStudiesSection from '../components/our-work/OurWorkCaseStudiesSection.astro';
 import OurWorkWhyChooseSection from '../components/our-work/OurWorkWhyChooseSection.astro';
 import OurWorkCTASection from '../components/our-work/OurWorkCTASection.astro';
 
@@ -13,7 +13,6 @@ import {
   ourWorkGridData,
   ourWorkCTAData,
   ourWorkIndustriesData,
-  ourWorkPortfolioCTAData,
   ourWorkWhyChooseData
 } from '../content/our-work/_index.js';
 import OurWorkIndustriesSection from '../components/our-work/OurWorkIndustriesSection.astro';
@@ -30,8 +29,8 @@ import OurWorkIndustriesSection from '../components/our-work/OurWorkIndustriesSe
   <!-- Industries Section -->
   <OurWorkIndustriesSection data={ourWorkIndustriesData} />
   
-  <!-- Portfolio CTA Section -->
-  <OurWorkPortfolioCTASection data={ourWorkPortfolioCTAData} />
+  <!-- Case Studies Section -->
+  <OurWorkCaseStudiesSection />
   
   <!-- Why Choose Section -->
   <OurWorkWhyChooseSection data={ourWorkWhyChooseData} />

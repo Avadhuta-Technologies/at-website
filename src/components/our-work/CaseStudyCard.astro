@@ -1,0 +1,266 @@
+---
+// Case Study Card Component
+export interface Props {
+  caseStudy: {
+    id: string;
+    title: string;
+    industry: string;
+    duration: string;
+    problemStatement: string;
+    techStack: string[];
+    impact: string[];
+    badge: string;
+    badgeColor: string;
+  };
+  index: number;
+}
+
+const { caseStudy, index } = Astro.props;
+
+// Color mapping for different case study types
+const getColorClasses = (badgeColor: string) => {
+  const colors = {
+    blue: {
+      bg: 'bg-blue-50/80',
+      border: 'border-blue-200/50',
+      text: 'text-blue-700',
+      badge: 'bg-blue-100/90 text-blue-800 backdrop-blur-sm',
+      iconBg: 'bg-blue-100/80',
+      gradient: 'from-blue-500 to-blue-600'
+    },
+    green: {
+      bg: 'bg-green-50/80',
+      border: 'border-green-200/50',
+      text: 'text-green-700',
+      badge: 'bg-green-100/90 text-green-800 backdrop-blur-sm',
+      iconBg: 'bg-green-100/80',
+      gradient: 'from-green-500 to-green-600'
+    },
+    purple: {
+      bg: 'bg-purple-50/80',
+      border: 'border-purple-200/50',
+      text: 'text-purple-700',
+      badge: 'bg-purple-100/90 text-purple-800 backdrop-blur-sm',
+      iconBg: 'bg-purple-100/80',
+      gradient: 'from-purple-500 to-purple-600'
+    },
+    indigo: {
+      bg: 'bg-indigo-50/80',
+      border: 'border-indigo-200/50',
+      text: 'text-indigo-700',
+      badge: 'bg-indigo-100/90 text-indigo-800 backdrop-blur-sm',
+      iconBg: 'bg-indigo-100/80',
+      gradient: 'from-indigo-500 to-indigo-600'
+    },
+    teal: {
+      bg: 'bg-teal-50/80',
+      border: 'border-teal-200/50',
+      text: 'text-teal-700',
+      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
+      iconBg: 'bg-teal-100/80',
+      gradient: 'from-teal-500 to-teal-600'
+    },
+    orange: {
+      bg: 'bg-orange-50/80',
+      border: 'border-orange-200/50',
+      text: 'text-orange-700',
+      badge: 'bg-orange-100/90 text-orange-800 backdrop-blur-sm',
+      iconBg: 'bg-orange-100/80',
+      gradient: 'from-orange-500 to-orange-600'
+    },
+    pink: {
+      bg: 'bg-pink-50/80',
+      border: 'border-pink-200/50',
+      text: 'text-pink-700',
+      badge: 'bg-pink-100/90 text-pink-800 backdrop-blur-sm',
+      iconBg: 'bg-pink-100/80',
+      gradient: 'from-pink-500 to-pink-600'
+    }
+  };
+  return colors[badgeColor as keyof typeof colors] || colors.blue;
+};
+
+// Generate contextual icon based on case study
+const getCaseStudyIcon = (caseStudy: any) => {
+  const title = caseStudy.title.toLowerCase();
+  const industry = caseStudy.industry.toLowerCase();
+  const badge = caseStudy.badge.toLowerCase();
+  
+  // AI/ML related
+  if (title.includes('ai') || title.includes('ml') || badge.includes('ai') || badge.includes('ml')) {
+    return '🤖';
+  }
+  
+  // Ecommerce
+  if (title.includes('ecommerce') || industry.includes('ecommerce') || badge.includes('ecommerce')) {
+    return '🛒';
+  }
+  
+  // Mobile App
+  if (title.includes('app') || badge.includes('mobile')) {
+    return '📱';
+  }
+  
+  // Design/3D
+  if (title.includes('design') || title.includes('3d') || badge.includes('design')) {
+    return '🎨';
+  }
+  
+  // Security
+  if (title.includes('security') || badge.includes('security')) {
+    return '🔐';
+  }
+  
+  // Automation
+  if (title.includes('automation') || badge.includes('automation')) {
+    return '⚙️';
+  }
+  
+  // Marketplace
+  if (title.includes('marketplace') || badge.includes('marketplace')) {
+    return '🏪';
+  }
+  
+  // SaaS
+  if (badge.includes('saas')) {
+    return '☁️';
+  }
+  
+  return '🚀';
+};
+
+const colors = getColorClasses(caseStudy.badgeColor);
+const icon = getCaseStudyIcon(caseStudy);
+---
+
+<div class="case-study-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer">
+  <!-- Card Background with Glass Morphism -->
+  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+  
+  <!-- Decorative Background Elements -->
+  <div class={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${colors.bg} rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300`}></div>
+  <div class={`absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr ${colors.bg} rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300`}></div>
+  
+  <!-- Card Content -->
+  <div class="relative p-6 flex flex-col h-full">
+    <!-- Card Header -->
+    <div class="flex items-start justify-between mb-4">
+      <div class={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}>
+        <span class="text-2xl">{icon}</span>
+      </div>
+      <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${colors.badge} border border-current/20`}>
+        {caseStudy.badge}
+      </span>
+    </div>
+    
+    <!-- Title and Industry -->
+    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">
+      {caseStudy.title}
+    </h3>
+    
+    <p class="text-sm text-gray-500 mb-4">
+      {caseStudy.industry} • {caseStudy.duration}
+    </p>
+    
+    <!-- Problem Statement (truncated) -->
+    <div class="flex-1 mb-6">
+      <p class="text-gray-600 leading-relaxed text-sm case-study-description">
+        {caseStudy.problemStatement.length > 120 
+          ? caseStudy.problemStatement.substring(0, 120) + '...' 
+          : caseStudy.problemStatement}
+      </p>
+    </div>
+    
+    <!-- Tech Stack -->
+    <div class="mb-4">
+      <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+        <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+        </svg>
+        Tech Stack
+      </h4>
+      <div class="flex flex-wrap gap-2">
+        {caseStudy.techStack.slice(0, 3).map((tech) => (
+          <span class="px-2 py-1 bg-gray-100/80 text-gray-700 text-xs rounded-md backdrop-blur-sm">
+            {tech}
+          </span>
+        ))}
+        {caseStudy.techStack.length > 3 && (
+          <span class="px-2 py-1 bg-gray-100/80 text-gray-700 text-xs rounded-md backdrop-blur-sm">
+            +{caseStudy.techStack.length - 3} more
+          </span>
+        )}
+      </div>
+    </div>
+    
+    <!-- Impact -->
+    <div class="mb-6">
+      <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+        <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+        </svg>
+        Impact
+      </h4>
+      <ul class="space-y-1">
+        {caseStudy.impact.slice(0, 2).map((impact) => (
+          <li class="flex items-start text-xs text-gray-600">
+            <svg class="w-3 h-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            {impact}
+          </li>
+        ))}
+      </ul>
+    </div>
+    
+    
+      
+      <!-- Read Full Case Study Button -->
+      <a 
+        href={`/case-studies/${caseStudy.id}`}
+        class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 group-hover:shadow-lg"
+      >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        </svg>
+        <span>Read Full Case Study</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Case Study Card Animations */
+  .case-study-card {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block !important;
+  }
+
+  .case-study-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hover Effects */
+  .case-study-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Text truncation */
+  .case-study-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .case-study-card {
+      padding: 1.5rem;
+    }
+  }
+</style> 
