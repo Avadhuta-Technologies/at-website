@@ -28,21 +28,10 @@ const { data } = Astro.props;
 ---
 
 <section id="how-it-works" class="py-20 relative overflow-hidden">
-  <!-- Enhanced Background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200/50"></div>
   
-  <!-- Background Elements -->
-  <div class="absolute inset-0 pointer-events-none">
-    <div class="absolute top-20 left-10 w-32 h-32 bg-mint-200/30 rounded-full blur-xl animate-pulse"></div>
-    <div class="absolute bottom-20 right-10 w-40 h-40 bg-cerulean-200/25 rounded-full blur-xl animate-pulse" style="animation-delay: 2s;"></div>
-    <div class="absolute top-1/2 left-1/4 w-24 h-24 bg-lavender-200/30 rounded-full blur-lg animate-pulse" style="animation-delay: 1s;"></div>
-    <div class="absolute top-1/3 right-1/4 w-20 h-20 bg-mint-300/20 rounded-full blur-lg animate-pulse" style="animation-delay: 3s;"></div>
-    <div class="absolute bottom-1/3 left-1/3 w-28 h-28 bg-cerulean-300/20 rounded-full blur-xl animate-pulse" style="animation-delay: 1.5s;"></div>
-  </div>
-
   <div class="container mx-auto px-4 relative z-10">
     <div class="max-w-3xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 font-satoshi">
+      <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
         {data.title}
       </h2>
       <p class="text-lg text-slate-600 leading-relaxed font-inter">
@@ -83,7 +72,7 @@ const { data } = Astro.props;
                       </svg>
                     )}
                   </div>
-                  <h3 class="text-lg font-semibold text-slate-900 font-satoshi leading-tight">
+                  <h3 class="text-lg font-semibold text-slate-900  leading-tight">
                     {step.title}
                   </h3>
                 </div>
@@ -106,7 +95,7 @@ const { data } = Astro.props;
                     <svg class="w-4 h-4 text-mint-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <h4 class="font-semibold text-slate-900 font-satoshi text-sm">Available Pods</h4>
+                    <h4 class="font-semibold text-slate-900  text-sm">Available Pods</h4>
                   </div>
                   <div class="content-grid">
                     {step.podTypes.map((pod) => (
@@ -117,7 +106,7 @@ const { data } = Astro.props;
                           </svg>
                         </div>
                         <div class="item-content">
-                          <div class="item-title font-satoshi text-sm">{pod.name}</div>
+                          <div class="item-title  text-sm">{pod.name}</div>
                           <div class="item-description font-inter text-xs line-clamp-1">{pod.description}</div>
                         </div>
                       </div>
@@ -133,7 +122,7 @@ const { data } = Astro.props;
                     <svg class="w-4 h-4 text-cerulean-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                     </svg>
-                    <h4 class="font-semibold text-slate-900 font-satoshi text-sm">Key Benefits</h4>
+                    <h4 class="font-semibold text-slate-900  text-sm">Key Benefits</h4>
                   </div>
                   <div class="content-grid">
                     {step.benefits.map((benefit) => (
@@ -159,7 +148,7 @@ const { data } = Astro.props;
                     <svg class="w-4 h-4 text-lavender-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                     </svg>
-                    <h4 class="font-semibold text-slate-900 font-satoshi text-sm">{step.compositionTitle}</h4>
+                    <h4 class="font-semibold text-slate-900  text-sm">{step.compositionTitle}</h4>
                   </div>
                   <div class="content-grid">
                     {step.composition.map((item) => (
@@ -185,13 +174,13 @@ const { data } = Astro.props;
                     <svg class="w-4 h-4 text-mint-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                     </svg>
-                    <h4 class="font-semibold text-slate-900 font-satoshi text-sm">{step.adaptabilityTitle}</h4>
+                    <h4 class="font-semibold text-slate-900  text-sm">{step.adaptabilityTitle}</h4>
                   </div>
                   <div class="content-grid">
                     {step.adaptabilityFeatures.map((feature) => (
                       <div class="content-item glass-card-light">
                         <div class="item-content">
-                          <div class="item-title font-satoshi text-sm">{feature.title}</div>
+                          <div class="item-title  text-sm">{feature.title}</div>
                           <div class="item-description font-inter text-xs line-clamp-2">{feature.description}</div>
                         </div>
                       </div>
