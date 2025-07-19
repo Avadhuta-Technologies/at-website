@@ -1,0 +1,66 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    description: string;
+    features: Array<{
+      title: string;
+      description: string;
+    }>;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-20  relative overflow-hidden">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-4xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-manrope font-bold text-graphite-900 mb-4 gradient-title">{data.title}</h2>
+      <p class="text-xl text-graphite-600 mb-6 font-inter">{data.subtitle}</p>
+      <p class="text-lg text-graphite-600 font-inter leading-relaxed">{data.description}</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      {data.features.map((feature, index) => (
+        <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Glass Card Background -->
+          <div class="absolute inset-0 bg-gradient-to-br from-white/80 to-white/60 backdrop-blur-md border border-white/20 rounded-xl shadow-sm group-hover:shadow-lg transition-all duration-300"></div>
+          
+          <!-- Card Content -->
+          <div class="relative p-8 text-center">
+            <div class="w-16 h-16 bg-gradient-to-br from-mint-100 to-cerulean-100 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-mint-200/50 shadow-sm">
+              {index === 0 && (
+                <svg class="w-8 h-8 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+              )}
+              {index === 1 && (
+                <svg class="w-8 h-8 text-cerulean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              )}
+              {index === 2 && (
+                <svg class="w-8 h-8 text-lavender-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              )}
+            </div>
+            <h3 class="text-xl font-manrope font-bold text-graphite-900 mb-4">{feature.title}</h3>
+            <p class="text-graphite-600 font-inter leading-relaxed">{feature.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="text-center">
+      <a href="/contact" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-xl hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md group">
+        <span class="font-manrope">Get Expert Guidance</span>
+        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section> 

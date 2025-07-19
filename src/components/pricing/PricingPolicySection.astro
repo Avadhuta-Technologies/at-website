@@ -1,0 +1,56 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    whatsIncluded: {
+      title: string;
+      items: string[];
+    };
+    billingPayment: {
+      title: string;
+      items: string[];
+    };
+  };
+  className?: string;
+}
+
+const { data, className = "" } = Astro.props;
+---
+
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+  <div class="container mx-auto px-4">
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-12">
+      <h2 class="text-2xl font-bold text-dark mb-6 gradient-title">{data.title}</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{data.whatsIncluded.title}</h3>
+          <ul class="space-y-3">
+            {data.whatsIncluded.items.map((item) => (
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-600">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{data.billingPayment.title}</h3>
+          <ul class="space-y-3">
+            {data.billingPayment.items.map((item) => (
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-600">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 

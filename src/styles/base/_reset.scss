@@ -1,5 +1,7 @@
 // CSS Reset and Base Styles
 
+@use '_variables' as vars;
+
 *,
 *::before,
 *::after {
@@ -14,8 +16,6 @@ html {
   text-size-adjust: 100%;
   scroll-behavior: smooth;
 }
-
-@use 'variables' as vars;
 
 body {
   margin: 0;
@@ -79,7 +79,7 @@ abbr[title] {
 
 b,
 strong {
-  font-weight: $font-weight-bold;
+  font-weight: vars.$font-weight-bold;
 }
 
 dfn {
@@ -93,37 +93,37 @@ h4,
 h5,
 h6 {
   margin: 0;
-  font-weight: $font-weight-semibold;
-  line-height: $line-height-tight;
+  font-weight: vars.$font-weight-semibold;
+  line-height: vars.$line-height-tight;
 }
 
 h1 {
-  font-size: $font-size-4xl;
+  font-size: vars.$font-size-4xl;
 }
 
 h2 {
-  font-size: $font-size-3xl;
+  font-size: vars.$font-size-3xl;
 }
 
 h3 {
-  font-size: $font-size-2xl;
+  font-size: vars.$font-size-2xl;
 }
 
 h4 {
-  font-size: $font-size-xl;
+  font-size: vars.$font-size-xl;
 }
 
 h5 {
-  font-size: $font-size-lg;
+  font-size: vars.$font-size-lg;
 }
 
 h6 {
-  font-size: $font-size-base;
+  font-size: vars.$font-size-base;
 }
 
 mark {
   background: #ff0;
-  color: $text-primary;
+  color: vars.$text-primary;
 }
 
 small {
@@ -165,18 +165,18 @@ hr {
   box-sizing: content-box;
   height: 0;
   border: none;
-  border-top: 1px solid $gray-300;
-  margin: $spacing-lg 0;
+  border-top: 1px solid vars.$gray-300;
+  margin: vars.$space-6 0;
 }
 
 pre {
   overflow: auto;
   font-family: monospace;
-  font-size: $font-size-sm;
-  line-height: $line-height-normal;
-  background: $gray-100;
-  padding: $spacing-md;
-  border-radius: $border-radius-md;
+  font-size: vars.$font-size-sm;
+  line-height: vars.$line-height-normal;
+  background: vars.$gray-100;
+  padding: vars.$space-4;
+  border-radius: vars.$border-radius-md;
 }
 
 code,
@@ -254,7 +254,7 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 fieldset {
-  border: 1px solid $gray-300;
+  border: 1px solid vars.$gray-300;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em;
 }
@@ -270,7 +270,7 @@ textarea {
 }
 
 optgroup {
-  font-weight: $font-weight-bold;
+  font-weight: vars.$font-weight-bold;
 }
 
 table {
@@ -301,25 +301,19 @@ q:after {
   content: none;
 }
 
-// Dark mode support
-.dark {
-  color: $text-white;
-  background-color: $bg-dark;
-}
-
 // Focus styles
 :focus {
-  outline: 2px solid $primary;
+  outline: 2px solid vars.$primary-blue;
   outline-offset: 2px;
 }
 
 // Selection styles
 ::selection {
-  background-color: $primary;
+  background-color: vars.$primary-blue;
   color: white;
 }
 
 ::-moz-selection {
-  background-color: $primary;
+  background-color: vars.$primary-blue;
   color: white;
 } 

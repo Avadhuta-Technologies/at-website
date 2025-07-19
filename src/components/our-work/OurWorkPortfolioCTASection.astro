@@ -1,0 +1,44 @@
+---
+// Portfolio CTA Section Component for Our Work page
+interface Props {
+  data: {
+    title: string;
+    description: string;
+    buttonText: string;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<!-- Portfolio CTA Section -->
+<section class="py-20 ">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Section Header -->
+      <div class="mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 gradient-title">
+          {data.title}
+        </h2>
+        <p class="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
+          {data.description}
+        </p>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="flex justify-center">
+        <a 
+          href="/portfolio" 
+          class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group"
+        >
+          <span>{data.buttonText}</span>
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+ 

@@ -1,3 +1,5 @@
+import { catalogUtils } from '../content/catalog/_index.js';
+
 export interface CartItem {
   id: string;
   type: 'pod' | 'pack';
@@ -91,59 +93,136 @@ class CartService {
     });
   }
 
-  // Add item to cart with business rules
+  // Add item to cart with business rules using centralized catalog
   async addToCart(item: CartItem): Promise<boolean> {
+    console.log('🟡 [CartService] addToCart called with item:', item);
+    
     // Check if we're in a browser environment
     if (typeof window === 'undefined' || typeof indexedDB === 'undefined') {
-      console.log('addToCart - Not in browser environment, returning false');
+      console.log('🟡 [CartService] addToCart - Not in browser environment, returning false');
       return false;
     }
 
     try {
+      console.log('🟡 [CartService] Validating product exists in catalog...');
+      // Validate product exists in catalog
+      if (!catalogUtils.productExists(item.id, item.type)) {
+        console.error('🟡 [CartService] Product not found in catalog:', item.id, item.type);
+        this.showNotification(`Invalid ${item.type}: ${item.id}`, 'error');
+        return false;
+      }
+      console.log('🟡 [CartService] Product validated in catalog');
+
+      console.log('🟡 [CartService] Getting current cart...');
       const cart = await this.getCart();
+      console.log('🟡 [CartService] Current cart items:', cart);
       
       if (item.type === 'pod') {
+        console.log('🟡 [CartService] Processing POD item...');
+        
         // Rule 1: Only one pod at a time
         const existingPod = cart.find(cartItem => cartItem.type === 'pod');
         if (existingPod) {
+          console.error('🟡 [CartService] Business rule violation: Only one pod allowed. Existing pod:', existingPod);
           this.showNotification('You can only reserve one pod at a time. Please remove the existing pod first.', 'error');
           return false;
         }
+        console.log('🟡 [CartService] No existing pod found, proceeding...');
         
+        // Get pod data from catalog
+        console.log('🟡 [CartService] Getting pod data from catalog for ID:', item.id);
+        const podData = catalogUtils.getProductForCart(item.id, 'pod');
+        if (!podData) {
+          console.error('🟡 [CartService] Pod not found in catalog for ID:', item.id);
+          this.showNotification('Pod not found in catalog', 'error');
+          return false;
+        }
+        console.log('🟡 [CartService] Pod data retrieved from catalog:', podData);
+
         // Set default reservation period if not specified
         if (!item.reservationMonths) {
           item.reservationMonths = 3;
+          console.log('🟡 [CartService] Set default reservation period to 3 months');
         }
         
         // Calculate price based on reservation period
-        if (item.basePrice) {
-          const totalPrice = item.basePrice * item.reservationMonths;
-          item.price = `₹${totalPrice.toLocaleString()}/month (~$${Math.round(totalPrice / 75)}/month)`;
+        if (podData.basePrice) {
+          const totalPrice = podData.basePrice * item.reservationMonths;
+          item.price = catalogUtils.formatPrice(totalPrice, 'INR') + `/month (~$${Math.round(totalPrice / 75)}/month)`;
+          item.basePrice = podData.basePrice;
+          console.log('🟡 [CartService] Calculated price:', item.price, 'for', item.reservationMonths, 'months');
         }
+
+        // Copy data from catalog
+        Object.assign(item, {
+          title: podData.title,
+          description: podData.description,
+          icon: podData.icon,
+          badge: podData.badge,
+          badgeColor: podData.badgeColor
+        });
+        console.log('🟡 [CartService] Pod item enriched with catalog data:', item);
+        
       } else if (item.type === 'pack') {
+        console.log('🟡 [CartService] Processing PACK item...');
+        
         // Rule 3: Must have a pod before adding packs
         const existingPod = cart.find(cartItem => cartItem.type === 'pod');
         if (!existingPod) {
+          console.error('🟡 [CartService] Business rule violation: No pod in cart. Cannot add pack without pod.');
           this.showNotification('Please add a pod to your cart before adding packs.', 'error');
           return false;
         }
+        console.log('🟡 [CartService] Found existing pod:', existingPod);
         
+        // Get pack data from catalog
+        console.log('🟡 [CartService] Getting pack data from catalog for ID:', item.id);
+        const packData = catalogUtils.getProductForCart(item.id, 'pack');
+        if (!packData) {
+          console.error('🟡 [CartService] Pack not found in catalog for ID:', item.id);
+          this.showNotification('Pack not found in catalog', 'error');
+          return false;
+        }
+        console.log('🟡 [CartService] Pack data retrieved from catalog:', packData);
+
         // Rule 2: Multiple packs allowed for same pod
         item.podId = existingPod.id;
+        console.log('🟡 [CartService] Set pack podId to:', item.podId);
+
+        // Copy data from catalog
+        Object.assign(item, {
+          title: packData.title,
+          description: packData.description,
+          price: packData.price,
+          priceUSD: packData.priceUSD,
+          basePrice: packData.basePrice,
+          duration: packData.duration,
+          icon: packData.icon,
+          badge: packData.badge,
+          badgeColor: packData.badgeColor
+        });
+        console.log('🟡 [CartService] Pack item enriched with catalog data:', item);
       }
 
       // Store in IndexedDB
+      console.log('🟡 [CartService] Storing item in IndexedDB...');
       await this.storeItem(item);
+      console.log('🟡 [CartService] Item stored successfully');
+      
+      console.log('🟡 [CartService] Updating cart count...');
       this.updateCartCount();
+      console.log('🟡 [CartService] Cart count updated');
       
       // Dispatch cart updated event
       if (typeof window !== 'undefined') {
+        console.log('🟡 [CartService] Dispatching cart-updated event...');
         window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'add' } }));
       }
       
+      console.log('🟡 [CartService] addToCart completed successfully');
       return true;
     } catch (error) {
-      console.error('Error adding item to cart:', error);
+      console.error('🟡 [CartService] Error adding item to cart:', error);
       return false;
     }
   }
@@ -279,14 +358,15 @@ class CartService {
   async updatePodReservation(podId: string, months: number): Promise<boolean> {
     try {
       const cart = await this.getCart();
-      const pod = cart.find(item => item.id === podId && item.type === 'pod');
+      const podItem = cart.find(item => item.id === podId && item.type === 'pod');
       
-      if (pod && pod.basePrice) {
-        pod.reservationMonths = months;
-        const totalPrice = pod.basePrice * months;
-        pod.price = `₹${totalPrice.toLocaleString()}/month (~$${Math.round(totalPrice / 75)}/month)`;
+      if (podItem && podItem.basePrice) {
+        podItem.reservationMonths = months;
+        const totalPrice = podItem.basePrice * months;
+        podItem.price = catalogUtils.formatPrice(totalPrice, 'INR') + `/month (~$${Math.round(totalPrice / 75)}/month)`;
         
-        await this.storeItem(pod);
+        await this.storeItem(podItem);
+        this.updateCartCount();
         return true;
       }
       return false;
@@ -296,43 +376,32 @@ class CartService {
     }
   }
 
-  // Get cart summary with business logic
+  // Get cart summary with calculations
   async getCartSummary(): Promise<CartSummary> {
-    const items = await this.getCart();
-    console.log('getCartSummary - Raw items from DB:', items);
-    
-    const podItem = items.find(item => item.type === 'pod');
-    const packItems = items.filter(item => item.type === 'pack');
-    
-    console.log('getCartSummary - Pod item:', podItem);
-    console.log('getCartSummary - Pack items:', packItems);
-    
-    // Calculate total price based on reservation period
-    let totalPrice = 0;
-    if (podItem && podItem.basePrice && podItem.reservationMonths) {
-      const podPrice = podItem.basePrice * podItem.reservationMonths;
-      totalPrice += podPrice;
+    try {
+      const cart = await this.getCart();
+      const podItem = cart.find(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
+      
+      // Calculate total price using catalog utilities
+      const totalPrice = catalogUtils.calculateTotalPrice(cart);
+      
+      return {
+        items: cart,
+        totalItems: cart.length,
+        totalPrice: totalPrice,
+        podItem: podItem,
+        packItems: packItems
+      };
+    } catch (error) {
+      console.error('Error getting cart summary:', error);
+      return {
+        items: [],
+        totalItems: 0,
+        totalPrice: 0,
+        packItems: []
+      };
     }
-    
-    // Add pack prices
-    packItems.forEach(pack => {
-      const priceMatch = pack.price.match(/₹([\d,]+)/);
-      if (priceMatch) {
-        const packPrice = parseInt(priceMatch[1].replace(/,/g, ''));
-        totalPrice += packPrice;
-      }
-    });
-
-    const summary = {
-      items,
-      totalItems: items.length,
-      totalPrice,
-      podItem,
-      packItems
-    };
-    
-    console.log('getCartSummary - Final summary:', summary);
-    return summary;
   }
 
   // Check if cart is empty
@@ -347,221 +416,87 @@ class CartService {
     return cart.length;
   }
 
-  // Update cart count in UI
+  // Update cart count display
   async updateCartCount(): Promise<void> {
-    // Check if we're in a browser environment
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-      console.log('updateCartCount - Not in browser environment, skipping UI update');
-      return;
-    }
+    if (typeof window === 'undefined') return;
 
-    const cartCount = await this.getCartCount();
-    const cartBadges = document.querySelectorAll('[data-cart-count], .cart-badge') as NodeListOf<HTMLElement>;
-    
-    console.log('Updating cart count:', cartCount);
-    console.log('Cart badges found:', cartBadges.length);
-    
-    cartBadges.forEach(cartBadge => {
-      if (cartBadge) {
-        cartBadge.textContent = cartCount.toString();
-        cartBadge.style.display = cartCount > 0 ? 'flex' : 'none';
-        console.log('Cart badge updated successfully');
-      }
-    });
-    
-    if (cartBadges.length === 0) {
-      console.warn('No cart badges found in DOM');
+    try {
+      const count = await this.getCartCount();
+      const cartCountElements = document.querySelectorAll('[data-cart-count]');
+      
+      cartCountElements.forEach(element => {
+        if (element instanceof HTMLElement) {
+          element.textContent = count.toString();
+          element.style.display = count > 0 ? 'block' : 'none';
+        }
+      });
+    } catch (error) {
+      console.error('Error updating cart count:', error);
     }
   }
 
-  // Show cart notification
+  // Show notification
   showNotification(message: string, type: 'success' | 'error' = 'success'): void {
-    // Check if we're in a browser environment
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-      console.log('showNotification - Not in browser environment, skipping notification');
-      return;
-    }
+    if (typeof window === 'undefined') return;
 
+    // Create notification element
     const notification = document.createElement('div');
-    const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-    
-    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+    notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full ${
+      type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+    }`;
     notification.textContent = message;
-    
+
+    // Add to DOM
     document.body.appendChild(notification);
-    
+
     // Animate in
     setTimeout(() => {
       notification.classList.remove('translate-x-full');
     }, 100);
-    
-    // Animate out and remove
+
+    // Remove after 3 seconds
     setTimeout(() => {
       notification.classList.add('translate-x-full');
       setTimeout(() => {
-        if (document.body.contains(notification)) {
-          document.body.removeChild(notification);
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
         }
       }, 300);
     }, 3000);
   }
 
-  // Add pod to cart with success notification
+  // Convenience methods for adding specific product types
   async addPod(podData: Omit<CartItem, 'type'>): Promise<boolean> {
-    const success = await this.addToCart({ ...podData, type: 'pod' });
-    if (success) {
-      this.showNotification(`Added ${podData.title} to cart!`);
-      await this.updateCartCount(); // Ensure cart count is updated
-    }
-    return success;
+    return this.addToCart({ ...podData, type: 'pod' });
   }
 
-  // Add pack to cart with success notification
   async addPack(packData: Omit<CartItem, 'type'>): Promise<boolean> {
-    const success = await this.addToCart({ ...packData, type: 'pack' });
-    if (success) {
-      this.showNotification(`Added ${packData.title} to your pod!`);
-      await this.updateCartCount(); // Ensure cart count is updated
-    }
-    return success;
+    return this.addToCart({ ...packData, type: 'pack' });
   }
 
-  // Remove item with notification
   async removeItem(index: number): Promise<boolean> {
-    const cart = await this.getCart();
-    if (index >= 0 && index < cart.length) {
-      const item = cart[index];
-      const success = await this.removeFromCart(index);
-      if (success) {
-        this.showNotification(`Removed ${item.title} from cart`, 'error');
-      }
-      return success;
-    }
-    return false;
+    return this.removeFromCart(index);
   }
 
-  // Initialize cart service (call on page load)
+  // Initialize the service
   async init(): Promise<void> {
     await this.updateCartCount();
   }
 
-  // Get pod details for modal/drawer
+  // Get product details from catalog
   async getPodDetails(podId: string): Promise<CartItem | null> {
-    const cart = await this.getCart();
-    return cart.find(item => item.id === podId && item.type === 'pod') || null;
+    const result = catalogUtils.getProductForCart(podId, 'pod');
+    return result as CartItem | null;
   }
 
-  // Get pack details for modal/drawer
   async getPackDetails(packId: string): Promise<CartItem | null> {
-    const cart = await this.getCart();
-    return cart.find(item => item.id === packId && item.type === 'pack') || null;
+    const result = catalogUtils.getProductForCart(packId, 'pack');
+    return result as CartItem | null;
   }
 }
 
 // Create singleton instance
-export const cartService = new CartService();
+const cartService = new CartService();
 
-// Make it available globally for inline onclick handlers
-if (typeof window !== 'undefined') {
-  (window as any).cartService = cartService;
-  
-  // Global functions for inline onclick handlers
-  (window as any).handleReservePod = async function(podId: string) {
-    console.log('Reserve pod clicked for:', podId);
-    
-    if (!podId) {
-      console.error('Pod ID is undefined');
-      return;
-    }
-    
-    try {
-      // Get pod data from the page
-      const podTitle = document.querySelector('h1')?.textContent?.trim() || 'Development Pod';
-      const podDescription = document.querySelector('p.text-xl')?.textContent?.trim() || 'Complete development team for your project';
-      
-      const podData = {
-        id: podId,
-        title: podTitle,
-        price: '₹6,00,000/month (~$28,000/month)',
-        priceUSD: '$28,000/month',
-        description: podDescription,
-        badge: 'Popular',
-        badgeColor: 'green',
-        basePrice: 600000, // Base price per month (₹6 Lakhs)
-        reservationMonths: 3 // Default 3 months
-      };
-      
-      console.log('Adding pod data:', podData);
-      const success = await cartService.addPod(podData);
-      console.log('Add pod result:', success);
-      
-      if (success) {
-        // Redirect to cart page after a short delay
-        setTimeout(() => {
-          window.location.href = '/cart';
-        }, 1000);
-      }
-    } catch (error) {
-      console.error('Error in handleReservePod:', error);
-      alert('Error adding pod to cart. Please try again.');
-    }
-  };
-
-  (window as any).handleAddPack = async function(packId: string) {
-    console.log('Add pack clicked for:', packId);
-    
-    try {
-      // Get packs data from the page
-      const packsDataElement = document.querySelector('[data-packs]');
-      if (!packsDataElement) {
-        console.error('Packs data not found on page');
-        cartService.showNotification('Pack data not available. Please refresh the page.', 'error');
-        return;
-      }
-      
-      const packsData = JSON.parse(packsDataElement.getAttribute('data-packs') || '[]');
-      console.log('Available packs data:', packsData);
-      
-      const pack = packsData.find((p: any) => p.id === packId);
-      console.log('Found pack:', pack);
-      
-      if (pack) {
-        const packData = {
-          id: packId,
-          title: pack.title,
-          price: pack.price,
-          duration: pack.duration,
-          description: pack.description,
-          icon: pack.icon,
-          podId: pack.podId || 'current-pod'
-        };
-        
-        console.log('Adding pack data:', packData);
-        const success = await cartService.addPack(packData);
-        console.log('Add pack result:', success);
-        
-        if (success) {
-          cartService.showNotification('Pack added to cart successfully!', 'success');
-        } else {
-          cartService.showNotification('Failed to add pack to cart. Please try again.', 'error');
-        }
-      } else {
-        console.error('Pack not found:', packId);
-        console.error('Available pack IDs:', packsData.map((p: any) => p.id));
-        cartService.showNotification('Pack not found. Please try again.', 'error');
-      }
-    } catch (error) {
-      console.error('Error in handleAddPack:', error);
-      alert('Error adding pack to cart. Please try again.');
-    }
-  };
-
-  (window as any).handleCaseStudyClick = function(useCase: string) {
-    const podId = document.querySelector('[data-pod-id]')?.getAttribute('data-pod-id') || '';
-    window.open(`/case-studies?pod=${podId}&case=${encodeURIComponent(useCase)}`, '_blank');
-  };
-
-  (window as any).handleContactClick = function() {
-    window.location.href = '/contact?type=sales';
-  };
-} 
+// Export the singleton instance
+export default cartService; 

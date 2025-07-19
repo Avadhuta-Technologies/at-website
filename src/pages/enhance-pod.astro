@@ -1,331 +1,43 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CartUtility from '../components/shared/CartUtility.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import EnhancePodHeroSection from '../components/enhance-pod/EnhancePodHeroSection.astro';
+import EnhancePodEnhancementsSection from '../components/enhance-pod/EnhancePodEnhancementsSection.astro';
+import SelectedItemsDisplay from '../components/shared/SelectedItemsDisplay.astro';
+import CTASection from '../components/shared/CTASection.astro';
+
+// Import isolated enhance-pod content
+import { 
+  enhancePodHeroData,
+  enhancePodEnhancementsData
+} from '../content/enhance-pod/_index.js';
 ---
 
-<Layout title="Enhance Your Pod - NovaPod" description="Add recommended packs to enhance your pod">
-  <CartUtility />
+<Layout 
+  description="Enhance your existing pod with additional team members and specialized skills. Take your project to the next level with our enhancement options."
+  title="Enhance Pod | NovaPod.ai"
+> 
+
   
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-    <div class="max-w-6xl mx-auto px-4">
-      <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Enhance Your Pod</h1>
-        <p class="text-xl text-gray-600 dark:text-gray-400">(Optional) Recommended Add-on Packs</p>
-      </div>
-
-      <!-- Current Selection Summary -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Current Selection</h2>
-        <div id="current-selection" class="space-y-3">
-          <!-- Current items will be rendered here -->
+  <!-- Hero Section -->
+  <EnhancePodHeroSection data={enhancePodHeroData} />
+  
+  <!-- Main Content -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Selected Items Display -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8">
+            <SelectedItemsDisplay />
+          </div>
         </div>
-      </div>
-
-      <!-- Recommended Packs -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-        <!-- Launch Pack -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Launch Pack</h3>
-            <div class="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">₹75,000</div>
-            <p class="text-sm text-gray-600 dark:text-gray-400">$900</p>
-          </div>
-          
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            Take your product live with confidence. Includes deployment, basic analytics, Play Store/App Store setup, and a launch checklist.
-          </p>
-          
-          <div class="mb-6">
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Duration: 2 weeks</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Deployment & Setup</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>App Store Setup</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Launch Checklist</span>
-            </div>
-          </div>
-          
-          <button 
-            data-add-to-cart
-            data-item-id="launch-pack"
-            data-item-type="pack"
-            data-item-title="Launch Pack"
-            data-item-description="Take your product live with confidence. Includes deployment, basic analytics, Play Store/App Store setup, and a launch checklist."
-            data-item-price="₹75,000"
-            class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105">
-            Add To Pod
-          </button>
+        
+        <!-- Enhancements Section -->
+        <div class="lg:col-span-2">
+          <EnhancePodEnhancementsSection data={enhancePodEnhancementsData} />
         </div>
-
-        <!-- Web Presence Pack -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Web Presence Pack</h3>
-            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">₹45,000</div>
-            <p class="text-sm text-gray-600 dark:text-gray-400">$550</p>
-          </div>
-          
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready.
-          </p>
-          
-          <div class="mb-6">
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Duration: 2 weeks</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Responsive Design</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Basic CMS</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>SEO Ready</span>
-            </div>
-          </div>
-          
-          <button 
-            data-add-to-cart
-            data-item-id="web-presence"
-            data-item-type="pack"
-            data-item-title="Web Presence Pack"
-            data-item-description="Create a sleek, responsive website to showcase your product. Landing page or multi-section site, basic CMS, mobile-first design, SEO ready."
-            data-item-price="₹45,000"
-            class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
-            Add To Pod
-          </button>
-        </div>
-
-        <!-- Brand Starter Pack -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Brand Starter Pack</h3>
-            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-2">₹30,000</div>
-            <p class="text-sm text-gray-600 dark:text-gray-400">$350</p>
-          </div>
-          
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            Build a professional identity for your product or startup. Logo, color palette, typography, pitch deck template, and social banners.
-          </p>
-          
-          <div class="mb-6">
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Duration: 2 weeks</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Logo & Branding</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Pitch Deck</span>
-            </div>
-            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-              <span>Social Banners</span>
-            </div>
-          </div>
-          
-          <button 
-            data-add-to-cart
-            data-item-id="brand-starter"
-            data-item-type="pack"
-            data-item-title="Brand Starter Pack"
-            data-item-description="Build a professional identity for your product or startup. Logo, color palette, typography, pitch deck template, and social banners."
-            data-item-price="₹30,000"
-            class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105">
-            Add To Pod
-          </button>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button id="enhance-pod-cart-btn" class="bg-gray-500 text-white py-3 px-8 rounded-xl font-semibold text-center hover:bg-gray-600 transition-colors">
-            Back to Summary
-          </button>
-        <button id="continue-btn" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
-          Continue
-        </button>
       </div>
     </div>
-  </div>
-</Layout>
-
-<script>
-  // Enhance Pod functionality
-  class EnhancePod {
-    constructor() {
-      this.cart = null;
-      this.init();
-    }
-
-    async init() {
-      if (typeof window !== 'undefined' && window.cartUtility) {
-        this.cart = window.cartUtility;
-        await this.renderCurrentSelection();
-        this.setupEventListeners();
-      }
-    }
-
-    async renderCurrentSelection() {
-      const cart = await this.cart.getCart();
-      const pods = cart.filter(item => item.type === 'pod');
-      const packs = cart.filter(item => item.type === 'pack');
-      
-      const selectionDiv = document.getElementById('current-selection');
-      
-      let html = '';
-      
-      if (pods.length > 0) {
-        const pod = pods[0];
-        html += `
-          <div class="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div>
-              <span class="font-semibold text-gray-900 dark:text-white">${pod.title}</span>
-              <span class="text-sm text-gray-600 dark:text-gray-400 ml-2">${pod.price}</span>
-            </div>
-            <span class="text-sm text-gray-500">Pod</span>
-          </div>
-        `;
-      }
-      
-      if (packs.length > 0) {
-        packs.forEach(pack => {
-          html += `
-            <div class="flex justify-between items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <div>
-                <span class="font-semibold text-gray-900 dark:text-white">${pack.title}</span>
-                <span class="text-sm text-gray-600 dark:text-gray-400 ml-2">${pack.price}</span>
-              </div>
-              <span class="text-sm text-gray-500">Pack</span>
-            </div>
-          `;
-        });
-      }
-      
-      if (html === '') {
-        html = '<p class="text-gray-500 italic">No items selected</p>';
-      }
-      
-      selectionDiv.innerHTML = html;
-    }
-
-    setupEventListeners() {
-      // Handle add to cart buttons
-      document.addEventListener('click', async (e) => {
-        if (e.target.matches('[data-add-to-cart]')) {
-          e.preventDefault();
-          
-          const button = e.target;
-          const item = {
-            id: button.dataset.itemId,
-            type: button.dataset.itemType,
-            title: button.dataset.itemTitle,
-            description: button.dataset.itemDescription,
-            price: button.dataset.itemPrice
-          };
-          
-          try {
-            await this.cart.addItem(item);
-            this.showNotification('Pack added to your pod!');
-            await this.renderCurrentSelection();
-          } catch (error) {
-            console.error('Failed to add pack:', error);
-            this.showNotification('Failed to add pack');
-          }
-        }
-      });
-
-      // Continue button
-      document.getElementById('continue-btn')?.addEventListener('click', () => {
-        this.proceedToCheckout();
-      });
-    }
-
-    showNotification(message) {
-      const notification = document.createElement('div');
-      notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full';
-      notification.textContent = message;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-      }, 100);
-      
-      setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-          if (document.body.contains(notification)) {
-            document.body.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
-    }
-
-    proceedToCheckout() {
-      window.location.href = '/checkout';
-    }
-  }
-
-  // Initialize enhance pod
-  let enhancePod;
-  if (typeof window !== 'undefined') {
-    enhancePod = new EnhancePod();
-  }
-</script> 
+  </section>
+</Layout> 

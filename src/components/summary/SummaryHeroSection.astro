@@ -1,0 +1,308 @@
+---
+// Summary Hero Section with Interactive Stepper
+---
+
+<section class="relative py-16 lg:py-20 bg-gradient-to-br from-mint-50 via-white to-cerulean-50 overflow-hidden">
+  <!-- Enhanced Background Pattern -->
+  <div class="absolute inset-0 opacity-30">
+    <div class="absolute top-0 left-0 w-72 h-72 bg-mint-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+    <div class="absolute top-0 right-0 w-72 h-72 bg-cerulean-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-lavender-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+  </div>
+
+  <div class="container mx-auto px-4 max-w-6xl relative z-10">
+    <!-- Page Title -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold text-graphite-900 mb-6 leading-tight">
+        Complete Your
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-mint-600 to-cerulean-600">
+          Pod Journey
+        </span>
+      </h1>
+      <p class="text-lg lg:text-xl text-graphite-700 max-w-3xl mx-auto leading-relaxed">
+        Follow our simple 3-step process to reserve your NovaPod and customize it with the perfect add-on packs for your business needs.
+      </p>
+    </div>
+
+    <!-- Enhanced Interactive Stepper -->
+    <div class="max-w-5xl mx-auto">
+      <div class="flex items-center justify-between relative">
+        <!-- Enhanced Progress Bar with Glow Effect -->
+        <div class="absolute top-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full transform -translate-y-1/2 z-0 shadow-inner">
+          <div id="stepper-progress" class="h-full bg-gradient-to-r from-mint-500 via-cerulean-500 to-lavender-500 rounded-full transition-all duration-700 ease-out shadow-lg" style="width: 33.33%">
+            <!-- Progress Glow Effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-mint-400 via-cerulean-400 to-lavender-400 rounded-full blur-sm opacity-50"></div>
+          </div>
+        </div>
+
+        <!-- Step 1: Choose Pod -->
+        <div class="relative z-10 flex flex-col items-center group">
+          <div 
+            data-step="1"
+            class="step-circle w-14 h-14 lg:w-18 lg:h-18 rounded-full bg-white border-4 border-mint-500 flex items-center justify-center shadow-xl transition-all duration-500 ease-out cursor-pointer hover:scale-110 hover:shadow-2xl active relative overflow-hidden">
+            <!-- Pulse Animation for Active Step -->
+            <div class="absolute inset-0 rounded-full bg-mint-400 opacity-20 animate-ping"></div>
+            <!-- Step Icon -->
+            <div class="w-7 h-7 lg:w-9 lg:h-9 text-mint-600 relative z-10 transition-all duration-300">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+              </svg>
+            </div>
+            <!-- Step Number Badge -->
+            <div class="absolute -top-2 -right-2 w-6 h-6 bg-mint-500 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+              1
+            </div>
+          </div>
+          <div class="mt-6 text-center transition-all duration-300 group-hover:scale-105">
+            <h3 class="text-sm lg:text-base font-semibold text-graphite-900 mb-2 transition-colors duration-300 group-hover:text-mint-600">Choose Pod</h3>
+            <p class="text-xs lg:text-sm text-graphite-600 max-w-28 lg:max-w-36 leading-relaxed">Select your ideal NovaPod solution</p>
+          </div>
+        </div>
+
+        <!-- Step 2: Add Packs -->
+        <div class="relative z-10 flex flex-col items-center group">
+          <div 
+            data-step="2"
+            class="step-circle w-14 h-14 lg:w-18 lg:h-18 rounded-full bg-white border-4 border-gray-300 flex items-center justify-center shadow-xl transition-all duration-500 ease-out cursor-pointer hover:scale-110 hover:shadow-2xl disabled relative overflow-hidden">
+            <!-- Step Icon -->
+            <div class="w-7 h-7 lg:w-9 lg:h-9 text-gray-400 relative z-10 transition-all duration-300">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+            </div>
+            <!-- Step Number Badge -->
+            <div class="absolute -top-2 -right-2 w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+              2
+            </div>
+          </div>
+          <div class="mt-6 text-center transition-all duration-300 group-hover:scale-105">
+            <h3 class="text-sm lg:text-base font-semibold text-graphite-900 mb-2 transition-colors duration-300 group-hover:text-cerulean-600">Add Packs</h3>
+            <p class="text-xs lg:text-sm text-graphite-600 max-w-28 lg:max-w-36 leading-relaxed">Enhance with recommended add-ons</p>
+          </div>
+        </div>
+
+        <!-- Step 3: Reserve Pod -->
+        <div class="relative z-10 flex flex-col items-center group">
+          <div 
+            data-step="3"
+            class="step-circle w-14 h-14 lg:w-18 lg:h-18 rounded-full bg-white border-4 border-gray-300 flex items-center justify-center shadow-xl transition-all duration-500 ease-out cursor-pointer hover:scale-110 hover:shadow-2xl disabled relative overflow-hidden">
+            <!-- Step Icon -->
+            <div class="w-7 h-7 lg:w-9 lg:h-9 text-gray-400 relative z-10 transition-all duration-300">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <!-- Step Number Badge -->
+            <div class="absolute -top-2 -right-2 w-6 h-6 bg-gray-400 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+              3
+            </div>
+          </div>
+          <div class="mt-6 text-center transition-all duration-300 group-hover:scale-105">
+            <h3 class="text-sm lg:text-base font-semibold text-graphite-900 mb-2 transition-colors duration-300 group-hover:text-lavender-600">Reserve Pod</h3>
+            <p class="text-xs lg:text-sm text-graphite-600 max-w-28 lg:max-w-36 leading-relaxed">Complete your reservation</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step Progress Indicator -->
+      <div class="mt-8 text-center">
+        <div class="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 shadow-lg border border-gray-100">
+          <span class="text-sm font-medium text-graphite-700">Step</span>
+          <span id="current-step-number" class="text-lg font-bold text-mint-600">1</span>
+          <span class="text-sm font-medium text-graphite-700">of 3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+  
+  /* Enhanced Stepper States */
+  [data-step].active {
+    border-color: #22c55e;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2), 0 10px 25px rgba(34, 197, 94, 0.3);
+    transform: scale(1.05);
+  }
+  
+  [data-step].active svg {
+    color: white;
+    transform: scale(1.1);
+  }
+  
+  [data-step].active .absolute.-top-2.-right-2 {
+    background: #16a34a;
+    animation: pulse 2s infinite;
+  }
+  
+  [data-step].completed {
+    border-color: #22c55e;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1), 0 8px 20px rgba(34, 197, 94, 0.2);
+  }
+  
+  [data-step].completed svg {
+    color: white;
+  }
+  
+  [data-step].completed .absolute.-top-2.-right-2 {
+    background: #16a34a;
+  }
+  
+  [data-step].disabled {
+    border-color: #d1d5db;
+    background: white;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+  
+  [data-step].disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  [data-step].disabled:hover svg {
+    transform: none;
+  }
+  
+  /* Smooth hover transitions */
+  .step-circle:hover:not(.disabled) {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Progress bar glow effect */
+  #stepper-progress {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #stepper-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+  
+  /* Animations */
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  /* Step content animations */
+  .step-content {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .step-circle {
+      width: 3.5rem;
+      height: 3.5rem;
+    }
+    
+    .step-circle .w-7.h-7 {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Simple Stepper functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    function updateStepperProgress(step) {
+      const progressBar = document.getElementById('stepper-progress');
+      if (progressBar) {
+        const progress = (step / 3) * 100;
+        progressBar.style.width = `${progress}%`;
+      }
+    }
+
+    function updateStepStates(step) {
+      const stepElements = document.querySelectorAll('[data-step]');
+      
+      stepElements.forEach((el, index) => {
+        const stepNumber = index + 1;
+        const stepCircle = el;
+        
+        // Remove all state classes
+        stepCircle.classList.remove('active', 'completed', 'disabled');
+        
+        if (stepNumber < step) {
+          stepCircle.classList.add('completed');
+        } else if (stepNumber === step) {
+          stepCircle.classList.add('active');
+        } else {
+          stepCircle.classList.add('disabled');
+        }
+      });
+    }
+
+    // Simple step click handling
+    document.querySelectorAll('[data-step]').forEach((stepEl) => {
+      stepEl.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const step = parseInt(target.getAttribute('data-step') || '1');
+        
+        // Dispatch custom event
+        window.dispatchEvent(new CustomEvent('step-changed', { 
+          detail: { step } 
+        }));
+      });
+    });
+
+    // Listen for step changes
+    window.addEventListener('step-changed', (e) => {
+      const newStep = e.detail.step;
+      console.log('Stepper received step change:', newStep);
+      updateStepperProgress(newStep);
+      updateStepStates(newStep);
+      
+      // Update the step number display
+      const stepNumberElement = document.getElementById('current-step-number');
+      if (stepNumberElement) {
+        stepNumberElement.textContent = newStep.toString();
+      }
+    });
+
+    // Initialize
+    updateStepperProgress(1);
+    updateStepStates(1);
+    
+    // Set initial step number
+    const stepNumberElement = document.getElementById('current-step-number');
+    if (stepNumberElement) {
+      stepNumberElement.textContent = '1';
+    }
+  });
+</script> 

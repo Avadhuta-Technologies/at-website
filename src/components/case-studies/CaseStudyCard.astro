@@ -1,0 +1,388 @@
+---
+export interface Props {
+  study: {
+    id: string;
+    title: string;
+    industry: string;
+    badge: string;
+    badgeColor: string;
+    problemStatement: string;
+    duration: string;
+    teamComposition: string;
+    techStack?: string[];
+    solutionHighlights?: string[];
+    impact?: string[];
+    testimonial?: {
+      quote: string;
+      author: string;
+    };
+    callToAction?: string;
+  };
+  index?: number;
+}
+
+const { study, index = 0 } = Astro.props;
+
+interface ColorClasses {
+  bg: string;
+  border: string;
+  text: string;
+  badge: string;
+  iconBg: string;
+}
+
+// Color mapping for different badge colors
+const getColorClasses = (color: string): ColorClasses => {
+  const colorMap: Record<string, ColorClasses> = {
+    blue: { 
+      bg: 'bg-blue-50/80', 
+      border: 'border-blue-200/50', 
+      text: 'text-blue-700', 
+      badge: 'bg-blue-100/90 text-blue-800 backdrop-blur-sm',
+      iconBg: 'bg-blue-100/80'
+    },
+    green: { 
+      bg: 'bg-green-50/80', 
+      border: 'border-green-200/50', 
+      text: 'text-green-700', 
+      badge: 'bg-green-100/90 text-green-800 backdrop-blur-sm',
+      iconBg: 'bg-green-100/80'
+    },
+    purple: { 
+      bg: 'bg-purple-50/80', 
+      border: 'border-purple-200/50', 
+      text: 'text-purple-700', 
+      badge: 'bg-purple-100/90 text-purple-800 backdrop-blur-sm',
+      iconBg: 'bg-purple-100/80'
+    },
+    pink: { 
+      bg: 'bg-pink-50/80', 
+      border: 'border-pink-200/50', 
+      text: 'text-pink-700', 
+      badge: 'bg-pink-100/90 text-pink-800 backdrop-blur-sm',
+      iconBg: 'bg-pink-100/80'
+    },
+    orange: { 
+      bg: 'bg-orange-50/80', 
+      border: 'border-orange-200/50', 
+      text: 'text-orange-700', 
+      badge: 'bg-orange-100/90 text-orange-800 backdrop-blur-sm',
+      iconBg: 'bg-orange-100/80'
+    },
+    teal: { 
+      bg: 'bg-teal-50/80', 
+      border: 'border-teal-200/50', 
+      text: 'text-teal-700', 
+      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
+      iconBg: 'bg-teal-100/80'
+    },
+    indigo: { 
+      bg: 'bg-indigo-50/80', 
+      border: 'border-indigo-200/50', 
+      text: 'text-indigo-700', 
+      badge: 'bg-indigo-100/90 text-indigo-800 backdrop-blur-sm',
+      iconBg: 'bg-indigo-100/80'
+    }
+  };
+  return colorMap[color] || colorMap.blue;
+};
+
+const colors = getColorClasses(study.badgeColor);
+
+// Generate contextual icon based on study content
+const getStudyIcon = (study: any) => {
+  const title = study.title.toLowerCase();
+  const industry = study.industry.toLowerCase();
+  const techStack = study.techStack?.join(' ').toLowerCase() || '';
+  const problemStatement = study.problemStatement.toLowerCase();
+  
+  // Industry-based icons
+  if (industry.includes('ecommerce') || title.includes('store') || title.includes('marketplace')) {
+    return '🛒';
+  }
+  if (industry.includes('interior') || title.includes('3d') || title.includes('design')) {
+    return '🏠';
+  }
+  if (industry.includes('pharmacovigilance') || industry.includes('healthcare')) {
+    return '💊';
+  }
+  if (industry.includes('finance') || title.includes('payment')) {
+    return '💰';
+  }
+  if (industry.includes('education')) {
+    return '📚';
+  }
+  if (industry.includes('manufacturing')) {
+    return '🏭';
+  }
+  if (industry.includes('retail')) {
+    return '🛍️';
+  }
+  
+  // Technology-based icons
+  if (title.includes('ai') || techStack.includes('ai') || techStack.includes('openai')) {
+    return '🤖';
+  }
+  if (title.includes('3d') || techStack.includes('three.js')) {
+    return '🎨';
+  }
+  if (title.includes('gateway') || title.includes('exchange') || title.includes('as2')) {
+    return '🔗';
+  }
+  if (title.includes('reconcile') || title.includes('automation')) {
+    return '⚙️';
+  }
+  if (title.includes('intelligence') || title.includes('regulatory')) {
+    return '📊';
+  }
+  if (title.includes('diagnostic') || title.includes('health')) {
+    return '🔍';
+  }
+  if (title.includes('secure') || title.includes('security')) {
+    return '🔐';
+  }
+  
+  // Problem-based icons
+  if (problemStatement.includes('ecommerce') || problemStatement.includes('store')) {
+    return '🛒';
+  }
+  if (problemStatement.includes('ai') || problemStatement.includes('generation')) {
+    return '🤖';
+  }
+  if (problemStatement.includes('3d') || problemStatement.includes('visualization')) {
+    return '🎨';
+  }
+  if (problemStatement.includes('regulatory') || problemStatement.includes('compliance')) {
+    return '📋';
+  }
+  if (problemStatement.includes('automation') || problemStatement.includes('manual')) {
+    return '⚙️';
+  }
+  if (problemStatement.includes('secure') || problemStatement.includes('exchange')) {
+    return '🔐';
+  }
+  
+  return '💼';
+};
+---
+
+<div class="case-study-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-study-id={study.id}>
+  <!-- Card Background with Glass Morphism -->
+  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+  
+  <!-- Decorative Background Elements -->
+  <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
+  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
+  
+  <!-- Card Content -->
+  <div class="relative p-6 flex flex-col h-full">
+    <!-- Card Header -->
+    <div class="flex items-start justify-between mb-4">
+      <div class={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}>
+        <span class="text-2xl">{getStudyIcon(study)}</span>
+      </div>
+      <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${colors.badge} border border-current/20`}>
+        {study.badge}
+      </span>
+    </div>
+    
+    <!-- Title and Industry -->
+    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">
+      {study.title}
+    </h3>
+    
+    <div class="flex items-center space-x-2 mb-4">
+      <span class="text-sm text-gray-500 font-medium">
+        {study.industry}
+      </span>
+    </div>
+    
+    <!-- Problem Statement -->
+    <div class="flex-1 mb-6">
+      <p class="text-gray-600 leading-relaxed text-sm study-description">
+        {study.problemStatement}
+      </p>
+    </div>
+    
+    <!-- Project Details -->
+    <div class="space-y-3 mb-6">
+      <div class="flex items-center">
+        <div class="w-8 h-8 bg-green-100/80 rounded-lg flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <span class="text-sm text-gray-600 font-medium">{study.duration}</span>
+      </div>
+      <div class="flex items-center">
+        <div class="w-8 h-8 bg-blue-100/80 rounded-lg flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <span class="text-sm text-gray-600 font-medium">{study.teamComposition}</span>
+      </div>
+    </div>
+    
+    <!-- Expandable Content (Hidden by default) -->
+    <div class="study-details hidden mt-4 space-y-4">
+      <!-- Tech Stack -->
+      {study.techStack && study.techStack.length > 0 && (
+        <div>
+          <h4 class="text-sm font-semibold text-gray-800 mb-2">Tech Stack</h4>
+          <div class="flex flex-wrap gap-2">
+            {study.techStack.map((tech: string) => (
+              <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100/80 text-gray-700 border border-gray-200/50">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <!-- Solution Highlights -->
+      {study.solutionHighlights && study.solutionHighlights.length > 0 && (
+        <div>
+          <h4 class="text-sm font-semibold text-gray-800 mb-2">Key Features</h4>
+          <ul class="space-y-1">
+            {study.solutionHighlights.slice(0, 3).map((highlight: string) => (
+              <li class="flex items-start text-xs text-gray-600">
+                <svg class="w-3 h-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                {highlight}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      <!-- Impact -->
+      {study.impact && study.impact.length > 0 && (
+        <div>
+          <h4 class="text-sm font-semibold text-gray-800 mb-2">Impact</h4>
+          <ul class="space-y-1">
+            {study.impact.map((impact: string) => (
+              <li class="flex items-start text-xs text-gray-600">
+                <svg class="w-3 h-3 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                {impact}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      <!-- Testimonial -->
+      {study.testimonial && (
+        <div class="bg-gray-50/80 rounded-lg p-3 border border-gray-200/50">
+          <blockquote class="text-xs text-gray-600 italic mb-2">
+            "{study.testimonial.quote}"
+          </blockquote>
+          <cite class="text-xs text-gray-500 font-medium">— {study.testimonial.author}</cite>
+        </div>
+      )}
+    </div>
+    
+    <!-- Action Bar -->
+    <div class="flex items-center justify-between pt-4 border-t border-gray-100/50 mt-auto">
+      <span class="text-sm text-gray-500 font-medium study-action-text">View Details</span>
+      <div class="flex items-center space-x-2">
+        <button class="expand-btn w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-3 h-3 text-white expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <a href={`/case-studies/${study.id}`} class="w-6 h-6 bg-gradient-to-r from-primary-600 to-primary-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Interactive functionality for case study cards
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.case-study-card');
+    
+    cards.forEach(card => {
+      const expandBtn = card.querySelector('.expand-btn');
+      const details = card.querySelector('.study-details');
+      const actionText = card.querySelector('.study-action-text');
+      const expandIcon = card.querySelector('.expand-icon');
+      
+      if (expandBtn && details && actionText && expandIcon) {
+        expandBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const isExpanded = details.classList.contains('hidden');
+          
+          if (isExpanded) {
+            details.classList.remove('hidden');
+            details.classList.add('animate-slide-down');
+            actionText.textContent = 'Show Less';
+            expandIcon.classList.add('rotate-180');
+          } else {
+            details.classList.add('hidden');
+            details.classList.remove('animate-slide-down');
+            actionText.textContent = 'View Details';
+            expandIcon.classList.remove('rotate-180');
+          }
+        });
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Case Study Card Animations */
+  .case-study-card {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block !important;
+  }
+
+  .case-study-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Expand Animation */
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Icon rotation */
+  .expand-icon.rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  /* Hover Effects */
+  .case-study-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .case-study-card {
+      padding: 1.5rem;
+    }
+  }
+</style> 

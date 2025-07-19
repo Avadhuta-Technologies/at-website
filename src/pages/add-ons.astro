@@ -1,496 +1,57 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import { packsData } from '../content/packs.js';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import AddOnsHeroSection from '../components/add-ons/AddOnsHeroSection.astro';
+import AddOnsServicesSection from '../components/add-ons/AddOnsServicesSection.astro';
+import SelectedItemsDisplay from '../components/shared/SelectedItemsDisplay.astro';
+import CTASection from '../components/shared/CTASection.astro';
 
-// Get pods data
-const podsData = await getCollection('pods');
+// Import isolated add-ons content
+import { 
+  addOnsHeroData,
+  addOnsServicesData
+} from '../content/add-ons/_index.js';
 ---
 
-<Layout title="Add-ons - NovaPod.ai" description="Enhance your NovaPod experience with additional packs and services. Customize your pod with modular add-ons for maximum impact.">
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-    <!-- Hero Section -->
-    <div class="relative bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white py-20">
-      <div class="absolute inset-0 bg-black/20"></div>
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-          <h1 id="page-title" class="text-4xl md:text-5xl font-bold mb-6">
-            Get Started
-          </h1>
-          <p id="page-message" class="text-xl text-blue-100 max-w-3xl mx-auto">
-            Loading your cart...
-          </p>
+<Layout 
+  description="Enhance your pod with specialized add-on services. From maintenance and support to analytics and DevOps, we have the expertise to accelerate your project's success."
+  title="Add-ons | NovaPod.ai"
+>
+
+  
+  <!-- Hero Section -->
+  <AddOnsHeroSection data={addOnsHeroData} />
+  
+  <!-- Main Content -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Selected Items Display -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8">
+            <SelectedItemsDisplay />
+          </div>
+        </div>
+        
+        <!-- Services Section -->
+        <div class="lg:col-span-2">
+          <AddOnsServicesSection data={addOnsServicesData} />
         </div>
       </div>
     </div>
-
-    <!-- Cart Summary -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Your Current Cart</h2>
-        <div id="cart-summary" class="space-y-4">
-          <p class="text-gray-500 dark:text-gray-400">Loading cart...</p>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div id="action-buttons" class="text-center mb-8" style="display: none;">
-        <a href="/checkout" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
-          Proceed to Checkout
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-          </svg>
-        </a>
-      </div>
-
-      <!-- Pods Section (if needed) -->
-      <div id="pods-section" class="mb-12" style="display: none;">
-        <div class="mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Available Pods
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {podsData.map(pod => {
-              const podData = pod.data;
-              return (
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                  <div class="p-6">
-                    <div class="flex items-center justify-between mb-4">
-                      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        Pod
-                      </span>
-                      {podData.badge && (
-                        <span class={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${podData.badgeColor || 'bg-green-100 text-green-800'}`}>
-                          {podData.badge}
-                        </span>
-                      )}
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">{podData.title}</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{podData.description}</p>
-                    <div class="flex items-center justify-between mb-4">
-                      <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{podData.priceINR}</span>
-                      {podData.engagement && (
-                        <span class="text-sm text-gray-500 dark:text-gray-400">{podData.engagement}</span>
-                      )}
-                    </div>
-                    <button 
-                      class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 add-pod-btn"
-                      data-pod-id={pod.id}
-                      data-pod-title={podData.title}
-                      data-pod-price={podData.priceINR}
-                      data-pod-description={podData.description}
-                      data-pod-engagement={podData.engagement}
-                      data-pod-badge={podData.badge}
-                      data-pod-badge-color={podData.badgeColor}
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      <!-- Packs Section (if needed) -->
-      <div id="packs-section" class="mb-12" style="display: none;">
-        <div class="mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Enhance Your Experience with Packs
-          </h2>
-          <!-- Debug: {JSON.stringify(packsData.availablePacks.categories.length)} categories -->
-          {packsData.availablePacks.categories && packsData.availablePacks.categories.length > 0 ? (
-            packsData.availablePacks.categories.map((category) => (
-              <div class="mb-12">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{category.title}</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">{category.description}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {category.packs.map((pack) => (
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                      <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            Pack
-                          </span>
-                          {pack.badge && (
-                            <span class={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${pack.badgeColor || 'bg-blue-100 text-blue-800'}`}>
-                              {pack.badge}
-                            </span>
-                          )}
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">{pack.title}</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{pack.description}</p>
-                        
-                        <!-- Ideal For Section -->
-                        {pack.idealFor && pack.idealFor.length > 0 && (
-                          <div class="mb-4">
-                            <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                              </svg>
-                              Ideal For
-                            </h4>
-                            <ul class="space-y-1">
-                              {pack.idealFor.slice(0, 2).map((item) => (
-                                <li class="flex items-start text-xs text-gray-600 dark:text-gray-400">
-                                  <span class="w-2 h-2 bg-green-500 rounded-full mr-2 mt-1 flex-shrink-0"></span>
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                        
-                        <!-- Deliverables Section -->
-                        {pack.deliverables && pack.deliverables.length > 0 && (
-                          <div class="mb-4">
-                            <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                              <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                              </svg>
-                              Deliverables
-                            </h4>
-                            <ul class="space-y-1">
-                              {pack.deliverables.slice(0, 2).map((item) => (
-                                <li class="flex items-start text-xs text-gray-500 dark:text-gray-400">
-                                  <span class="w-2 h-2 bg-green-500 rounded-full mr-2 mt-1 flex-shrink-0"></span>
-                                  <span>{item.split(' - ')[0]}</span>
-                                </li>
-                              ))}
-                              {pack.deliverables.length > 2 && (
-                                <li class="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                                  +{pack.deliverables.length - 2} more
-                                </li>
-                              )}
-                            </ul>
-                          </div>
-                        )}
-                        
-                        <div class="flex items-center justify-between mb-4">
-                          <span class="text-2xl font-bold text-green-600 dark:text-green-400">{pack.priceINR}</span>
-                          {pack.duration && (
-                            <span class="text-sm text-gray-500 dark:text-gray-400">{pack.duration}</span>
-                          )}
-                        </div>
-                        <button 
-                          class="w-full bg-gradient-to-r from-green-500 to-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-green-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 add-pack-btn"
-                          data-pack-id={pack.id}
-                          data-pack-title={pack.title}
-                          data-pack-price={pack.priceINR}
-                          data-pack-description={pack.description}
-                          data-pack-duration={pack.duration}
-                          data-pack-badge={pack.badge}
-                          data-pack-badge-color={pack.badgeColor}
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div class="text-center py-8">
-              <p class="text-gray-500 dark:text-gray-400">No packs available</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <!-- Continue to Checkout Button (when applicable) -->
-      <div id="continue-checkout-btn" class="text-center mt-8" style="display: none;">
-        <a href="/checkout" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-blue-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
-          Continue to Checkout
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </div>
-</Layout>
-
-<script>
-  class AddOnsPage {
-    private cartService: any;
-
-    constructor() {
-      this.cartService = null;
-      this.init();
-    }
-
-    async init() {
-      // Wait for cart service to be available
-      if (typeof window !== 'undefined' && window.cartService) {
-        this.cartService = window.cartService;
-        this.setupEventListeners();
-        await this.analyzeCart();
-      } else {
-        // Retry after a short delay
-        setTimeout(() => this.init(), 100);
-      }
-    }
-
-    async analyzeCart() {
-      if (!this.cartService) return;
-
-      try {
-        const cart = await this.cartService.getCart();
-        const podItems = cart.filter((item: any) => item.type === 'pod');
-        const packItems = cart.filter((item: any) => item.type === 'pack');
-
-        // Update page title and message
-        this.updatePageContent(cart, podItems, packItems);
-        
-        // Update cart summary
-        this.updateCartSummary(cart, podItems, packItems);
-        
-        // Show/hide sections based on cart contents
-        this.updateSections(cart, podItems, packItems);
-        
-      } catch (error) {
-        console.error('Error analyzing cart:', error);
-      }
-    }
-
-    updatePageContent(cart: any, podItems: any, packItems: any) {
-      const pageTitle = document.getElementById('page-title');
-      const pageMessage = document.getElementById('page-message');
-      
-      if (!pageTitle || !pageMessage) return;
-
-      let title = 'Get Started';
-      let message = 'Loading your cart...';
-
-      if (podItems.length > 0 && packItems.length > 0) {
-        title = 'Ready to Checkout?';
-        message = 'You have both a pod and packs in your cart. Ready to proceed to checkout?';
-      } else if (podItems.length > 0 && packItems.length === 0) {
-        title = 'Enhance Your Experience';
-        message = 'Great! You have a pod selected. Consider adding some packs to enhance your experience.';
-      } else if (podItems.length === 0 && packItems.length > 0) {
-        title = 'Select Your Pod';
-        message = 'A pod is required to proceed. Please select a pod to continue with your packs.';
-      } else {
-        title = 'Get Started';
-        message = 'Your cart is empty. Please add a pod to get started.';
-      }
-
-      pageTitle.textContent = title;
-      pageMessage.textContent = message;
-    }
-
-    updateCartSummary(cart: any, podItems: any, packItems: any) {
-      const cartSummary = document.getElementById('cart-summary');
-      if (!cartSummary) return;
-
-      if (cart.length === 0) {
-        cartSummary.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Your cart is empty</p>';
-        return;
-      }
-
-      let summaryHTML = '';
-      
-      // Add pod items
-      podItems.forEach((item: any) => {
-        summaryHTML += `
-          <div class="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div>
-              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 mr-2">
-                Pod
-              </span>
-              <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
-            </div>
-            <span class="text-sm text-gray-600 dark:text-gray-400">${item.price}</span>
-          </div>
-        `;
-      });
-
-      // Add pack items
-      packItems.forEach((item: any) => {
-        summaryHTML += `
-          <div class="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <div>
-              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 mr-2">
-                Pack
-              </span>
-              <span class="font-medium text-gray-900 dark:text-white">${item.title}</span>
-            </div>
-            <span class="text-sm text-gray-600 dark:text-gray-400">${item.price}</span>
-          </div>
-        `;
-      });
-
-      cartSummary.innerHTML = summaryHTML;
-    }
-
-    updateSections(cart: any, podItems: any, packItems: any) {
-      const actionButtons = document.getElementById('action-buttons');
-      const podsSection = document.getElementById('pods-section');
-      const packsSection = document.getElementById('packs-section');
-      const continueCheckoutBtn = document.getElementById('continue-checkout-btn');
-
-      // Show checkout button if both pod and packs are present
-      if (actionButtons) {
-        if (podItems.length > 0 && packItems.length > 0) {
-          actionButtons.style.display = 'block';
-        } else {
-          actionButtons.style.display = 'none';
-        }
-      }
-
-      // Show pods section if no pod is present
-      if (podsSection) {
-        if (podItems.length === 0) {
-          podsSection.style.display = 'block';
-        } else {
-          podsSection.style.display = 'none';
-        }
-      }
-
-      // Always show packs section if pod is present (regardless of existing packs)
-      if (packsSection) {
-        if (podItems.length > 0) {
-          packsSection.style.display = 'block';
-        } else {
-          packsSection.style.display = 'none';
-        }
-      }
-
-      // Show continue checkout button if cart has items but not ready for main checkout
-      if (continueCheckoutBtn) {
-        if (cart.length > 0 && !(podItems.length > 0 && packItems.length > 0)) {
-          continueCheckoutBtn.style.display = 'block';
-        } else {
-          continueCheckoutBtn.style.display = 'none';
-        }
-      }
-    }
-
-    setupEventListeners() {
-      // Add pod buttons
-      document.querySelectorAll('.add-pod-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.addPod(btn);
-        });
-      });
-
-      // Add pack buttons
-      document.querySelectorAll('.add-pack-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.addPack(btn);
-        });
-      });
-    }
-
-    async addPod(btn: any) {
-      if (!this.cartService) return;
-
-      const podData = {
-        id: btn.getAttribute('data-pod-id'),
-        type: 'pod',
-        title: btn.getAttribute('data-pod-title'),
-        price: btn.getAttribute('data-pod-price'),
-        description: btn.getAttribute('data-pod-description'),
-        engagement: btn.getAttribute('data-pod-engagement'),
-        badge: btn.getAttribute('data-pod-badge'),
-        badgeColor: btn.getAttribute('data-pod-badge-color')
-      };
-
-      try {
-        const success = await this.cartService.addToCart(podData);
-        if (success) {
-          this.showNotification('Pod added to cart successfully!');
-          
-          // Check if we should redirect to checkout
-          const cart = await this.cartService.getCart();
-          const packItems = cart.filter((item: any) => item.type === 'pack');
-          
-          if (packItems.length > 0) {
-            // If packs are already in cart, redirect to checkout
-            setTimeout(() => {
-              window.location.href = '/checkout';
-            }, 1500);
-          } else {
-            // Otherwise, stay on add-ons page to show packs
-            setTimeout(() => {
-              window.location.reload();
-            }, 1500);
-          }
-        }
-      } catch (error) {
-        console.error('Error adding pod:', error);
-        this.showNotification('Error adding pod to cart', 'error');
-      }
-    }
-
-    async addPack(btn: any) {
-      if (!this.cartService) return;
-
-      const packData = {
-        id: btn.getAttribute('data-pack-id'),
-        type: 'pack',
-        title: btn.getAttribute('data-pack-title'),
-        price: btn.getAttribute('data-pack-price'),
-        description: btn.getAttribute('data-pack-description'),
-        engagement: btn.getAttribute('data-pack-engagement'),
-        badge: btn.getAttribute('data-pack-badge'),
-        badgeColor: btn.getAttribute('data-pack-badge-color')
-      };
-
-      try {
-        const success = await this.cartService.addToCart(packData);
-        if (success) {
-          this.showNotification('Pack added to cart successfully!');
-          
-          // Stay on add-ons page to allow adding more packs
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-        }
-      } catch (error) {
-        console.error('Error adding pack:', error);
-        this.showNotification('Error adding pack to cart', 'error');
-      }
-    }
-
-    showNotification(message: string, type = 'success') {
-      const notification = document.createElement('div');
-      const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-      notification.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full flex items-center justify-between min-w-[300px]`;
-      
-      notification.innerHTML = `
-        <span>${message}</span>
-        <button class="ml-3 text-white hover:text-gray-200 transition-colors duration-200" onclick="this.parentElement.remove()">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      `;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-      }, 100);
-      
-      setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-          if (document.body.contains(notification)) {
-            document.body.removeChild(notification);
-          }
-        }, 300);
-      }, 3000);
-    }
-  }
-
-  // Initialize add-ons page
-  if (typeof window !== 'undefined') {
-    (window as any).addOnsPage = new AddOnsPage();
-  }
-</script> 
+  </section>
+  
+  <!-- Final CTA Section -->
+  <CTASection 
+    title="Ready to Enhance Your Pod?"
+    subtitle="Choose the add-ons that align with your project needs and let's build something amazing together."
+    primaryButton={{
+      label: "Get Started",
+      href: "/contact"
+    }}
+    secondaryButton={{
+      label: "Learn More",
+      href: "/explore-pods"
+    }}
+  />
+</Layout> 

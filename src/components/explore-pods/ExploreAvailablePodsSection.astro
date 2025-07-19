@@ -1,0 +1,71 @@
+---
+import { catalogUtils } from '../../content/catalog/_index.js';
+import AvailablePodCard from './AvailablePodCard.astro';
+
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    featuredPodIds?: string[]; // Optional: specific pod IDs to display
+  };
+}
+
+const { data } = Astro.props;
+
+// Get pods from centralized catalog
+let pods;
+if (data.featuredPodIds) {
+  // Get specific pods by IDs
+  pods = data.featuredPodIds.map(id => catalogUtils.getProductById(id, 'pod')).filter(Boolean);
+} else {
+  // Get all pods - this returns the raw pod data structure
+  const allProducts = catalogUtils.getAllProducts();
+  pods = allProducts.pods || [];
+}
+
+// Filter out pods that don't have the required structure for our card component
+const validPods = pods.filter(pod => 
+  pod && 
+  typeof pod === 'object' && 
+  'name' in pod && 
+  'tagline' in pod && 
+  'idealFor' in pod && 
+  'whatsInPod' in pod
+) as Array<{
+  name: string;
+  tagline: string;
+  idealFor: string[];
+  whatsInPod: {
+    description: string;
+    teamComposition: string[];
+    upgradeNote: string;
+  };
+  whatCanDo: string[];
+  deliveryTimelines: string[];
+  whyTrust: string[];
+  pastUseCases: string[];
+  pricing: string[];
+}>;
+---
+
+<section id="pods-section" class="py-20 ">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 leading-relaxed">
+        {data.subtitle}
+      </p>
+    </div>
+    
+    <!-- Pods Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      {validPods.map((pod, index) => (
+        <AvailablePodCard pod={pod} index={index} />
+      ))}
+    </div>
+    
+  </div>
+</section> 

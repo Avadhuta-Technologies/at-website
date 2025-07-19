@@ -1,6 +1,155 @@
 // How It Works Section Styles
-// This file will contain how it works section styles
+
+@use '../base/_variables' as vars;
 
 .how-it-works-section {
-  // How it works section styles will be added here
+  padding: vars.$space-20 0;
+  background: vars.$gradient-primary;
+  
+  // Section header
+  .section-header {
+    text-align: center;
+    margin-bottom: vars.$space-16;
+    
+    .section-title {
+      font-size: clamp(vars.$font-size-3xl, 4vw, vars.$font-size-5xl);
+      font-weight: vars.$font-weight-extrabold;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-4;
+    }
+    
+    .section-description {
+      color: vars.$gray-600;
+    }
+  }
+  
+  // Steps grid
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: vars.$space-12;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 vars.$space-4;
+  }
+  
+  // Individual step card
+  .step-card {
+    position: relative;
+    background: vars.$white;
+    border-radius: vars.$border-radius-2xl;
+    padding: vars.$space-12;
+    box-shadow: vars.$shadow-lg;
+    transition: all vars.$transition-slow;
+    overflow: hidden;
+    
+    // Step number
+    .step-number {
+      width: 4rem;
+      height: 4rem;
+      border-radius: vars.$border-radius-xl;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: vars.$space-5;
+      background: vars.$gradient-secondary;
+      color: vars.$white;
+      font-size: vars.$font-size-2xl;
+      font-weight: vars.$font-weight-bold;
+      box-shadow: vars.$shadow-md;
+    }
+    
+    // Step title
+    .step-title {
+      font-size: vars.$font-size-2xl;
+      font-weight: vars.$font-weight-bold;
+      color: vars.$text-primary;
+      margin-bottom: vars.$space-4;
+      line-height: 1.3;
+    }
+    
+    // Step description
+    .step-description {
+      color: vars.$gray-500;
+      line-height: vars.$line-height-relaxed;
+      margin-bottom: vars.$space-6;
+    }
+    
+    // Step features
+    .step-features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: vars.$space-6;
+      
+      li {
+        display: flex;
+        align-items: center;
+        margin-bottom: vars.$space-2;
+        color: vars.$gray-600;
+        font-size: vars.$font-size-sm;
+        
+        &::before {
+          content: '✓';
+          color: vars.$success;
+          font-weight: vars.$font-weight-bold;
+          margin-right: vars.$space-2;
+        }
+      }
+    }
+    
+    // Step duration
+    .step-duration {
+      background: vars.$primary-50;
+      border: 1px solid vars.$primary-200;
+      border-radius: vars.$border-radius-lg;
+      padding: vars.$space-4;
+      margin-bottom: vars.$space-6;
+      
+      .duration-label {
+        font-size: vars.$font-size-sm;
+        font-weight: vars.$font-weight-semibold;
+        color: vars.$primary-700;
+        margin-bottom: vars.$space-1;
+      }
+      
+      .duration-value {
+        font-size: vars.$font-size-lg;
+        font-weight: vars.$font-weight-bold;
+        color: vars.$primary-600;
+      }
+    }
+    
+    // Hover effects
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: vars.$shadow-2xl;
+      
+      .step-number {
+        transform: scale(1.1);
+      }
+    }
+    
+    // Animation delays for staggered entrance
+    &:nth-child(1) { animation-delay: 0.1s; }
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.3s; }
+    &:nth-child(4) { animation-delay: 0.4s; }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .how-it-works-section {
+    padding: 3rem 0;
+    
+    .steps-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 0 1rem;
+    }
+    
+    .step-card {
+      padding: 1.5rem;
+    }
+  }
 } 

@@ -33,15 +33,15 @@ const customPod = pods.find(pod => pod.isCustom);
 // Utility functions
 function getBadgeColorClass(color: string): string {
   const colorMap: Record<string, string> = {
-    'blue': 'bg-blue-100 dark:bg-blue-900',
-    'purple': 'bg-purple-100 dark:bg-purple-900',
-    'orange': 'bg-orange-100 dark:bg-orange-900',
-    'teal': 'bg-teal-100 dark:bg-teal-900',
-    'green': 'bg-green-100 dark:bg-green-900',
-    'indigo': 'bg-indigo-100 dark:bg-indigo-900',
-    'cyan': 'bg-cyan-100 dark:bg-cyan-900'
+    'blue': 'bg-blue-100 ',
+    'purple': 'bg-purple-100',
+    'orange': 'bg-orange-100 ',
+    'teal': 'bg-teal-100 ',
+    'green': 'bg-green-100 ',
+    'indigo': 'bg-indigo-100 ',
+    'cyan': 'bg-cyan-100'
   };
-  return colorMap[color] || 'bg-blue-100 dark:bg-blue-900';
+  return colorMap[color] || 'bg-blue-100 ';
 }
 
 function getBadgeStyle(color: string, isCustom: boolean = false): string {
@@ -92,20 +92,20 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
 }
 ---
 
-<section class={`py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3 ${className}`} id="available-pods">
+<section class={`py-16  ${className}`} id="available-pods">
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark  animate-fade-in-up gradient-title">
         {title}
       </h2>
-      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+      <p class="text-lg text-gray-600  max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
         Choose from our pre-configured, outcome-focused tech teams designed for specific project types
       </p>
     </div>
     
     <div class="grid gap-8 grid-cols-1 md:grid-cols-2">
       {regularPods.map((pod, index) => (
-        <div class={`pod-card group relative bg-white dark:bg-dark rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200} ${pod.isCustom ? 'custom-pod-card' : ''}`}>
+        <div class={`pod-card group relative bg-white  rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden flex flex-col h-full animate-fade-in-up animation-delay-${(index + 1) * 200} ${pod.isCustom ? 'custom-pod-card' : ''}`}>
           {/* Enhanced gradient overlay for custom pods */}
           {pod.isCustom && (
             <>
@@ -128,10 +128,10 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
             
             {/* Title and Description */}
             <div class="mb-6">
-              <h3 class={`font-bold text-xl mb-3 transition-colors duration-300 ${pod.isCustom ? 'text-dark dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400' : 'text-dark dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400'}`}>
+              <h3 class={`font-bold text-xl mb-3 transition-colors duration-300 ${pod.isCustom ? 'text-dark  group-hover:text-purple-600 ' : 'text-dark  group-hover:text-blue-600 '}`}>
                 {pod.title}
               </h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+              <p class="text-gray-600 leading-relaxed mb-4">
                 {pod.description}
               </p>
             </div>
@@ -139,7 +139,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
             {/* Ideal For - Show only first 2 */}
             {pod.idealFor && pod.idealFor.length > 0 && (
               <div class="mb-6">
-                <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                <h4 class="font-semibold text-sm text-gray-700  mb-3 flex items-center">
                   <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
@@ -147,7 +147,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
                 </h4>
                 <ul class="space-y-2">
                   {pod.idealFor.slice(0, 2).map((item) => (
-                    <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
+                    <li class="flex items-start text-sm text-gray-600  group/item">
                       <span class="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
                       <span class="leading-relaxed">{item}</span>
                     </li>
@@ -158,7 +158,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
             
             {/* Team Composition - Show only first 2 */}
             <div class="mb-6">
-              <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+              <h4 class="font-semibold text-sm text-gray-700  mb-3 flex items-center">
                 <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
@@ -166,13 +166,13 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
               </h4>
               <ul class="space-y-2">
                 {pod.teamComposition.slice(0, 2).map((member) => (
-                  <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
+                  <li class="flex items-start text-sm text-gray-600  group/item">
                     <span class={`w-2 h-2 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150 ${pod.isCustom ? 'bg-gradient-to-r from-purple-500 to-pink-500' : getDotColor(pod.badgeColor)}`}></span>
                     <span class="leading-relaxed">{member}</span>
                   </li>
                 ))}
                 {pod.teamComposition.length > 2 && (
-                  <li class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                  <li class="text-xs text-blue-600  font-medium">
                     +{pod.teamComposition.length - 2} more roles
                   </li>
                 )}
@@ -181,7 +181,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
             
             {/* Deliverables - Show only first 2 */}
             <div class="mb-6">
-              <h4 class="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+              <h4 class="font-semibold text-sm text-gray-700  mb-3 flex items-center">
                 <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
@@ -189,13 +189,13 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
               </h4>
               <ul class="space-y-2">
                 {pod.deliverables.slice(0, 2).map((deliverable) => (
-                  <li class="flex items-start text-sm text-gray-600 dark:text-gray-400 group/item">
+                  <li class="flex items-start text-sm text-gray-600  group/item">
                     <span class="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0 transition-all duration-300 group-hover/item:scale-150"></span>
                     <span class="leading-relaxed">{deliverable}</span>
                   </li>
                 ))}
                 {pod.deliverables.length > 2 && (
-                  <li class="text-xs text-green-600 dark:text-green-400 font-medium">
+                  <li class="text-xs text-green-600  font-medium">
                     +{pod.deliverables.length - 2} more deliverables
                   </li>
                 )}
@@ -203,11 +203,11 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
             </div>
             
             {/* Pricing and Engagement - Fixed at bottom */}
-            <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
+            <div class="mt-auto pt-6 border-t border-gray-100 ">
               <div class="mb-4">
-                <div class="font-bold text-2xl text-dark dark:text-white">{pod.engagement}</div>
+                <div class="font-bold text-2xl text-dark ">{pod.engagement}</div>
                 {pod.priceNote && (
-                  <div class="font-semibold text-sm text-gray-600 dark:text-gray-400">{pod.priceNote}</div>
+                  <div class="font-semibold text-sm text-gray-600 ">{pod.priceNote}</div>
                 )}
               </div>
               
@@ -216,7 +216,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
                 <a href="#" class={`flex-1 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${pod.isCustom ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl' : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-xl'}`}>
                   {pod.isCustom ? 'Book a Free Discovery Call' : 'Book Now'}
                 </a>
-                <a href={pod.isCustom ? '/contact' : `/pods/${pod.id}`} class={`flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${pod.isCustom ? 'border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20' : 'border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'}`}>
+                <a href={pod.isCustom ? '/contact' : `/pods/${pod.id}`} class={`flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${pod.isCustom ? 'border-purple-500 text-purple-600 hover:bg-purple-50 ' : 'border-blue-500 text-blue-600 hover:bg-blue-50 '}`}>
                   {pod.isCustom ? 'Contact Us' : 'Details'}
                 </a>
               </div>
@@ -232,7 +232,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
     {/* Custom Pod Full Width Section */}
     {customPod && (
       <div class="mt-16 animate-fade-in-up animation-delay-600">
-        <div class="custom-pod-full-width group relative bg-white dark:bg-dark rounded-3xl shadow-2xl hover:shadow-3xl overflow-hidden">
+        <div class="custom-pod-full-width group relative bg-white  rounded-3xl shadow-2xl hover:shadow-3xl overflow-hidden">
           {/* Enhanced gradient overlay for custom pod */}
           <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 opacity-10"></div>
           <div class="absolute inset-0 bg-gradient-to-tl from-cyan-500 via-blue-500 to-purple-600 opacity-5"></div>
@@ -251,17 +251,17 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
                   </span>
                 </div>
                 
-                <h3 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-dark dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 break-words">
+                <h3 class="font-bold text-2xl md:text-3xl lg:text-4xl mb-4 text-dark  group-hover:text-purple-600  transition-colors duration-300 break-words">
                   {customPod.title}
                 </h3>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg md:text-xl break-words mb-6">
+                <p class="text-gray-600 leading-relaxed text-lg md:text-xl break-words mb-6">
                   {customPod.description}
                 </p>
                 
                 <div class="mb-6">
-                  <div class="font-bold text-xl md:text-2xl text-dark dark:text-white break-words">{customPod.engagement}</div>
+                  <div class="font-bold text-xl md:text-2xl text-dark break-words">{customPod.engagement}</div>
                   {customPod.priceNote && (
-                    <div class="font-semibold text-sm md:text-base text-gray-600 dark:text-gray-400 break-words mt-2">{customPod.priceNote}</div>
+                    <div class="font-semibold text-sm md:text-base text-gray-600  break-words mt-2">{customPod.priceNote}</div>
                   )}
                 </div>
               </div>
@@ -276,7 +276,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
                   </a>
-                  <a href="/contact" class="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 border-2 border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 text-base md:text-lg whitespace-nowrap">
+                  <a href="/contact" class="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 border-2 border-purple-500 text-purple-600 hover:bg-purple-50  font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 text-base md:text-lg whitespace-nowrap">
                     Contact Us
                   </a>
                 </div>
@@ -378,22 +378,6 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
     color: #D1D5DB !important;
   }
 
-  /* Dark mode support for custom pod */
-  .dark .custom-pod-card .text-gray-600 {
-    color: #D1D5DB !important;
-  }
-
-  .dark .custom-pod-card .text-gray-400 {
-    color: #9CA3AF !important;
-  }
-
-  .dark .custom-pod-card .text-gray-700 {
-    color: #E5E7EB !important;
-  }
-
-  .dark .custom-pod-card .text-gray-300 {
-    color: #6B7280 !important;
-  }
 
   /* Animation delays */
   .animation-delay-200 { animation-delay: 0.2s; }

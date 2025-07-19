@@ -1,0 +1,86 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    description?: string;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="relativee overflow-hidden">
+  <div class="container relative z-10 mx-auto px-4 py-20 md:py-32">
+    <div class="mx-auto max-w-4xl text-center">
+      <!-- Badge -->
+      <div
+        class="mb-8 inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700"
+      >
+        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          ></path>
+        </svg>
+         Our Work
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="mb-6 text-4xl font-bold leading-tight gradient-title md:text-5xl lg:text-6xl">
+        Our
+        <span class="gradient-text"> Work</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <h2 class="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl">
+        {data.subtitle}
+      </h2>
+
+      <!-- Description (if provided) -->
+      {
+        data.description && (
+          <p class="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-gray-500">
+            {data.description}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  .animate-pulse {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+</style>
+
+<script is:inline>
+  function scrollToSection(event, sectionId) {
+    event.preventDefault();
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }
+</script>
+

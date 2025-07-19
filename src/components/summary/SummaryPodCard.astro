@@ -1,0 +1,135 @@
+---
+// Summary Pod Card Component
+export interface Props {
+  pod: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    basePrice?: number;
+    icon?: string;
+    badge?: string;
+    badgeColor?: string;
+  };
+}
+
+const { pod } = Astro.props;
+---
+
+<div class="pod-card bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group" data-pod-id={pod.id}>
+  <!-- Header -->
+  <div class="flex items-start justify-between mb-4">
+    <div class="flex items-center space-x-3">
+      <div class="w-12 h-12 bg-gradient-to-br from-mint-500 to-cerulean-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        {pod.icon ? (
+          <div class="w-6 h-6 text-white" set:html={pod.icon}></div>
+        ) : (
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        )}
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold text-graphite-900 group-hover:text-mint-600 transition-colors">
+          {pod.title}
+        </h3>
+        {pod.badge && (
+          <span class={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${pod.badgeColor || 'bg-mint-100 text-mint-800'}`}>
+            {pod.badge}
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <p class="text-graphite-600 text-sm mb-4 line-clamp-3">
+    {pod.description}
+  </p>
+
+  <!-- Price -->
+  <div class="flex items-center justify-between">
+    <div class="text-2xl font-bold text-mint-600">
+      {pod.price}
+    </div>
+    <button class="select-pod-btn bg-gradient-to-r from-mint-500 to-cerulean-500 text-white px-4 py-2 rounded-lg font-medium hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 opacity-0 group-hover:opacity-100">
+      Select Pod
+    </button>
+  </div>
+
+  <!-- Features Preview -->
+  <div class="mt-4 pt-4 border-t border-gray-100">
+    <div class="flex items-center space-x-2 text-xs text-graphite-500">
+      <svg class="w-4 h-4 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span>Customizable duration</span>
+    </div>
+    <div class="flex items-center space-x-2 text-xs text-graphite-500 mt-1">
+      <svg class="w-4 h-4 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span>Add-on packs available</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Pod card functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const podCards = document.querySelectorAll('.pod-card');
+    
+    podCards.forEach(card => {
+      const selectBtn = card.querySelector('.select-pod-btn');
+      const podId = card.getAttribute('data-pod-id');
+      
+      if (selectBtn && podId) {
+        selectBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Add pod to cart
+          if (typeof window !== 'undefined' && (window as any).cartService) {
+            const cartService = (window as any).cartService;
+            
+            try {
+              const success = await cartService.addToCart({
+                id: podId,
+                type: 'pod'
+              });
+              
+              if (success) {
+                // Show success notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg bg-green-500 text-white transition-all duration-300 transform translate-x-full';
+                notification.textContent = 'Pod added to cart successfully!';
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                  notification.classList.remove('translate-x-full');
+                }, 100);
+                
+                setTimeout(() => {
+                  notification.classList.add('translate-x-full');
+                  setTimeout(() => {
+                    document.body.removeChild(notification);
+                  }, 300);
+                }, 3000);
+              }
+            } catch (error) {
+              console.error('Error adding pod to cart:', error);
+            }
+          }
+        });
+      }
+      
+      // Make entire card clickable
+      card.addEventListener('click', () => {
+        const selectBtn = card.querySelector('.select-pod-btn') as HTMLElement;
+        if (selectBtn) {
+          selectBtn.click();
+        }
+      });
+    });
+  });
+</script> 

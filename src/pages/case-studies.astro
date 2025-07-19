@@ -1,186 +1,32 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
-import HeroSection from '../components/shared/HeroSection.astro';
-import CTASection from '../components/shared/CTASection.astro';
-import { caseStudiesData } from '../content/case-studies.js';
+import CaseStudiesHeroSection from '../components/case-studies/CaseStudiesHeroSection.astro';
+import CaseStudiesGridSection from '../components/case-studies/CaseStudiesGridSection.astro';
 
-// Utility functions for styling
-function getBadgeColorClass(color) {
-  const colorMap = {
-    'blue': 'bg-blue-100 dark:bg-blue-900',
-    'purple': 'bg-purple-100 dark:bg-purple-900',
-    'orange': 'bg-orange-100 dark:bg-orange-900',
-    'teal': 'bg-teal-100 dark:bg-teal-900',
-    'green': 'bg-green-100 dark:bg-green-900',
-    'indigo': 'bg-indigo-100 dark:bg-indigo-900',
-    'cyan': 'bg-cyan-100 dark:bg-cyan-900',
-    'pink': 'bg-pink-100 dark:bg-pink-900',
-    'gray': 'bg-gray-100 dark:bg-gray-900'
-  };
-  return colorMap[color] || 'bg-blue-100 dark:bg-blue-900';
-}
-
-function getBadgeStyle(color) {
-  const colorMap = {
-    'blue': 'bg-blue-100 text-blue-800',
-    'purple': 'bg-purple-100 text-purple-800',
-    'orange': 'bg-orange-100 text-orange-800',
-    'teal': 'bg-teal-100 text-teal-800',
-    'green': 'bg-green-100 text-green-800',
-    'indigo': 'bg-indigo-100 text-indigo-800',
-    'cyan': 'bg-cyan-100 text-cyan-800',
-    'pink': 'bg-pink-100 text-pink-800',
-    'gray': 'bg-gray-100 text-gray-800'
-  };
-  return colorMap[color] || 'bg-blue-100 text-blue-800';
-}
+// Import isolated case-studies content
+import { 
+  caseStudiesHeroData,
+  caseStudiesData
+} from '../content/case-studies/_index.js';
 ---
 
-<Layout description="Explore our comprehensive portfolio of successful projects across industries." title="Case Studies | NovaPod.ai">
+<Layout 
+  description="Explore our portfolio of successful projects across industries, from ecommerce platforms to AI-powered tools and mobile applications."
+  title="Case Studies | NovaPod.ai"
+>
 
-  <HeroSection 
-    title={caseStudiesData.hero.title}
-    subtitle={caseStudiesData.hero.subtitle}
-    description={caseStudiesData.hero.description}
-  />
-
-  <!-- Case Studies Grid Section -->
-  <section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-dark-2 dark:to-dark-3">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto text-center mb-16">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-dark dark:text-white animate-fade-in-up">
-          Our Success Stories
-        </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-          Real projects, real results. Discover how we've helped businesses across industries achieve their digital transformation goals.
-        </p>
-      </div>
-      
-      <!-- Case Studies Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-        {caseStudiesData.caseStudies.map((study, index) => (
-          <div class="bg-white dark:bg-dark-1 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
-            <!-- Image -->
-            <div class="relative h-48 rounded-t-2xl overflow-hidden">
-              <img 
-                src={study.image} 
-                alt={study.title}
-                class="w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div class="absolute top-4 left-4">
-                <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getBadgeStyle(study.badgeColor)}`}>
-                  {study.badge}
-                </span>
-              </div>
-            </div>
-            
-            <!-- Content -->
-            <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-dark dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                <a href={`/case-studies/${study.id}`}>{study.title}</a>
-              </h3>
-              
-              <div class="flex items-center mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <span class="mr-4">{study.industry}</span>
-                <span class="w-1 h-1 bg-gray-400 rounded-full mr-4"></span>
-                <span>{study.duration}</span>
-              </div>
-              
-              <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                {study.problemStatement.substring(0, 120)}...
-              </p>
-              
-              <!-- Tech Stack Preview -->
-              <div class="flex flex-wrap gap-2 mb-4">
-                {study.techStack.slice(0, 3).map((tech) => (
-                  <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                    {tech}
-                  </span>
-                ))}
-                {study.techStack.length > 3 && (
-                  <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                    +{study.techStack.length - 3} more
-                  </span>
-                )}
-              </div>
-              
-              <!-- Impact Preview -->
-              <div class="mb-4">
-                {study.impact.slice(0, 1).map((result) => (
-                  <div class="flex items-center text-sm text-green-600 dark:text-green-400">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                    </svg>
-                    {result}
-                  </div>
-                ))}
-              </div>
-              
-              <!-- CTA -->
-              <a 
-                href={`/case-studies/${study.id}`}
-                class="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-              >
-                Read Full Case Study
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      <!-- Call to Action -->
-      <div class="text-center animate-fade-in-up animation-delay-800">
-        <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-          Ready to start your own success story? Let's discuss how we can help you achieve your digital transformation goals.
-        </p>
-        <a href="/contact" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-          <span>Start Your Project</span>
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <CTASection 
-    title="Ready to Build Something Amazing?"
-    subtitle="Let's discuss your project and see how we can help you achieve your goals."
-    primaryButton={{
-      text: "Get Started",
-      url: "/contact"
-    }}
-    secondaryButton={{
-      text: "Learn More",
-      url: "/about"
-    }}
-  />
-
+  
+  <!-- Hero Section -->
+  <CaseStudiesHeroSection data={caseStudiesHeroData} />
+  
+  <!-- Grid Section -->
+  <CaseStudiesGridSection />
 </Layout>
 
 <style>
-  .animate-fade-in-up { 
-    animation: fadeInUp 0.8s ease-out; 
-  }
-  .animation-delay-200 { 
-    animation-delay: 0.2s; 
-  }
-  .animation-delay-800 { 
-    animation-delay: 0.8s; 
-  }
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+  /* Page-specific styles */
+  .case-studies-page {
+    /* Any case-studies page specific styles can go here */
   }
 </style> 

@@ -1,0 +1,43 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    description: string;
+    primaryButton: {
+      text: string;
+      url: string;
+    };
+    secondaryButton: {
+      text: string;
+      url: string;
+    };
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-20 bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 gradient-title">{data.title}</h2>
+      <p class="text-xl text-primary-100 mb-4">{data.subtitle}</p>
+      <p class="text-lg text-primary-200 mb-8 max-w-2xl mx-auto leading-relaxed">{data.description}</p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href={data.primaryButton.url} class="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-semibold rounded-lg hover:bg-gray-50 transition-colors duration-200 group">
+          <span>{data.primaryButton.text}</span>
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+        </a>
+        <a href={data.secondaryButton.url} class="inline-flex items-center px-6 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary-600 transition-colors duration-200">
+          <span>{data.secondaryButton.text}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+ 

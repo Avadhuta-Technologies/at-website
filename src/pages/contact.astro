@@ -1,15 +1,25 @@
 ---
-import Breadcrumb from '../components/layout/Breadcrumb.astro';
 import Layout from '../layouts/Layout.astro';
-import Contactsection from '../components/Contactsection.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import ContactHeroSection from '../components/contact/ContactHeroSection.astro';
+import ContactFormSection from '../components/contact/ContactFormSection.astro';
+
+// Import isolated contact content
+import { 
+  contactHeroData,
+  contactFormData
+} from '../content/contact/_index.js';
 ---
 
 <Layout
   description="Contact NovaPod.ai for your project needs. Get in touch with our expert team for consultation and project planning."
   title="Contact | NovaPod.ai"
 >
-  <Breadcrumb>
-    <Fragment slot="title">Contact Us</Fragment>
-  </Breadcrumb>
-  <Contactsection />
+
+  
+  <!-- Hero Section -->
+  <ContactHeroSection data={contactHeroData} />
+  
+  <!-- Contact Form Section -->
+  <ContactFormSection data={contactFormData} />
 </Layout>

@@ -1,0 +1,45 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    packs: Array<{
+      title: string;
+      price: string;
+      priceUSD: string;
+      features: string[];
+    }>;
+  };
+  className?: string;
+}
+
+const { data, className = "" } = Astro.props;
+---
+
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-dark mb-8 text-center gradient-title">{data.title}</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {data.packs.map((pack) => (
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-dark mb-2">{pack.title}</h3>
+          <div class="text-3xl font-bold text-green-600 mb-2">{pack.price}</div>
+          <p class="text-sm text-gray-600">{pack.priceUSD}</p>
+          
+          <ul class="mt-6 space-y-3">
+            {pack.features.map((feature) => (
+              <li class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-600">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

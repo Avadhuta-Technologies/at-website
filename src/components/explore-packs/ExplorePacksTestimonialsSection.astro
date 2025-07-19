@@ -1,0 +1,113 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    subtitle: string;
+    testimonials: Array<{
+      quote: string;
+      description: string;
+      author: string;
+      company: string;
+      avatar: string;
+    }>;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section class="py-16 lg:py-24 ">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 gradient-title">
+        {data.title}
+      </h2>
+      <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+        {data.subtitle}
+      </p>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8">
+        {data.testimonials.map((testimonial, index) => (
+          <div 
+            class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100"
+            data-testimonial={index + 1}
+          >
+            <!-- Quote Icon -->
+            <div class="text-4xl text-blue-100 mb-6">
+              "
+            </div>
+            
+            <!-- Quote -->
+            <blockquote class="text-xl font-semibold text-slate-900 mb-6 leading-relaxed">
+              {testimonial.quote}
+            </blockquote>
+            
+            <!-- Description -->
+            <p class="text-slate-600 leading-relaxed mb-8">
+              {testimonial.description}
+            </p>
+            
+            <!-- Author -->
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-lg mr-4">
+                {testimonial.author.charAt(0)}
+              </div>
+              <div>
+                <div class="font-semibold text-slate-900">
+                  {testimonial.author}
+                </div>
+                <div class="text-slate-600 text-sm">
+                  {testimonial.company}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+   
+  </div>
+</section>
+
+<style>
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // Add animation on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = (parseInt(entry.target.getAttribute('data-testimonial')) - 1) * 0.2;
+        entry.target.style.animationDelay = `${delay}s`;
+        entry.target.classList.add('animate-fade-in-up');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all testimonial cards
+  document.querySelectorAll('[data-testimonial]').forEach(card => {
+    observer.observe(card);
+  });
+</script> 

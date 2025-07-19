@@ -1,208 +1,91 @@
 ---
-export interface Props {
-  // New format - single data object
-  data?: {
+interface Props {
+  data: {
     title: string;
-    subtitle?: string;
-    items: Array<{
+    subtitle: string;
+    faqs: Array<{
       question: string;
       answer: string;
     }>;
-    cta?: {
-      question: string;
-      description: string;
-      button: {
-        label: string;
-        href: string;
-      };
-    };
-  };
-  // Old format - individual props (for backward compatibility)
-  title?: string;
-  subtitle?: string;
-  items?: Array<{
-    question: string;
-    answer: string;
-  }>;
-  cta?: {
-    question: string;
-    description: string;
-    button: {
-      label: string;
-      href: string;
-    };
   };
   className?: string;
 }
 
-const { data, title: titleProp, subtitle: subtitleProp, items: itemsProp, cta: ctaProp, className = "" } = Astro.props;
-
-// Use data object if provided, otherwise use individual props
-const title = data?.title || titleProp;
-const subtitle = data?.subtitle || subtitleProp;
-const items = data?.items || itemsProp || [];
-const cta = data?.cta || ctaProp;
+const { data, className = "" } = Astro.props;
 ---
 
-<section class={`py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-dark-2 ${className}`}>
+<section class={`py-20 bg-gradient-to-br from-gray-50 to-white ${className}`}>
   <div class="container mx-auto px-4">
-    <div class="max-w-4xl mx-auto">
-      <!-- Section Header -->
-      <div class="text-center mb-16 animate-fade-in-up">
-        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
-          {title}
-        </h2>
-        {subtitle && (
-          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
-            {subtitle}
-          </p>
-        )}
-      </div>
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-gray-900 gradient-title">
+        {data.title}
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
+        {data.subtitle}
+      </p>
+    </div>
 
-      <!-- Accordion Container -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl transform transition-all duration-500 hover:shadow-2xl animate-fade-in-up animation-delay-400">
-        <div class="divide-y divide-gray-200 dark:divide-gray-700">
-          {items?.map((item, index) => (
-            <div class="group faq-item">
-              <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300" data-accordion>
-                <div class="flex items-center justify-between">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                    {item.question}
-                  </h3>
-                  <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center transform transition-all duration-300 group-hover:scale-110">
-                      <svg class={`w-4 h-4 text-white transform transition-transform duration-300 ${index === 0 ? 'rotate-90' : 'rotate-0'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+    <!-- FAQ Accordion -->
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-xl transform transition-all duration-500 hover:shadow-2xl animate-fade-in-up animation-delay-400">
+        <div class="divide-y divide-gray-200">
+          {data.faqs.map((faq, index) => (
+            <div class="faq-item">
+              <button 
+                class="faq-question w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                data-faq-index={index}
+              >
+                <span class="text-lg font-semibold text-gray-900">{faq.question}</span>
+                <svg class="faq-icon w-6 h-6 text-gray-500 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
               </button>
-              <div class={`accordion-content ${index === 0 ? 'open' : 'hidden'}`}>
-                <div class="px-8 pb-6">
-                  <div class="border-l-4 border-blue-500 pl-6">
-                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
-                      {item.answer}
-                    </p>
-                  </div>
-                </div>
+              <div class="faq-answer hidden px-8 pb-6">
+                <p class="text-gray-600 leading-relaxed">{faq.answer}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
-      
-      <!-- Additional CTA -->
-      {cta && (
-        <div class="text-center mt-12 animate-fade-in-up animation-delay-600">
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            {cta.question}
-          </h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">
-            {cta.description}
-          </p>
-          <a href={cta.button.href} class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-            {cta.button.label}
-          </a>
-        </div>
-      )}
     </div>
   </div>
 </section>
 
-<style>
-  .faq-item {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .faq-item:hover {
-    transform: translateX(4px);
-  }
-
-  .accordion-content {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-  }
-  
-  .accordion-content.hidden {
-    max-height: 0;
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  
-  .accordion-content.open {
-    max-height: 300px;
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Animation delays */
-  .animation-delay-200 { animation-delay: 0.2s; }
-  .animation-delay-400 { animation-delay: 0.4s; }
-  .animation-delay-600 { animation-delay: 0.6s; }
-
-  /* Fade in animations */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
-
 <script>
-  // Enhanced accordion functionality with smooth animations
-  document.addEventListener('DOMContentLoaded', function() {
-    const accordionButtons = document.querySelectorAll('[data-accordion]');
+  // FAQ Accordion functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const faqItems = document.querySelectorAll('.faq-item');
     
-    accordionButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const content = button.nextElementSibling;
-        const icon = button.querySelector('svg');
-        
-        if (!content || !icon) return;
-        
-        const isOpen = content.classList.contains('open');
-        
-        // Close all accordion items with animation
-        document.querySelectorAll('.accordion-content').forEach(item => {
-          if (item !== content) {
-            item.classList.remove('open');
-            item.classList.add('hidden');
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      const icon = item.querySelector('.faq-icon');
+      
+      if (question && answer && icon) {
+        question.addEventListener('click', () => {
+          const isOpen = answer.classList.contains('hidden');
+          
+          // Close all other FAQ items
+          faqItems.forEach(otherItem => {
+            const otherAnswer = otherItem.querySelector('.faq-answer');
+            const otherIcon = otherItem.querySelector('.faq-icon');
+            if (otherAnswer && otherIcon && otherItem !== item) {
+              otherAnswer.classList.add('hidden');
+              otherIcon.classList.remove('rotate-180');
+            }
+          });
+          
+          // Toggle current item
+          if (isOpen) {
+            answer.classList.remove('hidden');
+            icon.classList.add('rotate-180');
+          } else {
+            answer.classList.add('hidden');
+            icon.classList.remove('rotate-180');
           }
         });
-        
-        // Reset all icons with animation
-        document.querySelectorAll('[data-accordion] svg').forEach(svg => {
-          if (svg !== icon) {
-            (svg as HTMLElement).style.transform = 'rotate(0deg)';
-          }
-        });
-        
-        // Toggle the clicked item with animation
-        if (isOpen) {
-          // Close the item
-          content.classList.remove('open');
-          content.classList.add('hidden');
-          icon.style.transform = 'rotate(0deg)';
-        } else {
-          // Open the item
-          content.classList.remove('hidden');
-          content.classList.add('open');
-          icon.style.transform = 'rotate(90deg)';
-        }
-      });
+      }
     });
   });
 </script> 

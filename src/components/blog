@@ -16,7 +16,7 @@ publishedBlogEntries.sort(function (a, b) {
   <div class="-mx-4 flex flex-wrap">
     <div class="wow fadeInUp mt-14 w-full px-4" data-wow-delay=".2s">
       <h2
-        class="relative pb-5 text-2xl font-semibold text-dark dark:text-white sm:text-[36px]"
+        class="relative pb-5 text-2xl font-semibold text-dark  sm:text-[36px]"
       >
         Related Articles
       </h2>
@@ -48,12 +48,12 @@ publishedBlogEntries.sort(function (a, b) {
                   </span>
                   <h3>
                     <span
-                      class="inline-block mb-4 text-xl font-semibold text-dark dark:text-white hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
+                      class="inline-block mb-4 text-xl font-semibold text-dark  hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl"
                     >
                       {blogPostEntry.data.title}
                     </span>
                   </h3>
-                  <p class="max-w-[370px] text-base text-body-color dark:text-dark-6">
+                  <p class="max-w-[370px] text-base text-body-color ">
                     {blogPostEntry.data.postDetails.paraOne.slice(0, 100)}
                   </p>
                 </div>

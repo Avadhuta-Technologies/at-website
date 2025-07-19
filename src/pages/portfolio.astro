@@ -1,33 +1,28 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { portfolioData } from '../content/portfolio.js';
-import { PortfolioData } from '../content/types/portfolio';
-import HeroSection from '../components/shared/HeroSection.astro';
-import CTASection from '../components/shared/CTASection.astro';
-import PortfolioGridSection from '../components/portfolio/PortfolioGridSection.astro';
+import PortfolioHeroSection from '../components/portfolio/PortfolioHeroSection.astro';
+import PortfolioProjectsSection from '../components/portfolio/PortfolioProjectsSection.astro';
 import PortfolioWhyChooseSection from '../components/portfolio/PortfolioWhyChooseSection.astro';
+import PortfolioCTASection from '../components/portfolio/PortfolioCTASection.astro';
+
+// Import portfolio content
+import {
+  portfolioHeroData,
+  portfolioProjectsData,
+  portfolioWhyChooseData,
+  portfolioCTAData,
+} from '../content/portfolio/_index.js';
+
+// Page metadata
+const pageTitle = 'Portfolio - Avadhuta Tech';
+const pageDescription =
+  'Explore our portfolio of successful projects across various industries including AI, eCommerce, 3D visualization, and workflow automation.';
 ---
 
-<Layout title="Portfolio | Avadhuta Technologies" description="Explore our portfolio of AI, automation, healthcare, eCommerce, and field ops solutions.">
-  <HeroSection 
-    title={portfolioData.hero.title}
-    subtitle={portfolioData.hero.subtitle}
-    description={portfolioData.hero.description}
-  />
+<Layout title={pageTitle} description={pageDescription}>
+  <PortfolioHeroSection data={portfolioHeroData} />
+  <PortfolioProjectsSection />
+  <PortfolioWhyChooseSection data={portfolioWhyChooseData} />
+  <PortfolioCTASection data={portfolioCTAData} />
+</Layout>
 
-  <PortfolioGridSection 
-    projects={portfolioData.projects}
-  />
-
-  <PortfolioWhyChooseSection 
-    title={portfolioData.whyChoose.title}
-    points={portfolioData.whyChoose.points}
-  />
-
-  <CTASection 
-    title={portfolioData.cta.title}
-    description={portfolioData.cta.description}
-    buttonText={portfolioData.cta.buttonText}
-    email={portfolioData.cta.email}
-  />
-</Layout> 

@@ -1,0 +1,31 @@
+---
+interface Props {
+  idealFor: string[];
+}
+
+const { idealFor } = Astro.props;
+---
+
+<section class="py-20 " id="details">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">Ideal For</h2>
+      <p class="text-lg text-gray-600 leading-relaxed">Perfect for teams and projects that need specialized expertise</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      {idealFor.map((item: string, index: number) => (
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 p-6">
+          <div class="flex items-start">
+            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+              <span class="text-primary-600 font-bold text-lg">{index + 1}</span>
+            </div>
+            <div>
+              <p class="text-gray-800 leading-relaxed">{item}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

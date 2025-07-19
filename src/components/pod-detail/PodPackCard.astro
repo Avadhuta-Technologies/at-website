@@ -1,0 +1,394 @@
+---
+export interface Props {
+  pack: {
+    id: string;
+    title: string;
+    description: string;
+    priceINR: string;
+    priceUSD: string;
+    duration: string;
+    badge: string;
+    badgeColor: string;
+    deliverables: string[];
+  };
+  index?: number;
+}
+
+const { pack, index = 0 } = Astro.props;
+
+interface ColorClasses {
+  bg: string;
+  border: string;
+  text: string;
+  badge: string;
+  iconBg: string;
+}
+
+// Color mapping for different badge colors
+const getColorClasses = (color: string): ColorClasses => {
+  const colorMap: Record<string, ColorClasses> = {
+    green: { 
+      bg: 'bg-green-50/80', 
+      border: 'border-green-200/50', 
+      text: 'text-green-700', 
+      badge: 'bg-green-100/90 text-green-800 backdrop-blur-sm',
+      iconBg: 'bg-green-100/80'
+    },
+    blue: { 
+      bg: 'bg-blue-50/80', 
+      border: 'border-blue-200/50', 
+      text: 'text-blue-700', 
+      badge: 'bg-blue-100/90 text-blue-800 backdrop-blur-sm',
+      iconBg: 'bg-blue-100/80'
+    },
+    purple: { 
+      bg: 'bg-purple-50/80', 
+      border: 'border-purple-200/50', 
+      text: 'text-purple-700', 
+      badge: 'bg-purple-100/90 text-purple-800 backdrop-blur-sm',
+      iconBg: 'bg-purple-100/80'
+    },
+    orange: { 
+      bg: 'bg-orange-50/80', 
+      border: 'border-orange-200/50', 
+      text: 'text-orange-700', 
+      badge: 'bg-orange-100/90 text-orange-800 backdrop-blur-sm',
+      iconBg: 'bg-orange-100/80'
+    },
+    indigo: { 
+      bg: 'bg-indigo-50/80', 
+      border: 'border-indigo-200/50', 
+      text: 'text-indigo-700', 
+      badge: 'bg-indigo-100/90 text-indigo-800 backdrop-blur-sm',
+      iconBg: 'bg-indigo-100/80'
+    },
+    pink: { 
+      bg: 'bg-pink-50/80', 
+      border: 'border-pink-200/50', 
+      text: 'text-pink-700', 
+      badge: 'bg-pink-100/90 text-pink-800 backdrop-blur-sm',
+      iconBg: 'bg-pink-100/80'
+    },
+    teal: { 
+      bg: 'bg-teal-50/80', 
+      border: 'border-teal-200/50', 
+      text: 'text-teal-700', 
+      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
+      iconBg: 'bg-teal-100/80'
+    }
+  };
+  return colorMap[color] || colorMap.blue;
+};
+
+const colors = getColorClasses(pack.badgeColor);
+
+// Generate contextual icon based on pack content
+const getPackIcon = (pack: any) => {
+  const title = pack.title.toLowerCase();
+  const description = pack.description.toLowerCase();
+  const deliverables = pack.deliverables.join(' ').toLowerCase();
+  const badge = pack.badge.toLowerCase();
+  
+  // Launch & Go-to-Market icons
+  if (title.includes('launch') || title.includes('web') || title.includes('presence') || 
+      description.includes('launch') || description.includes('website') || description.includes('online')) {
+    return '🚀';
+  }
+  
+  // Brand & Design icons
+  if (title.includes('brand') || title.includes('design') || title.includes('creative') ||
+      description.includes('brand') || description.includes('design') || description.includes('visual')) {
+    return '🎨';
+  }
+  
+  // Growth & Optimization icons
+  if (title.includes('growth') || title.includes('optimization') || title.includes('conversion') ||
+      description.includes('growth') || description.includes('optimize') || description.includes('convert')) {
+    return '📈';
+  }
+  
+  // UX & Audit icons
+  if (title.includes('ux') || title.includes('audit') || title.includes('review') ||
+      description.includes('ux') || description.includes('audit') || description.includes('review')) {
+    return '🎯';
+  }
+  
+  // Automation & Efficiency icons
+  if (title.includes('ops') || title.includes('automation') || title.includes('efficiency') ||
+      description.includes('automate') || description.includes('efficiency') || description.includes('process')) {
+    return '⚙️';
+  }
+  
+  // Integration icons
+  if (title.includes('integration') || title.includes('connect') || title.includes('api') ||
+      description.includes('integrate') || description.includes('connect') || description.includes('api')) {
+    return '🔌';
+  }
+  
+  // AI & Assistant icons
+  if (title.includes('ai') || title.includes('assistant') || title.includes('intelligence') ||
+      description.includes('ai') || description.includes('assistant') || description.includes('intelligence')) {
+    return '🤖';
+  }
+  
+  // Compliance & Security icons
+  if (title.includes('compliance') || title.includes('security') || title.includes('audit') ||
+      description.includes('compliance') || description.includes('security') || description.includes('audit')) {
+    return '🔐';
+  }
+  
+  // Hiring & Recruitment icons
+  if (title.includes('hiring') || title.includes('recruitment') || title.includes('talent') ||
+      description.includes('hire') || description.includes('recruit') || description.includes('talent')) {
+    return '👥';
+  }
+  
+  // Data & Analytics icons
+  if (title.includes('data') || title.includes('analytics') || title.includes('insights') ||
+      description.includes('data') || description.includes('analytics') || description.includes('insights')) {
+    return '📊';
+  }
+  
+  // Development & Engineering icons
+  if (title.includes('dev') || title.includes('development') || title.includes('engineering') ||
+      description.includes('develop') || description.includes('build') || description.includes('code')) {
+    return '💻';
+  }
+  
+  // Marketing & Sales icons
+  if (title.includes('marketing') || title.includes('sales') || title.includes('campaign') ||
+      description.includes('market') || description.includes('sell') || description.includes('campaign')) {
+    return '📢';
+  }
+  
+  return '📦';
+};
+---
+
+<div class="pack-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-pack-id={pack.id}>
+  <!-- Card Background with Glass Morphism -->
+  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+  
+  <!-- Decorative Background Elements -->
+  <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
+  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
+  
+  <!-- Card Content -->
+  <div class="relative p-6 flex flex-col h-full">
+    <!-- Card Header -->
+    <div class="flex items-start justify-between mb-4">
+      <div class={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}>
+        <span class="text-2xl">{getPackIcon(pack)}</span>
+      </div>
+      <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${colors.badge} border border-current/20`}>
+        {pack.badge}
+      </span>
+    </div>
+    
+    <!-- Title -->
+    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">
+      {pack.title}
+    </h3>
+    
+    <!-- Pricing -->
+    <div class="flex items-baseline space-x-2 mb-2">
+      <span class="text-2xl font-bold text-gray-900">
+        {pack.priceINR}
+      </span>
+    </div>
+    
+    <p class="text-sm text-gray-500 mb-4">
+      {pack.duration} • {pack.priceUSD}
+    </p>
+    
+    <!-- Description -->
+    <div class="flex-1 mb-6">
+      <p class="text-gray-600 leading-relaxed text-sm pack-description">
+        {pack.description}
+      </p>
+    </div>
+    
+    <!-- Features List -->
+    <div class="space-y-3 mb-6">
+      {pack.deliverables.slice(0, 3).map((deliverable: string) => (
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-green-100/80 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-600 font-medium">{deliverable.split(' - ')[0]}</span>
+        </div>
+      ))}
+    </div>
+    
+    <!-- Expandable Content (Hidden by default) -->
+    <div class="pack-details hidden mt-4 space-y-4">
+      <!-- All Deliverables -->
+      {pack.deliverables.length > 3 && (
+        <div>
+          <h4 class="text-sm font-semibold text-gray-800 mb-2">All Deliverables</h4>
+          <ul class="space-y-1">
+            {pack.deliverables.slice(3).map((deliverable: string) => (
+              <li class="flex items-start text-xs text-gray-600">
+                <svg class="w-3 h-3 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                {deliverable}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      <!-- Duration Details -->
+      <div>
+        <h4 class="text-sm font-semibold text-gray-800 mb-2">Timeline</h4>
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-blue-100/80 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="text-sm text-gray-600 font-medium">{pack.duration}</span>
+        </div>
+      </div>
+      
+      <!-- Pricing Details -->
+      <div>
+        <h4 class="text-sm font-semibold text-gray-800 mb-2">Pricing</h4>
+        <div class="space-y-1">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-gray-600">INR:</span>
+            <span class="font-medium text-gray-800">{pack.priceINR}</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-gray-600">USD:</span>
+            <span class="font-medium text-gray-800">{pack.priceUSD}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Bar -->
+    <div class="flex flex-col space-y-3 pt-4 border-t border-gray-100/50 mt-auto">
+      <!-- Expand/Details Row -->
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-500 font-medium pack-action-text">View Details</span>
+        <div class="flex items-center space-x-2">
+          <button class="expand-btn w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-3 h-3 text-white expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <a 
+            href={`/packs/${pack.id}`} 
+            class="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+          >
+            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Prominent Add Pack Button -->
+      <button 
+        data-add-to-cart
+        data-item-id={pack.id}
+        data-item-type="pack"
+        data-item-title={pack.title}
+        data-item-description={pack.description}
+        data-item-price={pack.priceINR}
+        class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 group-hover:shadow-lg">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span>Add Pack</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Interactive functionality for pack cards
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.pack-card');
+    
+    cards.forEach(card => {
+      const expandBtn = card.querySelector('.expand-btn');
+      const details = card.querySelector('.pack-details');
+      const actionText = card.querySelector('.pack-action-text');
+      const expandIcon = card.querySelector('.expand-icon');
+      
+      if (expandBtn && details && actionText && expandIcon) {
+        expandBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const isExpanded = details.classList.contains('hidden');
+          
+          if (isExpanded) {
+            details.classList.remove('hidden');
+            details.classList.add('animate-slide-down');
+            actionText.textContent = 'Show Less';
+            expandIcon.classList.add('rotate-180');
+          } else {
+            details.classList.add('hidden');
+            details.classList.remove('animate-slide-down');
+            actionText.textContent = 'View Details';
+            expandIcon.classList.remove('rotate-180');
+          }
+        });
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Pack Card Animations */
+  .pack-card {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block !important;
+  }
+
+  .pack-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Expand Animation */
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Icon rotation */
+  .expand-icon.rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  /* Hover Effects */
+  .pack-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .pack-card {
+      padding: 1.5rem;
+    }
+  }
+</style> 

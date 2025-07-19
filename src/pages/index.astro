@@ -1,118 +1,71 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import HeroSection from '../components/shared/HeroSection.astro';
-import HomeHowItWorksSection from '../components/home/HomeHowItWorksSection.astro';
+import Breadcrumb from '../components/layout/Breadcrumb.astro';
+import HomeHeroSection from '../components/home/HomeHeroSection.astro';
 import HomePodsSection from '../components/home/HomePodsSection.astro';
 import HomePacksSection from '../components/home/HomePacksSection.astro';
-import PodStrategistSection from '../components/home/PodStrategistSection.astro';
-import WhyWorksSection from '../components/home/WhyWorksSection.astro';
-import BuiltForSection from '../components/home/BuiltForSection.astro';
-import SuccessStoriesSection from '../components/home/SuccessStoriesSection.astro';
-import FinalCTASection from '../components/home/FinalCTASection.astro';
-import FAQSection from '../components/shared/FAQSection.astro';
-import { getHomeData } from '../content/home.js';
-import { podsData } from '../content/pods.js';
-import { enhanceHomePodData } from '../utils/podUtils.js';
-
-// Get home page content from markdown
-const homeData = await getHomeData();
-
-if (!homeData) {
-  throw new Error('Failed to load home page data');
-}
-
-// Use data from markdown file
-const { hero, howItWorks, podsGrid, packsGrid, podStrategistCTA, whyWorks, teamsFounders, successStories, faq, finalCTA } = homeData;
-
-// Use pods.js as single source of truth for home page pod data
-const homePodsData = {
-  title: podsGrid.title,
-  subtitle: podsGrid.subtitle,
-  pods: podsData.availablePods.pods.slice(0, 6).map(pod => ({
-    id: pod.id,
-    title: pod.title,
-    subtitle: pod.description,
-    description: pod.podDescription || pod.description,
-    idealFor: pod.idealFor ? pod.idealFor.join(', ') : '',
-    teamComposition: pod.teamComposition || [],
-    deliverables: pod.deliverables || [],
-    pricing: pod.engagement || '',
-    minEngagement: "1 month",
-    icon: pod.icon,
-    badge: pod.badge,
-    badgeColor: pod.badgeColor
-  }))
-};
-
-
-
-
-
+import HomeWhyWorksSection from '../components/home/HomeWhyWorksSection.astro';
+import HomeBuiltForSection from '../components/home/HomeBuiltForSection.astro';
+import HomeSuccessStoriesSection from '../components/home/HomeSuccessStoriesSection.astro';
+import HomePodStrategistSection from '../components/home/HomePodStrategistSection.astro';
+import HomeFinalCTASection from '../components/home/HomeFinalCTASection.astro';
+import HomeFAQSection from '../components/home/HomeFAQSection.astro';
+import HomeHowItWorksSection from '../components/home/HomeHowItWorksSection.astro';
+// Import isolated home content
+import { 
+  homeHeroData,
+  homePodsData,
+  homeWhyWorksData,
+  homeBuiltForData,
+  homeSuccessStoriesData,
+  homePodStrategistData,
+  homeFinalCTAData,
+  homeFAQData,
+  homeHowItWorksData
+} from '../content/home/_index.js';
 
 ---
 
-<Layout
-  description="NovaPod.ai - Hybrid AI + human delivery pods that get your product built—end-to-end."
-  title="NovaPod.ai - Build smarter. Ship faster."
+<Layout 
+  description="NovaPod.ai - Specialized development pods for startups and enterprises. Get dedicated teams of developers, designers, and project managers to build your next digital product."
+  title="NovaPod.ai - Specialized Development Pods"
 >
-  <div data-animate="fade-in-up">
-    <HeroSection
-      title={hero.title}
-      subtitle={hero.subtitle}
-      description={hero.description}
-      primaryButton={hero.primaryButton}
-      secondaryButton={hero.secondaryButton}
-    />
-  </div>
 
-  <div data-animate="fade-in-up">
-    <HomeHowItWorksSection title={howItWorks.title} steps={howItWorks.steps} />
-  </div>
+  
+  <!-- Hero Section -->
+  <HomeHeroSection data={homeHeroData} />
 
-  <div data-animate="row-staggered" data-base-delay="200" data-card-delay="120" data-row-delay="200" data-columns-per-row="3">
-    <HomePodsSection title={homePodsData.title} subtitle={homePodsData.subtitle} pods={homePodsData.pods} />
-  </div>
+  <!-- How It Works Section -->
+  <HomeHowItWorksSection data={homeHowItWorksData} />
+  
+  <!-- Pods Section -->
+  <HomePodsSection data={homePodsData} />
+  
+  <!-- Packs Section -->
+  <HomePacksSection />
 
-  <div data-animate="row-staggered" data-base-delay="200" data-card-delay="120" data-row-delay="200" data-columns-per-row="3">
-    <HomePacksSection 
-      title={packsGrid.title}
-      subtitle={packsGrid.subtitle}
-      description={packsGrid.description}
-      packs={packsGrid.packs}
-    />
-  </div>
-
-  <div data-animate="scale-in">
-    <PodStrategistSection question={podStrategistCTA.question} button={podStrategistCTA.button} />
-  </div>
-
-  <div data-animate="fade-in-up">
-    <WhyWorksSection title={whyWorks.title} items={whyWorks.items} />
-  </div>
-
-  <div data-animate="row-staggered" data-base-delay="200" data-card-delay="100" data-row-delay="180" data-columns-per-row="3">
-    <BuiltForSection title={teamsFounders.title} />
-  </div>
-
-  <div data-animate="row-staggered" data-base-delay="200" data-card-delay="150" data-row-delay="250" data-columns-per-row="2">
-    <SuccessStoriesSection title={successStories.title}  />
-  </div>
-
-  <div data-animate="fade-in-up">
-    <FAQSection title={faq.title} items={faq.items} cta={faq.cta} />
-  </div>
-
-  <div data-animate="slide-in-up">
-    <FinalCTASection
-      title={finalCTA.title}
-      description={finalCTA.description}
-      checklist={finalCTA.checklist}
-      buttons={finalCTA.buttons}
-      contactInfo={finalCTA.contactInfo}
-    />
-  </div>
+  <!-- Pod Strategist Section -->
+  <HomePodStrategistSection data={homePodStrategistData} />
+  
+  <!-- Why Works Section -->
+  <HomeWhyWorksSection data={homeWhyWorksData} />
+  
+  <!-- Built For Section -->
+  <HomeBuiltForSection data={homeBuiltForData} />
+  
+  <!-- Success Stories Section -->
+  <HomeSuccessStoriesSection data={homeSuccessStoriesData} />
+   
+  <!-- Final CTA Section -->
+  <HomeFinalCTASection data={homeFinalCTAData} />
+  
+  <!-- FAQ Section -->
+  <HomeFAQSection data={homeFAQData} />
 </Layout>
 
 <style>
-  /* Custom styles for new content can be added here */
+  /* Page-specific styles */
+  .home-page {
+    /* Any home page specific styles can go here */
+  }
 </style>

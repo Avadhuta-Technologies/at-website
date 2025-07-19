@@ -1,17 +1,17 @@
 // Color utility functions for consistent styling across components
 export function getBadgeColorClass(color: string): string {
   const colorMap: Record<string, string> = {
-    'blue': 'bg-blue-100 dark:bg-blue-900',
-    'purple': 'bg-purple-100 dark:bg-purple-900',
-    'orange': 'bg-orange-100 dark:bg-orange-900',
-    'teal': 'bg-teal-100 dark:bg-teal-900',
-    'green': 'bg-green-100 dark:bg-green-900',
-    'indigo': 'bg-indigo-100 dark:bg-indigo-900',
-    'cyan': 'bg-cyan-100 dark:bg-cyan-900',
-    'pink': 'bg-pink-100 dark:bg-pink-900',
-    'gray': 'bg-gray-100 dark:bg-gray-900'
+    'blue': 'bg-blue-100',
+    'purple': 'bg-purple-100',
+    'orange': 'bg-orange-100',
+    'teal': 'bg-teal-100',
+    'green': 'bg-green-100',
+    'indigo': 'bg-indigo-100',
+    'cyan': 'bg-cyan-100',
+    'pink': 'bg-pink-100',
+    'gray': 'bg-gray-100'
   };
-  return colorMap[color] || 'bg-blue-100 dark:bg-blue-900';
+  return colorMap[color] || 'bg-blue-100';
 }
 
 export function getBadgeStyle(color: string): string {

@@ -1,0 +1,121 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+  variant?: 'default' | 'primary' | 'secondary';
+  className?: string;
+}
+
+const { 
+  title, 
+  description, 
+  icon, 
+  variant = 'default',
+  className = "" 
+} = Astro.props;
+
+// Glass effect variants
+const glassVariants = {
+  default: 'glass',
+  primary: 'glass-strong',
+  secondary: 'glass'
+};
+
+// Hover effect variants
+const hoverVariants = {
+  default: 'hover:glass-strong',
+  primary: 'hover:glass-strong',
+  secondary: 'hover:glass-strong'
+};
+---
+
+<div class={`glass-card ${glassVariants[variant]} ${hoverVariants[variant]} ${className} rounded-2xl p-8 transition-all duration-500 hover:scale-105 hover:-translate-y-2 cursor-pointer group`}>
+  <!-- Icon (if provided) -->
+  {icon && (
+    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={icon}></path>
+      </svg>
+    </div>
+  )}
+
+  <!-- Content -->
+  <h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+    {title}
+  </h3>
+  
+  <p class="text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">
+    {description}
+  </p>
+</div>
+
+<style>
+  .glass-card {
+    @apply relative overflow-hidden rounded-xl p-6 transition-all duration-300 ease-out;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .glass-card:hover::before {
+    opacity: 1;
+  }
+  
+  .glass-card-content {
+    @apply relative z-10 space-y-4;
+  }
+  
+  .glass-card-icon {
+    @apply w-12 h-12 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .glass-card-title {
+    @apply text-lg leading-tight;
+  }
+  
+  .glass-card-description {
+    @apply text-sm leading-relaxed;
+  }
+  
+  .glass-card-link {
+    @apply inline-flex items-center mt-4;
+  }
+  
+  /* Dark variant */
+  .glass-card.glass-dark {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .glass-card.glass-dark .glass-card-title {
+    @apply text-white;
+  }
+  
+  .glass-card.glass-dark .glass-card-description {
+    @apply text-gray-300;
+  }
+  
+  .glass-card.glass-dark .glass-card-icon {
+    @apply bg-black/20 border-black/30;
+  }
+</style> 

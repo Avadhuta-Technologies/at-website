@@ -1,0 +1,155 @@
+---
+export interface Props {
+  pack: {
+    id: string;
+    title: string;
+    description: string;
+    icon: string;
+    badge?: string;
+    badgeColor?: string;
+    segmentName?: string;
+    segmentId?: string;
+  };
+  index?: number;
+}
+
+const { pack, index = 0 } = Astro.props;
+
+// Color mapping for different badge types
+const getBadgeColorClasses = (color: string) => {
+  const colorMap: Record<string, string> = {
+    green: 'bg-green-100 text-green-700 border-green-200',
+    blue: 'bg-blue-100 text-blue-700 border-blue-200',
+    purple: 'bg-purple-100 text-purple-700 border-purple-200',
+    orange: 'bg-orange-100 text-orange-700 border-orange-200',
+    teal: 'bg-teal-100 text-teal-700 border-teal-200',
+    pink: 'bg-pink-100 text-pink-700 border-pink-200',
+    indigo: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+    cyan: 'bg-cyan-100 text-cyan-700 border-cyan-200',
+    violet: 'bg-violet-100 text-violet-700 border-violet-200',
+    emerald: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    amber: 'bg-amber-100 text-amber-700 border-amber-200',
+    rose: 'bg-rose-100 text-rose-700 border-rose-200'
+  };
+  return colorMap[color] || colorMap.blue;
+};
+
+// Get contextually appropriate icon based on pack title and content
+const getPackIcon = (pack: any) => {
+  const title = pack.title.toLowerCase();
+  const segmentId = pack.segmentId;
+  
+  // Launch & Go-to-Market icons
+  if (segmentId === 'launch-gtm') {
+    if (title.includes('launch')) return '🚀';
+    if (title.includes('web') || title.includes('presence')) return '🌐';
+    if (title.includes('brand')) return '🎨';
+  }
+  
+  // Growth & Optimization icons
+  if (segmentId === 'growth-optimization') {
+    if (title.includes('growth')) return '📈';
+    if (title.includes('ux') || title.includes('audit')) return '🎯';
+    if (title.includes('conversion')) return '⚡';
+  }
+  
+  // Automation & Efficiency icons
+  if (segmentId === 'automation-efficiency') {
+    if (title.includes('ops') || title.includes('automation')) return '⚙️';
+    if (title.includes('integration')) return '🔌';
+    if (title.includes('ai') || title.includes('assistant')) return '🤖';
+  }
+  
+  // Specialized icons
+  if (segmentId === 'specialized') {
+    if (title.includes('compliance')) return '🔐';
+    if (title.includes('hiring')) return '👥';
+    if (title.includes('data') || title.includes('insights')) return '📊';
+  }
+  
+  return pack.icon || '📦';
+};
+---
+
+<a href={`/packs/${pack.id}`} class="pack-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer block">
+  <!-- Card Background with Gradient -->
+  <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+  
+  <!-- Decorative Background Elements -->
+  <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
+  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
+  
+  <!-- Card Content -->
+  <div class="relative p-6 flex flex-col h-full">
+    <!-- Segment Name -->
+    {pack.segmentName && (
+      <div class="mb-4">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100/80 text-gray-600 border border-gray-200/50 backdrop-blur-sm">
+          {pack.segmentName}
+        </span>
+      </div>
+    )}
+    
+    <!-- Icon and Badge Row -->
+    <div class="flex items-start justify-between mb-5">
+      <div class="w-14 h-14 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl flex items-center justify-center border border-blue-200/30 group-hover:scale-110 transition-transform duration-300">
+        <span class="text-2xl">{getPackIcon(pack)}</span>
+      </div>
+      {pack.badge && (
+        <span class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getBadgeColorClasses(pack.badgeColor || 'blue')}`}>
+          {pack.badge}
+        </span>
+      )}
+    </div>
+    
+    <!-- Title -->
+    <h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors duration-300 leading-tight">
+      {pack.title}
+    </h3>
+    
+    <!-- Description -->
+    <div class="flex-1 mb-6">
+      <p class="text-gray-600 leading-relaxed text-sm">
+        {pack.description}
+      </p>
+    </div>
+    
+    <!-- Action Indicator -->
+    <div class="flex items-center justify-between pt-4 border-t border-gray-100/50">
+      <span class="text-sm text-gray-500 font-medium">View Details</span>
+      <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  /* Pack Card Animations */
+  .pack-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .pack-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hover Effects */
+  .pack-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .pack-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+ 

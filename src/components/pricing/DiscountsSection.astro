@@ -1,0 +1,60 @@
+---
+export interface Props {
+  data: {
+    title: string;
+    volumeDiscounts: {
+      title: string;
+      items: Array<{
+        period: string;
+        discount: string;
+      }>;
+    };
+    bundleDiscounts: {
+      title: string;
+      items: Array<{
+        bundle: string;
+        discount: string;
+      }>;
+    };
+  };
+  className?: string;
+}
+
+const { data, className = "" } = Astro.props;
+---
+
+<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-dark mb-4 gradient-title">{data.title}</h2>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Volume Discounts -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">{data.volumeDiscounts.title}</h3>
+        <div class="space-y-4">
+          {data.volumeDiscounts.items.map((item) => (
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+              <span class="font-medium text-gray-900">{item.period}</span>
+              <span class="text-green-600 font-bold">{item.discount}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <!-- Bundle Discounts -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">{data.bundleDiscounts.title}</h3>
+        <div class="space-y-4">
+          {data.bundleDiscounts.items.map((item) => (
+            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+              <span class="font-medium text-gray-900">{item.bundle}</span>
+              <span class="text-green-600 font-bold">{item.discount}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 

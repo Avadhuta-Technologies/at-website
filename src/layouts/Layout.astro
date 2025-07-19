@@ -3,132 +3,549 @@ import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 import BackToTop from '../components/layout/BackToTop.astro';
 import MadeWithButton from '../components/layout/MadeWithButton.astro';
-import CartUtility from '../components/shared/CartUtility.astro';
 import CartDrawer from '../components/shared/CartDrawer.astro';
+
+
 
 interface Props {
   description: string;
   title: string;
   image?: string;
+  theme?: 'light' | 'dark' | 'auto';
 }
 
-const { description, title, image } = Astro.props;
+const { description, title, image, theme = 'auto' } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme={theme}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={image} />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    
+    <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
-    <meta property="og:image" content={image} />
-    <meta property="twitter:image" content={image} />
-    <title>{title}</title>
-    <script>
-      // Load cart service early
-      import "../scripts/cart-init.ts";
-      import "../scripts/global-cart-init.ts";
-    </script>
-  </head>
-  <body>
-    <Header />
-    <!-- <Header client:load /> -->
-    <main>
-      <slot />
-    </main>
-    <Footer />
-    <BackToTop />
-    <CartUtility />
-    <CartDrawer />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Clean Minimalistic Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" />
+    
+    <!-- Satoshi Font (self-hosted) -->
+    <link rel="preload" href="/fonts/satoshi.css" as="style" />
+    <link rel="stylesheet" href="/fonts/satoshi.css" />
+    
+    <!-- Critical CSS -->
     <style is:global>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+      /* Critical CSS for above-the-fold content */
+      :root {
+        /* Clean Minimalistic Color Variables */
+        --primary-500: #22c55e;
+        --primary-600: #16a34a;
+        --graphite-900: #202124;
+        --graphite-800: #3c4043;
+        --graphite-700: #5f6368;
+        --mint-500: #22c55e;
+        --lavender-500: #71717a;
+        --cerulean-500: #0ea5e9;
+        
+        /* Font Families */
+        --font-family-inter: 'Inter', sans-serif;
+        --font-family-dm-sans: 'DM Sans', sans-serif;
+        --font-family-primary: 'Inter', sans-serif;
+        --font-family-secondary: 'DM Sans', sans-serif;
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+        background: #ffffff;
+      }
+      
       body {
-        font-family: "Inter", sans-serif;
-        background-color: #FAFAFA; /* Brand background color */
-        color: #000000; /* Brand primary text color */
+        font-family: var(--font-family-primary);
+        background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 50%, #f0f9ff 100%);
+        color: #202124;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+        min-height: 100vh;
       }
-      .sticky-header {
-        @apply fixed z-[9999] bg-white/80 dark:bg-dark/80 transition;
-        backdrop-filter: blur(5px);
-        box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
+      
+      /* Global Animated Background */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
+        pointer-events: none;
       }
-
-      .sticky-header .navbar-logo {
-        @apply py-2;
+      
+      body::before {
+        background: 
+          radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+          radial-gradient(circle at 40% 60%, rgba(113, 113, 122, 0.1) 0%, transparent 50%);
+        animation: backgroundFloat 20s ease-in-out infinite;
       }
-
-      .sticky-header #navbarToggler span {
-        @apply bg-dark dark:bg-white;
+      
+      @keyframes backgroundFloat {
+        0%, 100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(-10px, -10px) scale(1.05);
+        }
+        66% {
+          transform: translate(10px, 10px) scale(0.95);
+        }
       }
-
-      .sticky-header #navbarCollapse li > a {
-        @apply text-dark dark:text-white hover:text-primary dark:hover:text-primary hover:opacity-100;
+      
+      /* Animated Background Circles */
+      .animated-bg-circles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        overflow: hidden;
       }
-      #navbarCollapse li .ud-menu-scroll.active {
-        @apply opacity-70;
+      
+      .animated-bg-circles::before,
+      .animated-bg-circles::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+        filter: blur(40px);
+        animation: pulse 4s ease-in-out infinite;
       }
-      .sticky-header #navbarCollapse li .ud-menu-scroll.active {
-        @apply text-primary opacity-100;
+      
+      .animated-bg-circles::before {
+        top: 10%;
+        left: 10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(34, 197, 94, 0.2);
+        animation-delay: 0s;
       }
-      .sticky-header .loginBtn {
-        @apply text-dark dark:text-white hover:text-primary dark:hover:text-primary hover:opacity-100;
+      
+      .animated-bg-circles::after {
+        top: 60%;
+        right: 10%;
+        width: 250px;
+        height: 250px;
+        background: rgba(14, 165, 233, 0.2);
+        animation-delay: 2s;
       }
-
-      .sticky-header .signUpBtn {
-        @apply bg-primary text-white hover:bg-blue-dark hover:text-white;
+      
+      /* Additional floating elements */
+      .animated-bg-circles .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+        filter: blur(30px);
+        animation: float 6s ease-in-out infinite;
       }
-
-      .sticky-header #themeSwitcher span {
-        @apply text-dark dark:text-white;
+      
+      .animated-bg-circles .floating-element:nth-child(1) {
+        top: 30%;
+        right: 20%;
+        width: 200px;
+        height: 200px;
+        background: rgba(113, 113, 122, 0.15);
+        animation-delay: 1s;
       }
-
-      .navbarTogglerActive > span:nth-child(1) {
-        @apply top-[7px] rotate-45 transform;
+      
+      .animated-bg-circles .floating-element:nth-child(2) {
+        bottom: 20%;
+        left: 20%;
+        width: 180px;
+        height: 180px;
+        background: rgba(34, 197, 94, 0.1);
+        animation-delay: 3s;
       }
-      .navbarTogglerActive > span:nth-child(2) {
-        @apply opacity-0;
+      
+      .animated-bg-circles .floating-element:nth-child(3) {
+        top: 70%;
+        left: 60%;
+        width: 120px;
+        height: 120px;
+        background: rgba(14, 165, 233, 0.12);
+        animation-delay: 4s;
       }
-      .navbarTogglerActive > span:nth-child(3) {
-        @apply top-[-8px] rotate-[135deg];
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px) scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translateY(-20px) scale(1.1);
+          opacity: 1;
+        }
       }
-
-      .common-carousel .swiper-button-next:after,
-      .common-carousel .swiper-button-prev:after {
-        @apply hidden;
+      
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
       }
-
-      .common-carousel .swiper-button-next,
-      .common-carousel .swiper-button-prev {
-        @apply !static h-12 w-12 rounded-lg bg-white dark:bg-dark shadow-testimonial-btn text-dark dark:text-white m-0 ease-out duration-200 hover:bg-primary hover:text-white hover:shadow-none;
+      
+      /* Responsive optimizations for animated background */
+      @media (max-width: 768px) {
+        .animated-bg-circles::before {
+          width: 200px;
+          height: 200px;
+          top: 5%;
+          left: 5%;
+        }
+        
+        .animated-bg-circles::after {
+          width: 150px;
+          height: 150px;
+          top: 70%;
+          right: 5%;
+        }
+        
+        .animated-bg-circles .floating-element:nth-child(1) {
+          width: 120px;
+          height: 120px;
+          top: 40%;
+          right: 10%;
+        }
+        
+        .animated-bg-circles .floating-element:nth-child(2) {
+          width: 100px;
+          height: 100px;
+          bottom: 10%;
+          left: 10%;
+        }
+        
+        .animated-bg-circles .floating-element:nth-child(3) {
+          width: 80px;
+          height: 80px;
+          top: 80%;
+          left: 70%;
+        }
+        
+        /* Reduce animation intensity on mobile for better performance */
+        body::before {
+          animation-duration: 30s;
+        }
+        
+        .animated-bg-circles::before,
+        .animated-bg-circles::after {
+          animation-duration: 6s;
+        }
+        
+        .animated-bg-circles .floating-element {
+          animation-duration: 8s;
+        }
       }
-
-      .common-carousel .swiper-button-next svg,
-      .common-carousel .swiper-button-prev svg {
-        @apply w-auto h-auto;
+      
+      /* Reduce motion for users who prefer it */
+      @media (prefers-reduced-motion: reduce) {
+        body::before,
+        .animated-bg-circles::before,
+        .animated-bg-circles::after,
+        .animated-bg-circles .floating-element {
+          animation: none;
+        }
       }
-
-      /* Dark header for pages with dark backgrounds */
-      .dark-header-page .ud-header {
-        @apply bg-black/20 backdrop-blur-md;
+      
+      /* Clean Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f8f9fa;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #dadce0;
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #bdc1c6;
+      }
+      
+      /* Light mode support - clean minimalistic theme */
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg-primary: #ffffff;
+          --text-primary: #202124;
+        }
+      }
+      
+      [data-theme="light"], [data-theme="dark"], [data-theme="auto"] {
+        --bg-primary: #ffffff;
+        --text-primary: #202124;
+      }
+      
+      /* Focus styles for accessibility */
+      :focus-visible {
+        outline: 2px solid var(--mint-500);
+        outline-offset: 2px;
+      }
+      
+      /* Skip to content link */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: var(--mint-500);
+        color: white;
+        padding: 8px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 10000;
+        font-weight: 600;
+      }
+      
+      .skip-link:focus {
+        top: 6px;
+      }
+      
+      /* Clean background patterns */
+      .clean-pattern {
+        background-image: 
+          radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
+        background-size: 200px 200px, 300px 300px;
+        background-position: 0 0, 100px 100px;
+      }
+      
+      /* Clean Glassmorphism Utilities */
+      .glass {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       }
+      
+      .glass-strong {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      
 
+      
+      /* Glassmorphism hover effects */
+      .glass-hover {
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      
+      .glass-hover:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        backdrop-filter: blur(16px);
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      
+      /* Clean hover effects */
+      .hover-lift {
+        transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      
+      .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* Gradient Title Styling - Summary Page Style */
+      .gradient-title {
+        color: #202124; /* graphite-900 */
+      }
+      
+      .gradient-title .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #0ea5e9); /* from-mint-600 to-cerulean-600 */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      /* Alternative gradient variations */
+      .gradient-title-purple .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #8b5cf6); /* mint to purple */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      .gradient-title-orange .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #f97316); /* mint to orange */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      .gradient-title-pink .gradient-text {
+        background: linear-gradient(135deg, #22c55e, #ec4899); /* mint to pink */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+      
+      /* Loading animation */
+      .loading-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
     </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="/src/styles/main.scss" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="/src/styles/main.scss" /></noscript>
+  </head>
+  
+  <body class="clean-pattern">
+    <!-- Animated Background Circles -->
+    <div class="animated-bg-circles">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+    </div>
+    
+    <!-- Accessibility: Skip to main content -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <Header />
+    
+    <!-- Main Content -->
+    <main id="main-content">
+      <slot />
+    </main>
+    
+    <!-- Footer -->
+    <Footer />
+    
+    <!-- Utility Components -->
+    <BackToTop />
+    <CartDrawer />
+    
+    <!-- Theme Script (loads early for better UX) -->
     <script>
-      import "../scripts/stickymenu.js";
-      import "../scripts/dropdown.js";
-      import "../scripts/darkMode.js";
-      import "../scripts/scrolltop.js";
-      import "../scripts/scrollmenu.js";
-      import "../scripts/testimonial.js";
-      import "../scripts/scrollAnimations.js";
-      import "../scripts/interactiveElements.js";
-      import "../scripts/scrollUtils.js";
+      // Theme management - clean minimalistic theme
+      (function() {
+        document.documentElement.setAttribute('data-theme', 'light');
+        
+        // Add clean pattern effect to body
+        document.body.classList.add('clean-pattern');
+        
+        // Initialize animated background
+        function initAnimatedBackground() {
+          const animatedBg = document.querySelector('.animated-bg-circles');
+          if (animatedBg) {
+            // Ensure background is visible
+            animatedBg.style.display = 'block';
+            
+            // Add performance optimization for animations
+            if ('IntersectionObserver' in window) {
+              const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                  } else {
+                    entry.target.style.animationPlayState = 'paused';
+                  }
+                });
+              }, { threshold: 0.1 });
+              
+              observer.observe(animatedBg);
+            }
+          }
+        }
+        
+        // Initialize background when DOM is ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAnimatedBackground);
+        } else {
+          initAnimatedBackground();
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = anchor.getAttribute('href');
+            if (href) {
+              const target = document.querySelector(href);
+              if (target) {
+                target.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }
+          });
+        });
+      })();
     </script>
+    
+    <!-- Non-critical JavaScript loaded asynchronously -->
+    <script type="module" src="/scripts/global-cart-init.js"></script>
+    <script src="/scripts/cart-service-init.js" is:inline></script>
+    <script type="module" src="/scripts/stickymenu.js"></script>
+    <script type="module" src="/scripts/dropdown.js"></script>
+
+    <script type="module" src="/scripts/scrolltop.js"></script>
+    <script type="module" src="/scripts/scrollmenu.js"></script>
+    <script type="module" src="/scripts/testimonial.js"></script>
+    <script type="module" src="/scripts/scrollAnimations.js"></script> 
+    <script type="module" src="/scripts/interactiveElements.js"></script>
+    <script type="module" src="/scripts/scrollUtils.js"></script>
   </body>
 </html>

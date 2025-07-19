@@ -1,0 +1,204 @@
+---
+// Try importing directly from the case studies file
+import { caseStudiesData } from '../../content/case-studies/_case-studies.js';
+import CaseStudyCard from './CaseStudyCard.astro';
+
+export interface Props {
+  data?: Array<any> | {
+    title: string;
+    subtitle: string;
+    caseStudies?: Array<any>;
+  };
+}
+
+const { data } = Astro.props;
+
+// Debug the import
+console.log('Raw caseStudiesData:', caseStudiesData);
+console.log('caseStudiesData.caseStudies:', caseStudiesData?.caseStudies);
+
+const studies = Array.isArray(data) ? data : (data?.caseStudies || caseStudiesData?.caseStudies || []);
+const title = Array.isArray(data) ? "Case Studies" : ((data as any)?.title || "Case Studies");
+const subtitle = Array.isArray(data) ? "Real solutions, real results" : ((data as any)?.subtitle || "Real solutions, real results");
+
+// Add a test case study if no data is found
+const testStudy = {
+  id: "test-case-study",
+  title: "Test Case Study",
+  industry: "Technology",
+  badge: "Test",
+  badgeColor: "blue",
+  problemStatement: "This is a test case study to verify the component is working correctly.",
+  duration: "1 month",
+  teamComposition: "1 Developer",
+  techStack: ["React", "Node.js"],
+  solutionHighlights: ["Test feature 1", "Test feature 2"],
+  impact: ["Test impact 1"],
+  testimonial: {
+    quote: "This is a test testimonial.",
+    author: "Test Client"
+  }
+};
+
+const finalStudies = studies && studies.length > 0 ? studies : [testStudy];
+
+// Debug logging
+console.log('Props data:', data);
+console.log('Studies Array:', finalStudies);
+console.log('Studies Length:', finalStudies?.length);
+console.log('First Study:', finalStudies?.[0]);
+
+// Group case studies by industry
+const groupedStudies = finalStudies.reduce((acc, study) => {
+  const industry = study.industry;
+  if (!acc[industry]) {
+    acc[industry] = [];
+  }
+  acc[industry].push(study);
+  return acc;
+}, {} as Record<string, any[]>);
+
+const industries = Object.keys(groupedStudies);
+console.log('Industries:', industries);
+console.log('Grouped Studies:', groupedStudies);
+---
+
+<section id="case-studies-grid" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <!-- Section Header -->
+    <div class="max-w-3xl mx-auto text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">
+        {title}
+      </h2>
+      <p class="text-lg text-gray-600 leading-relaxed">
+        {subtitle}
+      </p>
+    </div>
+
+    <!-- Debug Info -->
+    <div class="text-center mb-4 text-sm text-gray-500">
+      Total Studies: {finalStudies?.length || 0} | Industries: {industries.length}
+      {finalStudies && finalStudies.length > 0 && (
+        <div class="mt-2">
+          First Study: {finalStudies[0].title} - {finalStudies[0].industry}
+        </div>
+      )}
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="flex flex-wrap justify-center mb-16">
+      <div class="flex flex-wrap gap-2 md:gap-4 justify-center">
+        <button 
+          class="tab-button active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-lg transition-all duration-200 bg-primary-600 text-white hover:bg-primary-700"
+          data-tab="all"
+        >
+          All Industries
+        </button>
+        {industries.map((industry) => (
+          <button 
+            class="tab-button px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-lg transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200"
+            data-tab={industry.toLowerCase().replace(/\s+/g, '-')}
+          >
+            {industry}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content" data-tab="all">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {finalStudies && finalStudies.length > 0 ? (
+          finalStudies.map((study: any, index: number) => (
+            <CaseStudyCard study={study} index={index} />
+          ))
+        ) : (
+          <div class="col-span-full text-center py-12">
+            <p class="text-gray-500">No case studies found.</p>
+            <p class="text-gray-400 text-sm mt-2">Debug: studies length = {finalStudies?.length}</p>
+            <p class="text-gray-400 text-sm">Debug: caseStudiesData exists = {caseStudiesData ? 'Yes' : 'No'}</p>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {industries.map((industry) => (
+      <div class="tab-content hidden" data-tab={industry.toLowerCase().replace(/\s+/g, '-')}>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {groupedStudies[industry].map((study: any, index: number) => (
+            <CaseStudyCard study={study} index={index} />
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Tab functionality and scroll animations
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const caseStudyCards = document.querySelectorAll('.case-study-card');
+
+    // Initialize scroll animations for cards
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('animate');
+          }, index * 100); // Stagger animation
+        }
+      });
+    }, observerOptions);
+
+    // Observe all case study cards
+    caseStudyCards.forEach(card => {
+      observer.observe(card);
+    });
+
+    // Tab functionality
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+        
+        // Update button states
+        tabButtons.forEach(btn => {
+          btn.classList.remove('active', 'bg-primary-600', 'text-white');
+          btn.classList.add('bg-gray-100', 'text-gray-700');
+        });
+        button.classList.add('active', 'bg-primary-600', 'text-white');
+        button.classList.remove('bg-gray-100', 'text-gray-700');
+        
+        // Show/hide tab content
+        tabContents.forEach(content => {
+          content.classList.add('hidden');
+          if (content.getAttribute('data-tab') === targetTab) {
+            content.classList.remove('hidden');
+            
+            // Re-observe cards in the newly shown tab
+            const newCards = content.querySelectorAll('.case-study-card');
+            newCards.forEach(card => {
+              observer.observe(card);
+            });
+          }
+        });
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Responsive tab adjustments */
+  @media (max-width: 768px) {
+    .tab-button {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+</style> 
