@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import { HubSpotService, type ContactFormData } from '../../services/HubSpotService';
 import { mapFormDataToHubSpot, validateContactData, sanitizeFormData } from '../../utils/hubspotMapper';

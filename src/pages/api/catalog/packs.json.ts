@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import { packsCatalog } from '../../../content/catalog/_packs.js';
 

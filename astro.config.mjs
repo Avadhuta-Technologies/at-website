@@ -4,6 +4,6 @@ import compress from "astro-compress";
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
+  output: 'static',
   integrations: [tailwind(), compress()]
 });
