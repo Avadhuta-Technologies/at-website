@@ -84,7 +84,7 @@ const relevantPacks = getRelevantPacks(pod.name);
             
             try {
               // Import the summaryShared utility
-              const { SummaryShared } = await import('/src/utils/summaryShared.js');
+              const { SummaryShared } = await import('../../utils/summaryShared.js');
               const shared = new SummaryShared();
               
               // Add both pod and pack, then navigate to summary

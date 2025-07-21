@@ -64,6 +64,8 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
             const success = await shared.selectPod(podId);
             if (success) {
               console.log('Pod added to cart successfully');
+              // Navigate to summary page after successful pod reservation
+              window.location.href = '/summary?step=1';
             }
           } else if (action === 'remove') {
             // Remove pod from cart
@@ -96,6 +98,8 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
             const success = await shared.selectPod(podId);
             if (success) {
               console.log('Pod added to cart successfully via data-add-to-cart');
+              // Navigate to summary page after successful pod reservation
+              window.location.href = '/summary?step=1';
             }
           } catch (error) {
             console.error('Error handling data-add-to-cart button:', error);

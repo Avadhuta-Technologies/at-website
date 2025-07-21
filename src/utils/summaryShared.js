@@ -1,5 +1,5 @@
 // Shared utilities for summary components - Using catalog as single source of truth
-import { catalogUtils, podsCatalog, packsCatalog } from '/src/content/catalog/_index.js';
+import { catalogUtils, podsCatalog, packsCatalog } from '../content/catalog/_index.js';
 
 export class SummaryShared {
   constructor() {

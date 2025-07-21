@@ -1,6 +1,7 @@
 ---
 export interface Props {
   pod: {
+    id?: string;
     name: string;
     tagline: string;
     idealFor: string[];
@@ -137,11 +138,14 @@ const getPodIcon = (pod: any) => {
   return '🚀';
 };
 
-// Generate a simple ID from the pod name
-const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+// Use the actual pod ID from catalog, or generate from name as fallback
+const podId = pod.id || pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+// Generate slug from pod name for navigation (matches pod detail page slug generation)
+const podSlug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 ---
 
-<div class="pod-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-pod-id={podId} data-pod-slug={podId}>
+<div class="pod-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-pod-id={podId} data-pod-slug={podSlug}>
   <!-- Card Background with Glass Morphism -->
   <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
   
@@ -207,7 +211,7 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
 
     
     <!-- Action Bar -->
-    <div class="flex items-center justify-between space-y-3 pt-4 border-t border-gray-100/50 mt-auto">
+    <div class="flex items-center justify-between pt-4 border-t border-gray-100/50 mt-auto">
       
       <!-- Dynamic CTA Button -->
       <button 
@@ -218,7 +222,8 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
         data-item-title={pod.name}
         data-item-description={pod.whatsInPod.description}
         data-item-price={pod.pricing[0]}
-        class="pod-cta-btn w-full inline-flex items-center justify-center px-4 py-3 font-semibold rounded-xl transition-all duration-200 group-hover:shadow-lg"
+        data-add-to-cart
+        class="pod-cta-btn w-1/2 inline-flex items-center justify-center px-4 py-3 font-semibold rounded-xl transition-all duration-200 group-hover:shadow-lg mr-1"
         onclick="console.log('🔵 [AvailablePodCard] Pod CTA button clicked for:', '{{pod.name}}', 'with ID:', '{{podId}}');">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
@@ -226,32 +231,84 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
         <span class="cta-text">Reserve Pod</span>
       </button>
 
-      <!-- Details Link -->
-      <div class="flex items-center justify-center">
-        <a 
-          href={`/pods/${podId}`} 
-          class="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 font-medium transition-colors duration-200"
+      <!-- Details Button -->
+        <button 
+          data-pod-slug={podSlug}
+          class="view-details-btn inline-flex items-center justify-center w-1/2 mt-0 px-4 py-3 text-sm ml-1 text-gray-600 hover:text-gray-700 font-semibold border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 group-hover:shadow-sm"
         >
           View Details
           <svg class="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
-        </a>
-      </div>
+        </button>
       
     </div>
   </div>
 </div>
 
 <script>
-  // Handle pod card clicks for navigation
+  // Handle pod card clicks for navigation and Reserve Pod functionality
   document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(e) {
-      // Check if the clicked element is a pod card
-      const podCard = e.target.closest('.pod-card');
+    document.addEventListener('click', async function(e) {
+      // Handle Reserve Pod button clicks
+      if (e.target && (e.target as Element).closest('.pod-cta-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = (e.target as Element).closest('.pod-cta-btn') as HTMLElement;
+        if (button) {
+          const podId = button.getAttribute('data-pod-id');
+          const action = button.getAttribute('data-action') || 'add';
+          
+          console.log('🔵 [AvailablePodCard] Reserve Pod clicked for:', podId, 'action:', action);
+          
+          try {
+            // Import the summaryShared utility
+            const { SummaryShared } = await import('../../utils/summaryShared.js');
+            const shared = new SummaryShared();
+            
+            if (action === 'add') {
+              // Add pod to cart
+              const success = await shared.selectPod(podId);
+              if (success) {
+                console.log('🔵 [AvailablePodCard] Pod added to cart successfully');
+                // Navigate to summary page after successful pod reservation
+                window.location.href = '/summary?step=1';
+              }
+            } else if (action === 'remove') {
+              // Remove pod from cart
+              const success = await shared.removePod();
+              if (success) {
+                console.log('🔵 [AvailablePodCard] Pod removed from cart successfully');
+              }
+            }
+          } catch (error) {
+            console.error('🔵 [AvailablePodCard] Error handling Reserve Pod button:', error);
+          }
+        }
+      }
+      
+      // Handle View Details button clicks
+      if (e.target && (e.target as Element).closest('.view-details-btn')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = (e.target as Element).closest('.view-details-btn');
+        if (button) {
+          const podSlug = button.getAttribute('data-pod-slug');
+        
+        if (podSlug) {
+          console.log('🔵 [AvailablePodCard] View Details clicked for pod:', podSlug);
+          window.location.href = `/pods/${podSlug}`;
+        }
+      }
+      }
+      
+      // Handle card body clicks (excluding buttons)
+      const podCard = e.target && (e.target as Element).closest('.pod-card');
       if (podCard) {
         // Check if the click was on a button or link (CTA elements)
-        const isCTAElement = e.target.closest('button, a, [data-add-to-cart]');
+        const isCTAElement = e.target && (e.target as Element).closest('button, a, [data-add-to-cart]');
         
         if (!isCTAElement) {
           // Get the pod slug from the data attribute
