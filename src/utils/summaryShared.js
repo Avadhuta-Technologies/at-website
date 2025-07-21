@@ -451,30 +451,59 @@ export class SummaryShared {
   // Navigation
   nextStep() {
     const currentStep = this.getCurrentStep();
+    console.log('🔍 [nextStep] Current step:', currentStep);
+    console.log('🔍 [nextStep] Called from:', new Error().stack?.split('\n')[2] || 'unknown');
+    
     if (currentStep < 3) {
-      this.navigateToStep(currentStep + 1);
+      const nextStepNumber = currentStep + 1;
+      console.log('🔍 [nextStep] Navigating to step:', nextStepNumber);
+      this.navigateToStep(nextStepNumber);
+    } else {
+      console.log('🔍 [nextStep] Already at step 3, cannot go further');
     }
   }
 
   previousStep() {
     const currentStep = this.getCurrentStep();
+    console.log('🔍 [previousStep] Current step:', currentStep);
+    
     if (currentStep > 1) {
-      this.navigateToStep(currentStep - 1);
+      const previousStepNumber = currentStep - 1;
+      console.log('🔍 [previousStep] Navigating to step:', previousStepNumber);
+      this.navigateToStep(previousStepNumber);
+    } else {
+      console.log('🔍 [previousStep] Already at step 1, cannot go back');
     }
   }
 
   navigateToStep(step) {
+    console.log('🔍 [navigateToStep] Dispatching step-changed event for step:', step);
     window.dispatchEvent(new CustomEvent('step-changed', { detail: { step } }));
   }
 
   getCurrentStep() {
+    // Try to get step from the step coordinator's internal state
+    const stepCoordinator = document.querySelector('#step-coordinator');
+    if (stepCoordinator && stepCoordinator._currentStep) {
+      console.log('🔍 [getCurrentStep] Using step coordinator internal state:', stepCoordinator._currentStep);
+      return stepCoordinator._currentStep;
+    }
+    
+    // Fallback to stepper method
     const stepper = document.querySelector('.stepper');
-    if (!stepper) return 1;
+    if (!stepper) {
+      console.log('🔍 [getCurrentStep] No stepper found, returning 1');
+      return 1;
+    }
     
     const activeStep = stepper.querySelector('.step.active');
-    if (!activeStep) return 1;
+    if (!activeStep) {
+      console.log('🔍 [getCurrentStep] No active step found, returning 1');
+      return 1;
+    }
     
     const stepNumber = parseInt(activeStep.getAttribute('data-step'));
+    console.log('🔍 [getCurrentStep] Active step number from stepper:', stepNumber);
     return stepNumber || 1;
   }
 

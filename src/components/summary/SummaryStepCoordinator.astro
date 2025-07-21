@@ -10,11 +10,12 @@
   import { summaryShared } from '/src/utils/summaryShared.js';
 
   class SummaryStepCoordinator {
-    constructor() {
-      this.currentStep = 1;
-      this.shared = summaryShared;
-      this.init();
-    }
+      constructor() {
+    this.currentStep = 1;
+    this.shared = summaryShared;
+    this.currentEventListeners = [];
+    this.init();
+  }
 
     async init() {
       console.log('🔍 [SummaryStepCoordinator] Initializing...');
@@ -31,10 +32,22 @@
       // Listen for step changes
       window.addEventListener('step-changed', (e) => {
         const newStep = e.detail.step;
-        console.log('Step coordinator received step change:', newStep);
+        console.log('🔍 [StepCoordinator] Step coordinator received step change:', newStep);
+        console.log('🔍 [StepCoordinator] Current step before change:', this.currentStep);
+        
         if (newStep >= 1 && newStep <= 3) {
           this.currentStep = newStep;
+          
+          // Store current step in DOM element for shared utility to access
+          const stepCoordinator = document.getElementById('step-coordinator');
+          if (stepCoordinator) {
+            stepCoordinator._currentStep = newStep;
+          }
+          
+          console.log('🔍 [StepCoordinator] Loading step:', newStep);
           this.loadStep(newStep);
+        } else {
+          console.log('🔍 [StepCoordinator] Invalid step number:', newStep);
         }
       });
       
@@ -162,20 +175,43 @@
     }
 
     async loadStep(step) {
+      console.log('🔍 [loadStep] Loading step:', step);
       const coordinator = document.getElementById('step-coordinator');
-      if (!coordinator) return;
+      if (!coordinator) {
+        console.error('🔍 [loadStep] Step coordinator element not found');
+        return;
+      }
+
+      // Clean up existing event listeners before loading new step
+      this.cleanupEventListeners();
 
       switch (step) {
         case 1:
+          console.log('🔍 [loadStep] Loading Step 1');
           await this.loadStep1();
           break;
         case 2:
+          console.log('🔍 [loadStep] Loading Step 2');
           await this.loadStep2();
           break;
         case 3:
+          console.log('🔍 [loadStep] Loading Step 3');
           await this.loadStep3();
           break;
+        default:
+          console.error('🔍 [loadStep] Unknown step:', step);
       }
+    }
+
+    cleanupEventListeners() {
+      console.log('🔍 [cleanupEventListeners] Cleaning up event listeners');
+      // Store references to event listeners so we can remove them
+      if (this.currentEventListeners) {
+        this.currentEventListeners.forEach(listener => {
+          document.removeEventListener('click', listener);
+        });
+      }
+      this.currentEventListeners = [];
     }
 
     async loadStep1() {
@@ -247,14 +283,8 @@
           </div>
 
           <!-- Navigation -->
-          <div class="flex justify-between items-center pt-8 border-t border-gray-200">
-            <button id="back-btn" class="flex items-center space-x-2 text-graphite-600 hover:text-graphite-800 font-medium transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-              <span>Back</span>
-            </button>
-            <button id="continue-btn" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
+          <div class="flex justify-end items-center pt-8 border-t border-gray-200">
+            <button id="step2-continue-btn" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
               Continue
             </button>
           </div>
@@ -265,7 +295,13 @@
     }
 
     async loadStep3() {
+      console.log('🔍 [loadStep3] Starting Step 3 load');
       const coordinator = document.getElementById('step-coordinator');
+      if (!coordinator) {
+        console.error('🔍 [loadStep3] Step coordinator element not found');
+        return;
+      }
+      
       coordinator.innerHTML = `
         <div id="step-3-content" class="step-content">
           <div class="text-center mb-12">
@@ -347,15 +383,8 @@
             </div>
           </div>
 
-          <!-- Navigation -->
-          <div class="flex justify-between items-center pt-8 border-t border-gray-200 mt-12">
-            <button id="back-btn" class="flex items-center space-x-2 text-graphite-600 hover:text-graphite-800 font-medium transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-              <span>Back</span>
-            </button>
-          </div>
+          <!-- Navigation removed - no back button in Step 3 -->
+        </div>
         </div>
       `;
 
@@ -602,7 +631,7 @@
 
               <!-- Action Buttons -->
               <div class="space-y-3">
-                <button id="start-journey-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <button id="step1-continue-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
                   Continue to Step 2
                 </button>
                 <button id="remove-pod-btn" class="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
@@ -1064,10 +1093,16 @@
         }
       });
 
-      // Start journey button
+      // Start journey button (Step 1 only)
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#start-journey-btn')) {
+        if (e.target && e.target.matches('#step1-continue-btn') && this.currentStep === 1) {
+          console.log('🔍 [Step1] Continue to Step 2 button clicked');
+          console.log('🔍 [Step1] Current step before nextStep():', this.currentStep);
+          console.log('🔍 [Step1] About to call nextStep()');
           this.shared.nextStep();
+          console.log('🔍 [Step1] nextStep() called');
+        } else if (e.target && e.target.matches('#step1-continue-btn')) {
+          console.log('🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:', this.currentStep, ')');
         }
       });
 
@@ -1199,18 +1234,20 @@
         }
       });
 
-      // Back button
-      document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#back-btn')) {
-          this.shared.previousStep();
-        }
-      });
+      // Back button removed from Step 2
 
-      // Continue button
+      // Continue button (Step 2 only)
       document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#continue-btn')) {
-          console.log('🔍 [Step2] Continue button clicked');
+        console.log('🔍 [Step2] Click event detected, target:', e.target);
+        console.log('🔍 [Step2] Target matches #step2-continue-btn:', e.target && e.target.matches('#step2-continue-btn'));
+        if (e.target && e.target.matches('#step2-continue-btn') && this.currentStep === 2) {
+          console.log('🔍 [Step2] Continue to Step 3 button clicked');
+          console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
+          console.log('🔍 [Step2] About to call nextStep()');
           this.shared.nextStep();
+          console.log('🔍 [Step2] nextStep() called');
+        } else if (e.target && e.target.matches('#step2-continue-btn')) {
+          console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
         }
       });
 
@@ -1225,13 +1262,7 @@
     addStep3EventListeners() {
       console.log('🔍 Adding Step 3 event listeners...');
       
-      // Back button
-      document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#back-btn')) {
-          console.log('🔍 Back button clicked in Step 3');
-          this.shared.previousStep();
-        }
-      });
+      // Back button removed from Step 3
 
       // Form submission
       console.log('🔍 Calling shared.addFormListeners()...');
