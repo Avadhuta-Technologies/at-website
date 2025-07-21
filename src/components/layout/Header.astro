@@ -445,21 +445,38 @@ const menuitems = [
       });
     }
     
+    // Cart service should already be available from early initialization
+    console.log('🟡 [Header] Cart service check - available:', typeof window !== 'undefined' && (window as any).cartService);
+    
     // Update cart badge count
     function updateCartBadge() {
-      if (typeof window !== 'undefined' && (window as any).cartService) {
+      if (typeof window !== 'undefined' && (window as any).cartService && typeof (window as any).cartService.getCartCount === 'function') {
         (window as any).cartService.getCartCount().then((count: number) => {
           if (cartBadge) {
             if (count > 0) {
-              cartBadge.textContent = count.toString();
-              cartBadge.style.display = 'flex';
+              (cartBadge as HTMLElement).textContent = count.toString();
+              (cartBadge as HTMLElement).style.display = 'flex';
             } else {
-              cartBadge.style.display = 'none';
+              (cartBadge as HTMLElement).style.display = 'none';
             }
           }
+        }).catch((error: any) => {
+          console.error('🟡 [Header] Error getting cart count:', error);
+          // Hide badge on error
+          if (cartBadge) {
+            (cartBadge as HTMLElement).style.display = 'none';
+          }
         });
+      } else {
+        // Cart service not ready yet, hide badge
+        if (cartBadge) {
+          (cartBadge as HTMLElement).style.display = 'none';
+        }
       }
     }
+    
+    // Listen for cart service ready event
+    window.addEventListener('cart-service-ready', updateCartBadge);
     
     // Listen for cart updates
     window.addEventListener('cart-updated', updateCartBadge);
@@ -474,6 +491,8 @@ const menuitems = [
   initCart();
   window.addEventListener('scroll', handleScroll);
   window.addEventListener('load', handleScroll);
+  
+
 </script>
 
 <style>

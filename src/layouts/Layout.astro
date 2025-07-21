@@ -61,6 +61,9 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <link rel="preload" href="/fonts/satoshi.css" as="style" />
     <link rel="stylesheet" href="/fonts/satoshi.css" />
     
+    <!-- Cart Service Initialization (load early) -->
+    <script src="/scripts/cart-init.js" is:inline></script>
+    
     <!-- Critical CSS -->
     <style is:global>
       /* Critical CSS for above-the-fold content */
@@ -535,9 +538,9 @@ const { description, title, image, theme = 'auto' } = Astro.props;
       })();
     </script>
     
-    <!-- Non-critical JavaScript loaded asynchronously -->
-    <script type="module" src="/scripts/global-cart-init.js"></script>
+    <!-- Cart Service Initialization (load early) -->
     <script src="/scripts/cart-service-init.js" is:inline></script>
+    <script type="module" src="/scripts/global-cart-init.js"></script>
     <script type="module" src="/scripts/stickymenu.js"></script>
     <script type="module" src="/scripts/dropdown.js"></script>
 

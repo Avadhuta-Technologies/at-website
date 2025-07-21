@@ -6,7 +6,7 @@
   function checkCartService() {
     if (typeof window !== 'undefined') {
       // Check if CartService is available through the global-cart-init.ts
-      if (window.cartService) {
+      if (window.cartService && typeof window.cartService.getCartCount === 'function') {
         console.log('🟢 [CartServiceInit] CartService found and available globally');
         window.dispatchEvent(new CustomEvent('cart-service-ready'));
         return;
@@ -18,6 +18,8 @@
         setTimeout(checkCartService, 100);
       } else {
         console.error('🟢 [CartServiceInit] CartService not available after maximum retries');
+        // Dispatch event anyway to prevent hanging
+        window.dispatchEvent(new CustomEvent('cart-service-ready'));
       }
     }
   }

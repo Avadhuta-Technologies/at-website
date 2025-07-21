@@ -55,6 +55,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           localStorage.removeItem('novapod-cart');
           return true;
         },
+        async getCartCount() {
+          console.log('🟢 [GlobalCartInit] Mock CartService.getCartCount called');
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          return cart.length;
+        },
         async updateCartCount() {
           console.log('🟢 [GlobalCartInit] Mock CartService.updateCartCount called');
           const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
@@ -70,11 +75,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         showNotification(message, type = 'success') {
           console.log('🟢 [GlobalCartInit] Mock CartService.showNotification:', message);
           showNotification(message, type);
+        },
+        async init() {
+          console.log('🟢 [GlobalCartInit] Mock CartService.init called');
+          await this.updateCartCount();
         }
       };
     }
     
     console.log('🟢 [GlobalCartInit] CartService available, proceeding with initialization');
+    
+    // Initialize the cart service
+    await window.cartService.init();
+    console.log('🟢 [GlobalCartInit] CartService initialized successfully');
+    
+    // Dispatch cart service ready event
+    window.dispatchEvent(new CustomEvent('cart-service-ready'));
+    console.log('🟢 [GlobalCartInit] Cart service ready event dispatched');
     
     // Set up event listeners for add-to-cart buttons
     document.addEventListener('click', async (e) => {
@@ -181,8 +198,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     
     console.log('🟢 [GlobalCartInit] Global cart functionality initialized successfully');
+    
+    // Ensure cart service ready event is dispatched
+    window.dispatchEvent(new CustomEvent('cart-service-ready'));
+    console.log('🟢 [GlobalCartInit] Cart service ready event dispatched (final)');
   } catch (error) {
     console.error('🟢 [GlobalCartInit] Error initializing cart functionality:', error);
+    
+    // Dispatch cart service ready event even on error to prevent hanging
+    window.dispatchEvent(new CustomEvent('cart-service-ready'));
+    console.log('🟢 [GlobalCartInit] Cart service ready event dispatched (error fallback)');
   }
 });
 

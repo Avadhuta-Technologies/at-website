@@ -1,141 +1,168 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import CartService from '../services/CartService.ts';
+// Test page for cart functionality
 ---
 
-<Layout 
-  title="Test Cart - Avadhuta Tech" 
-  description="Test the cart functionality and see how items are managed"
->
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-8">Cart Testing Page</h1>
-    
-    <!-- Cart Status Display -->
-    <div class="bg-white rounded-lg shadow-lg p-6">
-      <h2 class="text-xl font-bold text-gray-900 mb-4 gradient-title">Current Cart Status</h2>
-      <div id="cart-status">
-        <p class="text-gray-600">Loading cart status...</p>
-      </div>
-    </div>
-
-    <!-- Test Controls -->
-    <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
-      <h2 class="text-xl font-bold text-gray-900 mb-4 gradient-title">Test Results</h2>
-      <div id="test-results" class="text-gray-600">
-        <p>Test results will appear here...</p>
-      </div>
-      
-      <div class="mt-6 space-y-4">
-        <button 
-          onclick="testAddPod()" 
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-        >
-          Test Add Pod
-        </button>
-        
-        <button 
-          onclick="testAddPack()" 
-          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors ml-4"
-        >
-          Test Add Pack
-        </button>
-        
-        <button 
-          onclick="testRemoveItem()" 
-          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors ml-4"
-        >
-          Test Remove Item
-        </button>
-        
-        <button 
-          onclick="testClearCart()" 
-          class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors ml-4"
-        >
-          Test Clear Cart
-        </button>
-      </div>
-    </div>
-  </div>
-</Layout>
-
-<script>
-  import CartService from '../services/CartService.ts';
-  
-  // Initialize cart service
-  const cartService = new CartService();
-  
-  // Test functions
-  function testAddPod() {
-    const testPod = {
-      id: 'test-pod-' + Date.now(),
-      name: 'Test Pod',
-      price: 999,
-      type: 'pod'
-    };
-    
-    cartService.addItem(testPod);
-    updateCartStatus();
-    logTestResult('Added test pod: ' + testPod.name);
-  }
-  
-  function testAddPack() {
-    const testPack = {
-      id: 'test-pack-' + Date.now(),
-      name: 'Test Pack',
-      price: 299,
-      type: 'pack'
-    };
-    
-    cartService.addItem(testPack);
-    updateCartStatus();
-    logTestResult('Added test pack: ' + testPack.name);
-  }
-  
-  function testRemoveItem() {
-    const items = cartService.getItems();
-    if (items.length > 0) {
-      const itemToRemove = items[0];
-      cartService.removeItem(itemToRemove.id);
-      updateCartStatus();
-      logTestResult('Removed item: ' + itemToRemove.name);
-    } else {
-      logTestResult('No items to remove');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart Service Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
     }
-  }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-button {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .test-button:hover {
+      background: #16a34a;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+    .error {
+      background: #fee;
+      color: #c00;
+    }
+    .success {
+      background: #efe;
+      color: #0a0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cart Service Test Page</h1>
   
-  function testClearCart() {
-    cartService.clearCart();
-    updateCartStatus();
-    logTestResult('Cleared cart');
-  }
+  <div class="test-section">
+    <h2>Cart Service Availability Test</h2>
+    <button class="test-button" onclick="testCartServiceAvailability()">Test Cart Service</button>
+    <div id="availability-result" class="result"></div>
+  </div>
   
-  function updateCartStatus() {
-    const statusDiv = document.getElementById('cart-status');
-    const items = cartService.getItems();
-    const total = cartService.getTotal();
+  <div class="test-section">
+    <h2>Cart Count Test</h2>
+    <button class="test-button" onclick="testGetCartCount()">Get Cart Count</button>
+    <div id="count-result" class="result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Add Item Test</h2>
+    <button class="test-button" onclick="testAddToCart()">Add Test Item</button>
+    <div id="add-result" class="result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Clear Cart Test</h2>
+    <button class="test-button" onclick="testClearCart()">Clear Cart</button>
+    <div id="clear-result" class="result"></div>
+  </div>
+
+  <script>
+    function showResult(elementId, message, isError = false) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.className = `result ${isError ? 'error' : 'success'}`;
+    }
     
-    statusDiv.innerHTML = `
-      <p class="text-gray-600">Items in cart: ${items.length}</p>
-      <p class="text-gray-600">Total: $${total}</p>
-      <div class="mt-4">
-        <h3 class="font-semibold text-gray-900 mb-2">Cart Items:</h3>
-        ${items.map((item: any) => `
-          <div class="bg-gray-50 p-2 rounded mb-2">
-            <p class="text-sm text-gray-700">${item.name} - $${item.price} (${item.type})</p>
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-  
-  function logTestResult(message: string) {
-    const resultsDiv = document.getElementById('test-results');
-    const timestamp = new Date().toLocaleTimeString();
-    resultsDiv.innerHTML += `<p class="text-sm text-gray-500">[${timestamp}] ${message}</p>`;
-  }
-  
-  // Initialize display
-  document.addEventListener('DOMContentLoaded', () => {
-    updateCartStatus();
-  });
-</script> 
+    function testCartServiceAvailability() {
+      try {
+        if (typeof window !== 'undefined' && window.cartService) {
+          showResult('availability-result', '✅ Cart service is available');
+          
+          // Test if getCartCount method exists
+          if (typeof window.cartService.getCartCount === 'function') {
+            showResult('availability-result', '✅ Cart service is available and getCartCount method exists');
+          } else {
+            showResult('availability-result', '❌ Cart service exists but getCartCount method is missing', true);
+          }
+        } else {
+          showResult('availability-result', '❌ Cart service is not available', true);
+        }
+      } catch (error) {
+        showResult('availability-result', `❌ Error testing cart service: ${error.message}`, true);
+      }
+    }
+    
+    async function testGetCartCount() {
+      try {
+        if (typeof window !== 'undefined' && window.cartService && typeof window.cartService.getCartCount === 'function') {
+          const count = await window.cartService.getCartCount();
+          showResult('count-result', `✅ Cart count: ${count}`);
+        } else {
+          showResult('count-result', '❌ Cart service or getCartCount method not available', true);
+        }
+      } catch (error) {
+        showResult('count-result', `❌ Error getting cart count: ${error.message}`, true);
+      }
+    }
+    
+    async function testAddToCart() {
+      try {
+        if (typeof window !== 'undefined' && window.cartService && typeof window.cartService.addToCart === 'function') {
+          const testItem = {
+            id: 'test-item-' + Date.now(),
+            type: 'pack',
+            title: 'Test Item',
+            description: 'A test item for cart functionality',
+            price: '₹999'
+          };
+          
+          const success = await window.cartService.addToCart(testItem);
+          if (success) {
+            showResult('add-result', '✅ Test item added to cart successfully');
+          } else {
+            showResult('add-result', '❌ Failed to add test item to cart', true);
+          }
+        } else {
+          showResult('add-result', '❌ Cart service or addToCart method not available', true);
+        }
+      } catch (error) {
+        showResult('add-result', `❌ Error adding to cart: ${error.message}`, true);
+      }
+    }
+    
+    async function testClearCart() {
+      try {
+        if (typeof window !== 'undefined' && window.cartService && typeof window.cartService.clearCart === 'function') {
+          const success = await window.cartService.clearCart();
+          if (success) {
+            showResult('clear-result', '✅ Cart cleared successfully');
+          } else {
+            showResult('clear-result', '❌ Failed to clear cart', true);
+          }
+        } else {
+          showResult('clear-result', '❌ Cart service or clearCart method not available', true);
+        }
+      } catch (error) {
+        showResult('clear-result', `❌ Error clearing cart: ${error.message}`, true);
+      }
+    }
+    
+    // Auto-test on page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        testCartServiceAvailability();
+      }, 1000);
+    });
+  </script>
+</body>
+</html> 
