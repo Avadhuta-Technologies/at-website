@@ -36,6 +36,15 @@
           this.loadStep(newStep);
         }
       });
+      
+      // Listen for cart updates to refresh UI
+      window.addEventListener('cart-updated', async (e) => {
+        console.log('🔍 Cart updated event received in coordinator');
+        if (this.currentStep === 1) {
+          console.log('🔍 Refreshing Step 1 due to cart update...');
+          await this.initializeStep1();
+        }
+      });
     }
 
     async loadStep(step) {
@@ -59,68 +68,7 @@
       const coordinator = document.getElementById('step-coordinator');
       coordinator.innerHTML = `
         <div id="step-1-content" class="step-content">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl lg:text-4xl font-bold text-graphite-900 mb-4 gradient-title">
-              Choose Your NovaPod
-            </h2>
-            <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
-              Select the perfect NovaPod solution for your business needs. Each pod is designed to deliver exceptional results.
-            </p>
-          </div>
-
-          <!-- Selected Pod Display -->
-          <div id="selected-pod-display" class="hidden mb-8">
-            <div class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-8 border border-mint-200">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-mint-500 rounded-xl flex items-center justify-center">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">Selected Pod</h3>
-                    <p id="selected-pod-description" class="text-graphite-600">Pod description</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">₹0/month</p>
-                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
-                    Change Pod
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Hire Period Selection -->
-              <div class="mt-6 pt-6 border-t border-mint-200">
-                <label class="block text-sm font-medium text-graphite-700 mb-3">Hire Period</label>
-                <select id="hire-period-select" class="w-full max-w-xs px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-colors">
-                  <option value="1">1 Month</option>
-                  <option value="3" selected>3 Months</option>
-                  <option value="6">6 Months</option>
-                  <option value="12">12 Months</option>
-                </select>
-              </div>
-
-              <!-- CTA Button -->
-              <div class="mt-6 space-y-3">
-                <button id="start-journey-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                  Start My Pod Journey
-                </button>
-                <button id="remove-pod-btn" class="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
-                  <span>Remove Pod</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Available Pods Grid -->
-          <div id="available-pods-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Pods will be dynamically loaded here -->
-          </div>
+          <!-- Content will be dynamically loaded based on cart state -->
         </div>
       `;
 
@@ -293,6 +241,14 @@
 
     async initializeStep1() {
       console.log('🔍 Initializing Step 1...');
+      
+      // Wait for shared utilities to be ready
+      while (!this.shared.cartService) {
+        console.log('🔍 Waiting for cart service to be available...');
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      
+      console.log('🔍 Cart service is available, getting cart...');
       const cart = await this.shared.getCart();
       console.log('🔍 Current cart items:', cart);
       
@@ -344,26 +300,133 @@
     }
 
     async showSelectedPod(podItem) {
-      const selectedDisplay = document.getElementById('selected-pod-display');
-      const availableGrid = document.getElementById('available-pods-grid');
+      const step1Content = document.getElementById('step-1-content');
       
-      if (selectedDisplay) selectedDisplay.classList.remove('hidden');
-      if (availableGrid) availableGrid.classList.add('hidden');
-      
-      this.shared.updatePodSummary(podItem, {
-        titleSelector: '#selected-pod-title',
-        priceSelector: '#selected-pod-price',
-        descriptionSelector: '#selected-pod-description'
-      });
+      if (step1Content) {
+        // Replace the entire step 1 content with selected pod display
+        step1Content.innerHTML = `
+          <div class="text-center mb-12">
+            <h2 class="text-3xl lg:text-4xl font-bold text-graphite-900 mb-4 gradient-title">
+              Your Selected NovaPod
+            </h2>
+            <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
+              Review your selected pod and customize your reservation period.
+            </p>
+          </div>
+
+          <!-- Selected Pod Display -->
+          <div class="max-w-2xl mx-auto mb-8">
+            <div class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-8 border border-mint-200">
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-4">
+                  <div class="w-16 h-16 bg-mint-500 rounded-xl flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">${podItem.title || 'Selected Pod'}</h3>
+                    <p id="selected-pod-description" class="text-graphite-600">${podItem.description || 'Pod description'}</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">${podItem.price || '₹0/month'}</p>
+                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
+                    Change Pod
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Hire Period Selection -->
+              <div class="mb-6 pt-6 border-t border-mint-200">
+                <label class="block text-sm font-medium text-graphite-700 mb-3">Reservation Period</label>
+                <select id="hire-period-select" class="w-full max-w-xs px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-colors">
+                  <option value="1" ${podItem.reservationMonths === 1 ? 'selected' : ''}>1 Month</option>
+                  <option value="3" ${podItem.reservationMonths === 3 ? 'selected' : ''}>3 Months</option>
+                  <option value="6" ${podItem.reservationMonths === 6 ? 'selected' : ''}>6 Months</option>
+                  <option value="12" ${podItem.reservationMonths === 12 ? 'selected' : ''}>12 Months</option>
+                </select>
+                <p class="text-sm text-graphite-500 mt-2">Select how long you'd like to reserve this pod</p>
+              </div>
+
+              <!-- Pod Details -->
+              <div class="mb-6 pt-6 border-t border-mint-200">
+                <h4 class="text-sm font-semibold text-graphite-800 mb-3">What's Included</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Dedicated Team</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Full-time Availability</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Project Management</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Quality Assurance</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="space-y-3">
+                <button id="start-journey-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  Continue to Step 2
+                </button>
+                <button id="remove-pod-btn" class="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  <span>Remove Pod</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
     }
 
     async showAvailablePods() {
-      const selectedDisplay = document.getElementById('selected-pod-display');
-      const availableGrid = document.getElementById('available-pods-grid');
+      const step1Content = document.getElementById('step-1-content');
       
-      if (selectedDisplay) selectedDisplay.classList.add('hidden');
-      if (availableGrid) {
-        availableGrid.classList.remove('hidden');
+      if (step1Content) {
+        // Show the original "Choose Your NovaPod" section
+        step1Content.innerHTML = `
+          <div class="text-center mb-12">
+            <h2 class="text-3xl lg:text-4xl font-bold text-graphite-900 mb-4 gradient-title">
+              Choose Your NovaPod
+            </h2>
+            <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
+              Select the perfect NovaPod solution for your business needs. Each pod is designed to deliver exceptional results.
+            </p>
+          </div>
+
+          <!-- Available Pods Grid -->
+          <div id="available-pods-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Pods will be dynamically loaded here -->
+          </div>
+        `;
+        
         await this.loadAvailablePods();
       }
     }
@@ -601,18 +664,60 @@
         }
       });
 
+      // Handle data-add-to-cart buttons in summary page
+      document.addEventListener('click', async (e) => {
+        const target = e.target as HTMLElement;
+        if (target && target.matches('[data-add-to-cart]')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const addToCartBtn = target;
+          const itemId = addToCartBtn.getAttribute('data-item-id');
+          const itemType = addToCartBtn.getAttribute('data-item-type');
+          const itemTitle = addToCartBtn.getAttribute('data-item-title');
+          const itemDescription = addToCartBtn.getAttribute('data-item-description');
+          const itemPrice = addToCartBtn.getAttribute('data-item-price');
+          
+          if (itemId && itemType) {
+            const cartItem = {
+              id: itemId,
+              type: itemType,
+              title: itemTitle || '',
+              description: itemDescription || '',
+              price: itemPrice || '',
+              reservationMonths: itemType === 'pod' ? 3 : undefined
+            };
+            
+            // Add to cart using the shared cart service
+            const success = await this.shared.addToCart(cartItem);
+            if (success) {
+              // Show notification
+              this.shared.showNotification(`Added ${itemTitle || 'Item'} to cart!`);
+              
+              // Refresh the current step to show updated cart
+              await this.loadStep(this.currentStep);
+            }
+          }
+        }
+      });
+
       // Change pod button
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#change-pod-btn')) {
+        const target = e.target as HTMLElement;
+        if (target && target.matches('#change-pod-btn')) {
+          console.log('🔍 Change pod button clicked');
           await this.showAvailablePods();
         }
       });
 
       // Remove pod button
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#remove-pod-btn')) {
+        const target = e.target as HTMLElement;
+        if (target && target.matches('#remove-pod-btn')) {
+          console.log('🔍 Remove pod button clicked');
           await this.shared.removePod();
-          await this.showAvailablePods();
+          console.log('🔍 Pod removed, refreshing Step 1...');
+          await this.initializeStep1(); // Re-initialize to check cart state and update UI
         }
       });
 

@@ -1,0 +1,158 @@
+---
+// Test page for cart navigation functionality
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart Navigation Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-button {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .test-button:hover {
+      background: #16a34a;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+    .error {
+      background: #fee;
+      color: #c00;
+    }
+    .success {
+      background: #efe;
+      color: #0a0;
+    }
+    .info {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cart Navigation Test Page</h1>
+  
+  <div class="test-section">
+    <h2>Test Reserve Pod Button</h2>
+    <p>This button should add the pod to cart, show a notification, and navigate to /summary after 1.5 seconds.</p>
+    <button 
+      data-add-to-cart
+      data-item-id="test-pod-1"
+      data-item-type="pod"
+      data-item-title="Test Pod"
+      data-item-description="A test pod for navigation testing"
+      data-item-price="₹9999/month"
+      class="test-button">
+      Reserve Pod (Should Navigate to /summary)
+    </button>
+    <div id="test-result" class="result info">Click the button above to test navigation...</div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test Add Pack Button</h2>
+    <p>This button should add the pack to cart, show a notification, and navigate to /summary after 1.5 seconds.</p>
+    <button 
+      data-add-to-cart
+      data-item-id="test-pack-1"
+      data-item-type="pack"
+      data-item-title="Test Pack"
+      data-item-description="A test pack for navigation testing"
+      data-item-price="₹1999"
+      class="test-button">
+      Add Pack (Should Navigate to /summary)
+    </button>
+    <div id="pack-result" class="result info">Click the button above to test navigation...</div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Manual Navigation Test</h2>
+    <p>Test manual navigation to summary page:</p>
+    <button onclick="window.location.href='/summary'" class="test-button">
+      Go to Summary Page
+    </button>
+  </div>
+
+  <script>
+    function showResult(elementId, message, type = 'info') {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.className = `result ${type}`;
+    }
+    
+    // Monitor cart service availability
+    const checkCartService = () => {
+      if (typeof window !== 'undefined') {
+        if (window.cartService) {
+          showResult('test-result', '✅ CartService is available and ready for testing', 'success');
+          return true;
+        } else {
+          showResult('test-result', '⏳ CartService not yet available, waiting...', 'info');
+          setTimeout(checkCartService, 100);
+          return false;
+        }
+      }
+      return false;
+    };
+
+    // Check cart service on load
+    checkCartService();
+
+    // Monitor cart events
+    if (typeof window !== 'undefined') {
+      // Listen for cart service ready event
+      window.addEventListener('cart-service-ready', () => {
+        showResult('test-result', '✅ Cart service ready event received', 'success');
+      });
+
+      window.addEventListener('cart-updated', (event) => {
+        const customEvent = event as CustomEvent;
+        showResult('pack-result', `✅ Cart updated event received: ${customEvent.detail?.action || 'unknown'}`, 'success');
+      });
+    }
+
+    // Test button click monitoring
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target && target.matches('[data-add-to-cart]')) {
+        showResult('test-result', '🔄 Button clicked! Processing...', 'info');
+        
+        // Monitor for navigation
+        const originalHref = window.location.href;
+        const checkNavigation = () => {
+          if (window.location.href !== originalHref) {
+            showResult('test-result', '✅ Navigation to /summary detected!', 'success');
+          } else {
+            setTimeout(checkNavigation, 100);
+          }
+        };
+        
+        setTimeout(checkNavigation, 1600); // Check after 1.6 seconds
+      }
+    });
+  </script>
+</body>
+</html> 

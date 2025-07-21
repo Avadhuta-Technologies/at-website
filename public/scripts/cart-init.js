@@ -25,6 +25,16 @@
           cart.push({ ...item, timestamp: Date.now() });
           localStorage.setItem('novapod-cart', JSON.stringify(cart));
           this.updateCartCount();
+          
+          // Show notification
+          this.showNotification(`Added ${item.title || 'Item'} to cart!`);
+          
+          // Navigate to summary page after a short delay
+          setTimeout(() => {
+            console.log('🟢 [CartInit] Navigating to summary page...');
+            window.location.href = '/summary';
+          }, 1500);
+          
           return true;
         } catch (error) {
           console.error('🟡 [CartInit] Error adding to cart:', error);

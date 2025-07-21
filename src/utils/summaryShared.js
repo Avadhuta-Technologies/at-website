@@ -8,17 +8,26 @@ export class SummaryShared {
   }
 
   async init() {
+    console.log('🔍 SummaryShared init called');
     if (typeof window !== 'undefined' && window.cartService) {
+      console.log('🔍 Cart service found, setting it');
       this.cartService = window.cartService;
     } else {
+      console.log('🔍 Cart service not available yet, retrying in 100ms');
       setTimeout(() => this.init(), 100);
     }
   }
 
   // Cart operations
   async getCart() {
-    if (!this.cartService) return [];
-    return await this.cartService.getCart();
+    console.log('🔍 getCart called, cartService available:', !!this.cartService);
+    if (!this.cartService) {
+      console.log('🔍 No cart service available, returning empty array');
+      return [];
+    }
+    const cart = await this.cartService.getCart();
+    console.log('🔍 Cart retrieved:', cart);
+    return cart;
   }
 
   async addToCart(item) {
@@ -69,6 +78,8 @@ export class SummaryShared {
         for (const pack of packItems) {
           await this.removeFromCart(pack.id, 'pack');
         }
+        
+
         
         this.showNotification('Pod and all packs removed from cart', 'success');
         return true;

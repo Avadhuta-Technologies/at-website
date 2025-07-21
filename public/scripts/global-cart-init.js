@@ -168,6 +168,12 @@ document.addEventListener('DOMContentLoaded', async () => {
               window.dispatchEvent(new CustomEvent('cart-updated', { 
                 detail: { action: 'add', item: cartItem } 
               }));
+              
+              // Navigate to summary page after a short delay to allow notification to show
+              setTimeout(() => {
+                console.log('🟢 [GlobalCartInit] Navigating to summary page...');
+                window.location.href = '/summary';
+              }, 1500); // 1.5 second delay to show notification
             } else {
               console.error('🟢 [GlobalCartInit] Failed to add to cart');
               console.error('🟢 [GlobalCartInit] This could be due to business rules or validation errors');

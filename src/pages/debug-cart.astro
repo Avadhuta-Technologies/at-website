@@ -1,0 +1,176 @@
+---
+// Debug page to check cart functionality
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart Debug</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .debug-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .debug-button {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .debug-button:hover {
+      background: #16a34a;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+    .error {
+      background: #fee;
+      color: #c00;
+    }
+    .success {
+      background: #efe;
+      color: #0a0;
+    }
+    .info {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cart Debug Page</h1>
+  
+  <div class="debug-section">
+    <h2>Cart Service Status</h2>
+    <button id="check-cart-service" class="debug-button">Check Cart Service</button>
+    <div id="cart-service-status" class="result info">Click to check cart service status...</div>
+  </div>
+  
+  <div class="debug-section">
+    <h2>Cart Contents</h2>
+    <button id="get-cart" class="debug-button">Get Cart Contents</button>
+    <div id="cart-contents" class="result info">Click to get cart contents...</div>
+  </div>
+  
+  <div class="debug-section">
+    <h2>Local Storage Check</h2>
+    <button id="check-localstorage" class="debug-button">Check Local Storage</button>
+    <div id="localstorage-contents" class="result info">Click to check localStorage...</div>
+  </div>
+  
+  <div class="debug-section">
+    <h2>Add Test Pod</h2>
+    <button 
+      data-add-to-cart
+      data-item-id="ecommerce-engine-pod"
+      data-item-type="pod"
+      data-item-title="Ecommerce Engine Pod"
+      data-item-description="Complete ecommerce development team"
+      data-item-price="₹29999/month"
+      class="debug-button">
+      Add Ecommerce Engine Pod
+    </button>
+    <div id="add-result" class="result info">Click to add test pod...</div>
+  </div>
+  
+  <div class="debug-section">
+    <h2>Test Summary Page</h2>
+    <button onclick="window.location.href='/summary'" class="debug-button">
+      Go to Summary Page
+    </button>
+    <div id="summary-result" class="result info">Navigate to summary page to test...</div>
+  </div>
+
+  <script>
+    function showResult(elementId, message, type = 'info') {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.textContent = message;
+        element.className = `result ${type}`;
+      }
+    }
+    
+    // Check cart service status
+    document.getElementById('check-cart-service').addEventListener('click', () => {
+      const status = {
+        windowExists: typeof window !== 'undefined',
+        cartServiceExists: typeof window !== 'undefined' && !!window.cartService,
+        cartServiceType: typeof window !== 'undefined' && window.cartService ? typeof window.cartService : 'N/A',
+        cartServiceMethods: typeof window !== 'undefined' && window.cartService ? Object.keys(window.cartService) : []
+      };
+      
+      showResult('cart-service-status', JSON.stringify(status, null, 2), 'success');
+    });
+    
+    // Get cart contents
+    document.getElementById('get-cart').addEventListener('click', async () => {
+      try {
+        if (window.cartService) {
+          const cart = await window.cartService.getCart();
+          showResult('cart-contents', JSON.stringify(cart, null, 2), 'success');
+        } else {
+          showResult('cart-contents', 'Cart service not available', 'error');
+        }
+      } catch (error) {
+        showResult('cart-contents', `Error: ${error.message}`, 'error');
+      }
+    });
+    
+    // Check localStorage
+    document.getElementById('check-localstorage').addEventListener('click', () => {
+      try {
+        const cartData = localStorage.getItem('novapod-cart');
+        const parsedCart = cartData ? JSON.parse(cartData) : null;
+        
+        const result = {
+          cartData: cartData,
+          parsedCart: parsedCart,
+          allLocalStorage: Object.keys(localStorage).filter(key => key.includes('cart') || key.includes('pod'))
+        };
+        
+        showResult('localstorage-contents', JSON.stringify(result, null, 2), 'success');
+      } catch (error) {
+        showResult('localstorage-contents', `Error: ${error.message}`, 'error');
+      }
+    });
+    
+    // Monitor cart events
+    if (typeof window !== 'undefined') {
+      window.addEventListener('cart-service-ready', () => {
+        showResult('cart-service-status', '✅ Cart service ready event received', 'success');
+      });
+
+      window.addEventListener('cart-updated', (event) => {
+        const customEvent = event as CustomEvent;
+        showResult('add-result', `✅ Cart updated event received: ${JSON.stringify(customEvent.detail, null, 2)}`, 'success');
+      });
+    }
+    
+    // Monitor add to cart button clicks
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target && target.matches('[data-add-to-cart]')) {
+        showResult('add-result', '🔄 Adding pod to cart...', 'info');
+      }
+    });
+  </script>
+</body>
+</html> 

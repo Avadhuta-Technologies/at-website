@@ -1,0 +1,217 @@
+---
+// Test page for remove pod functionality
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Remove Pod Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-button {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .test-button:hover {
+      background: #16a34a;
+    }
+    .remove-button {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .remove-button:hover {
+      background: #dc2626;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+    .error {
+      background: #fee;
+      color: #c00;
+    }
+    .success {
+      background: #efe;
+      color: #0a0;
+    }
+    .info {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+    .cart-status {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Remove Pod Test</h1>
+  
+  <div class="test-section">
+    <h2>Current Cart Status</h2>
+    <div id="cart-status" class="cart-status">
+      Loading cart status...
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Add Test Pod</h2>
+    <p>First, add a test pod to the cart:</p>
+    <button 
+      data-add-to-cart
+      data-item-id="test-pod-remove"
+      data-item-type="pod"
+      data-item-title="Test Pod for Removal"
+      data-item-description="A test pod to verify removal functionality"
+      data-item-price="₹19999/month"
+      class="test-button">
+      Add Test Pod
+    </button>
+    <div id="add-result" class="result info">Click the button above to add a test pod...</div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test Remove Pod</h2>
+    <p>After adding the pod, test the remove functionality:</p>
+    <button id="remove-pod-btn" class="remove-button">
+      Remove Pod (Should Update UI Immediately)
+    </button>
+    <div id="remove-result" class="result info">Click the button above to test pod removal...</div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test Summary Page</h2>
+    <p>Test the remove functionality on the summary page:</p>
+    <button onclick="window.location.href='/summary'" class="test-button">
+      Go to Summary Page
+    </button>
+    <div id="summary-result" class="result info">Navigate to summary page and test remove button there...</div>
+  </div>
+
+  <script>
+    function showResult(elementId, message, type = 'info') {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.textContent = message;
+        element.className = `result ${type}`;
+      }
+    }
+    
+    function updateCartStatus() {
+      const statusElement = document.getElementById('cart-status');
+      if (!statusElement) return;
+      
+      if (window.cartService) {
+        window.cartService.getCart().then(cart => {
+          const pod = cart.find(item => item.type === 'pod');
+          const packs = cart.filter(item => item.type === 'pack');
+          
+          statusElement.innerHTML = `
+            <strong>Cart Items:</strong><br>
+            Pod: ${pod ? pod.title : 'None'}<br>
+            Packs: ${packs.length} items<br>
+            Total Items: ${cart.length}
+          `;
+        }).catch(error => {
+          statusElement.innerHTML = `<strong>Error loading cart:</strong> ${error.message}`;
+        });
+      } else {
+        statusElement.innerHTML = '<strong>Cart service not available</strong>';
+      }
+    }
+    
+    // Monitor cart service availability
+    const checkCartService = () => {
+      if (typeof window !== 'undefined') {
+        if (window.cartService) {
+          showResult('add-result', '✅ CartService is available and ready for testing', 'success');
+          updateCartStatus();
+          return true;
+        } else {
+          showResult('add-result', '⏳ CartService not yet available, waiting...', 'info');
+          setTimeout(checkCartService, 100);
+          return false;
+        }
+      }
+      return false;
+    };
+
+    // Check cart service on load
+    checkCartService();
+
+    // Monitor cart events
+    if (typeof window !== 'undefined') {
+      // Listen for cart service ready event
+      window.addEventListener('cart-service-ready', () => {
+        showResult('add-result', '✅ Cart service ready event received', 'success');
+        updateCartStatus();
+      });
+
+      window.addEventListener('cart-updated', (event) => {
+        const customEvent = event as CustomEvent;
+        showResult('remove-result', `✅ Cart updated event received: ${customEvent.detail?.action || 'unknown'}`, 'success');
+        updateCartStatus();
+      });
+    }
+
+    // Test remove pod button
+    document.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+      
+      if (target && target.matches('#remove-pod-btn')) {
+        showResult('remove-result', '🔄 Removing pod...', 'info');
+        
+        if (window.cartService) {
+          try {
+            const cart = await window.cartService.getCart();
+            const pod = cart.find(item => item.type === 'pod');
+            
+            if (pod) {
+              await window.cartService.removeItemById(pod.id, 'pod');
+              showResult('remove-result', '✅ Pod removed successfully!', 'success');
+            } else {
+              showResult('remove-result', '❌ No pod found in cart to remove', 'error');
+            }
+          } catch (error) {
+            showResult('remove-result', `❌ Error removing pod: ${error.message}`, 'error');
+          }
+        } else {
+          showResult('remove-result', '❌ Cart service not available', 'error');
+        }
+      }
+      
+      if (target && target.matches('[data-add-to-cart]')) {
+        showResult('add-result', '🔄 Adding test pod to cart...', 'info');
+      }
+    });
+  </script>
+</body>
+</html> 
