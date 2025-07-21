@@ -358,38 +358,11 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
     idealFor: ['{{pod.idealFor[0]}}', '{{pod.idealFor[1]}}', '{{pod.idealFor[2]}}']
   });
 
-  // Monitor cart service availability
-  const checkCartService = () => {
-    if (typeof window !== 'undefined') {
-      if ((window as any).cartService) {
-        console.log('🔵 [AvailablePodCard] CartService is available');
-        return true;
-      } else {
-        console.log('🔵 [AvailablePodCard] CartService not yet available, retrying...');
-        setTimeout(checkCartService, 100);
-        return false;
-      }
-    }
-    return false;
-  };
-
-  // Check cart service on load
-  checkCartService();
-
-  // Monitor cart events
+  // Monitor cart events (no longer depends on CartService)
   if (typeof window !== 'undefined') {
-    // Listen for cart service ready event
-    window.addEventListener('cart-service-ready', () => {
-      console.log('🔵 [AvailablePodCard] Cart service ready event received');
-    });
-
     window.addEventListener('cart-updated', (event) => {
       const customEvent = event as CustomEvent;
       console.log('🔵 [AvailablePodCard] Cart updated event received:', customEvent.detail);
-    });
-
-    window.addEventListener('cart-drawer-ready', () => {
-      console.log('🔵 [AvailablePodCard] Cart drawer is ready');
     });
   }
 </script>

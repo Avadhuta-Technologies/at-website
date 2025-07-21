@@ -3,7 +3,6 @@ import { catalogUtils, podsCatalog, packsCatalog } from '/src/content/catalog/_i
 
 export class SummaryShared {
   constructor() {
-    this.cartService = null;
     this.init();
   }
 
@@ -449,9 +448,7 @@ export class SummaryShared {
       this.showNotification('Reservation submitted successfully! We\'ll contact you within 24 hours.', 'success');
       
       // Clear cart after successful submission
-      if (this.cartService) {
-        await this.cartService.clearCart();
-      }
+      localStorage.removeItem('novapod-cart');
       
       // Reset button
       submitBtn.textContent = originalText;
@@ -547,9 +544,9 @@ export class SummaryShared {
   }
 
   updateCartCountDisplay() {
-    if (this.cartService) {
-      this.cartService.updateCartCountDisplay();
-    }
+    // Cart count display is now handled by localStorage events
+    // This method is kept for compatibility but no longer needed
+    console.log('🔍 [updateCartCountDisplay] Method called but no longer needed');
   }
 }
 

@@ -20,24 +20,9 @@ import '/src/utils/formTest.js';
 </Layout>
 
 <script>
-  // Initialize cart service for summary page
-  import cartService from '../services/CartService.js';
-  
-  if (typeof window !== 'undefined') {
-    window.cartService = cartService;
-  }
-  
-  // Simple page-level coordination
+  // Summary page coordination (no longer uses CartService)
   document.addEventListener('DOMContentLoaded', async () => {
     console.log('Summary page loaded');
-    
-    // Clear cart to ensure clean state - no default pods
-    try {
-      await cartService.clearCart();
-      console.log('✅ Cart cleared on summary page load');
-    } catch (error) {
-      console.log('Cart clear error (may be normal):', error);
-    }
     
     // Initialize with step 1
     window.dispatchEvent(new CustomEvent('step-changed', { 

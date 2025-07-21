@@ -43,7 +43,6 @@ import {
 </Layout>
 
 <script>
-  import cartService from '../services/CartService';
   import { catalogUtils } from '../content/catalog/_index.js';
 
   // Initialize checkout functionality
@@ -51,8 +50,8 @@ import {
     console.log('Initializing checkout page...');
     
     try {
-      // Get cart summary
-      const cartSummary = await cartService.getCartSummary();
+      // Get cart summary from localStorage
+      const cartSummary = getCartSummaryFromLocalStorage();
       
       // Display cart items
       displayCartItems(cartSummary);
@@ -64,6 +63,34 @@ import {
       console.error('Error initializing checkout:', error);
     }
   });
+
+  function getCartSummaryFromLocalStorage() {
+    try {
+      const cartData = localStorage.getItem('novapod-cart');
+      if (!cartData) {
+        return { items: [], podItem: null, packItems: [], totalPrice: 0 };
+      }
+      
+      const cart = JSON.parse(cartData);
+      const podItem = cart.find(item => item.type === 'pod');
+      const packItems = cart.filter(item => item.type === 'pack');
+      
+      const totalPrice = cart.reduce((total, item) => {
+        const price = parseFloat(item.price.replace(/[^\d.]/g, '')) || 0;
+        return total + price;
+      }, 0);
+      
+      return {
+        items: cart,
+        podItem,
+        packItems,
+        totalPrice
+      };
+    } catch (error) {
+      console.error('Error reading cart from localStorage:', error);
+      return { items: [], podItem: null, packItems: [], totalPrice: 0 };
+    }
+  }
 
   function displayCartItems(cartSummary) {
     const cartContainer = document.getElementById('cart-items');
@@ -138,7 +165,7 @@ import {
   }
 
   function setupCheckoutForm() {
-    const form = document.getElementById('checkout-form');
+    const form = document.getElementById('checkout-form') as HTMLFormElement;
     if (!form) return;
 
     form.addEventListener('submit', async (e) => {
@@ -156,7 +183,7 @@ import {
           address: formData.get('address')
         },
         paymentMethod: formData.get('paymentMethod'),
-        cart: await cartService.getCartSummary()
+        cart: getCartSummaryFromLocalStorage()
       };
 
       console.log('Submitting order:', orderData);
@@ -167,7 +194,7 @@ import {
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         // Clear cart after successful order
-        await cartService.clearCart();
+        localStorage.removeItem('novapod-cart');
         
         // Redirect to order confirmation
         window.location.href = '/order-confirmation';
@@ -179,15 +206,22 @@ import {
   }
 
   // Global function for removing items from cart
-  window.removeFromCart = async function(itemId, itemType) {
+  (window as any).removeFromCart = async function(itemId: string, itemType: string) {
     try {
-      await cartService.removeItemById(itemId, itemType);
+      // Remove item from localStorage
+      const cartData = localStorage.getItem('novapod-cart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        const updatedCart = cart.filter((item: any) => !(item.id === itemId && item.type === itemType));
+        localStorage.setItem('novapod-cart', JSON.stringify(updatedCart));
+      }
       
       // Refresh cart display
-      const cartSummary = await cartService.getCartSummary();
+      const cartSummary = getCartSummaryFromLocalStorage();
       displayCartItems(cartSummary);
       
-      cartService.showNotification('Item removed from cart');
+      // Show notification
+      alert('Item removed from cart');
     } catch (error) {
       console.error('Error removing item from cart:', error);
     }

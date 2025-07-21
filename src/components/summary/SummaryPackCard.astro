@@ -129,60 +129,65 @@ const { pack, isSelected = false } = Astro.props;
           e.preventDefault();
           e.stopPropagation();
           
-          if (typeof window !== 'undefined' && (window as any).cartService) {
-            const cartService = (window as any).cartService;
+          try {
+            const cartData = localStorage.getItem('novapod-cart') || '[]';
+            let cart = JSON.parse(cartData);
             
-            try {
-              if (isSelected) {
-                // Remove pack from cart
-                const success = await cartService.removeItemById(packId, 'pack');
-                if (success) {
-                  // Show success notification
-                  const notification = document.createElement('div');
-                  notification.className = 'fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg bg-red-500 text-white transition-all duration-300 transform translate-x-full';
-                  notification.textContent = 'Pack removed from cart!';
-                  document.body.appendChild(notification);
-                  
-                  setTimeout(() => {
-                    notification.classList.remove('translate-x-full');
-                  }, 100);
-                  
-                  setTimeout(() => {
-                    notification.classList.add('translate-x-full');
-                    setTimeout(() => {
-                      document.body.removeChild(notification);
-                    }, 300);
-                  }, 3000);
-                }
-              } else {
-                // Add pack to cart
-                const success = await cartService.addToCart({
-                  id: packId,
-                  type: 'pack'
-                });
-                
-                if (success) {
-                  // Show success notification
-                  const notification = document.createElement('div');
-                  notification.className = 'fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg bg-green-500 text-white transition-all duration-300 transform translate-x-full';
-                  notification.textContent = 'Pack added to cart successfully!';
-                  document.body.appendChild(notification);
-                  
-                  setTimeout(() => {
-                    notification.classList.remove('translate-x-full');
-                  }, 100);
-                  
-                  setTimeout(() => {
-                    notification.classList.add('translate-x-full');
-                    setTimeout(() => {
-                      document.body.removeChild(notification);
-                    }, 300);
-                  }, 3000);
-                }
-              }
-            } catch (error) {
-              console.error('Error managing pack in cart:', error);
+            if (isSelected) {
+              // Remove pack from cart
+              cart = cart.filter((item: any) => !(item.id === packId && item.type === 'pack'));
+              localStorage.setItem('novapod-cart', JSON.stringify(cart));
+              
+              // Dispatch cart-updated event
+              window.dispatchEvent(new CustomEvent('cart-updated'));
+              
+              // Show success notification
+              const notification = document.createElement('div');
+              notification.className = 'fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg bg-red-500 text-white transition-all duration-300 transform translate-x-full';
+              notification.textContent = 'Pack removed from cart!';
+              document.body.appendChild(notification);
+              
+              setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+              }, 100);
+              
+              setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                  document.body.removeChild(notification);
+                }, 300);
+              }, 3000);
+            } else {
+              // Add pack to cart
+              cart.push({
+                id: packId,
+                type: 'pack'
+              });
+              
+              localStorage.setItem('novapod-cart', JSON.stringify(cart));
+              
+              // Dispatch cart-updated event
+              window.dispatchEvent(new CustomEvent('cart-updated'));
+              
+              // Show success notification
+              const notification = document.createElement('div');
+              notification.className = 'fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg bg-green-500 text-white transition-all duration-300 transform translate-x-full';
+              notification.textContent = 'Pack added to cart successfully!';
+              document.body.appendChild(notification);
+              
+              setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+              }, 100);
+              
+              setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                  document.body.removeChild(notification);
+                }, 300);
+              }, 3000);
             }
+          } catch (error) {
+            console.error('Error managing pack in cart:', error);
           }
         });
       }
