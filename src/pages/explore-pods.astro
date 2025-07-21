@@ -45,10 +45,10 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', async function(e) {
       // Handle dynamic pod CTA buttons
-      if (e.target.matches('.pod-cta-btn')) {
+      if (e.target && (e.target as HTMLElement).matches('.pod-cta-btn')) {
         e.preventDefault();
         
-        const button = e.target;
+        const button = e.target as HTMLElement;
         const action = button.getAttribute('data-action');
         const podId = button.getAttribute('data-pod-id');
         
@@ -56,7 +56,7 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
         
         try {
           // Import the summaryShared utility
-          const { SummaryShared } = await import('/src/utils/summaryShared.js');
+          const { SummaryShared } = await import('../utils/summaryShared.js');
           const shared = new SummaryShared();
           
           if (action === 'add') {
@@ -78,18 +78,18 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
       }
       
       // Handle regular data-add-to-cart buttons (fallback)
-      if (e.target.matches('[data-add-to-cart]')) {
+      if (e.target && (e.target as HTMLElement).matches('[data-add-to-cart]')) {
         e.preventDefault();
         
-        const button = e.target;
-        const itemType = button.dataset.itemType;
+        const button = e.target as HTMLElement;
+        const itemType = button.dataset?.itemType;
         
         if (itemType === 'pod') {
-          const podId = button.dataset.itemId;
+          const podId = button.dataset?.itemId;
           
           try {
             // Import the summaryShared utility
-            const { SummaryShared } = await import('/src/utils/summaryShared.js');
+            const { SummaryShared } = await import('../utils/summaryShared.js');
             const shared = new SummaryShared();
             
             // Add pod to cart
