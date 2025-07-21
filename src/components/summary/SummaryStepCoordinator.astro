@@ -17,13 +17,14 @@
     }
 
     async init() {
-      // Wait for shared utilities to initialize
-      while (!this.shared.cartService) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      console.log('🔍 [SummaryStepCoordinator] Initializing...');
+      
+      // Initialize shared utilities (no longer depends on cartService)
+      await this.shared.init();
       
       this.setupEventListeners();
       this.loadStep(this.currentStep);
+      console.log('🔍 [SummaryStepCoordinator] Initialization complete');
     }
 
     setupEventListeners() {
@@ -275,61 +276,61 @@
     }
 
     async initializeStep1() {
-      // Wait for shared utilities to be ready
-      while (!this.shared.cartService) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      console.log('🔍 [initializeStep1] Starting initialization...');
       
-      // Check both cart service and localStorage to ensure we have the complete picture
-      const cart = await this.shared.getCart();
-      const selectedPod = cart.find(item => item.type === 'pod');
+      // Get cart data from localStorage (single source of truth)
+      let cart = [];
+      let selectedPod = null;
       
-      // Also check localStorage directly as a fallback
-      let localStoragePod = null;
       try {
-        const localStorageCart = localStorage.getItem('novapod-cart');
-        if (localStorageCart) {
-          const parsedCart = JSON.parse(localStorageCart);
-          localStoragePod = parsedCart.find(item => item.type === 'pod');
-        }
+        // Try shared.getCart() first
+        cart = await this.shared.getCart();
+        console.log('🔍 [initializeStep1] Cart from shared.getCart():', cart);
+        selectedPod = cart.find(item => item.type === 'pod');
+        console.log('🔍 [initializeStep1] Selected pod from shared.getCart():', selectedPod);
       } catch (error) {
-        // Ignore localStorage errors
+        console.error('🔍 [initializeStep1] Error with shared.getCart():', error);
       }
       
-      // If we have a pod in either cart service or localStorage, show selected pod
-      if (selectedPod || localStoragePod) {
-        const podToShow = selectedPod || localStoragePod;
-        this.showSelectedPod(podToShow);
+      // Fallback: Direct localStorage check
+      if (!selectedPod) {
+        try {
+          const localStorageCart = localStorage.getItem('novapod-cart');
+          console.log('🔍 [initializeStep1] Direct localStorage value:', localStorageCart);
+          
+          if (localStorageCart) {
+            const parsedCart = JSON.parse(localStorageCart);
+            console.log('🔍 [initializeStep1] Parsed localStorage cart:', parsedCart);
+            selectedPod = parsedCart.find(item => item.type === 'pod');
+            console.log('🔍 [initializeStep1] Selected pod from direct localStorage:', selectedPod);
+          }
+        } catch (error) {
+          console.error('🔍 [initializeStep1] Error reading direct localStorage:', error);
+        }
+      }
+      
+      if (selectedPod) {
+        // Show selected pod
+        console.log('🔍 [initializeStep1] Showing selected pod:', selectedPod);
+        this.showSelectedPod(selectedPod);
       } else {
-        // Only show available pods if there's nothing in cart or localStorage
+        // Show available pods
+        console.log('🔍 [initializeStep1] No pod found, showing available pods');
         this.showAvailablePods();
       }
       
       this.addStep1EventListeners();
+      console.log('🔍 [initializeStep1] Initialization complete');
     }
 
     async initializeStep2() {
       console.log('🔍 [initializeStep2] Starting initialization...');
       
-      // Get cart data with fallback to localStorage
-      let cart = await this.shared.getCart();
-      console.log('🔍 [initializeStep2] Cart from service:', cart);
-      
-      // Also check localStorage directly as fallback
-      let localStoragePod = null;
-      try {
-        const localStorageCart = localStorage.getItem('novapod-cart');
-        if (localStorageCart) {
-          const parsedCart = JSON.parse(localStorageCart);
-          localStoragePod = parsedCart.find(item => item.type === 'pod');
-          console.log('🔍 [initializeStep2] Pod from localStorage:', localStoragePod);
-        }
-      } catch (error) {
-        console.error('🔍 [initializeStep2] Error reading localStorage:', error);
-      }
-      
-      const selectedPod = cart.find(item => item.type === 'pod') || localStoragePod;
-      console.log('🔍 [initializeStep2] Final selected pod:', selectedPod);
+      // Get cart data from localStorage (single source of truth)
+      const cart = await this.shared.getCart();
+      const selectedPod = cart.find(item => item.type === 'pod');
+      console.log('🔍 [initializeStep2] Cart from localStorage:', cart);
+      console.log('🔍 [initializeStep2] Selected pod:', selectedPod);
       console.log('🔍 [initializeStep2] Selected pod reservationMonths:', selectedPod?.reservationMonths);
       
       if (selectedPod) {

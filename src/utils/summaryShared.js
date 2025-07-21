@@ -8,56 +8,72 @@ export class SummaryShared {
   }
 
   async init() {
-    if (typeof window !== 'undefined' && window.cartService) {
-      this.cartService = window.cartService;
-    } else {
-      setTimeout(() => this.init(), 100);
-    }
+    // Always use localStorage as single source of truth
+    console.log('🔍 [SummaryShared] Initialized with localStorage-only approach');
   }
 
-  // Cart operations
+  // Cart operations - localStorage only
   async getCart() {
-    if (!this.cartService) {
-      // Fallback to localStorage if cart service is not available
-      try {
-        const localStorageCart = localStorage.getItem('novapod-cart');
-        return localStorageCart ? JSON.parse(localStorageCart) : [];
-      } catch (error) {
-        return [];
-      }
+    try {
+      const localStorageCart = localStorage.getItem('novapod-cart');
+      const cart = localStorageCart ? JSON.parse(localStorageCart) : [];
+      console.log('🔍 [getCart] Retrieved from localStorage:', cart);
+      return cart;
+    } catch (error) {
+      console.error('🔍 [getCart] Error reading localStorage:', error);
+      return [];
     }
-    return await this.cartService.getCart();
   }
 
   async addToCart(item) {
-    if (!this.cartService) return;
-    await this.cartService.addToCart(item);
+    try {
+      const cart = await this.getCart();
+      cart.push(item);
+      localStorage.setItem('novapod-cart', JSON.stringify(cart));
+      console.log('🔍 [addToCart] Added item to localStorage:', item);
+      
+      // Dispatch cart updated event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cart-updated', { 
+          detail: { action: 'add', item } 
+        }));
+      }
+      return true;
+    } catch (error) {
+      console.error('🔍 [addToCart] Error adding to cart:', error);
+      return false;
+    }
   }
 
   async removeFromCart(id, type) {
-    if (!this.cartService) return;
-    await this.cartService.removeItemById(id, type);
+    try {
+      const cart = await this.getCart();
+      const index = cart.findIndex(item => item.id === id && item.type === type);
+      if (index !== -1) {
+        cart.splice(index, 1);
+        localStorage.setItem('novapod-cart', JSON.stringify(cart));
+        console.log('🔍 [removeFromCart] Removed item from localStorage:', { id, type });
+        
+        // Dispatch cart updated event
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cart-updated', { 
+            detail: { action: 'remove', item: { id, type } } 
+          }));
+        }
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('🔍 [removeFromCart] Error removing from cart:', error);
+      return false;
+    }
   }
 
   async updateCartItem(id, type, data) {
     console.log('🔍 [updateCartItem] Called with:', { id, type, data });
     
-    // Try to use cart service if available and has updateItem method
-    if (this.cartService && typeof this.cartService.updateItem === 'function') {
-      console.log('🔍 [updateCartItem] Using cart service updateItem method');
-      try {
-        await this.cartService.updateItem(id, type, data);
-        console.log('🔍 [updateCartItem] cartService.updateItem completed');
-      } catch (error) {
-        console.error('🔍 [updateCartItem] Error with cart service updateItem:', error);
-        // Fall through to localStorage fallback
-      }
-    }
-    
-    // Always also update localStorage as a backup
-    console.log('🔍 [updateCartItem] Also updating localStorage as backup');
     try {
-      const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+      const cart = await this.getCart();
       const index = cart.findIndex(item => item.id === id && item.type === type);
       
       if (index !== -1) {
@@ -65,8 +81,7 @@ export class SummaryShared {
         localStorage.setItem('novapod-cart', JSON.stringify(cart));
         console.log('🔍 [updateCartItem] Updated localStorage with:', cart[index]);
       } else {
-        console.log('🔍 [updateCartItem] Item not found in localStorage cart, adding it');
-        // If not found, add it to localStorage
+        console.log('🔍 [updateCartItem] Item not found, adding it to localStorage');
         cart.push({ id, type, ...data });
         localStorage.setItem('novapod-cart', JSON.stringify(cart));
         console.log('🔍 [updateCartItem] Added item to localStorage:', cart[cart.length - 1]);
@@ -105,36 +120,62 @@ export class SummaryShared {
   }
 
   async removePod() {
+    console.log('🔍 [removePod] Starting pod removal...');
     try {
       const cart = await this.getCart();
       const podItem = cart.find(item => item.type === 'pod');
+      console.log('🔍 [removePod] Found pod item:', podItem);
       
       if (podItem) {
+        // Remove pod from localStorage
+        console.log('🔍 [removePod] Removing pod from localStorage...');
         await this.removeFromCart(podItem.id, 'pod');
         
         // Also remove all packs since they depend on the pod
         const packItems = cart.filter(item => item.type === 'pack');
+        console.log('🔍 [removePod] Removing packs:', packItems.length);
         for (const pack of packItems) {
           await this.removeFromCart(pack.id, 'pack');
         }
         
-        // Ensure localStorage is also cleared if cart service is not available
-        if (!this.cartService) {
-          localStorage.removeItem('novapod-cart');
-        }
-        
-        // Dispatch cart updated event to trigger UI refresh
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('cart-updated', { 
-            detail: { action: 'remove', item: podItem } 
-          }));
+        // Clear any other cart-related localStorage items for safety
+        try {
+          const keysToRemove = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.includes('cart') && key !== 'novapod-cart') {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach(key => localStorage.removeItem(key));
+          console.log('🔍 [removePod] Cleared additional cart-related storage');
+        } catch (storageError) {
+          console.error('🔍 [removePod] Error clearing additional storage:', storageError);
         }
         
         this.showNotification('Pod and all packs removed from cart', 'success');
+        console.log('🔍 [removePod] Pod removal completed successfully');
+        
+        // Verify that storage is completely cleared
+        try {
+          const verifyCart = await this.getCart();
+          console.log('🔍 [removePod] Verification - localStorage cart:', verifyCart);
+          
+          if (verifyCart.length === 0) {
+            console.log('🔍 [removePod] ✅ Storage verification passed - localStorage cleared');
+          } else {
+            console.log('🔍 [removePod] ⚠️ Storage verification failed - data remains:', verifyCart);
+          }
+        } catch (verifyError) {
+          console.error('🔍 [removePod] Error during verification:', verifyError);
+        }
+        
         return true;
+      } else {
+        console.log('🔍 [removePod] No pod found in cart');
       }
     } catch (error) {
-      console.error('Error removing pod:', error);
+      console.error('🔍 [removePod] Error removing pod:', error);
       this.showNotification('Failed to remove pod', 'error');
     }
     return false;
