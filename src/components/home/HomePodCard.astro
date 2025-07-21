@@ -62,7 +62,7 @@ const getPodColorClasses = (pod: any) => {
 };
 ---
 
-<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer">
+<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer" data-pod-slug={pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}>
   <!-- Card Background with Gradient -->
   <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
@@ -292,6 +292,29 @@ const getPodColorClasses = (pod: any) => {
 
     .highlight-text {
       font-size: 0.75rem;
-    }
-  }
-</style> 
+      }
+}
+</style>
+
+<script>
+  // Handle pod card clicks
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+      // Check if the clicked element is a pod card
+      const podCard = e.target.closest('.pod-card');
+      if (podCard) {
+        // Check if the click was on a button or link (CTA elements)
+        const isCTAElement = e.target.closest('button, a, [data-add-to-cart]');
+        
+        if (!isCTAElement) {
+          // Get the pod slug from the data attribute
+          const podSlug = podCard.getAttribute('data-pod-slug');
+          if (podSlug) {
+            // Navigate to the pod details page
+            window.location.href = `/pods/${podSlug}`;
+          }
+        }
+      }
+    });
+  });
+</script> 
