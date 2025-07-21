@@ -39,10 +39,39 @@
       
       // Listen for cart updates to refresh UI
       window.addEventListener('cart-updated', async (e) => {
-        console.log('🔍 Cart updated event received in coordinator');
         if (this.currentStep === 1) {
-          console.log('🔍 Refreshing Step 1 due to cart update...');
-          await this.initializeStep1();
+          // Check if we still have a pod after the update
+          const cart = await this.shared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          
+          // Also check localStorage as fallback
+          let localStoragePod = null;
+          try {
+            const localStorageCart = localStorage.getItem('novapod-cart');
+            if (localStorageCart) {
+              const parsedCart = JSON.parse(localStorageCart);
+              localStoragePod = parsedCart.find(item => item.type === 'pod');
+            }
+          } catch (error) {
+            // Ignore localStorage errors
+          }
+          
+          if (selectedPod || localStoragePod) {
+            // Still have a pod, show selected pod
+            const podToShow = selectedPod || localStoragePod;
+            this.showSelectedPod(podToShow);
+          } else {
+            // No pod, show available pods
+            this.showAvailablePods();
+          }
+        } else if (this.currentStep === 2) {
+          // Update Step 2 pod summary if cart was updated
+          const cart = await this.shared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          
+          if (selectedPod) {
+            this.updatePodSummary(selectedPod);
+          }
         }
       });
     }
@@ -90,7 +119,7 @@
 
           <!-- Selected Pod Summary -->
           <div id="pod-summary" class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-6 mb-8 border border-mint-200">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,6 +129,7 @@
                 <div>
                   <h3 id="summary-pod-title" class="text-lg font-semibold text-graphite-900">Your Pod</h3>
                   <p id="summary-pod-price" class="text-mint-600 font-medium">₹0/month</p>
+                  <p id="summary-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">Loading...</span></p>
                 </div>
               </div>
               <div class="flex items-center space-x-3">
@@ -240,26 +270,33 @@
     }
 
     async initializeStep1() {
-      console.log('🔍 Initializing Step 1...');
-      
       // Wait for shared utilities to be ready
       while (!this.shared.cartService) {
-        console.log('🔍 Waiting for cart service to be available...');
         await new Promise(resolve => setTimeout(resolve, 100));
       }
       
-      console.log('🔍 Cart service is available, getting cart...');
+      // Check both cart service and localStorage to ensure we have the complete picture
       const cart = await this.shared.getCart();
-      console.log('🔍 Current cart items:', cart);
-      
       const selectedPod = cart.find(item => item.type === 'pod');
-      console.log('🔍 Selected pod found:', selectedPod);
       
-      if (selectedPod) {
-        console.log('🔍 Showing selected pod display');
-        this.showSelectedPod(selectedPod);
+      // Also check localStorage directly as a fallback
+      let localStoragePod = null;
+      try {
+        const localStorageCart = localStorage.getItem('novapod-cart');
+        if (localStorageCart) {
+          const parsedCart = JSON.parse(localStorageCart);
+          localStoragePod = parsedCart.find(item => item.type === 'pod');
+        }
+      } catch (error) {
+        // Ignore localStorage errors
+      }
+      
+      // If we have a pod in either cart service or localStorage, show selected pod
+      if (selectedPod || localStoragePod) {
+        const podToShow = selectedPod || localStoragePod;
+        this.showSelectedPod(podToShow);
       } else {
-        console.log('🔍 No pod selected, showing available pods');
+        // Only show available pods if there's nothing in cart or localStorage
         this.showAvailablePods();
       }
       
@@ -267,19 +304,42 @@
     }
 
     async initializeStep2() {
-      const cart = await this.shared.getCart();
-      const selectedPod = cart.find(item => item.type === 'pod');
+      console.log('🔍 [initializeStep2] Starting initialization...');
+      
+      // Get cart data with fallback to localStorage
+      let cart = await this.shared.getCart();
+      console.log('🔍 [initializeStep2] Cart from service:', cart);
+      
+      // Also check localStorage directly as fallback
+      let localStoragePod = null;
+      try {
+        const localStorageCart = localStorage.getItem('novapod-cart');
+        if (localStorageCart) {
+          const parsedCart = JSON.parse(localStorageCart);
+          localStoragePod = parsedCart.find(item => item.type === 'pod');
+          console.log('🔍 [initializeStep2] Pod from localStorage:', localStoragePod);
+        }
+      } catch (error) {
+        console.error('🔍 [initializeStep2] Error reading localStorage:', error);
+      }
+      
+      const selectedPod = cart.find(item => item.type === 'pod') || localStoragePod;
+      console.log('🔍 [initializeStep2] Final selected pod:', selectedPod);
+      console.log('🔍 [initializeStep2] Selected pod reservationMonths:', selectedPod?.reservationMonths);
       
       if (selectedPod) {
         // Update the pod summary display
+        console.log('🔍 [initializeStep2] Calling updatePodSummary...');
         this.updatePodSummary(selectedPod);
         // Load packs for the selected pod
         await this.loadPacksForStep2(selectedPod);
       } else {
+        console.log('🔍 [initializeStep2] No pod found, showing warning');
         this.showNoPodWarning();
       }
       
       this.addStep2EventListeners();
+      console.log('🔍 [initializeStep2] Initialization complete');
     }
 
     async initializeStep3() {
@@ -327,6 +387,7 @@
                   <div>
                     <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">${podItem.title || 'Selected Pod'}</h3>
                     <p id="selected-pod-description" class="text-graphite-600">${podItem.description || 'Pod description'}</p>
+                    <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}</span></p>
                   </div>
                 </div>
                 <div class="text-right">
@@ -340,12 +401,57 @@
               <!-- Hire Period Selection -->
               <div class="mb-6 pt-6 border-t border-mint-200">
                 <label class="block text-sm font-medium text-graphite-700 mb-3">Reservation Period</label>
-                <select id="hire-period-select" class="w-full max-w-xs px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-colors">
-                  <option value="1" ${podItem.reservationMonths === 1 ? 'selected' : ''}>1 Month</option>
-                  <option value="3" ${podItem.reservationMonths === 3 ? 'selected' : ''}>3 Months</option>
-                  <option value="6" ${podItem.reservationMonths === 6 ? 'selected' : ''}>6 Months</option>
-                  <option value="12" ${podItem.reservationMonths === 12 ? 'selected' : ''}>12 Months</option>
-                </select>
+                
+                <!-- Custom Dropdown -->
+                <div class="relative w-full max-w-xs">
+                  <button 
+                    id="hire-period-dropdown-btn" 
+                    class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-left focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-all duration-200 hover:border-mint-400 flex items-center justify-between shadow-sm"
+                    data-selected="${podItem.reservationMonths || 3}"
+                  >
+                    <span id="hire-period-display" class="text-graphite-900 font-medium">
+                      ${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}
+                    </span>
+                    <svg class="w-5 h-5 text-graphite-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </button>
+                  
+                  <!-- Dropdown Options -->
+                  <div id="hire-period-options" class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 invisible transition-all duration-200 transform scale-95 origin-top">
+                    <div class="py-2">
+                      <button 
+                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 1 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
+                        data-value="1"
+                      >
+                        <span>1 Month</span>
+                        ${(podItem.reservationMonths || 3) === 1 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                      </button>
+                      <button 
+                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 3 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
+                        data-value="3"
+                      >
+                        <span>3 Months</span>
+                        ${(podItem.reservationMonths || 3) === 3 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                      </button>
+                      <button 
+                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 6 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
+                        data-value="6"
+                      >
+                        <span>6 Months</span>
+                        ${(podItem.reservationMonths || 3) === 6 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                      </button>
+                      <button 
+                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 12 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
+                        data-value="12"
+                      >
+                        <span>12 Months</span>
+                        ${(podItem.reservationMonths || 3) === 12 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
                 <p class="text-sm text-graphite-500 mt-2">Select how long you'd like to reserve this pod</p>
               </div>
 
@@ -615,10 +721,39 @@
     }
 
     updatePodSummary(podItem) {
-      this.shared.updatePodSummary(podItem, {
+      console.log('🔍 [updatePodSummary] Called with podItem:', podItem);
+      
+      // Double-check the latest data from storage
+      let latestPodItem = podItem;
+      try {
+        const localStorageCart = localStorage.getItem('novapod-cart');
+        if (localStorageCart) {
+          const parsedCart = JSON.parse(localStorageCart);
+          const storagePod = parsedCart.find(item => item.type === 'pod');
+          if (storagePod && storagePod.id === podItem.id) {
+            latestPodItem = storagePod;
+            console.log('🔍 [updatePodSummary] Found updated pod in localStorage:', latestPodItem);
+          }
+        }
+      } catch (error) {
+        console.error('🔍 [updatePodSummary] Error reading localStorage:', error);
+      }
+      
+      this.shared.updatePodSummary(latestPodItem, {
         titleSelector: '#summary-pod-title',
         priceSelector: '#summary-pod-price'
       });
+      
+      // Update the months display
+      const monthsElement = document.getElementById('summary-pod-months');
+      console.log('🔍 [updatePodSummary] monthsElement found:', !!monthsElement);
+      
+      if (monthsElement) {
+        const months = latestPodItem.reservationMonths || 3;
+        console.log('🔍 [updatePodSummary] Using months:', months, 'from latestPodItem.reservationMonths:', latestPodItem.reservationMonths);
+        monthsElement.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
+        console.log('🔍 [updatePodSummary] Updated months display');
+      }
     }
 
     updateFinalSummary(podItem, packItems) {
@@ -713,11 +848,14 @@
       // Remove pod button
       document.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement;
+        console.log('🔍 [Step1] Click event target:', target);
+        console.log('🔍 [Step1] Target matches #remove-pod-btn:', target && target.matches('#remove-pod-btn'));
+        
         if (target && target.matches('#remove-pod-btn')) {
-          console.log('🔍 Remove pod button clicked');
+          console.log('🔍 [Step1] Remove pod button clicked');
           await this.shared.removePod();
-          console.log('🔍 Pod removed, refreshing Step 1...');
-          await this.initializeStep1(); // Re-initialize to check cart state and update UI
+          // Immediately show available pods after removing
+          await this.showAvailablePods();
         }
       });
 
@@ -728,12 +866,104 @@
         }
       });
 
-      // Hire period change
-      document.addEventListener('change', (e) => {
-        if (e.target && e.target.matches('#hire-period-select')) {
-          this.shared.updateHirePeriod(e.target.value);
-        }
-      });
+      // Custom dropdown functionality
+      const dropdownBtn = document.getElementById('hire-period-dropdown-btn');
+      const dropdownOptions = document.getElementById('hire-period-options');
+      
+      if (dropdownBtn && dropdownOptions) {
+        // Toggle dropdown
+        dropdownBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const isOpen = dropdownOptions.classList.contains('opacity-100');
+          
+          if (isOpen) {
+            // Close dropdown
+            dropdownOptions.classList.remove('opacity-100', 'visible', 'scale-100');
+            dropdownOptions.classList.add('opacity-0', 'invisible', 'scale-95');
+            dropdownBtn.querySelector('svg').classList.remove('rotate-180');
+          } else {
+            // Open dropdown
+            dropdownOptions.classList.remove('opacity-0', 'invisible', 'scale-95');
+            dropdownOptions.classList.add('opacity-100', 'visible', 'scale-100');
+            dropdownBtn.querySelector('svg').classList.add('rotate-180');
+          }
+        });
+        
+        // Handle option selection
+        dropdownOptions.addEventListener('click', async (e) => {
+          const target = e.target as HTMLElement;
+          const optionBtn = target.closest('button[data-value]') as HTMLElement;
+          
+          if (optionBtn) {
+            const months = parseInt(optionBtn.getAttribute('data-value'));
+            console.log('🔍 [Step1] Custom dropdown option selected:', months);
+            
+            // Update the display
+            const displayElement = document.getElementById('hire-period-display');
+            if (displayElement) {
+              displayElement.textContent = `${months} Month${months > 1 ? 's' : ''}`;
+            }
+            
+            // Update the selected state
+            dropdownBtn.setAttribute('data-selected', months.toString());
+            
+            // Update all option buttons
+            const allOptions = dropdownOptions.querySelectorAll('button[data-value]');
+            allOptions.forEach(option => {
+              const optionValue = parseInt(option.getAttribute('data-value'));
+              if (optionValue === months) {
+                option.classList.add('bg-mint-100', 'text-mint-700', 'font-medium');
+                option.classList.remove('text-graphite-700');
+                // Add checkmark
+                option.innerHTML = `<span>${option.textContent.split('<')[0]}</span><svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+              } else {
+                option.classList.remove('bg-mint-100', 'text-mint-700', 'font-medium');
+                option.classList.add('text-graphite-700');
+                // Remove checkmark
+                option.innerHTML = `<span>${option.textContent.split('<')[0]}</span>`;
+              }
+            });
+            
+            // Close dropdown
+            dropdownOptions.classList.remove('opacity-100', 'visible', 'scale-100');
+            dropdownOptions.classList.add('opacity-0', 'invisible', 'scale-95');
+            dropdownBtn.querySelector('svg').classList.remove('rotate-180');
+            
+            // Update storage
+            console.log('🔍 [Step1] Calling updateHirePeriod...');
+            await this.shared.updateHirePeriod(months);
+            console.log('🔍 [Step1] updateHirePeriod completed');
+            
+            // Update the months display in Step 1
+            const monthsDisplay = document.getElementById('selected-pod-months');
+            if (monthsDisplay) {
+              monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
+              console.log('🔍 [Step1] Updated months display in Step 1');
+            }
+            
+            // Also verify the storage was updated
+            try {
+              const localStorageCart = localStorage.getItem('novapod-cart');
+              if (localStorageCart) {
+                const parsedCart = JSON.parse(localStorageCart);
+                const pod = parsedCart.find(item => item.type === 'pod');
+                console.log('🔍 [Step1] Pod in localStorage after update:', pod);
+              }
+            } catch (error) {
+              console.error('🔍 [Step1] Error checking localStorage:', error);
+            }
+          }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!dropdownBtn.contains(e.target as Node) && !dropdownOptions.contains(e.target as Node)) {
+            dropdownOptions.classList.remove('opacity-100', 'visible', 'scale-100');
+            dropdownOptions.classList.add('opacity-0', 'invisible', 'scale-95');
+            dropdownBtn.querySelector('svg').classList.remove('rotate-180');
+          }
+        });
+      }
     }
 
     addStep2EventListeners() {
@@ -760,16 +990,22 @@
 
       // Edit pod button
       document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#edit-pod-btn')) {
-          this.shared.previousStep();
+        const target = e.target as HTMLElement;
+        if (target && target.matches('#edit-pod-btn')) {
+          this.shared.navigateToStep(1);
         }
       });
 
       // Remove pod button
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#remove-pod-step2-btn')) {
+        const target = e.target as HTMLElement;
+        console.log('🔍 [Step2] Click event target:', target);
+        console.log('🔍 [Step2] Target matches #remove-pod-step2-btn:', target && target.matches('#remove-pod-step2-btn'));
+        
+        if (target && target.matches('#remove-pod-step2-btn')) {
+          console.log('🔍 [Step2] Remove pod button clicked');
           await this.shared.removePod();
-          this.showNoPodWarning();
+          this.shared.navigateToStep(1);
         }
       });
 

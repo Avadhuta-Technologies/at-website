@@ -8,26 +8,25 @@ export class SummaryShared {
   }
 
   async init() {
-    console.log('🔍 SummaryShared init called');
     if (typeof window !== 'undefined' && window.cartService) {
-      console.log('🔍 Cart service found, setting it');
       this.cartService = window.cartService;
     } else {
-      console.log('🔍 Cart service not available yet, retrying in 100ms');
       setTimeout(() => this.init(), 100);
     }
   }
 
   // Cart operations
   async getCart() {
-    console.log('🔍 getCart called, cartService available:', !!this.cartService);
     if (!this.cartService) {
-      console.log('🔍 No cart service available, returning empty array');
-      return [];
+      // Fallback to localStorage if cart service is not available
+      try {
+        const localStorageCart = localStorage.getItem('novapod-cart');
+        return localStorageCart ? JSON.parse(localStorageCart) : [];
+      } catch (error) {
+        return [];
+      }
     }
-    const cart = await this.cartService.getCart();
-    console.log('🔍 Cart retrieved:', cart);
-    return cart;
+    return await this.cartService.getCart();
   }
 
   async addToCart(item) {
@@ -41,8 +40,48 @@ export class SummaryShared {
   }
 
   async updateCartItem(id, type, data) {
-    if (!this.cartService) return;
-    await this.cartService.updateItem(id, type, data);
+    console.log('🔍 [updateCartItem] Called with:', { id, type, data });
+    
+    // Try to use cart service if available and has updateItem method
+    if (this.cartService && typeof this.cartService.updateItem === 'function') {
+      console.log('🔍 [updateCartItem] Using cart service updateItem method');
+      try {
+        await this.cartService.updateItem(id, type, data);
+        console.log('🔍 [updateCartItem] cartService.updateItem completed');
+      } catch (error) {
+        console.error('🔍 [updateCartItem] Error with cart service updateItem:', error);
+        // Fall through to localStorage fallback
+      }
+    }
+    
+    // Always also update localStorage as a backup
+    console.log('🔍 [updateCartItem] Also updating localStorage as backup');
+    try {
+      const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+      const index = cart.findIndex(item => item.id === id && item.type === type);
+      
+      if (index !== -1) {
+        cart[index] = { ...cart[index], ...data };
+        localStorage.setItem('novapod-cart', JSON.stringify(cart));
+        console.log('🔍 [updateCartItem] Updated localStorage with:', cart[index]);
+      } else {
+        console.log('🔍 [updateCartItem] Item not found in localStorage cart, adding it');
+        // If not found, add it to localStorage
+        cart.push({ id, type, ...data });
+        localStorage.setItem('novapod-cart', JSON.stringify(cart));
+        console.log('🔍 [updateCartItem] Added item to localStorage:', cart[cart.length - 1]);
+      }
+      
+      // Dispatch cart updated event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cart-updated', { 
+          detail: { action: 'update', item: data } 
+        }));
+        console.log('🔍 [updateCartItem] Dispatched cart-updated event');
+      }
+    } catch (error) {
+      console.error('🔍 [updateCartItem] Error updating localStorage:', error);
+    }
   }
 
   // Pod operations - using catalog data
@@ -79,7 +118,17 @@ export class SummaryShared {
           await this.removeFromCart(pack.id, 'pack');
         }
         
-
+        // Ensure localStorage is also cleared if cart service is not available
+        if (!this.cartService) {
+          localStorage.removeItem('novapod-cart');
+        }
+        
+        // Dispatch cart updated event to trigger UI refresh
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cart-updated', { 
+            detail: { action: 'remove', item: podItem } 
+          }));
+        }
         
         this.showNotification('Pod and all packs removed from cart', 'success');
         return true;
@@ -92,18 +141,36 @@ export class SummaryShared {
   }
 
   async updateHirePeriod(months) {
+    console.log('🔍 [updateHirePeriod] Called with months:', months);
     try {
       const cart = await this.getCart();
+      console.log('🔍 [updateHirePeriod] Current cart:', cart);
       const podItem = cart.find(item => item.type === 'pod');
+      console.log('🔍 [updateHirePeriod] Found pod item:', podItem);
       
       if (podItem) {
-        await this.updateCartItem(podItem.id, 'pod', {
+        const updatedPod = {
           ...podItem,
           reservationMonths: parseInt(months)
-        });
+        };
+        console.log('🔍 [updateHirePeriod] Updated pod:', updatedPod);
+        
+        console.log('🔍 [updateHirePeriod] Calling updateCartItem...');
+        await this.updateCartItem(podItem.id, 'pod', updatedPod);
+        console.log('🔍 [updateHirePeriod] updateCartItem completed');
+        
+        // Dispatch cart updated event to trigger UI refresh
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('cart-updated', { 
+            detail: { action: 'update', item: updatedPod } 
+          }));
+          console.log('🔍 [updateHirePeriod] Dispatched cart-updated event');
+        }
+      } else {
+        console.log('🔍 [updateHirePeriod] No pod found in cart');
       }
     } catch (error) {
-      console.error('Error updating hire period:', error);
+      console.error('🔍 [updateHirePeriod] Error updating hire period:', error);
     }
   }
 

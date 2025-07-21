@@ -26,6 +26,11 @@
           localStorage.setItem('novapod-cart', JSON.stringify(cart));
           this.updateCartCount();
           
+          // Dispatch cart updated event
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'add', item } }));
+          }
+          
           // Show notification
           this.showNotification(`Added ${item.title || 'Item'} to cart!`);
           
@@ -49,6 +54,11 @@
             cart.splice(index, 1);
             localStorage.setItem('novapod-cart', JSON.stringify(cart));
             this.updateCartCount();
+            
+            // Dispatch cart updated event
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'remove' } }));
+            }
             return true;
           }
           return false;
@@ -58,10 +68,68 @@
         }
       },
       
+      async removeItemById(id, type) {
+        try {
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          const index = cart.findIndex(item => item.id === id && item.type === type);
+          if (index !== -1) {
+            cart.splice(index, 1);
+            localStorage.setItem('novapod-cart', JSON.stringify(cart));
+            this.updateCartCount();
+            
+            // Dispatch cart updated event
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'remove' } }));
+            }
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('🟡 [CartInit] Error removing item by ID:', error);
+          return false;
+        }
+      },
+      
+      async getCart() {
+        try {
+          return JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+        } catch (error) {
+          console.error('🟡 [CartInit] Error getting cart:', error);
+          return [];
+        }
+      },
+      
+      async updateItem(id, type, data) {
+        try {
+          const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+          const index = cart.findIndex(item => item.id === id && item.type === type);
+          if (index !== -1) {
+            cart[index] = { ...cart[index], ...data };
+            localStorage.setItem('novapod-cart', JSON.stringify(cart));
+            this.updateCartCount();
+            
+            // Dispatch cart updated event
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'update' } }));
+            }
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('🟡 [CartInit] Error updating item:', error);
+          return false;
+        }
+      },
+      
       async clearCart() {
         try {
           localStorage.removeItem('novapod-cart');
           this.updateCartCount();
+          
+          // Dispatch cart updated event
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { action: 'clear' } }));
+          }
           return true;
         } catch (error) {
           console.error('🟡 [CartInit] Error clearing cart:', error);
