@@ -80,6 +80,8 @@ const relevantPacks = getRelevantPacks(pod.name);
             const packId = button.dataset.itemId;
             const podId = '${pod.id}'; // Pod ID from the current page
             
+            console.log('🔍 [PodDetail] Adding pack from pod detail page:', { packId, podId });
+            
             try {
               // Import the summaryShared utility
               const { SummaryShared } = await import('/src/utils/summaryShared.js');
@@ -97,6 +99,42 @@ const relevantPacks = getRelevantPacks(pod.name);
             } catch (error) {
               console.error('Error in pod detail cart handler:', error);
               showNotification('Failed to add items to cart', 'error');
+            }
+          } else if (itemType === 'pod') {
+            // Handle pod selection/replacement from pod detail page
+            const podId = button.dataset.itemId;
+            
+            console.log('🔍 [PodDetail] Pod selection from pod detail page:', { podId });
+            
+            try {
+              // Import the summaryShared utility
+              const { SummaryShared } = await import('/src/utils/summaryShared.js');
+              const shared = new SummaryShared();
+              
+              // Check if there's already a pod in cart
+              const cart = await shared.getCart();
+              const existingPod = cart.find(item => item.type === 'pod');
+              
+              if (existingPod) {
+                console.log('🔍 [PodDetail] Replacing existing pod:', existingPod.id, 'with new pod:', podId);
+                // Remove existing pod first (this will also remove all packs)
+                await shared.removePod();
+              }
+              
+              // Add the new pod
+              const success = await shared.selectPod(podId);
+              
+              if (success) {
+                console.log('Pod selected successfully, navigating to summary...');
+                // Navigate to summary page
+                window.location.href = '/summary?step=1';
+              } else {
+                console.error('Failed to select pod');
+                showNotification('Failed to select pod', 'error');
+              }
+            } catch (error) {
+              console.error('Error in pod detail pod selection:', error);
+              showNotification('Failed to select pod', 'error');
             }
           } else {
             // Handle other item types normally
@@ -169,7 +207,7 @@ const relevantPacks = getRelevantPacks(pod.name);
   </script>
   
   <!-- Hero Section -->
-  <PodHeroSection pod={pod} />
+  <PodHeroSection pod={{ ...pod, id: pod.id }} />
 
   <!-- Ideal For Section -->
   <PodIdealForSection idealFor={pod.idealFor} />
@@ -196,7 +234,7 @@ const relevantPacks = getRelevantPacks(pod.name);
   <PodAddPacksSection relevantPacks={relevantPacks} />
 
   <!-- Ready to Launch CTA Section -->
-  <PodReadyToLaunchSection pod={pod} />
+  <PodReadyToLaunchSection pod={{ ...pod, id: pod.id }} />
 </Layout>
 
 <style>

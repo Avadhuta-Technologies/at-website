@@ -1209,6 +1209,7 @@
       // Continue button
       document.addEventListener('click', (e) => {
         if (e.target && e.target.matches('#continue-btn')) {
+          console.log('🔍 [Step2] Continue button clicked');
           this.shared.nextStep();
         }
       });

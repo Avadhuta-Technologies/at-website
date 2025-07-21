@@ -294,20 +294,21 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
         </div>
       </div>
       
-      <!-- Prominent Reserve Pod Button -->
+      <!-- Dynamic CTA Button -->
       <button 
-        data-add-to-cart
+        id="pod-cta-{podId}"
+        data-pod-id={podId}
         data-item-id={podId}
         data-item-type="pod"
         data-item-title={pod.name}
         data-item-description={pod.whatsInPod.description}
         data-item-price={pod.pricing[0]}
-        class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 group-hover:shadow-lg"
-        onclick="console.log('🔵 [AvailablePodCard] Reserve Pod button clicked for:', '{{pod.name}}', 'with ID:', '{{podId}}'); console.log('🔵 [AvailablePodCard] Button data attributes:', { id: '{{podId}}', type: 'pod', title: '{{pod.name}}', description: '{{pod.whatsInPod.description}}', price: '{{pod.pricing[0]}}' });">
+        class="pod-cta-btn w-full inline-flex items-center justify-center px-4 py-3 font-semibold rounded-xl transition-all duration-200 group-hover:shadow-lg"
+        onclick="console.log('🔵 [AvailablePodCard] Pod CTA button clicked for:', '{{pod.name}}', 'with ID:', '{{podId}}');">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
         </svg>
-        <span>Reserve Pod</span>
+        <span class="cta-text">Reserve Pod</span>
       </button>
     </div>
   </div>
@@ -358,12 +359,50 @@ const podId = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '
     idealFor: ['{{pod.idealFor[0]}}', '{{pod.idealFor[1]}}', '{{pod.idealFor[2]}}']
   });
 
-  // Monitor cart events (no longer depends on CartService)
+  // Monitor cart events and update CTA buttons
   if (typeof window !== 'undefined') {
     window.addEventListener('cart-updated', (event) => {
       const customEvent = event as CustomEvent;
       console.log('🔵 [AvailablePodCard] Cart updated event received:', customEvent.detail);
+      updatePodCTAButtons();
     });
+    
+    // Update CTA buttons on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updatePodCTAButtons();
+    });
+    
+    // Function to update pod CTA buttons based on cart state
+    function updatePodCTAButtons() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+        const selectedPod = cart.find(item => item.type === 'pod');
+        
+        // Get all pod CTA buttons
+        const podButtons = document.querySelectorAll('.pod-cta-btn');
+        
+        podButtons.forEach(button => {
+          const podId = button.getAttribute('data-pod-id');
+          const ctaText = button.querySelector('.cta-text');
+          
+          if (selectedPod && selectedPod.id === podId) {
+            // This pod is selected - show "Remove Pod"
+            button.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
+            button.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+            button.setAttribute('data-action', 'remove');
+            if (ctaText) ctaText.textContent = 'Remove Pod';
+          } else {
+            // This pod is not selected - show "Reserve Pod"
+            button.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+            button.classList.add('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
+            button.setAttribute('data-action', 'add');
+            if (ctaText) ctaText.textContent = 'Reserve Pod';
+          }
+        });
+      } catch (error) {
+        console.error('Error updating pod CTA buttons:', error);
+      }
+    }
   }
 </script>
 
