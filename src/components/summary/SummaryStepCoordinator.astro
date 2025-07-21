@@ -80,6 +80,85 @@
           }
         }
       });
+      
+      // Global pack action handler - only added once
+      document.addEventListener('click', async (e) => {
+        const target = e.target as HTMLElement;
+        
+        // Handle pack add/remove buttons
+        if (target && target.matches('button[data-pack-id]')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const packId = target.getAttribute('data-pack-id');
+          const action = target.getAttribute('data-action');
+          
+          console.log('🔍 [Global] Pack action:', action, 'for pack:', packId);
+          
+          // Add a small delay to prevent rapid clicks
+          if (target.disabled) {
+            console.log('🔍 [Global] Button already processing, ignoring click');
+            return;
+          }
+          
+          target.disabled = true;
+          
+          try {
+            if (action === 'add') {
+              // Check if pod exists before adding pack
+              const hasPod = await this.shared.hasPod();
+              if (!hasPod) {
+                this.shared.showNotification('Please select a NovaPod first to add packs', 'warning');
+                return;
+              }
+              await this.shared.addPack(packId);
+            } else if (action === 'remove') {
+              await this.shared.removePack(packId);
+            }
+            
+            // Reload packs to update UI if we're on Step 2
+            if (this.currentStep === 2) {
+              const cart = await this.shared.getCart();
+              const selectedPod = cart.find(item => item.type === 'pod');
+              if (selectedPod) {
+                await this.loadPacksForStep2(selectedPod);
+              }
+              
+              // Update selected packs display
+              this.updateSelectedPacksDisplay();
+            }
+          } finally {
+            // Re-enable button after a short delay
+            setTimeout(() => {
+              target.disabled = false;
+            }, 500);
+          }
+        }
+        
+        // Handle delete pack buttons
+        const deleteBtn = target.closest('.delete-pack-btn') as HTMLElement;
+        if (deleteBtn) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const packId = deleteBtn.getAttribute('data-pack-id');
+          if (packId) {
+            console.log('🔍 [Global] Deleting pack:', packId);
+            await this.shared.removePack(packId);
+            
+            // Refresh the packs display if we're on Step 2
+            if (this.currentStep === 2) {
+              this.updateSelectedPacksDisplay();
+              // Also refresh the available packs to update their state
+              const cart = await this.shared.getCart();
+              const selectedPod = cart.find(item => item.type === 'pod');
+              if (selectedPod) {
+                await this.loadPacksForStep2(selectedPod);
+              }
+            }
+          }
+        }
+      });
     }
 
     async loadStep(step) {
@@ -148,6 +227,14 @@
                   </svg>
                 </button>
               </div>
+            </div>
+          </div>
+
+          <!-- Selected Packs Section -->
+          <div id="selected-packs-section" class="bg-white rounded-2xl p-6 mb-8 border border-gray-200 shadow-sm">
+            <h3 class="text-lg font-semibold text-graphite-900 mb-4">Selected Packs</h3>
+            <div id="selected-packs-list" class="space-y-3">
+              ${this.renderSelectedPacksWithDelete()}
             </div>
           </div>
 
@@ -339,9 +426,14 @@
         this.updatePodSummary(selectedPod);
         // Load packs for the selected pod
         await this.loadPacksForStep2(selectedPod);
+        // Update selected packs display
+        this.updateSelectedPacksDisplay();
       } else {
-        console.log('🔍 [initializeStep2] No pod found, showing warning');
-        this.showNoPodWarning();
+        console.log('🔍 [initializeStep2] No pod found, redirecting to Step 1');
+        this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
+        // Navigate back to Step 1
+        this.shared.navigateToStep(1);
+        return;
       }
       
       this.addStep2EventListeners();
@@ -359,6 +451,12 @@
       
       if (selectedPod) {
         this.updateFinalSummary(selectedPod, selectedPacks);
+      } else {
+        console.log('🔍 [initializeStep3] No pod found, redirecting to Step 1');
+        this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
+        // Navigate back to Step 1
+        this.shared.navigateToStep(1);
+        return;
       }
       
       this.addStep3EventListeners();
@@ -499,6 +597,8 @@
                   </div>
                 </div>
               </div>
+
+
 
               <!-- Action Buttons -->
               <div class="space-y-3">
@@ -647,8 +747,12 @@
     }
 
     renderPackCard(pack) {
+      // Check if pack is already in cart
+      const cart = this.getCurrentCart();
+      const isAdded = cart.some(item => item.id === pack.id && item.type === 'pack');
+      
       return `
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-cerulean-300 transition-all duration-300 hover:shadow-lg ${pack.isAdded ? 'ring-2 ring-cerulean-500' : ''}">
+        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-cerulean-300 transition-all duration-300 hover:shadow-lg ${isAdded ? 'ring-2 ring-cerulean-500' : ''}">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
@@ -664,13 +768,107 @@
           
           <div class="flex items-center justify-between">
             <span class="text-sm text-graphite-500">${pack.duration}</span>
-            <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${pack.isAdded ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-cerulean-500 text-white hover:bg-cerulean-600'}" data-pack-id="${pack.id}" data-action="${pack.isAdded ? 'remove' : 'add'}">
-              ${pack.isAdded ? 'Remove' : 'Add Pack'}
+            <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${isAdded ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-cerulean-500 text-white hover:bg-cerulean-600'}" data-pack-id="${pack.id}" data-action="${isAdded ? 'remove' : 'add'}">
+              ${isAdded ? 'Remove' : 'Add Pack'}
             </button>
           </div>
         </div>
       `;
     }
+
+    getCurrentCart() {
+      try {
+        const cartData = localStorage.getItem('novapod-cart');
+        return cartData ? JSON.parse(cartData) : [];
+      } catch (error) {
+        console.error('Error reading cart from localStorage:', error);
+        return [];
+      }
+    }
+
+    renderSelectedPacks() {
+      const cart = this.getCurrentCart();
+      const selectedPacks = cart.filter(item => item.type === 'pack');
+      
+      if (selectedPacks.length === 0) {
+        return `
+          <div class="text-center py-4">
+            <p class="text-sm text-graphite-500">No packs selected yet</p>
+            <p class="text-xs text-graphite-400 mt-1">Add packs in Step 2 to enhance your pod</p>
+          </div>
+        `;
+      }
+      
+      return selectedPacks.map(pack => `
+        <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+              <span class="text-white text-sm">📦</span>
+            </div>
+            <div>
+              <span class="font-medium text-graphite-900 text-sm">${pack.title || 'Pack'}</span>
+              <p class="text-xs text-graphite-500">${pack.description || 'Pack description'}</p>
+            </div>
+          </div>
+          <span class="font-semibold text-cerulean-600 text-sm">${pack.price || '₹0'}</span>
+        </div>
+      `).join('');
+    }
+
+    renderSelectedPacksWithDelete() {
+      const cart = this.getCurrentCart();
+      const selectedPacks = cart.filter(item => item.type === 'pack');
+      
+      if (selectedPacks.length === 0) {
+        return `
+          <div class="text-center py-6">
+            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+            </div>
+            <p class="text-sm text-graphite-500">No packs selected yet</p>
+            <p class="text-xs text-graphite-400 mt-1">Browse and add packs below to enhance your pod</p>
+          </div>
+        `;
+      }
+      
+      return selectedPacks.map(pack => `
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
+              <span class="text-white text-sm">📦</span>
+            </div>
+            <div>
+              <span class="font-medium text-graphite-900">${pack.title || 'Pack'}</span>
+              <p class="text-sm text-graphite-600">${pack.description || 'Pack description'}</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span class="font-semibold text-cerulean-600">${pack.price || '₹0'}</span>
+            <button 
+              class="delete-pack-btn p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors" 
+              data-pack-id="${pack.id}" 
+              title="Remove pack"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    updateSelectedPacksDisplay() {
+      const selectedPacksList = document.getElementById('selected-packs-list');
+      if (selectedPacksList) {
+        selectedPacksList.innerHTML = this.renderSelectedPacksWithDelete();
+        // Event listeners are now handled by event delegation in addStep2EventListeners
+      }
+    }
+
+
 
     addTabListeners() {
       const tabButtons = document.querySelectorAll('.tab-btn');
@@ -974,26 +1172,10 @@
     }
 
     addStep2EventListeners() {
-      // Pack add/remove
-      document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('[data-pack-id]')) {
-          const packId = e.target.getAttribute('data-pack-id');
-          const action = e.target.getAttribute('data-action');
-          
-          if (action === 'add') {
-            await this.shared.addPack(packId);
-          } else if (action === 'remove') {
-            await this.shared.removePack(packId);
-          }
-          
-          // Reload packs to update UI
-          const cart = await this.shared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
-          if (selectedPod) {
-            await this.loadPacksForStep2(selectedPod);
-          }
-        }
-      });
+      console.log('🔍 [Step2] Adding event listeners...');
+      
+      // Pack event listeners are now handled globally in setupEventListeners()
+      // Only add Step 2 specific listeners here
 
       // Edit pod button
       document.addEventListener('click', (e) => {

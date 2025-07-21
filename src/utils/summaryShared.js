@@ -27,8 +27,41 @@ export class SummaryShared {
   async addToCart(item) {
     try {
       const cart = await this.getCart();
-      cart.push(item);
-      localStorage.setItem('novapod-cart', JSON.stringify(cart));
+      
+      // Business Rule: Only 1 pod allowed
+      if (item.type === 'pod') {
+        const existingPod = cart.find(cartItem => cartItem.type === 'pod');
+        if (existingPod) {
+          console.log('🔍 [addToCart] Pod already exists, replacing:', existingPod.id);
+          // Remove existing pod and all its packs
+          await this.removePod();
+          // Get fresh cart after removal
+          const freshCart = await this.getCart();
+          freshCart.push(item);
+          localStorage.setItem('novapod-cart', JSON.stringify(freshCart));
+        } else {
+          cart.push(item);
+          localStorage.setItem('novapod-cart', JSON.stringify(cart));
+        }
+      }
+      // Business Rule: Multiple packs allowed, but no duplicates
+      else if (item.type === 'pack') {
+        const existingPack = cart.find(cartItem => cartItem.id === item.id && cartItem.type === 'pack');
+        if (existingPack) {
+          console.log('🔍 [addToCart] Pack already exists, skipping:', item.id);
+          this.showNotification('Pack already in cart', 'info');
+          return false;
+        } else {
+          cart.push(item);
+          localStorage.setItem('novapod-cart', JSON.stringify(cart));
+        }
+      }
+      // Other item types
+      else {
+        cart.push(item);
+        localStorage.setItem('novapod-cart', JSON.stringify(cart));
+      }
+      
       console.log('🔍 [addToCart] Added item to localStorage:', item);
       
       // Dispatch cart updated event
@@ -299,6 +332,60 @@ export class SummaryShared {
     } catch (error) {
       console.error('Error loading all packs:', error);
       return [];
+    }
+  }
+
+  // Check if pod exists in cart
+  async hasPod() {
+    try {
+      const cart = await this.getCart();
+      return cart.some(item => item.type === 'pod');
+    } catch (error) {
+      console.error('Error checking for pod:', error);
+      return false;
+    }
+  }
+
+  // Prompt user to add pod if none exists
+  async promptForPod() {
+    const hasPod = await this.hasPod();
+    if (!hasPod) {
+      this.showNotification('Please select a NovaPod first to proceed', 'warning');
+      return false;
+    }
+    return true;
+  }
+
+  // Add both pod and pack from pod detail page
+  async addPodAndPack(podId, packId) {
+    try {
+      console.log('🔍 [addPodAndPack] Adding pod and pack:', { podId, packId });
+      
+      // Add pod first
+      const pod = await this.selectPod(podId);
+      if (!pod) {
+        this.showNotification('Failed to add pod', 'error');
+        return false;
+      }
+      
+      // Add pack
+      const pack = await this.addPack(packId);
+      if (!pack) {
+        this.showNotification('Failed to add pack', 'error');
+        return false;
+      }
+      
+      // Navigate to summary page step 2
+      if (typeof window !== 'undefined') {
+        window.location.href = '/summary?step=2';
+      }
+      
+      this.showNotification('Pod and pack added! Redirecting to summary...', 'success');
+      return true;
+    } catch (error) {
+      console.error('Error adding pod and pack:', error);
+      this.showNotification('Failed to add pod and pack', 'error');
+      return false;
     }
   }
 
