@@ -333,6 +333,36 @@ const podSlug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g,
     idealFor: ['{{pod.idealFor[0]}}', '{{pod.idealFor[1]}}', '{{pod.idealFor[2]}}']
   });
 
+  // Check localStorage immediately and update button state
+  if (typeof window !== 'undefined') {
+    try {
+      const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+      const selectedPod = cart.find((item: any) => item.type === 'pod');
+      
+      console.log('🔵 [AvailablePodCard] Initial cart check for podId:', '{{podId}}');
+      console.log('🔵 [AvailablePodCard] Selected pod in cart:', selectedPod);
+      
+      if (selectedPod && selectedPod.id === '{{podId}}') {
+        console.log('🔵 [AvailablePodCard] This pod is already in cart - setting initial state to "Remove Pod"');
+        // This pod is already in cart - set initial state
+        setTimeout(() => {
+          const button = document.querySelector(`[data-pod-id="{{podId}}"]`) as HTMLElement;
+          const ctaText = button?.querySelector('.cta-text');
+          
+          if (button && ctaText) {
+            button.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
+            button.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+            button.setAttribute('data-action', 'remove');
+            ctaText.textContent = 'Remove Pod';
+            console.log('🔵 [AvailablePodCard] Initial button state set to "Remove Pod"');
+          }
+        }, 100);
+      }
+    } catch (error) {
+      console.error('🔵 [AvailablePodCard] Error checking initial cart state:', error);
+    }
+  }
+
   // Monitor cart events and update CTA buttons
   if (typeof window !== 'undefined') {
     window.addEventListener('cart-updated', (event) => {
@@ -352,29 +382,39 @@ const podSlug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g,
         const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
         const selectedPod = cart.find((item: any) => item.type === 'pod');
         
+        console.log('🔵 [AvailablePodCard] Current cart:', cart);
+        console.log('🔵 [AvailablePodCard] Selected pod:', selectedPod);
+        
         // Get all pod CTA buttons
         const podButtons = document.querySelectorAll('.pod-cta-btn');
+        console.log('🔵 [AvailablePodCard] Found pod buttons:', podButtons.length);
         
         podButtons.forEach((button: Element) => {
-          const podId = button.getAttribute('data-pod-id');
-          const ctaText = button.querySelector('.cta-text');
+          const buttonElement = button as HTMLElement;
+          const podId = buttonElement.getAttribute('data-pod-id');
+          const ctaText = buttonElement.querySelector('.cta-text');
+          
+          console.log('🔵 [AvailablePodCard] Checking button for podId:', podId);
+          console.log('🔵 [AvailablePodCard] Selected pod ID:', selectedPod?.id);
           
           if (selectedPod && selectedPod.id === podId) {
             // This pod is selected - show "Remove Pod"
-            button.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
-            button.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
-            button.setAttribute('data-action', 'remove');
+            console.log('🔵 [AvailablePodCard] Updating button to "Remove Pod" for:', podId);
+            buttonElement.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
+            buttonElement.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+            buttonElement.setAttribute('data-action', 'remove');
             if (ctaText) ctaText.textContent = 'Remove Pod';
           } else {
             // This pod is not selected - show "Reserve Pod"
-            button.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
-            button.classList.add('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
-            button.setAttribute('data-action', 'add');
+            console.log('🔵 [AvailablePodCard] Updating button to "Reserve Pod" for:', podId);
+            buttonElement.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+            buttonElement.classList.add('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
+            buttonElement.setAttribute('data-action', 'add');
             if (ctaText) ctaText.textContent = 'Reserve Pod';
           }
         });
       } catch (error) {
-        console.error('Error updating pod CTA buttons:', error);
+        console.error('🔵 [AvailablePodCard] Error updating pod CTA buttons:', error);
       }
     }
   }
