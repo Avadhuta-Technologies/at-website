@@ -39,6 +39,8 @@
       
       // Listen for cart updates to refresh UI
       window.addEventListener('cart-updated', async (e) => {
+        console.log('🔍 [CartUpdated] Event received, current step:', this.currentStep);
+        
         if (this.currentStep === 1) {
           // Check if we still have a pod after the update
           const cart = await this.shared.getCart();
@@ -59,9 +61,11 @@
           if (selectedPod || localStoragePod) {
             // Still have a pod, show selected pod
             const podToShow = selectedPod || localStoragePod;
+            console.log('🔍 [CartUpdated] Step 1 - Showing selected pod:', podToShow);
             this.showSelectedPod(podToShow);
           } else {
             // No pod, show available pods
+            console.log('🔍 [CartUpdated] Step 1 - Showing available pods');
             this.showAvailablePods();
           }
         } else if (this.currentStep === 2) {
@@ -70,6 +74,7 @@
           const selectedPod = cart.find(item => item.type === 'pod');
           
           if (selectedPod) {
+            console.log('🔍 [CartUpdated] Step 2 - Updating pod summary with:', selectedPod);
             this.updatePodSummary(selectedPod);
           }
         }
@@ -845,14 +850,15 @@
         }
       });
 
-      // Remove pod button
+      // Remove pod button - using event delegation
       document.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement;
-        console.log('🔍 [Step1] Click event target:', target);
-        console.log('🔍 [Step1] Target matches #remove-pod-btn:', target && target.matches('#remove-pod-btn'));
+        const removeBtn = target.closest('#remove-pod-btn') as HTMLElement;
         
-        if (target && target.matches('#remove-pod-btn')) {
+        if (removeBtn) {
           console.log('🔍 [Step1] Remove pod button clicked');
+          e.preventDefault();
+          e.stopPropagation();
           await this.shared.removePod();
           // Immediately show available pods after removing
           await this.showAvailablePods();
@@ -996,14 +1002,15 @@
         }
       });
 
-      // Remove pod button
+      // Remove pod button - using event delegation
       document.addEventListener('click', async (e) => {
         const target = e.target as HTMLElement;
-        console.log('🔍 [Step2] Click event target:', target);
-        console.log('🔍 [Step2] Target matches #remove-pod-step2-btn:', target && target.matches('#remove-pod-step2-btn'));
+        const removeBtn = target.closest('#remove-pod-step2-btn') as HTMLElement;
         
-        if (target && target.matches('#remove-pod-step2-btn')) {
+        if (removeBtn) {
           console.log('🔍 [Step2] Remove pod button clicked');
+          e.preventDefault();
+          e.stopPropagation();
           await this.shared.removePod();
           this.shared.navigateToStep(1);
         }
