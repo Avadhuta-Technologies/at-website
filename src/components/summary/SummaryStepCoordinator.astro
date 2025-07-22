@@ -91,6 +91,9 @@
             console.log('🔍 [CartUpdated] Step 2 - Updating pod summary with:', selectedPod);
             this.updatePodSummary(selectedPod);
           }
+          
+          // Update selected packs display
+          await this.updateSelectedPacksDisplay();
         }
       });
       
@@ -98,15 +101,34 @@
       document.addEventListener('click', async (e) => {
         const target = e.target;
         
+        console.log('🔍 [Global] Click detected on:', target);
+        console.log('🔍 [Global] Target matches button[data-pack-id]:', target && target.matches('button[data-pack-id]'));
+        
         // Handle pack add/remove buttons
         if (target && target.matches('button[data-pack-id]')) {
           e.preventDefault();
           e.stopPropagation();
           
           const packId = target.getAttribute('data-pack-id');
-          const action = target.getAttribute('data-action');
+          const currentAction = target.getAttribute('data-action');
           
-          console.log('🔍 [Global] Pack action:', action, 'for pack:', packId);
+          // Determine the correct action based on button text and current state
+          let action;
+          if (target.textContent.trim() === 'Add Pack' || currentAction === 'add') {
+            action = 'add';
+          } else if (target.textContent.trim() === 'Remove Pack' || currentAction === 'remove') {
+            action = 'remove';
+          } else {
+            console.error('🔍 [Global] Unknown button state:', target.textContent, 'data-action:', currentAction);
+            return;
+          }
+          
+          console.log('🔍 [Global] ===== PACK ACTION START =====');
+          console.log('🔍 [Global] Button text:', target.textContent.trim());
+          console.log('🔍 [Global] Data action:', currentAction);
+          console.log('🔍 [Global] Determined action:', action, 'for pack:', packId);
+          console.log('🔍 [Global] Current step:', this.currentStep);
+          console.log('🔍 [Global] Button disabled state:', target.disabled);
           
           // Add a small delay to prevent rapid clicks
           if (target.disabled) {
@@ -115,46 +137,59 @@
           }
           
           target.disabled = true;
+          console.log('🔍 [Global] Button disabled for processing');
           
           try {
             if (action === 'add') {
+              console.log('🔍 [Global] ===== ADDING PACK =====');
               // Check if pod exists before adding pack
               const hasPod = await this.shared.hasPod();
+              console.log('🔍 [Global] Has pod:', hasPod);
               if (!hasPod) {
                 this.shared.showNotification('Please select a NovaPod first to add packs', 'warning');
                 return;
               }
               await this.shared.addPack(packId);
+              console.log('🔍 [Global] ===== PACK ADDED SUCCESSFULLY =====');
             } else if (action === 'remove') {
+              console.log('🔍 [Global] ===== REMOVING PACK =====');
               await this.shared.removePack(packId);
+              console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
             }
             
             // Refresh pack cards display immediately for better UX
             if (this.currentStep === 2) {
+              console.log('🔍 [Global] ===== REFRESHING UI =====');
               await this.refreshPackCards();
+              await this.updateSelectedPacksDisplay();
+              console.log('🔍 [Global] ===== UI REFRESHED =====');
             }
+          } catch (error) {
+            console.error('🔍 [Global] Error in pack action:', error);
           } finally {
             // Re-enable button after a short delay
             setTimeout(() => {
               target.disabled = false;
+              console.log('🔍 [Global] ===== PACK ACTION END - Button re-enabled =====');
             }, 500);
           }
         }
         
-        // Handle delete pack buttons
-        const deleteBtn = target.closest('.delete-pack-btn');
-        if (deleteBtn) {
+        // Handle delete pack buttons in selected packs container
+        const deleteBtn = target.closest('#selected-packs-list button[data-action="remove"]');
+        if (deleteBtn && deleteBtn.getAttribute('data-pack-id')) {
           e.preventDefault();
           e.stopPropagation();
           
           const packId = deleteBtn.getAttribute('data-pack-id');
           if (packId) {
-            console.log('🔍 [Global] Deleting pack:', packId);
+            console.log('🔍 [Global] Deleting pack from selected packs:', packId);
             await this.shared.removePack(packId);
             
             // Refresh the packs display if we're on Step 2
             if (this.currentStep === 2) {
               await this.refreshPackCards();
+              await this.updateSelectedPacksDisplay();
             }
           }
         }
@@ -270,8 +305,14 @@
           <!-- Selected Packs Section -->
           <div id="selected-packs-section" class="bg-white rounded-2xl p-6 mb-8 border border-gray-200 shadow-sm">
             <h3 class="text-lg font-semibold text-graphite-900 mb-4">Selected Packs</h3>
-            <div id="selected-packs-list" class="space-y-3">
+            <div id="selected-packs-list" class="space-y-3 mb-6">
               ${this.renderSelectedPacksWithDelete()}
+            </div>
+            <!-- Continue button in selected packs container -->
+            <div class="flex justify-end items-center pt-4 border-t border-gray-200">
+              <button id="step2-continue-btn-selected" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
+                Continue
+              </button>
             </div>
           </div>
 
@@ -1040,30 +1081,37 @@
     }
 
     async updateSelectedPacksDisplay() {
+      console.log('🔍 [updateSelectedPacksDisplay] ===== STARTING UPDATE =====');
       const selectedPacksList = document.getElementById('selected-packs-list');
       if (selectedPacksList) {
-        selectedPacksList.innerHTML = await this.renderSelectedPacksWithDelete();
+        console.log('🔍 [updateSelectedPacksDisplay] Found selected-packs-list element');
+        const newContent = await this.renderSelectedPacksWithDelete();
+        console.log('🔍 [updateSelectedPacksDisplay] New content length:', newContent.length);
+        selectedPacksList.innerHTML = newContent;
+        console.log('🔍 [updateSelectedPacksDisplay] ===== UPDATE COMPLETED =====');
+      } else {
+        console.error('🔍 [updateSelectedPacksDisplay] selected-packs-list element not found');
       }
     }
 
     async refreshPackCards() {
+      console.log('🔍 [refreshPackCards] ===== STARTING PACK CARDS REFRESH =====');
       try {
-        console.log('🔍 [refreshPackCards] Starting pack cards refresh');
-        
-        // Get current cart to check which packs are selected
         const cart = this.getCurrentCart();
         const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
         
         console.log('🔍 [refreshPackCards] Selected pack IDs:', selectedPackIds);
         
-        // Update all pack cards on the page
         const packCards = document.querySelectorAll('.pack-card');
+        console.log('🔍 [refreshPackCards] Found pack cards:', packCards.length);
+        
         packCards.forEach(card => {
           const packId = card.getAttribute('data-pack-id');
           const button = card.querySelector('button[data-action]');
           
           if (packId && button) {
             const isSelected = selectedPackIds.includes(packId);
+            console.log('🔍 [refreshPackCards] Processing pack:', packId, 'isSelected:', isSelected, 'current action:', button.getAttribute('data-action'));
             
             // Update card styling
             if (isSelected) {
@@ -1078,21 +1126,27 @@
             if (isSelected) {
               button.textContent = 'Remove Pack';
               button.setAttribute('data-action', 'remove');
-              button.classList.remove('bg-mint-500', 'hover:bg-mint-600');
-              button.classList.add('bg-red-500', 'hover:bg-red-600');
+              // Completely replace the class attribute to avoid conflicts
+              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-red-500 text-white hover:bg-red-600';
+              button.disabled = false; // Ensure button is enabled
+              console.log('🔍 [refreshPackCards] Button classes after update (selected):', button.className);
             } else {
               button.textContent = 'Add Pack';
               button.setAttribute('data-action', 'add');
-              button.classList.remove('bg-red-500', 'hover:bg-red-600');
-              button.classList.add('bg-mint-500', 'hover:bg-mint-600');
+              // Completely replace the class attribute to avoid conflicts
+              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-cerulean-500 text-white hover:bg-cerulean-600';
+              button.disabled = false; // Ensure button is enabled
+              console.log('🔍 [refreshPackCards] Button classes after update (not selected):', button.className);
             }
+            
+            console.log('🔍 [refreshPackCards] Updated button for pack:', packId, 'new action:', button.getAttribute('data-action'), 'disabled:', button.disabled);
           }
         });
         
-        // Also refresh the selected packs list
-        await this.renderSelectedPacksWithDelete();
+        // Update the selected packs display in the DOM
+        await this.updateSelectedPacksDisplay();
         
-        console.log('🔍 [refreshPackCards] Pack cards refreshed successfully');
+        console.log('🔍 [refreshPackCards] ===== PACK CARDS REFRESH COMPLETED =====');
       } catch (error) {
         console.error('🔍 [refreshPackCards] Error refreshing pack cards:', error);
       }
@@ -1475,13 +1529,14 @@
       document.addEventListener('click', (e) => {
         console.log('🔍 [Step2] Click event detected, target:', e.target);
         console.log('🔍 [Step2] Target matches #step2-continue-btn:', e.target && e.target.matches('#step2-continue-btn'));
-        if (e.target && e.target.matches('#step2-continue-btn') && this.currentStep === 2) {
+        console.log('🔍 [Step2] Target matches #step2-continue-btn-selected:', e.target && e.target.matches('#step2-continue-btn-selected'));
+        if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected')) && this.currentStep === 2) {
           console.log('🔍 [Step2] Continue to Step 3 button clicked');
           console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step2] About to call nextStep()');
           this.shared.nextStep();
           console.log('🔍 [Step2] nextStep() called');
-        } else if (e.target && e.target.matches('#step2-continue-btn')) {
+        } else if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected'))) {
           console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
         }
       });
