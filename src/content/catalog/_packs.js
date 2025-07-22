@@ -2,6 +2,8 @@
 // This file contains all pack data used throughout the website
 // Import this file whenever you need pack data for cart, checkout, or display
 
+import { generatePackSlug } from '../../utils/slugUtils.js';
+
 export const packsCatalog = {
   // Pack data organized by categories
   packCategories: [
@@ -690,6 +692,13 @@ export const packsCatalog = {
   // Utility functions for working with pack data
   getPackById: (id) => {
     return packsCatalog.availablePacks.find(pack => pack.id === id) || null;
+  },
+
+  getPackBySlug: (slug) => {
+    return packsCatalog.availablePacks.find(pack => {
+      const packSlug = generatePackSlug(pack.title);
+      return packSlug === slug;
+    }) || null;
   },
 
   getPacksByCategory: (category) => {

@@ -1,4 +1,6 @@
 ---
+import { generatePackSlug } from '../../utils/slugUtils.js';
+
 export interface Props {
   pack: {
     id: string;
@@ -71,7 +73,7 @@ const getPackIcon = (pack: any) => {
 };
 ---
 
-<a href={`/packs/${pack.id}`} class="pack-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer block">
+<a href={`/packs/${generatePackSlug(pack.title)}`} class="pack-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer block">
   <!-- Card Background with Gradient -->
   <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { catalogUtils } from '../../content/catalog/_index.js';
+import { generatePackSlug } from '../../utils/slugUtils.js';
 import PackHeroSection from '../../components/packs/PackHeroSection.astro';
 import PackIncludedSection from '../../components/packs/PackIncludedSection.astro';
 import PackAddOnsSection from '../../components/packs/PackAddOnsSection.astro';
@@ -13,7 +14,7 @@ import PodRequiredModal from '../../components/shared/PodRequiredModal.astro';
 export async function getStaticPaths() {
   const { packs } = catalogUtils.getAllProducts();
   return packs.map((pack) => ({
-    params: { slug: pack.id },
+    params: { slug: generatePackSlug(pack.title) },
     props: { pack },
   }));
 }

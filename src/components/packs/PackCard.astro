@@ -1,6 +1,7 @@
 ---
 import { getBadgeStyle, getDotColor, getGradientClass } from '../../utils/colorUtils';
 import { catalogUtils } from '../../content/catalog/_index.js';
+import { generatePackSlug } from '../../utils/slugUtils.js';
 
 export interface Props {
   packId: string; // Use packId instead of individual props
@@ -38,8 +39,8 @@ const {
 } = pack;
 
 // Default URLs if not provided
-const defaultLearnMoreUrl = `/packs/${id}`;
-const defaultActionUrl = `/packs/${id}`;
+const defaultLearnMoreUrl = `/packs/${generatePackSlug(title)}`;
+const defaultActionUrl = `/packs/${generatePackSlug(title)}`;
 const defaultActionText = 'Add Pack';
 
 const finalLearnMoreUrl = learnMoreUrl || defaultLearnMoreUrl;

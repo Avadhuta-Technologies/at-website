@@ -1,4 +1,6 @@
 ---
+import { generatePackSlug } from '../../utils/slugUtils.js';
+
 export interface Props {
   pack: {
     id: string;
@@ -317,7 +319,7 @@ const getPackIcon = (pack: any) => {
             </svg>
           </button>
           <a 
-            href={`/packs/${pack.id}`} 
+            href={`/packs/${generatePackSlug(pack.title)}`} 
             class="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
           >
             <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
