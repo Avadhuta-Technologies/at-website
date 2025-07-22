@@ -7,8 +7,9 @@ export const GET: APIRoute = async () => {
       id: pod.id,
       title: pod.name,
       description: pod.tagline,
-      price: pod.pricing[0] || 'Starting at ₹2.5L/month',
-      basePrice: 250000, // Default base price
+      basePriceINR: pod.basePriceINR,
+      basePriceUSD: pod.basePriceUSD,
+      discountPercentage: pod.discountPercentage,
       icon: '🚀', // Default icon
       badge: 'New',
       badgeColor: 'bg-mint-100 text-mint-800',

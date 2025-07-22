@@ -182,6 +182,9 @@
         return;
       }
 
+      // Update URL with current step
+      this.updateURL(step);
+
       // Clean up existing event listeners before loading new step
       this.cleanupEventListeners();
 
@@ -200,6 +203,17 @@
           break;
         default:
           console.error('🔍 [loadStep] Unknown step:', step);
+      }
+    }
+
+    updateURL(step) {
+      try {
+        const url = new URL(window.location);
+        url.searchParams.set('step', step.toString());
+        window.history.replaceState({}, '', url);
+        console.log('🔍 [updateURL] Updated URL to step:', step);
+      } catch (error) {
+        console.error('🔍 [updateURL] Error updating URL:', error);
       }
     }
 
@@ -456,7 +470,7 @@
         // Load packs for the selected pod
         await this.loadPacksForStep2(selectedPod);
         // Update selected packs display
-        this.updateSelectedPacksDisplay();
+        await this.updateSelectedPacksDisplay();
       } else {
         console.log('🔍 [initializeStep2] No pod found, redirecting to Step 1');
         this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
@@ -479,7 +493,7 @@
       console.log('🔍 Step 3 - Selected packs:', selectedPacks);
       
       if (selectedPod) {
-        this.updateFinalSummary(selectedPod, selectedPacks);
+        await this.updateFinalSummary(selectedPod, selectedPacks);
       } else {
         console.log('🔍 [initializeStep3] No pod found, redirecting to Step 1');
         this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
@@ -705,7 +719,15 @@
           
           <!-- Pricing - positioned above button -->
           <div class="mb-4">
-            <span class="text-lg font-bold text-mint-600">${pod.pricing ? pod.pricing[0] : 'Contact Us'}</span>
+            ${pod.discountPercentage > 0 ? `
+              <div class="space-y-1">
+                <div class="text-sm text-gray-500 line-through">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</div>
+                <div class="text-lg font-bold text-mint-600">₹${((pod.basePriceINR * (100 - pod.discountPercentage) / 100) / 100000).toFixed(1)}L/month</div>
+                <div class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">${pod.discountPercentage}% OFF</div>
+              </div>
+            ` : `
+              <span class="text-lg font-bold text-mint-600">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</span>
+            `}
           </div>
           
           <!-- CTA Button - always at bottom -->
@@ -775,13 +797,9 @@
       this.addTabListeners();
     }
 
-    renderPackCard(pack) {
-      // Check if pack is already in cart
-      const cart = this.getCurrentCart();
-      const isAdded = cart.some(item => item.id === pack.id && item.type === 'pack');
-      
+    renderPackCard(pack, isAdded = false) {
       return `
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-cerulean-300 transition-all duration-300 hover:shadow-lg ${isAdded ? 'ring-2 ring-cerulean-500' : ''}">
+        <div class="pack-card bg-white rounded-xl border-2 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group ${isAdded ? 'border-mint-500 bg-mint-50' : 'border-gray-200'}" data-pack-id="${pack.id}">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
@@ -789,7 +807,15 @@
               </div>
               ${pack.badge ? `<span class="px-2 py-1 text-xs font-medium rounded-full ${pack.badgeColor === 'green' ? 'bg-green-100 text-green-800' : pack.badgeColor === 'blue' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}">${pack.badge}</span>` : ''}
             </div>
-            <span class="text-sm font-medium text-cerulean-600">${pack.priceINR}</span>
+            <div class="text-right">
+              ${pack.discountPercentage > 0 ? `
+                <div class="text-sm text-gray-500 line-through">₹${(pack.basePriceINR / 1000).toFixed(0)}K</div>
+                <div class="text-sm font-medium text-cerulean-600">₹${((pack.basePriceINR * (100 - pack.discountPercentage)) / 100000).toFixed(1)}L</div>
+                <div class="text-xs text-green-600">${pack.discountPercentage}% OFF</div>
+              ` : `
+                <div class="text-sm font-medium text-cerulean-600">₹${(pack.basePriceINR / 100000).toFixed(1)}L</div>
+              `}
+            </div>
           </div>
           
           <h3 class="text-lg font-semibold text-graphite-900 mb-2">${pack.title}</h3>
@@ -815,7 +841,34 @@
       }
     }
 
-    renderSelectedPacks() {
+    async getPackDetails(packId) {
+      try {
+        // Import catalog data dynamically
+        const { packsCatalog } = await import('/src/content/catalog/_packs.js');
+        
+        // Search through all categories to find the pack
+        for (const category of packsCatalog.packCategories) {
+          const pack = category.packs.find(p => p.id === packId);
+          if (pack) {
+            return pack;
+          }
+        }
+        
+        // If not found in categories, search in availablePacks
+        const pack = packsCatalog.availablePacks.find(p => p.id === packId);
+        if (pack) {
+          return pack;
+        }
+        
+        console.error('Pack not found in catalog:', packId);
+        return null;
+      } catch (error) {
+        console.error('Error getting pack details from catalog:', error);
+        return null;
+      }
+    }
+
+    async renderSelectedPacks() {
       const cart = this.getCurrentCart();
       const selectedPacks = cart.filter(item => item.type === 'pack');
       
@@ -828,23 +881,35 @@
         `;
       }
       
-      return selectedPacks.map(pack => `
-        <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
-          <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
-              <span class="text-white text-sm">📦</span>
+      const packPromises = selectedPacks.map(async (pack) => {
+        // Get pack details from catalog
+        const packDetails = await this.getPackDetails(pack.id);
+        if (!packDetails) return '';
+        
+        const finalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const formattedPrice = `₹${(finalPrice / 100000).toFixed(1)}L`;
+        
+        return `
+          <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
+              </div>
+              <div>
+                <span class="font-medium text-graphite-900 text-sm">${packDetails.title || 'Pack'}</span>
+                <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
+              </div>
             </div>
-            <div>
-              <span class="font-medium text-graphite-900 text-sm">${pack.title || 'Pack'}</span>
-              <p class="text-xs text-graphite-500">${pack.description || 'Pack description'}</p>
-            </div>
+            <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
           </div>
-          <span class="font-semibold text-cerulean-600 text-sm">${pack.price || '₹0'}</span>
-        </div>
-      `).join('');
+        `;
+      });
+      
+      const packResults = await Promise.all(packPromises);
+      return packResults.join('');
     }
 
-    renderSelectedPacksWithDelete() {
+    async renderSelectedPacksWithDelete() {
       const cart = this.getCurrentCart();
       const selectedPacks = cart.filter(item => item.type === 'pack');
       
@@ -862,38 +927,45 @@
         `;
       }
       
-      return selectedPacks.map(pack => `
-        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
-              <span class="text-white text-sm">📦</span>
+      const packPromises = selectedPacks.map(async (pack) => {
+        // Get pack details from catalog
+        const packDetails = await this.getPackDetails(pack.id);
+        if (!packDetails) return '';
+        
+        const finalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const formattedPrice = `₹${(finalPrice / 100000).toFixed(1)}L`;
+        
+        return `
+          <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
+              </div>
+              <div>
+                <span class="font-medium text-graphite-900 text-sm">${packDetails.title || 'Pack'}</span>
+                <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
+              </div>
             </div>
-            <div>
-              <span class="font-medium text-graphite-900">${pack.title || 'Pack'}</span>
-              <p class="text-sm text-graphite-600">${pack.description || 'Pack description'}</p>
+            <div class="flex items-center space-x-3">
+              <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
+              <button class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors" data-pack-id="${pack.id}" data-action="remove" title="Remove Pack">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
             </div>
           </div>
-          <div class="flex items-center space-x-3">
-            <span class="font-semibold text-cerulean-600">${pack.price || '₹0'}</span>
-            <button 
-              class="delete-pack-btn p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors" 
-              data-pack-id="${pack.id}" 
-              title="Remove pack"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      });
+      
+      const packResults = await Promise.all(packPromises);
+      return packResults.join('');
     }
 
-    updateSelectedPacksDisplay() {
+    async updateSelectedPacksDisplay() {
       const selectedPacksList = document.getElementById('selected-packs-list');
       if (selectedPacksList) {
-        selectedPacksList.innerHTML = this.renderSelectedPacksWithDelete();
-        // Event listeners are now handled by event delegation in addStep2EventListeners
+        selectedPacksList.innerHTML = await this.renderSelectedPacksWithDelete();
       }
     }
 
@@ -953,26 +1025,22 @@
       }
     }
 
-    updatePodSummary(podItem) {
-      console.log('🔍 [updatePodSummary] Called with podItem:', podItem);
+    async updatePodSummary(podItem) {
+      console.log('🔍 [updatePodSummary] Updating pod summary with:', podItem);
       
-      // Double-check the latest data from storage
-      let latestPodItem = podItem;
-      try {
-        const localStorageCart = localStorage.getItem('novapod-cart');
-        if (localStorageCart) {
-          const parsedCart = JSON.parse(localStorageCart);
-          const storagePod = parsedCart.find(item => item.type === 'pod');
-          if (storagePod && storagePod.id === podItem.id) {
-            latestPodItem = storagePod;
-            console.log('🔍 [updatePodSummary] Found updated pod in localStorage:', latestPodItem);
-          }
-        }
-      } catch (error) {
-        console.error('🔍 [updatePodSummary] Error reading localStorage:', error);
+      // Get the latest pod data from localStorage
+      const cart = await this.shared.getCart();
+      const latestPodItem = cart.find(item => item.type === 'pod');
+      
+      if (!latestPodItem) {
+        console.error('🔍 [updatePodSummary] No pod found in cart');
+        return;
       }
       
-      this.shared.updatePodSummary(latestPodItem, {
+      console.log('🔍 [updatePodSummary] Latest pod item:', latestPodItem);
+      
+      // Update the pod summary using shared utility
+      await this.shared.updatePodSummary(latestPodItem, {
         titleSelector: '#summary-pod-title',
         priceSelector: '#summary-pod-price'
       });
@@ -989,8 +1057,8 @@
       }
     }
 
-    updateFinalSummary(podItem, packItems) {
-      this.shared.updatePodSummary(podItem, {
+    async updateFinalSummary(podItem, packItems) {
+      await this.shared.updatePodSummary(podItem, {
         titleSelector: '#final-pod-title',
         priceSelector: '#final-pod-price',
         descriptionSelector: '#final-pod-duration'
@@ -1001,21 +1069,119 @@
         if (packItems.length === 0) {
           packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
         } else {
-          packsList.innerHTML = packItems.map(pack => `
-            <div class="flex items-center justify-between p-3 bg-white rounded-lg">
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
-                  <span class="text-white text-sm">${pack.icon || '📦'}</span>
+          const packPromises = packItems.map(async (pack) => {
+            const packDetails = await this.shared.getPackDetails(pack.id);
+            if (!packDetails) return '';
+            
+            const finalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+            const formattedPrice = `₹${(finalPrice / 100000).toFixed(1)}L`;
+            
+            return `
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                    <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
+                  </div>
+                  <span class="font-medium text-graphite-900">${packDetails.title}</span>
                 </div>
-                <span class="font-medium text-graphite-900">${pack.title}</span>
+                <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
               </div>
-              <span class="font-semibold text-cerulean-600">${pack.priceINR}</span>
-            </div>
-          `).join('');
+            `;
+          });
+          
+          const packResults = await Promise.all(packPromises);
+          packsList.innerHTML = packResults.join('');
         }
       }
 
-      this.shared.updateTotalPrice(podItem, packItems);
+      await this.shared.updateTotalPrice(podItem, packItems);
+    }
+
+    async updatePricingForReservationPeriod(months) {
+      console.log('🔍 [updatePricingForReservationPeriod] Updating pricing for', months, 'months');
+      
+      try {
+        // Get current cart
+        const cart = await this.shared.getCart();
+        const selectedPod = cart.find(item => item.type === 'pod');
+        
+        if (selectedPod) {
+          // Update pod pricing in Step 1
+          if (this.currentStep === 1) {
+            await this.updatePodSummary(selectedPod);
+          }
+          
+          // Update pod pricing in Step 2
+          if (this.currentStep === 2) {
+            await this.updatePodSummary(selectedPod);
+          }
+          
+          // Update total pricing in Step 3
+          if (this.currentStep === 3) {
+            const selectedPacks = cart.filter(item => item.type === 'pack');
+            await this.updateFinalSummary(selectedPod, selectedPacks);
+            await this.shared.updateTotalPrice(selectedPod, selectedPacks);
+          }
+          
+          // Update all DiscountedPriceDisplay components on the page
+          this.updateAllPriceDisplays(months);
+        }
+      } catch (error) {
+        console.error('🔍 [updatePricingForReservationPeriod] Error updating pricing:', error);
+      }
+    }
+
+    updateAllPriceDisplays(months) {
+      // Update all DiscountedPriceDisplay components on the page
+      const priceDisplays = document.querySelectorAll('.discounted-price-display');
+      priceDisplays.forEach(display => {
+        const basePriceINR = parseInt(display.getAttribute('data-base-price-inr') || '0');
+        const basePriceUSD = parseInt(display.getAttribute('data-base-price-usd') || '0');
+        const discountPercentage = parseInt(display.getAttribute('data-discount-percentage') || '0');
+        const isPack = display.getAttribute('data-item-type') === 'pack';
+        
+        if (basePriceINR > 0) {
+          // Calculate total price - only apply reservation period to pods, not packs
+          const totalPriceINR = isPack ? basePriceINR : basePriceINR * months;
+          const totalPriceUSD = isPack ? basePriceUSD : basePriceUSD * months;
+          
+          // Apply discount
+          const discountMultiplier = (100 - discountPercentage) / 100;
+          const finalPriceINR = totalPriceINR * discountMultiplier;
+          const finalPriceUSD = totalPriceUSD * discountMultiplier;
+          
+          // Update the display
+          const priceElement = display.querySelector('.discounted-price, .sale-price-extra-large');
+          if (priceElement) {
+            // Format price based on user location
+            let userCurrency = 'INR';
+            if (typeof window !== 'undefined' && window.userLocation) {
+              userCurrency = window.userLocation.currency;
+            }
+            
+            const formattedPrice = userCurrency === 'INR' 
+              ? `₹${(finalPriceINR / 100000).toFixed(1)}L`
+              : `$${(finalPriceUSD / 1000).toFixed(1)}K`;
+            
+            priceElement.textContent = formattedPrice;
+          }
+          
+          // Update original price if it exists
+          const originalPriceElement = display.querySelector('.original-price, .original-price-large');
+          if (originalPriceElement) {
+            let userCurrency = 'INR';
+            if (typeof window !== 'undefined' && window.userLocation) {
+              userCurrency = window.userLocation.currency;
+            }
+            
+            const originalFormattedPrice = userCurrency === 'INR' 
+              ? `₹${(totalPriceINR / 100000).toFixed(1)}L`
+              : `$${(totalPriceUSD / 1000).toFixed(1)}K`;
+            
+            originalPriceElement.textContent = originalFormattedPrice;
+          }
+        }
+      });
     }
 
     addStep1EventListeners() {
@@ -1178,6 +1344,9 @@
               monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
               console.log('🔍 [Step1] Updated months display in Step 1');
             }
+            
+            // Update pricing dynamically based on new reservation period
+            await this.updatePricingForReservationPeriod(months);
             
             // Also verify the storage was updated
             try {

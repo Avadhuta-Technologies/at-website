@@ -1,5 +1,5 @@
 ---
-import { getDiscountedPriceDisplay, getDiscountBadgeText, getDiscountBadgeColor } from '../../utils/pricingUtils.js';
+import { getDiscountedPriceDisplay, getDiscountBadgeText, getDiscountBadgeColor } from '../../utils/pricingUtils.ts';
 
 export interface Props {
   basePriceINR: number;
@@ -7,8 +7,11 @@ export interface Props {
   discountPercentage: number;
   showBadge?: boolean;
   showSavings?: boolean;
+  showOriginalPrice?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  variant?: 'default' | 'conversion' | 'minimal';
+  itemType?: 'pod' | 'pack';
 }
 
 const { 
@@ -17,8 +20,11 @@ const {
   discountPercentage, 
   showBadge = true,
   showSavings = true,
+  showOriginalPrice = true,
   size = 'md',
-  className = ""
+  className = "",
+  variant = 'default',
+  itemType
 } = Astro.props;
 
 // Size classes
@@ -32,47 +38,104 @@ const sizeClasses = {
 // Default to INR for server-side rendering
 const defaultCurrency = 'INR';
 const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, discountPercentage, defaultCurrency);
+
+// Determine if there's a discount
+const hasDiscount = discountPercentage > 0;
 ---
 
-<div class={`discounted-price-display ${sizeClasses[size]} ${className}`} 
+<div class={`discounted-price-display ${sizeClasses[size]} ${className} ${variant === 'conversion' ? 'conversion-focused' : ''}`} 
      data-base-price-inr={basePriceINR} 
      data-base-price-usd={basePriceUSD}
      data-discount-percentage={discountPercentage}
      data-show-badge={showBadge}
-     data-show-savings={showSavings}>
+     data-show-savings={showSavings}
+     data-show-original-price={showOriginalPrice}
+     data-variant={variant}
+     data-item-type={itemType}>
   
-  <!-- Discount Badge -->
-  {showBadge && discountPercentage > 0 && (
-    <div class={`discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`}>
-      {getDiscountBadgeText(discountPercentage)} {discountPercentage}%
+  {variant === 'conversion' && hasDiscount ? (
+    <!-- Conversion-focused layout for better sales -->
+    <div class="conversion-layout">
+      <!-- Prominent Discount Badge -->
+      <div class={`discount-badge-prominent inline-block px-3 py-2 rounded-lg text-sm font-bold mb-3 ${getDiscountBadgeColor(discountPercentage)} animate-pulse`}>
+        <span class="block text-lg">🔥 {getDiscountBadgeText(discountPercentage)}</span>
+        <span class="block text-2xl font-black">{discountPercentage}% OFF</span>
+      </div>
+      
+      <!-- Price Stack -->
+      <div class="price-stack">
+        <!-- Original Price (Large, Strikethrough) -->
+        <div class="original-price-large line-through text-gray-400 text-lg mb-1">
+          {priceDisplay.originalPrice}
+        </div>
+        
+        <!-- Sale Price (Extra Large, Bold) -->
+        <div class="sale-price-extra-large font-black text-3xl text-red-600 mb-2">
+          {priceDisplay.discountedPrice}
+        </div>
+        
+        <!-- Savings Highlight -->
+        <div class="savings-highlight bg-green-100 text-green-800 px-3 py-2 rounded-lg text-sm font-bold inline-block">
+          💰 You Save {priceDisplay.savings}!
+        </div>
+      </div>
+    </div>
+  ) : variant === 'minimal' ? (
+    <!-- Minimal layout -->
+    <div class="minimal-layout">
+      {showBadge && hasDiscount && (
+        <div class={`discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-1 ${getDiscountBadgeColor(discountPercentage)}`}>
+          {getDiscountBadgeText(discountPercentage)} {discountPercentage}%
+        </div>
+      )}
+      <div class="price-container">
+        {showOriginalPrice && hasDiscount && (
+          <span class="original-price line-through text-gray-500 mr-2">
+            {priceDisplay.originalPrice}
+          </span>
+        )}
+        <span class="discounted-price font-bold text-gray-900">
+          {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
+        </span>
+      </div>
+    </div>
+  ) : (
+    <!-- Default layout -->
+    <div class="default-layout">
+      <!-- Discount Badge -->
+      {showBadge && hasDiscount && (
+        <div class={`discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`}>
+          {getDiscountBadgeText(discountPercentage)} {discountPercentage}%
+        </div>
+      )}
+      
+      <!-- Price Display -->
+      <div class="price-container">
+        <!-- Original Price (Strikethrough) -->
+        {showOriginalPrice && hasDiscount && (
+          <span class="original-price line-through text-gray-500 mr-2">
+            {priceDisplay.originalPrice}
+          </span>
+        )}
+        
+        <!-- Discounted Price -->
+        <span class="discounted-price font-bold text-gray-900">
+          {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
+        </span>
+        
+        <!-- Savings Text -->
+        {showSavings && hasDiscount && (
+          <span class="savings-text text-green-600 text-sm ml-2">
+            Save {priceDisplay.savings}
+          </span>
+        )}
+      </div>
     </div>
   )}
-  
-  <!-- Price Display -->
-  <div class="price-container">
-    <!-- Original Price (Strikethrough) -->
-    {discountPercentage > 0 && (
-      <span class="original-price line-through text-gray-500 mr-2">
-        {priceDisplay.originalPrice}
-      </span>
-    )}
-    
-    <!-- Discounted Price -->
-    <span class="discounted-price font-bold text-gray-900">
-      {discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
-    </span>
-    
-    <!-- Savings Text -->
-    {showSavings && discountPercentage > 0 && (
-      <span class="savings-text text-green-600 text-sm ml-2">
-        Save {priceDisplay.savings}
-      </span>
-    )}
-  </div>
 </div>
 
 <script>
-  import { getDiscountedPriceDisplay, getDiscountBadgeText, getDiscountBadgeColor } from '../../utils/pricingUtils.js';
+  import { getDiscountedPriceDisplay, getDiscountBadgeText, getDiscountBadgeColor } from '../../utils/pricingUtils.ts';
 
   // Initialize discounted price display based on user location
   async function initializeDiscountedPriceDisplay() {
@@ -122,12 +185,17 @@ const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, disco
         const discountPercentage = parseInt(display.getAttribute('data-discount-percentage') || '0');
         const showBadge = display.getAttribute('data-show-badge') === 'true';
         const showSavings = display.getAttribute('data-show-savings') === 'true';
+        const showOriginalPrice = display.getAttribute('data-show-original-price') === 'true';
+        const variant = display.getAttribute('data-variant');
+        const itemType = display.getAttribute('data-item-type');
         
         console.log(`🌍 [DiscountedPriceDisplay] Updating display ${index}:`, {
           basePriceINR,
           basePriceUSD,
           discountPercentage,
-          userCurrency
+          userCurrency,
+          variant,
+          itemType
         });
         
         const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, discountPercentage, userCurrency);
@@ -138,11 +206,24 @@ const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, disco
           badge.textContent = `${getDiscountBadgeText(discountPercentage)} ${discountPercentage}%`;
           badge.className = `discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`;
         }
+
+        // Update discount badge prominent
+        const badgeProminent = display.querySelector('.discount-badge-prominent');
+        if (badgeProminent && discountPercentage > 0) {
+          badgeProminent.textContent = `🔥 ${getDiscountBadgeText(discountPercentage)}`;
+          badgeProminent.className = `discount-badge-prominent inline-block px-3 py-2 rounded-lg text-sm font-bold mb-3 ${getDiscountBadgeColor(discountPercentage)} animate-pulse`;
+        }
         
         // Update original price
         const originalPrice = display.querySelector('.original-price');
         if (originalPrice && discountPercentage > 0) {
           originalPrice.textContent = priceDisplay.originalPrice;
+        }
+
+        // Update original price large
+        const originalPriceLarge = display.querySelector('.original-price-large');
+        if (originalPriceLarge && discountPercentage > 0) {
+          originalPriceLarge.textContent = priceDisplay.originalPrice;
         }
         
         // Update discounted price
@@ -150,11 +231,40 @@ const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, disco
         if (discountedPrice) {
           discountedPrice.textContent = discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice;
         }
+
+        // Update sale price extra large
+        const salePriceExtraLarge = display.querySelector('.sale-price-extra-large');
+        if (salePriceExtraLarge) {
+          salePriceExtraLarge.textContent = priceDisplay.discountedPrice;
+        }
         
         // Update savings text
         const savingsText = display.querySelector('.savings-text');
         if (savingsText && discountPercentage > 0) {
           savingsText.textContent = `Save ${priceDisplay.savings}`;
+        }
+
+        // Update savings highlight
+        const savingsHighlight = display.querySelector('.savings-highlight');
+        if (savingsHighlight && discountPercentage > 0) {
+          savingsHighlight.textContent = `💰 You Save ${priceDisplay.savings}!`;
+        }
+
+        // Update variant classes
+        if (variant === 'conversion') {
+          display.classList.add('conversion-focused');
+          display.classList.remove('default-layout', 'minimal-layout');
+        } else if (variant === 'minimal') {
+          display.classList.add('minimal-layout');
+          display.classList.remove('default-layout', 'conversion-focused');
+        } else {
+          display.classList.add('default-layout');
+          display.classList.remove('minimal-layout', 'conversion-focused');
+        }
+
+        // Update item type
+        if (itemType) {
+          display.setAttribute('data-item-type', itemType);
         }
       });
     } catch (error) {

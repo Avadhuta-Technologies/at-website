@@ -1,10 +1,14 @@
 ---
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+
 interface Props {
   pod: {
     id: string;
     name: string;
     tagline: string;
-    pricing: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
 }
 
@@ -21,10 +25,21 @@ const { pod } = Astro.props;
     <div class="max-w-2xl mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
         <div class="text-center mb-8">
-          <div class="text-4xl font-bold text-gray-900 mb-2">{pod.pricing[0]}</div>
-          {pod.pricing[1] && (
-            <div class="text-gray-600 mb-4">{pod.pricing[1]}</div>
-          )}
+          <!-- Updated Price Display -->
+          <div class="mb-4">
+            <DiscountedPriceDisplay 
+              basePriceINR={pod.basePriceINR}
+              basePriceUSD={pod.basePriceUSD}
+              discountPercentage={pod.discountPercentage}
+              showBadge={true}
+              showSavings={true}
+              showOriginalPrice={true}
+              size="xl"
+              variant="conversion"
+            />
+            <p class="text-sm text-gray-600 mt-1">per month</p>
+          </div>
+          
           <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -33,23 +48,28 @@ const { pod } = Astro.props;
           </div>
         </div>
         
-        <div class="flex sm:flex-row gap-4 justify-center items-center w-full">
-          <button 
-            id={`pod-pricing-cta-${pod.id}`}
-            data-add-to-cart
-            data-item-id={pod.id}
-            data-item-type="pod"
-            data-item-title={pod.name}
-            data-item-description={pod.tagline}
-            data-item-price={pod.pricing[0]}
-            class="flex items-center pod-pricing-cta-btn px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            data-action="add">
-            <span class="cta-text">Reserve Pod</span>
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </button>
-          <a href="/contact" class="px-8 py-4 border-2 border-primary-600 text-primary-600 font-semibold rounded-xl hover:bg-primary-50 transition-all duration-300">Contact Us</a>
+        <!-- Rest of the pricing content -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">Development Team</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">Design & UX</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">QA & Testing</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">Infrastructure</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3">
+            <span class="text-gray-600">Deployment</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
         </div>
       </div>
     </div>

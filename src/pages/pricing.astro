@@ -8,12 +8,10 @@ import AddonPricingSection from '../components/pricing/AddonPricingSection.astro
 import DiscountsSection from '../components/pricing/DiscountsSection.astro';
 import PricingCTASection from '../components/pricing/PricingCTASection.astro';
 
-// Import isolated pricing content
+// Import pricing content (excluding pod and pack data which now comes from catalog)
 import { 
   pricingHeroData,
   pricingPolicyData,
-  podPricingData,
-  addonPricingData,
   discountsData,
   pricingCTAData
 } from '../content/pricing/_index.js';
@@ -28,10 +26,10 @@ import {
   <PricingPolicySection data={pricingPolicyData} />
   
   <!-- Pod Pricing Section -->
-  <PodPricingSection data={podPricingData} />
+  <PodPricingSection />
   
   <!-- Addon Pricing Section -->
-  <AddonPricingSection data={addonPricingData} />
+  <AddonPricingSection />
   
   <!-- Discounts Section -->
   <DiscountsSection data={discountsData} />

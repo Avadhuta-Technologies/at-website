@@ -1,11 +1,14 @@
 ---
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+
 export interface Props {
   pack: {
     id: string;
     title: string;
     description: string;
-    priceINR: string;
-    priceUSD: string;
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
     duration: string;
     cta: {
       primaryButton: string;
@@ -23,30 +26,43 @@ const { pack } = Astro.props;
       <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 gradient-title">Investment & ROI</h2>
       <p class="text-lg text-gray-600 mb-8">Transparent pricing, no surprises</p>
       <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
-        <div class="text-4xl font-bold text-gray-900 mb-2">{pack.priceINR} <span class="text-lg text-gray-400">({pack.priceUSD})</span></div>
+        <!-- Updated Price Display -->
+        <div class="mb-4">
+          <DiscountedPriceDisplay 
+            basePriceINR={pack.basePriceINR}
+            basePriceUSD={pack.basePriceUSD}
+            discountPercentage={pack.discountPercentage}
+            showBadge={true}
+            showSavings={true}
+            showOriginalPrice={true}
+            size="xl"
+            variant="conversion"
+          />
+        </div>
         <div class="text-gray-600 mb-4">{pack.duration} delivery</div>
         <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold mb-4">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           Best Value Guarantee
         </div>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+        
+        <div class="flex sm:flex-row gap-4 justify-center items-center w-full">
           <button 
+            id={`pack-pricing-cta-${pack.id}`}
             data-add-to-cart
             data-item-id={pack.id}
             data-item-type="pack"
             data-item-title={pack.title}
             data-item-description={pack.description}
-            data-item-price={pack.priceINR}
-            class="pack-detail-cart-btn px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            class="flex items-center pack-pricing-cta-btn px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            data-action="add">
+            <span class="cta-text">{pack.cta.primaryButton}</span>
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
             </svg>
-            <span>Add to Pod</span>
           </button>
-          <a href="/contact" class="px-8 py-4 border-2 border-blue-500 text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300">{pack.cta.secondaryButton}</a>
+          <a href="/contact" class="px-8 py-4 border-2 border-primary-600 text-primary-600 font-semibold rounded-xl hover:bg-primary-50 transition-all duration-300">{pack.cta.secondaryButton}</a>
         </div>
       </div>
-      <p class="text-sm text-gray-500">⚡ Fast delivery • 🔒 Secure payment • 📞 24/7 support</p>
     </div>
   </div>
 </section>

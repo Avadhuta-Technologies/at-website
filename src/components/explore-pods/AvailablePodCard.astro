@@ -1,5 +1,6 @@
 ---
 import { generatePodSlug } from '../../utils/slugUtils.js';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
 
 export interface Props {
   pod: {
@@ -17,6 +18,9 @@ export interface Props {
     whyTrust: string[];
     pastUseCases: string[];
     pricing: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
   index: number;
 }
@@ -177,17 +181,19 @@ const podSlug = generatePodSlug(pod.name);
     </p>
     
     <!-- Pricing -->
-    <div class="flex items-baseline space-x-2 mb-4">
-      <span class="text-2xl font-bold text-gray-900">
-        {pod.pricing[0]}
-      </span>
+    <div class="mb-4">
+      <DiscountedPriceDisplay 
+        basePriceINR={pod.basePriceINR}
+        basePriceUSD={pod.basePriceUSD}
+        discountPercentage={pod.discountPercentage}
+        showBadge={true}
+        showSavings={true}
+        showOriginalPrice={true}
+        size="lg"
+        variant="conversion"
+      />
+      <p class="text-sm text-gray-500 mt-1">per month</p>
     </div>
-    
-    {pod.pricing[1] && (
-      <p class="text-sm text-gray-500 mb-4">
-        {pod.pricing[1]}
-      </p>
-    )}
     
     <!-- Description -->
     <div class="flex-1 mb-6">
@@ -223,7 +229,8 @@ const podSlug = generatePodSlug(pod.name);
         data-item-type="pod"
         data-item-title={pod.name}
         data-item-description={pod.whatsInPod.description}
-        data-item-price={pod.pricing[0]}
+        data-item-price-inr={pod.basePriceINR}
+        data-item-price-usd={pod.basePriceUSD}
         data-add-to-cart
         class="pod-cta-btn w-1/2 inline-flex items-center justify-center px-4 py-3 font-semibold rounded-xl transition-all duration-200 group-hover:shadow-lg mr-1"
         onclick="console.log('🔵 [AvailablePodCard] Pod CTA button clicked for:', '{{pod.name}}', 'with ID:', '{{podId}}');">
@@ -328,13 +335,6 @@ const podSlug = generatePodSlug(pod.name);
   // Debug logging for AvailablePodCard component
   console.log('🔵 [AvailablePodCard] Component loaded for pod:', '{{pod.name}}');
   console.log('🔵 [AvailablePodCard] Generated podId:', '{{podId}}');
-  console.log('🔵 [AvailablePodCard] Pod data:', {
-    name: '{{pod.name}}',
-    tagline: '{{pod.tagline}}',
-    pricing: ['{{pod.pricing[0]}}', '{{pod.pricing[1]}}'],
-    description: '{{pod.whatsInPod.description}}',
-    idealFor: ['{{pod.idealFor[0]}}', '{{pod.idealFor[1]}}', '{{pod.idealFor[2]}}']
-  });
 
   // Check localStorage immediately and update button state
   if (typeof window !== 'undefined') {

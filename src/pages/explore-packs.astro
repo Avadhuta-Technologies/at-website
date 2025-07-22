@@ -9,10 +9,9 @@ import ExplorePacksHowItWorksFixedScopeSection from '../components/explore-packs
 import ExplorePacksTestimonialsSection from '../components/explore-packs/ExplorePacksTestimonialsSection.astro';
 import FAQSection from '../components/shared/FAQSection.astro';
 
-// Import isolated explore-packs content
+// Import explore-packs content (excluding pack data which now comes from catalog)
 import { 
   explorePacksHeroData,
-  exploreAvailablePacksData,
   explorePacksWhyChooseData,
   whyChooseFixedScopeData,
   howItWorksFixedScopeData,
@@ -37,7 +36,7 @@ import {
   <ExplorePacksHowItWorksFixedScopeSection data={howItWorksFixedScopeData} />
 
   <!-- Packs Section -->
-  <ExplorePacksGroupedSection data={exploreAvailablePacksData} />
+  <ExplorePacksGroupedSection />
   
   <!-- Testimonials Section -->
   <ExplorePacksTestimonialsSection data={explorePacksTestimonialsData} />

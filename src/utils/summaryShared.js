@@ -659,7 +659,7 @@ export class SummaryShared {
   }
 
   // UI updates
-  updatePodSummary(podItem, selectors = {}) {
+  async updatePodSummary(podItem, selectors = {}) {
     const {
       titleSelector = '#summary-pod-title',
       priceSelector = '#summary-pod-price',
@@ -671,8 +671,83 @@ export class SummaryShared {
     const descEl = document.querySelector(descriptionSelector);
     
     if (titleEl) titleEl.textContent = podItem.title || podItem.name;
-    if (priceEl) priceEl.textContent = podItem.price || 'Price not available';
     if (descEl) descEl.textContent = podItem.description || podItem.tagline;
+    
+    // Calculate price based on catalog data and reservation period
+    if (priceEl) {
+      try {
+        // Get pod details from catalog
+        const podDetails = await this.getPodDetails(podItem.id);
+        if (podDetails) {
+          // Get current reservation period from dropdown
+          const hirePeriodDropdown = document.querySelector('#hire-period-options');
+          const months = hirePeriodDropdown ? parseInt(hirePeriodDropdown.value) : 3;
+          
+          const totalPriceINR = podDetails.basePriceINR * months;
+          const totalPriceUSD = podDetails.basePriceUSD * months;
+          
+          // Apply discount
+          const discountMultiplier = (100 - podDetails.discountPercentage) / 100;
+          const finalPriceINR = totalPriceINR * discountMultiplier;
+          const finalPriceUSD = totalPriceUSD * discountMultiplier;
+          
+          // Format price based on user location
+          let userCurrency = 'INR';
+          if (typeof window !== 'undefined' && window.userLocation) {
+            userCurrency = window.userLocation.currency;
+          }
+          
+          const formattedPrice = userCurrency === 'INR' 
+            ? `₹${(finalPriceINR / 100000).toFixed(1)}L`
+            : `$${(finalPriceUSD / 1000).toFixed(1)}K`;
+          
+          priceEl.textContent = formattedPrice;
+        } else {
+          priceEl.textContent = 'Price not available';
+        }
+      } catch (error) {
+        console.error('Error calculating pod price:', error);
+        priceEl.textContent = 'Price not available';
+      }
+    }
+  }
+
+  async getPodDetails(podId) {
+    try {
+      // Import catalog data dynamically
+      const { podsCatalog } = await import('/src/content/catalog/_pods.js');
+      
+      // Search for pod in catalog
+      const pod = podsCatalog.availablePods.find(p => p.id === podId);
+      if (pod) {
+        return pod;
+      }
+      
+      console.error('Pod not found in catalog:', podId);
+      return null;
+    } catch (error) {
+      console.error('Error getting pod details from catalog:', error);
+      return null;
+    }
+  }
+
+  async getPackDetails(packId) {
+    try {
+      // Import catalog data dynamically
+      const { packsCatalog } = await import('/src/content/catalog/_packs.js');
+      
+      // Search for pack in catalog
+      const pack = packsCatalog.availablePacks.find(p => p.id === packId);
+      if (pack) {
+        return pack;
+      }
+      
+      console.error('Pack not found in catalog:', packId);
+      return null;
+    } catch (error) {
+      console.error('Error getting pack details from catalog:', error);
+      return null;
+    }
   }
 
   updateFinalSummary(podItem, packItems) {
@@ -682,29 +757,65 @@ export class SummaryShared {
     
     if (titleEl) titleEl.textContent = podItem.title || podItem.name;
     if (priceEl) priceEl.textContent = podItem.price || 'Price not available';
-    if (durationEl) durationEl.textContent = `${podItem.reservationMonths || 3} months`;
+    
+    // Get current reservation period from dropdown
+    const hirePeriodDropdown = document.querySelector('#hire-period-options');
+    const months = hirePeriodDropdown ? parseInt(hirePeriodDropdown.value) : 3;
+    if (durationEl) durationEl.textContent = `${months} months`;
   }
 
-  updateTotalPrice(podItem, packItems) {
+  async updateTotalPrice(podItem, packItems) {
     const totalEl = document.getElementById('total-price');
     if (!totalEl) return;
 
-    let total = 0;
+    let totalINR = 0;
+    let totalUSD = 0;
     
-    // Add pod price
-    if (podItem && podItem.basePrice) {
-      const months = podItem.reservationMonths || 3;
-      total += podItem.basePrice * months;
-    }
-    
-    // Add pack prices
-    packItems.forEach(pack => {
-      if (pack.basePrice) {
-        total += pack.basePrice;
+    try {
+      // Get current reservation period from dropdown
+      const hirePeriodDropdown = document.querySelector('#hire-period-options');
+      const months = hirePeriodDropdown ? parseInt(hirePeriodDropdown.value) : 3;
+      
+      // Add pod price
+      if (podItem) {
+        const podDetails = await this.getPodDetails(podItem.id);
+        if (podDetails) {
+          const totalPriceINR = podDetails.basePriceINR * months;
+          const totalPriceUSD = podDetails.basePriceUSD * months;
+          
+          // Apply discount
+          const discountMultiplier = (100 - podDetails.discountPercentage) / 100;
+          totalINR += totalPriceINR * discountMultiplier;
+          totalUSD += totalPriceUSD * discountMultiplier;
+        }
       }
-    });
+      
+      // Add pack prices (packs are one-time, not multiplied by months)
+      for (const pack of packItems) {
+        const packDetails = await this.getPackDetails(pack.id);
+        if (packDetails) {
+          // Apply discount
+          const discountMultiplier = (100 - packDetails.discountPercentage) / 100;
+          totalINR += packDetails.basePriceINR * discountMultiplier;
+          totalUSD += packDetails.basePriceUSD * discountMultiplier;
+        }
+      }
 
-    totalEl.textContent = catalogUtils.formatPrice(total);
+      // Format price based on user location
+      let userCurrency = 'INR';
+      if (typeof window !== 'undefined' && window.userLocation) {
+        userCurrency = window.userLocation.currency;
+      }
+      
+      const formattedPrice = userCurrency === 'INR' 
+        ? `₹${(totalINR / 100000).toFixed(1)}L`
+        : `$${(totalUSD / 1000).toFixed(1)}K`;
+      
+      totalEl.textContent = formattedPrice;
+    } catch (error) {
+      console.error('Error calculating total price:', error);
+      totalEl.textContent = 'Price not available';
+    }
   }
 
   // Navigation

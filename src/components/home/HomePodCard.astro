@@ -1,5 +1,6 @@
 ---
 import { generatePodSlug } from '../../utils/slugUtils.js';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
 
 export interface Props {
   pod: {
@@ -17,6 +18,9 @@ export interface Props {
     whyTrust: string[];
     pastUseCases: string[];
     pricing: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
   index: number;
 }
@@ -106,6 +110,20 @@ const getPodColorClasses = (pod: any) => {
       </div>
     </div>
     
+    <!-- Updated Price Display -->
+    <div class="mb-4">
+      <DiscountedPriceDisplay 
+        basePriceINR={pod.basePriceINR}
+        basePriceUSD={pod.basePriceUSD}
+        discountPercentage={pod.discountPercentage}
+        showBadge={true}
+        showSavings={true}
+        showOriginalPrice={true}
+        size="md"
+        variant="conversion"
+      />
+    </div>
+
     <!-- Vertical Highlights Layout -->
     <div class="grid grid-cols-3 gap-3 mb-5">
       <!-- Ideal For -->

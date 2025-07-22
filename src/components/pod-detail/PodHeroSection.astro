@@ -1,10 +1,13 @@
 ---
-interface Props {
+export interface Props {
   pod: {
     id: string;
     name: string;
     tagline: string;
     pricing: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
 }
 
@@ -43,7 +46,8 @@ const { pod } = Astro.props;
           data-item-type="pod"
           data-item-title={pod.name}
           data-item-description={pod.tagline}
-          data-item-price={pod.pricing[0]}
+          data-item-price-inr={pod.basePriceINR}
+          data-item-price-usd={pod.basePriceUSD}
           class="pod-hero-cta-btn inline-flex items-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors duration-200 group"
         >
           <span class="cta-text">Reserve Pod</span>

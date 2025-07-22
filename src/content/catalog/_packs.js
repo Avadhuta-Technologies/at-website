@@ -353,7 +353,7 @@ export const packsCatalog = {
           duration: "3 weeks",
           basePriceINR: 85000,
           basePriceUSD: 1000,
-          discountPercentage: 15,
+          discountPercentage: 20,
           category: "automation-efficiency",
           deliverables: [
             "Process Mapping & Audit - We start by understanding your current workflows—manual tasks, handoffs, bottlenecks—and identify where automation makes the most impact.",
@@ -406,7 +406,7 @@ export const packsCatalog = {
           duration: "3–4 weeks",
           basePriceINR: 110000,
           basePriceUSD: 1300,
-          discountPercentage: 15,
+          discountPercentage: 20,
           category: "automation-efficiency",
           deliverables: [
             "Integration Requirements Mapping - We work with you to identify all the tools, platforms, and data flows that need to connect—CRMs, ERPs, payment gateways, analytics, internal apps, and more.",
@@ -459,7 +459,7 @@ export const packsCatalog = {
           duration: "4 weeks",
           basePriceINR: 125000,
           basePriceUSD: 1500,
-          discountPercentage: 10,
+          discountPercentage: 20,
           category: "automation-efficiency",
           deliverables: [
             "Use-Case Definition & Persona Design - We help you define what your AI assistant should do—support, onboarding, lead qualification, FAQs, or internal automation—along with tone, voice, and boundaries.",
@@ -519,7 +519,7 @@ export const packsCatalog = {
           duration: "1.5 weeks",
           basePriceINR: 35000,
           basePriceUSD: 425,
-          discountPercentage: 10,
+          discountPercentage: 20,
           category: "specialized",
           deliverables: [
             "Compliance Needs Assessment - We analyze your business model, industry, geography, and data flows to determine which standards (GDPR, SOC 2, ISO 27001, HIPAA, etc.) apply to you.",
@@ -572,7 +572,7 @@ export const packsCatalog = {
           duration: "2 weeks",
           basePriceINR: 60000,
           basePriceUSD: 725,
-          discountPercentage: 10,
+          discountPercentage: 20,
           category: "specialized",
           deliverables: [
             "Careers Page Design & Development - A compelling, branded careers page that highlights your culture, perks, and open roles—designed to attract the right kind of candidates.",
@@ -625,7 +625,7 @@ export const packsCatalog = {
           duration: "3 weeks",
           basePriceINR: 90000,
           basePriceUSD: 1050,
-          discountPercentage: 10,
+          discountPercentage: 20,
           category: "specialized",
           deliverables: [
             "Data Audit & Metrics Definition - We start by understanding your business goals and data sources. Then we define the right KPIs and success metrics tailored to your growth stage.",
