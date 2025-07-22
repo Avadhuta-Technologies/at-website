@@ -247,23 +247,102 @@ export class SummaryShared {
     }
   }
 
-  // Pack operations - using catalog data
+  // Enhanced Pack operations - using catalog data with pod requirement check
   async addPack(packId) {
     try {
       const pack = packsCatalog.getPackById(packId);
       
-      if (pack) {
-        const packForCart = packsCatalog.getPackForCart(packId);
-        await this.addToCart(packForCart);
-        
-        this.showNotification('Pack added to cart successfully!', 'success');
-        return pack;
-      } else {
+      if (!pack) {
         this.showNotification('Pack not found', 'error');
+        return null;
       }
+
+      // Check if pack already exists in cart
+      const cart = await this.getCart();
+      const existingPack = cart.find(item => item.id === packId && item.type === 'pack');
+      
+      if (existingPack) {
+        // Pack exists, remove it
+        await this.removePack(packId);
+        this.showNotification('Pack removed from cart', 'success');
+        return pack;
+      }
+
+      // Check if pod exists in cart before adding pack
+      const hasPodInCart = cart.some(item => item.type === 'pod');
+      
+      if (!hasPodInCart) {
+        // Show modal to inform user they need a pod first
+        if (typeof window !== 'undefined' && window.showPodRequiredModal) {
+          window.showPodRequiredModal();
+        } else {
+          this.showNotification('Please select a pod first before adding packs', 'warning');
+        }
+        return null;
+      }
+
+      // Pod exists, add the pack
+      const packForCart = packsCatalog.getPackForCart(packId);
+      await this.addToCart(packForCart);
+      
+      this.showNotification('Pack added to cart successfully!', 'success');
+      return pack;
     } catch (error) {
       console.error('Error adding pack to cart:', error);
       this.showNotification('Failed to add pack to cart', 'error');
+      return null;
+    }
+  }
+
+  // Enhanced Pod selection with replacement confirmation
+  async selectPodWithConfirmation(podId) {
+    try {
+      const pod = podsCatalog.getPodById(podId);
+      
+      if (!pod) {
+        this.showNotification('Pod not found', 'error');
+        return null;
+      }
+
+      const cart = await this.getCart();
+      const existingPod = cart.find(item => item.type === 'pod');
+      
+      if (existingPod) {
+        console.log('🔍 [selectPodWithConfirmation] Existing pod found, showing replacement confirmation');
+        // Pod exists, show replacement confirmation
+        if (typeof window !== 'undefined' && window.showPodReplacementModal) {
+          return new Promise((resolve) => {
+            window.showPodReplacementModal(existingPod, pod, async (currentPod, newPod) => {
+              // User confirmed replacement
+              console.log('🔍 [selectPodWithConfirmation] User confirmed replacement');
+              await this.removePod(); // This removes the current pod and all packs
+              const podForCart = podsCatalog.getPodForCart(podId);
+              await this.addToCart(podForCart);
+              this.showNotification(`Pod replaced with ${newPod.title || newPod.name}`, 'success');
+              resolve(newPod);
+            });
+          });
+        } else {
+          // Fallback without modal
+          console.log('🔍 [selectPodWithConfirmation] Modal not available, using fallback');
+          await this.removePod();
+          const podForCart = podsCatalog.getPodForCart(podId);
+          await this.addToCart(podForCart);
+          this.showNotification(`Pod replaced with ${pod.name}`, 'success');
+          return pod;
+        }
+      } else {
+        console.log('🔍 [selectPodWithConfirmation] No existing pod, adding directly');
+        // No existing pod, add directly
+        const podForCart = podsCatalog.getPodForCart(podId);
+        await this.addToCart(podForCart);
+        this.showNotification(`Pod ${pod.name} added to cart`, 'success');
+        return pod;
+      }
+    } catch (error) {
+      console.error('Error selecting pod with confirmation:', error);
+      this.showNotification('Failed to select pod', 'error');
+      return null;
     }
   }
 
@@ -346,6 +425,35 @@ export class SummaryShared {
     }
   }
 
+  // Check if pack exists in cart
+  async isPackInCart(packId) {
+    try {
+      const cart = await this.getCart();
+      return cart.some(item => item.id === packId && item.type === 'pack');
+    } catch (error) {
+      console.error('Error checking if pack is in cart:', error);
+      return false;
+    }
+  }
+
+  // Get cart status for pack (for button text)
+  async getPackCartStatus(packId) {
+    try {
+      const cart = await this.getCart();
+      const packInCart = cart.find(item => item.id === packId && item.type === 'pack');
+      const hasPod = cart.some(item => item.type === 'pod');
+      
+      if (packInCart) {
+        return { inCart: true, hasPod, action: 'remove' };
+      } else {
+        return { inCart: false, hasPod, action: 'add' };
+      }
+    } catch (error) {
+      console.error('Error getting pack cart status:', error);
+      return { inCart: false, hasPod: false, action: 'add' };
+    }
+  }
+
   // Prompt user to add pod if none exists
   async promptForPod() {
     const hasPod = await this.hasPod();
@@ -362,7 +470,7 @@ export class SummaryShared {
       console.log('🔍 [addPodAndPack] Adding pod and pack:', { podId, packId });
       
       // Add pod first
-      const pod = await this.selectPod(podId);
+      const pod = await this.selectPodWithConfirmation(podId);
       if (!pod) {
         this.showNotification('Failed to add pod', 'error');
         return false;

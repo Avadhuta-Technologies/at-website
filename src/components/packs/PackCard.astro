@@ -152,7 +152,7 @@ const finalActionText = actionText || defaultActionText;
           data-item-description={description}
           data-item-price={priceINR}
           data-item-duration={duration}
-          class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
+          class="pack-cart-btn flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
           Add Pack
         </button>
         <a href={finalLearnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50
@@ -197,4 +197,94 @@ const finalActionText = actionText || defaultActionText;
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
-</style> 
+</style>
+
+<script>
+  // Pack Card Cart Logic
+  class PackCardCart {
+    constructor(packId, buttonElement) {
+      this.packId = packId;
+      this.button = buttonElement;
+      this.init();
+    }
+
+    async init() {
+      await this.updateButtonText();
+      this.setupEventListeners();
+    }
+
+    async updateButtonText() {
+      try {
+        // Import the shared utilities
+        const { SummaryShared } = await import('/src/utils/summaryShared.js');
+        const shared = new SummaryShared();
+        
+        const status = await shared.getPackCartStatus(this.packId);
+        
+        if (status.inCart) {
+          // Pack is in cart - show remove button
+          this.button.textContent = 'Remove Pack';
+          this.button.className = this.button.className.replace(
+            'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600',
+            'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
+          );
+        } else {
+          // Pack is not in cart - show add button
+          this.button.textContent = 'Add Pack';
+          this.button.className = this.button.className.replace(
+            'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
+            'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600'
+          );
+        }
+      } catch (error) {
+        console.error('Error updating pack button text:', error);
+      }
+    }
+
+    setupEventListeners() {
+      this.button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await this.handleCartAction();
+      });
+    }
+
+    async handleCartAction() {
+      try {
+        const { SummaryShared } = await import('/src/utils/summaryShared.js');
+        const shared = new SummaryShared();
+        
+        await shared.addPack(this.packId);
+        
+        // Update button text after action
+        setTimeout(() => {
+          this.updateButtonText();
+        }, 100);
+      } catch (error) {
+        console.error('Error handling pack cart action:', error);
+      }
+    }
+  }
+
+  // Initialize pack card cart functionality when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const packButtons = document.querySelectorAll('.pack-cart-btn');
+    packButtons.forEach(button => {
+      const packId = button.getAttribute('data-item-id');
+      if (packId) {
+        new PackCardCart(packId, button);
+      }
+    });
+  });
+
+  // Listen for cart updates to refresh button states
+  window.addEventListener('cart-updated', () => {
+    const packButtons = document.querySelectorAll('.pack-cart-btn');
+    packButtons.forEach(button => {
+      const packId = button.getAttribute('data-item-id');
+      if (packId) {
+        // Re-initialize the cart logic for this button
+        new PackCardCart(packId, button);
+      }
+    });
+  });
+</script> 

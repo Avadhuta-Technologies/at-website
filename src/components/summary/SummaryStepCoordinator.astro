@@ -1019,13 +1019,11 @@
     }
 
     addStep1EventListeners() {
-      // Pod selection
+      // Pod selection with replacement confirmation
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('[data-pod-id]')) {
           const podId = e.target.getAttribute('data-pod-id');
-          await this.shared.selectPod(podId);
-          const cart = await this.shared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
+          const selectedPod = await this.shared.selectPodWithConfirmation(podId);
           if (selectedPod) {
             await this.showSelectedPod(selectedPod);
           }

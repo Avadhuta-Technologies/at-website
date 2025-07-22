@@ -8,6 +8,7 @@ import PackIdealForSection from '../../components/packs/PackIdealForSection.astr
 import PackWhyItWorksSection from '../../components/packs/PackWhyItWorksSection.astro';
 import PackTestimonialsSection from '../../components/packs/PackTestimonialsSection.astro';
 import PackPricingSection from '../../components/packs/PackPricingSection.astro';
+import PodRequiredModal from '../../components/shared/PodRequiredModal.astro';
 
 export async function getStaticPaths() {
   const { packs } = catalogUtils.getAllProducts();
@@ -46,4 +47,7 @@ const { pack } = Astro.props;
 
   <!-- Pricing & CTA Section -->
   <PackPricingSection pack={pack} />
+  
+  <!-- Pod Required Modal -->
+  <PodRequiredModal />
 </Layout> 

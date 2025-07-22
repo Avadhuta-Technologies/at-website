@@ -1,6 +1,7 @@
 ---
 export interface Props {
   pack: {
+    id: string;
     priceINR: string;
     priceUSD: string;
     duration: string;
@@ -27,11 +28,106 @@ const { pack } = Astro.props;
           Best Value Guarantee
         </div>
         <div class="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-          <a href="/contact" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">{pack.cta.primaryButton}</a>
+          <button 
+            id="pack-detail-cart-btn"
+            data-pack-id={pack.id}
+            class="pack-detail-cart-btn px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            Add to Cart
+          </button>
           <a href="/contact" class="px-8 py-4 border-2 border-blue-500 text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300">{pack.cta.secondaryButton}</a>
         </div>
       </div>
       <p class="text-sm text-gray-500">⚡ Fast delivery • 🔒 Secure payment • 📞 24/7 support</p>
     </div>
   </div>
-</section> 
+</section>
+
+<script>
+  // Pack Detail Cart Logic
+  class PackDetailCart {
+    constructor(packId, buttonElement) {
+      this.packId = packId;
+      this.button = buttonElement;
+      this.init();
+    }
+
+    async init() {
+      await this.updateButtonText();
+      this.setupEventListeners();
+    }
+
+    async updateButtonText() {
+      try {
+        // Import the shared utilities
+        const { SummaryShared } = await import('/src/utils/summaryShared.js');
+        const shared = new SummaryShared();
+        
+        const status = await shared.getPackCartStatus(this.packId);
+        
+        if (status.inCart) {
+          // Pack is in cart - show remove button
+          this.button.textContent = 'Remove from Cart';
+          this.button.className = this.button.className.replace(
+            'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700',
+            'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
+          );
+        } else {
+          // Pack is not in cart - show add button
+          this.button.textContent = 'Add to Cart';
+          this.button.className = this.button.className.replace(
+            'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
+            'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700'
+          );
+        }
+      } catch (error) {
+        console.error('Error updating pack detail button text:', error);
+      }
+    }
+
+    setupEventListeners() {
+      this.button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await this.handleCartAction();
+      });
+    }
+
+    async handleCartAction() {
+      try {
+        const { SummaryShared } = await import('/src/utils/summaryShared.js');
+        const shared = new SummaryShared();
+        
+        await shared.addPack(this.packId);
+        
+        // Update button text after action
+        setTimeout(() => {
+          this.updateButtonText();
+        }, 100);
+      } catch (error) {
+        console.error('Error handling pack detail cart action:', error);
+      }
+    }
+  }
+
+  // Initialize pack detail cart functionality when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const packDetailButton = document.getElementById('pack-detail-cart-btn');
+    if (packDetailButton) {
+      const packId = packDetailButton.getAttribute('data-pack-id');
+      if (packId) {
+        new PackDetailCart(packId, packDetailButton);
+      }
+    }
+  });
+
+  // Listen for cart updates to refresh button state
+  window.addEventListener('cart-updated', () => {
+    const packDetailButton = document.getElementById('pack-detail-cart-btn');
+    if (packDetailButton) {
+      const packId = packDetailButton.getAttribute('data-pack-id');
+      if (packId) {
+        // Re-initialize the cart logic for this button
+        new PackDetailCart(packId, packDetailButton);
+      }
+    }
+  });
+</script> 

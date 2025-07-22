@@ -144,27 +144,33 @@ import {
                 shared.showNotification('Failed to remove pod from cart', 'error');
               }
             } else {
-              // Pod is not in cart - add it
-              const cartItem = {
-                id: itemId,
-                type: itemType,
-                title: itemTitle || '',
-                description: itemDescription || '',
-                price: '',
-                reservationMonths: itemType === 'pod' ? 3 : undefined
-              };
-              
-              // Add to cart
-              const success = await shared.addToCart(cartItem);
-              
-              if (success) {
-                // Show success notification
-                shared.showNotification(`${itemTitle || 'Item'} added to cart!`);
-                
-                // Navigate to summary page
-                window.location.href = '/summary?step=1';
+              // Pod is not in cart - add it with confirmation if replacing
+              if (itemType === 'pod') {
+                const selectedPod = await shared.selectPodWithConfirmation(itemId);
+                if (selectedPod) {
+                  shared.showNotification(`${itemTitle || 'Pod'} added to cart!`);
+                  // Navigate to summary page
+                  window.location.href = '/summary?step=1';
+                }
               } else {
-                shared.showNotification('Failed to add item to cart', 'error');
+                // For non-pod items, use regular addToCart
+                const cartItem = {
+                  id: itemId,
+                  type: itemType,
+                  title: itemTitle || '',
+                  description: itemDescription || '',
+                  price: '',
+                  reservationMonths: itemType === 'pod' ? 3 : undefined
+                };
+                
+                const success = await shared.addToCart(cartItem);
+                
+                if (success) {
+                  shared.showNotification(`${itemTitle || 'Item'} added to cart!`);
+                  window.location.href = '/summary?step=1';
+                } else {
+                  shared.showNotification('Failed to add item to cart', 'error');
+                }
               }
             }
           } catch (error) {

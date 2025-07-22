@@ -60,9 +60,9 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
           const shared = new SummaryShared();
           
           if (action === 'add') {
-            // Add pod to cart
-            const success = await shared.selectPod(podId);
-            if (success) {
+            // Add pod to cart with confirmation if replacing
+            const selectedPod = await shared.selectPodWithConfirmation(podId);
+            if (selectedPod) {
               console.log('Pod added to cart successfully');
               // Navigate to summary page after successful pod reservation
               window.location.href = '/summary?step=1';
@@ -94,9 +94,9 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
             const { SummaryShared } = await import('../utils/summaryShared.js');
             const shared = new SummaryShared();
             
-            // Add pod to cart
-            const success = await shared.selectPod(podId);
-            if (success) {
+            // Add pod to cart with confirmation if replacing
+            const selectedPod = await shared.selectPodWithConfirmation(podId);
+            if (selectedPod) {
               console.log('Pod added to cart successfully via data-add-to-cart');
               // Navigate to summary page after successful pod reservation
               window.location.href = '/summary?step=1';

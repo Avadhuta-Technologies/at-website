@@ -3,6 +3,7 @@
 
 import { podsCatalog } from './_pods.js';
 import { packsCatalog } from './_packs.js';
+import { generatePodSlug, generatePackSlug } from '../../utils/slugUtils.js';
 
 // Export all catalog data
 export { podsCatalog, packsCatalog };
@@ -15,6 +16,16 @@ export const catalogUtils = {
       return podsCatalog.getPodById(id);
     } else if (type === 'pack') {
       return packsCatalog.getPackById(id);
+    }
+    return null;
+  },
+
+  // Get any product by slug and type
+  getProductBySlug: (slug, type) => {
+    if (type === 'pod') {
+      return podsCatalog.getPodBySlug(slug);
+    } else if (type === 'pack') {
+      return packsCatalog.getPackBySlug ? packsCatalog.getPackBySlug(slug) : null;
     }
     return null;
   },

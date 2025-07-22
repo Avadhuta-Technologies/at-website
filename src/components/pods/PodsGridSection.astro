@@ -1,4 +1,6 @@
 ---
+import { generatePodSlug } from '../../utils/slugUtils.js';
+
 export interface Props {
   title: string;
   subtitle?: string;
@@ -216,7 +218,7 @@ function getGradientClass(color: string, isCustom: boolean = false): string {
                 <a href="#" class={`flex-1 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${pod.isCustom ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl' : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg hover:shadow-xl'}`}>
                   {pod.isCustom ? 'Book a Free Discovery Call' : 'Book Now'}
                 </a>
-                <a href={pod.isCustom ? '/contact' : `/pods/${pod.id}`} class={`flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${pod.isCustom ? 'border-purple-500 text-purple-600 hover:bg-purple-50 ' : 'border-blue-500 text-blue-600 hover:bg-blue-50 '}`}>
+                <a href={pod.isCustom ? '/contact' : `/pods/${generatePodSlug(pod.title)}`} class={`flex-1 border-2 text-center py-3 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${pod.isCustom ? 'border-purple-500 text-purple-600 hover:bg-purple-50 ' : 'border-blue-500 text-blue-600 hover:bg-blue-50 '}`}>
                   {pod.isCustom ? 'Contact Us' : 'Details'}
                 </a>
               </div>

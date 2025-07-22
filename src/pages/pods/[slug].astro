@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { catalogUtils } from '../../content/catalog/_index.js';
 import { packsCatalog } from '../../content/catalog/_packs.js';
+import { generatePodSlug } from '../../utils/slugUtils.js';
 import {
   PodHeroSection,
   PodIdealForSection,
@@ -19,10 +20,10 @@ export async function getStaticPaths() {
   const { pods } = catalogUtils.getAllProducts();
   return pods.map((pod) => {
     // Generate slug from pod name
-    const slug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    const slug = generatePodSlug(pod.name);
     return {
       params: { slug },
-      props: { pod },
+      props: { pod, slug },
     };
   });
 }
@@ -46,7 +47,7 @@ const getRelevantPacks = (podName: string) => {
   };
   
   // Generate slug from pod name for matching
-  const podSlug = podName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const podSlug = generatePodSlug(podName);
   
   // Get recommended pack IDs for this pod
   const recommendedPackIds = packRecommendations[podSlug] || ['launch-pack', 'growth-pack'];
@@ -122,7 +123,8 @@ const relevantPacks = getRelevantPacks(pod.name);
               }
               
               // Add the new pod
-              const success = await shared.selectPod(podId);
+              const selectedPod = await shared.selectPodWithConfirmation(podId);
+            const success = !!selectedPod;
               
               if (success) {
                 console.log('Pod selected successfully, navigating to summary...');

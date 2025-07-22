@@ -270,7 +270,8 @@ const { pod } = Astro.props;
           if (action === 'add') {
             // Add pod to cart
             console.log('🔵 [PodHeroSection] Attempting to add pod to cart...');
-            const success = await shared.selectPod(podId);
+            const selectedPod = await shared.selectPodWithConfirmation(podId);
+            const success = !!selectedPod;
             if (success) {
               console.log('🔵 [PodHeroSection] Pod added to cart successfully');
               // Navigate to summary page

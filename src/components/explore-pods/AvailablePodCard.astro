@@ -1,4 +1,6 @@
 ---
+import { generatePodSlug } from '../../utils/slugUtils.js';
+
 export interface Props {
   pod: {
     id?: string;
@@ -142,7 +144,7 @@ const getPodIcon = (pod: any) => {
 const podId = pod.id || pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 
 // Generate slug from pod name for navigation (matches pod detail page slug generation)
-const podSlug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+const podSlug = generatePodSlug(pod.name);
 ---
 
 <div class="pod-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-pod-id={podId} data-pod-slug={podSlug}>
@@ -269,7 +271,8 @@ const podSlug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g,
             
             if (action === 'add') {
               // Add pod to cart
-              const success = await shared.selectPod(podId);
+              const selectedPod = await shared.selectPodWithConfirmation(podId);
+            const success = !!selectedPod;
               if (success) {
                 console.log('🔵 [AvailablePodCard] Pod added to cart successfully');
                 // Navigate to summary page after successful pod reservation

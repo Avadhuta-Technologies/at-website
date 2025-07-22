@@ -1,3 +1,5 @@
+import { generatePodSlug } from '../../utils/slugUtils.js';
+
 export const podsCatalog = {  
   availablePods: [
     {
@@ -381,6 +383,13 @@ export const podsCatalog = {
   // Utility functions for working with pod data
   getPodById: (id) => {
     return podsCatalog.availablePods.find(pod => pod.id === id) || null;
+  },
+
+  getPodBySlug: (slug) => {
+    return podsCatalog.availablePods.find(pod => {
+      const podSlug = generatePodSlug(pod.name);
+      return podSlug === slug;
+    }) || null;
   },
 
   getPodsByCategory: (category) => {
