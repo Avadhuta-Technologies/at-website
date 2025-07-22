@@ -1,0 +1,181 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CurrencyDisplay from '../components/shared/CurrencyDisplay.astro';
+import DiscountedPriceDisplay from '../components/shared/DiscountedPriceDisplay.astro';
+---
+
+<Layout 
+  title="Location Test | NovaPod.ai"
+  description="Test location detection and currency display"
+>
+
+<div class="min-h-screen bg-gray-50 py-20">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl font-bold text-gray-900 mb-8">Location Detection Test</h1>
+      
+      <!-- Location Info Display -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Current Location</h2>
+        <div id="location-display" class="space-y-2">
+          <p><strong>Country:</strong> <span id="country">Detecting...</span></p>
+          <p><strong>Currency:</strong> <span id="currency">Detecting...</span></p>
+          <p><strong>Timezone:</strong> <span id="timezone">Detecting...</span></p>
+        </div>
+      </div>
+
+      <!-- Test Controls -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Test Controls</h2>
+        <div class="space-y-4">
+          <button id="clear-cache" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+            Clear Location Cache & Re-detect
+          </button>
+          <button id="test-india" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors ml-4">
+            Test India Location
+          </button>
+          <button id="test-us" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors ml-4">
+            Test US Location
+          </button>
+        </div>
+      </div>
+
+      <!-- Currency Display Test -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Currency Display Test</h2>
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-lg font-medium mb-2">Regular Price Display:</h3>
+            <CurrencyDisplay amountINR={75000} amountUSD={900} />
+          </div>
+          <div>
+            <h3 class="text-lg font-medium mb-2">Discounted Price Display:</h3>
+            <DiscountedPriceDisplay 
+              basePriceINR={75000}
+              basePriceUSD={900}
+              discountPercentage={20}
+              size="lg"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="bg-blue-50 rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">How It Works</h2>
+        <div class="space-y-2 text-gray-700">
+          <p>• The system detects your location using IP geolocation (ipapi.co)</p>
+          <p>• If you're in India, prices show in INR as primary currency</p>
+          <p>• If you're outside India, prices show in USD as primary currency</p>
+          <p>• Location is cached in localStorage for performance</p>
+          <p>• Use the test buttons to simulate different locations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { clearLocationCache, setCustomLocation } from '../utils/locationUtils.js';
+
+  // Update location display
+  function updateLocationDisplay() {
+    const locationInfo = document.getElementById('location-info');
+    if (locationInfo) {
+      document.getElementById('country').textContent = locationInfo.getAttribute('data-country') || 'Unknown';
+      document.getElementById('currency').textContent = locationInfo.getAttribute('data-currency') || 'Unknown';
+      document.getElementById('timezone').textContent = locationInfo.getAttribute('data-timezone') || 'Unknown';
+    } else {
+      document.getElementById('country').textContent = 'Location not detected';
+      document.getElementById('currency').textContent = 'Location not detected';
+      document.getElementById('timezone').textContent = 'Location not detected';
+    }
+  }
+
+  // Clear cache and re-detect
+  document.getElementById('clear-cache').addEventListener('click', async () => {
+    console.log('🧹 Clearing location cache...');
+    clearLocationCache();
+    localStorage.removeItem('user-location');
+    
+    // Force page reload to re-detect
+    window.location.reload();
+  });
+
+  // Test India location
+  document.getElementById('test-india').addEventListener('click', () => {
+    console.log('🇮🇳 Setting test India location...');
+    setCustomLocation({
+      country: 'India',
+      countryCode: 'IN',
+      currency: 'INR',
+      timezone: 'Asia/Kolkata'
+    });
+    
+    // Update global location
+    (window as any).userLocation = {
+      country: 'India',
+      countryCode: 'IN',
+      currency: 'INR',
+      timezone: 'Asia/Kolkata'
+    };
+    
+    // Update location info element
+    const locationInfo = document.getElementById('location-info');
+    if (locationInfo) {
+      locationInfo.setAttribute('data-country', 'India');
+      locationInfo.setAttribute('data-currency', 'INR');
+      locationInfo.setAttribute('data-timezone', 'Asia/Kolkata');
+    }
+    
+    // Dispatch location change event
+    window.dispatchEvent(new CustomEvent('location-changed'));
+    
+    updateLocationDisplay();
+  });
+
+  // Test US location
+  document.getElementById('test-us').addEventListener('click', () => {
+    console.log('🇺🇸 Setting test US location...');
+    setCustomLocation({
+      country: 'United States',
+      countryCode: 'US',
+      currency: 'USD',
+      timezone: 'America/New_York'
+    });
+    
+    // Update global location
+    (window as any).userLocation = {
+      country: 'United States',
+      countryCode: 'US',
+      currency: 'USD',
+      timezone: 'America/New_York'
+    };
+    
+    // Update location info element
+    const locationInfo = document.getElementById('location-info');
+    if (locationInfo) {
+      locationInfo.setAttribute('data-country', 'United States');
+      locationInfo.setAttribute('data-currency', 'USD');
+      locationInfo.setAttribute('data-timezone', 'America/New_York');
+    }
+    
+    // Dispatch location change event
+    window.dispatchEvent(new CustomEvent('location-changed'));
+    
+    updateLocationDisplay();
+  });
+
+  // Listen for location detection
+  window.addEventListener('location-detected', (event) => {
+    console.log('🌍 Location detected event received:', event.detail);
+    updateLocationDisplay();
+  });
+
+  // Update display on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(updateLocationDisplay, 1000); // Give time for location detection
+  });
+</script>
+
+</Layout> 

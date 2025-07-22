@@ -6,12 +6,13 @@ interface Props {
     id: string;
     title: string;
     description: string;
-    priceINR: string;
-    priceUSD: string;
     duration: string;
     badge: string;
     badgeColor: string;
     deliverables: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   }>;
 }
 

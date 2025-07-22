@@ -2,6 +2,7 @@
 import { getBadgeStyle, getDotColor, getGradientClass } from '../../utils/colorUtils';
 import { catalogUtils } from '../../content/catalog/_index.js';
 import { generatePackSlug } from '../../utils/slugUtils.js';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
 
 export interface Props {
   packId: string; // Use packId instead of individual props
@@ -136,8 +137,12 @@ const finalActionText = actionText || defaultActionText;
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
           <div>
-            {priceINR && <span class="font-bold text-base text-dark ">{priceINR}</span>}
-            {priceUSD && <span class="text-xs text-gray-500 ml-2">({priceUSD})</span>}
+            <DiscountedPriceDisplay 
+              basePriceINR={pack.basePriceINR}
+              basePriceUSD={pack.basePriceUSD}
+              discountPercentage={pack.discountPercentage || 0}
+              size="sm"
+            />
           </div>
           {duration && <span class="text-xs text-gray-500">{duration}</span>}
         </div>

@@ -1,0 +1,186 @@
+---
+import { getDiscountedPriceDisplay, getDiscountBadgeText, getDiscountBadgeColor } from '../../utils/pricingUtils.js';
+
+export interface Props {
+  basePriceINR: number;
+  basePriceUSD: number;
+  discountPercentage: number;
+  showBadge?: boolean;
+  showSavings?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+}
+
+const { 
+  basePriceINR, 
+  basePriceUSD, 
+  discountPercentage, 
+  showBadge = true,
+  showSavings = true,
+  size = 'md',
+  className = ""
+} = Astro.props;
+
+// Size classes
+const sizeClasses = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl'
+};
+
+// Default to INR for server-side rendering
+const defaultCurrency = 'INR';
+const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, discountPercentage, defaultCurrency);
+---
+
+<div class={`discounted-price-display ${sizeClasses[size]} ${className}`} 
+     data-base-price-inr={basePriceINR} 
+     data-base-price-usd={basePriceUSD}
+     data-discount-percentage={discountPercentage}
+     data-show-badge={showBadge}
+     data-show-savings={showSavings}>
+  
+  <!-- Discount Badge -->
+  {showBadge && discountPercentage > 0 && (
+    <div class={`discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`}>
+      {getDiscountBadgeText(discountPercentage)} {discountPercentage}%
+    </div>
+  )}
+  
+  <!-- Price Display -->
+  <div class="price-container">
+    <!-- Original Price (Strikethrough) -->
+    {discountPercentage > 0 && (
+      <span class="original-price line-through text-gray-500 mr-2">
+        {priceDisplay.originalPrice}
+      </span>
+    )}
+    
+    <!-- Discounted Price -->
+    <span class="discounted-price font-bold text-gray-900">
+      {discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
+    </span>
+    
+    <!-- Savings Text -->
+    {showSavings && discountPercentage > 0 && (
+      <span class="savings-text text-green-600 text-sm ml-2">
+        Save {priceDisplay.savings}
+      </span>
+    )}
+  </div>
+</div>
+
+<script>
+  import { getDiscountedPriceDisplay, getDiscountBadgeText, getDiscountBadgeColor } from '../../utils/pricingUtils.js';
+
+  // Initialize discounted price display based on user location
+  async function initializeDiscountedPriceDisplay() {
+    try {
+      // Get user location from global variable or detect
+      let userCurrency: 'INR' | 'USD' = 'INR'; // Default to INR for India
+      
+      console.log('🌍 [DiscountedPriceDisplay] Checking user location...');
+      
+      // Wait for location detection if not available
+      if (!(window as any).userLocation) {
+        const locationInfo = document.getElementById('location-info');
+        if (!locationInfo) {
+          console.log('🌍 [DiscountedPriceDisplay] Waiting for location detection...');
+          // Wait a bit for location detection to complete
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+      }
+      
+      if ((window as any).userLocation) {
+        userCurrency = (window as any).userLocation.currency;
+        console.log('🌍 [DiscountedPriceDisplay] Found userLocation:', (window as any).userLocation);
+      } else {
+        // Try to get from location info element
+        const locationInfo = document.getElementById('location-info');
+        if (locationInfo) {
+          const currency = locationInfo.getAttribute('data-currency');
+          userCurrency = (currency === 'INR' || currency === 'USD') ? currency : 'INR';
+          console.log('🌍 [DiscountedPriceDisplay] Found location info:', {
+            country: locationInfo.getAttribute('data-country'),
+            currency: locationInfo.getAttribute('data-currency'),
+            timezone: locationInfo.getAttribute('data-timezone')
+          });
+        } else {
+          console.log('🌍 [DiscountedPriceDisplay] No location info found, defaulting to INR');
+        }
+      }
+      
+      console.log('🌍 [DiscountedPriceDisplay] Using currency:', userCurrency);
+      
+      const priceDisplays = document.querySelectorAll('.discounted-price-display');
+      console.log('🌍 [DiscountedPriceDisplay] Found', priceDisplays.length, 'price displays to update');
+      
+      priceDisplays.forEach((display, index) => {
+        const basePriceINR = parseInt(display.getAttribute('data-base-price-inr') || '0');
+        const basePriceUSD = parseInt(display.getAttribute('data-base-price-usd') || '0');
+        const discountPercentage = parseInt(display.getAttribute('data-discount-percentage') || '0');
+        const showBadge = display.getAttribute('data-show-badge') === 'true';
+        const showSavings = display.getAttribute('data-show-savings') === 'true';
+        
+        console.log(`🌍 [DiscountedPriceDisplay] Updating display ${index}:`, {
+          basePriceINR,
+          basePriceUSD,
+          discountPercentage,
+          userCurrency
+        });
+        
+        const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, discountPercentage, userCurrency);
+        
+        // Update discount badge
+        const badge = display.querySelector('.discount-badge');
+        if (badge && discountPercentage > 0) {
+          badge.textContent = `${getDiscountBadgeText(discountPercentage)} ${discountPercentage}%`;
+          badge.className = `discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`;
+        }
+        
+        // Update original price
+        const originalPrice = display.querySelector('.original-price');
+        if (originalPrice && discountPercentage > 0) {
+          originalPrice.textContent = priceDisplay.originalPrice;
+        }
+        
+        // Update discounted price
+        const discountedPrice = display.querySelector('.discounted-price');
+        if (discountedPrice) {
+          discountedPrice.textContent = discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice;
+        }
+        
+        // Update savings text
+        const savingsText = display.querySelector('.savings-text');
+        if (savingsText && discountPercentage > 0) {
+          savingsText.textContent = `Save ${priceDisplay.savings}`;
+        }
+      });
+    } catch (error) {
+      console.warn('🌍 [DiscountedPriceDisplay] Failed to initialize discounted price display:', error);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initializeDiscountedPriceDisplay, 100);
+    });
+  } else {
+    setTimeout(initializeDiscountedPriceDisplay, 100);
+  }
+
+  // Listen for location changes
+  window.addEventListener('location-detected', () => {
+    console.log('🌍 [DiscountedPriceDisplay] Location detected event received');
+    setTimeout(initializeDiscountedPriceDisplay, 100);
+  });
+  window.addEventListener('location-changed', () => {
+    console.log('🌍 [DiscountedPriceDisplay] Location changed event received');
+    setTimeout(initializeDiscountedPriceDisplay, 100);
+  });
+
+  // Retry initialization after a delay to catch any delayed location detection
+  setTimeout(initializeDiscountedPriceDisplay, 2000);
+</script> 

@@ -1,19 +1,22 @@
 ---
 import { generatePackSlug } from '../../utils/slugUtils.js';
+import CurrencyDisplay from '../shared/CurrencyDisplay.astro';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
 
 export interface Props {
   pack: {
     id: string;
     title: string;
     description: string;
-    price: string;
-    priceUSD: string;
     duration: string;
     badge: string;
     badgeColor: string;
     icon: string;
     deliverables?: string[];
     features?: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
   index?: number;
 }
@@ -251,7 +254,12 @@ const getPackIcon = (pack: any) => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
           </svg>
         </div>
-        <span class="font-semibold text-gray-900">{pack.price} / {pack.priceUSD}</span>
+        <DiscountedPriceDisplay 
+          basePriceINR={pack.basePriceINR}
+          basePriceUSD={pack.basePriceUSD}
+          discountPercentage={pack.discountPercentage || 0}
+          size="sm"
+        />
       </div>
     </div>
     

@@ -1,17 +1,19 @@
 ---
 import { generatePackSlug } from '../../utils/slugUtils.js';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
 
 export interface Props {
   pack: {
     id: string;
     title: string;
     description: string;
-    priceINR: string;
-    priceUSD: string;
     duration: string;
     badge: string;
     badgeColor: string;
     deliverables: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
   index?: number;
 }
@@ -193,14 +195,19 @@ const getPackIcon = (pack: any) => {
     </h3>
     
     <!-- Pricing -->
-    <div class="flex items-baseline space-x-2 mb-2">
-      <span class="text-2xl font-bold text-gray-900">
-        {pack.priceINR}
-      </span>
+    <div class="mb-2">
+      <DiscountedPriceDisplay 
+        basePriceINR={pack.basePriceINR}
+        basePriceUSD={pack.basePriceUSD}
+        discountPercentage={pack.discountPercentage}
+        size="lg"
+        showBadge={true}
+        showSavings={false}
+      />
     </div>
     
     <p class="text-sm text-gray-500 mb-4">
-      {pack.duration} • {pack.priceUSD}
+      {pack.duration}
     </p>
     
     <!-- Description -->
@@ -259,16 +266,14 @@ const getPackIcon = (pack: any) => {
       <!-- Pricing Details -->
       <div>
         <h4 class="text-sm font-semibold text-gray-800 mb-2">Pricing</h4>
-        <div class="space-y-1">
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-600">INR:</span>
-            <span class="font-medium text-gray-800">{pack.priceINR}</span>
-          </div>
-          <div class="flex items-center justify-between text-xs">
-            <span class="text-gray-600">USD:</span>
-            <span class="font-medium text-gray-800">{pack.priceUSD}</span>
-          </div>
-        </div>
+        <DiscountedPriceDisplay 
+          basePriceINR={pack.basePriceINR}
+          basePriceUSD={pack.basePriceUSD}
+          discountPercentage={pack.discountPercentage}
+          size="sm"
+          showBadge={true}
+          showSavings={true}
+        />
       </div>
     </div>
     

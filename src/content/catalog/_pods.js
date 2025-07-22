@@ -49,7 +49,9 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹2.5L/month (~$3K/month)",
         "Includes dev, design, QA, infrastructure, and deployment"
-      ]
+      ],
+      basePrice: 250000,
+      basePriceUSD: 3000,
     },
     {
       id: "ar-vr-experience",
@@ -97,7 +99,9 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹3L/month (~$3.6K/month)",
         "Includes full development, 3D assets, testing, and deployment"
-      ]
+      ],
+      basePrice: 300000,
+      basePriceUSD: 3600,
     },
     {
       id: "ai-product-studio",
@@ -145,7 +149,9 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹3.5L/month (~$4.2K/month)",
         "Includes design, dev, infra, and AI pipelines"
-      ]
+      ],
+      basePrice: 350000,
+      basePriceUSD: 4200,
     },
     {
       id: "product-launch",
@@ -193,7 +199,9 @@ export const podsCatalog = {
       pricing: [
         "Starts at ₹2.5L/month (~$3K/month)",
         "Includes dev, design, testing, DevOps & coordination"
-      ]
+      ],
+      basePrice: 250000,
+      basePriceUSD: 3000,
     },
     {
       id: "admin-workflow-automation",
@@ -237,7 +245,9 @@ export const podsCatalog = {
       ],
       pricing: [
         "Starting at ₹2L/month (~$2.4K)"
-      ]
+      ],
+      basePrice: 200000,
+      basePriceUSD: 2400,
     },
     {
       id: "ai-ml-integration",
@@ -281,7 +291,9 @@ export const podsCatalog = {
       pricing: [
         "Starts at ₹3L/month (~$3.6K)",
         "PoC-based pricing also available"
-      ]
+      ],
+      basePrice: 300000,
+      basePriceUSD: 3600,
     },
     {
       id: "mobile-first-saas",
@@ -330,7 +342,9 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹3L/month (~$3.6K)",
         "Includes mobile dev, backend dev, design, testing, and deployment"
-      ]
+      ],
+      basePrice: 300000,
+      basePriceUSD: 3600,
     },
     {
       id: "devops-infra-automation",
@@ -376,7 +390,9 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹2L/month (~$2.4K)",
         "One-time infra setup plans available as well"
-      ]
+      ],
+      basePrice: 200000,
+      basePriceUSD: 2400,
     }
   ],
 

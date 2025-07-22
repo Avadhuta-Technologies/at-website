@@ -6,7 +6,7 @@ import MadeWithButton from '../components/layout/MadeWithButton.astro';
 import CartDrawer from '../components/shared/CartDrawer.astro';
 import PodRequiredModal from '../components/shared/PodRequiredModal.astro';
 import PodReplacementModal from '../components/shared/PodReplacementModal.astro';
-
+import LocationDetector from '../components/shared/LocationDetector.astro';
 
 
 interface Props {
@@ -477,6 +477,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <CartDrawer />
     <PodRequiredModal />
     <PodReplacementModal />
+    <LocationDetector />
     
     <!-- Theme Script (loads early for better UX) -->
     <script>
