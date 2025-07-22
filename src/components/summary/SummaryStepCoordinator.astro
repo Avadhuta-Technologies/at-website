@@ -427,6 +427,33 @@
 
           <!-- Navigation removed - no back button in Step 3 -->
         </div>
+        
+        <!-- Thank You Modal -->
+        <div id="thank-you-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+          <div class="bg-white rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="text-center mb-6">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-graphite-900 mb-2">Thank You!</h3>
+              <p class="text-graphite-600">Your NovaPod reservation has been submitted successfully.</p>
+            </div>
+            
+            <div class="bg-gray-50 rounded-lg p-6 mb-6">
+              <h4 class="font-semibold text-graphite-900 mb-4">Reservation Details</h4>
+              <div id="modal-reservation-details" class="space-y-3 text-sm">
+                <!-- Details will be populated here -->
+              </div>
+            </div>
+            
+            <div class="flex justify-center">
+              <button id="close-modal-btn" class="bg-mint-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-mint-600 transition-colors">
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       `;
 
@@ -1552,12 +1579,151 @@
     addStep3EventListeners() {
       console.log('🔍 Adding Step 3 event listeners...');
       
-      // Back button removed from Step 3
-
       // Form submission
-      console.log('🔍 Calling shared.addFormListeners()...');
-      this.shared.addFormListeners();
+      const form = document.getElementById('reservation-form');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          console.log('🔍 [Step3] Form submission started');
+          
+          // Get form data
+          const formData = new FormData(form);
+          const formValues = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            company: formData.get('company'),
+            message: formData.get('message')
+          };
+          
+          // Get cart data
+          const cart = await this.shared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          const selectedPacks = cart.filter(item => item.type === 'pack');
+          
+          // Create submission data
+          const submissionData = {
+            timestamp: new Date().toISOString(),
+            formData: formValues,
+            cartItems: {
+              pod: selectedPod,
+              packs: selectedPacks
+            },
+            totalItems: cart.length,
+            step: this.currentStep
+          };
+          
+          // Log everything to console
+          console.log('🔍 [Step3] ===== FORM SUBMISSION DATA =====');
+          console.log('🔍 [Step3] Form Values:', formValues);
+          console.log('🔍 [Step3] Cart Items:', cart);
+          console.log('🔍 [Step3] Selected Pod:', selectedPod);
+          console.log('🔍 [Step3] Selected Packs:', selectedPacks);
+          console.log('🔍 [Step3] Complete Submission Data:', submissionData);
+          console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
+          
+          // Show thank you modal with details
+          this.showThankYouModal(submissionData);
+        });
+      }
+      
+      // Modal close button
+      document.addEventListener('click', (e) => {
+        if (e.target && e.target.matches('#close-modal-btn')) {
+          this.hideThankYouModal();
+        }
+      });
+      
       console.log('🔍 Step 3 event listeners added');
+    }
+    
+    showThankYouModal(submissionData) {
+      console.log('🔍 [showThankYouModal] Showing thank you modal');
+      
+      const modal = document.getElementById('thank-you-modal');
+      const detailsContainer = document.getElementById('modal-reservation-details');
+      
+      if (modal && detailsContainer) {
+        // Populate modal with submission details
+        const detailsHTML = this.generateModalDetailsHTML(submissionData);
+        detailsContainer.innerHTML = detailsHTML;
+        
+        // Show modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        console.log('🔍 [showThankYouModal] Modal displayed successfully');
+      } else {
+        console.error('🔍 [showThankYouModal] Modal elements not found');
+      }
+    }
+    
+    hideThankYouModal() {
+      console.log('🔍 [hideThankYouModal] Hiding thank you modal');
+      
+      const modal = document.getElementById('thank-you-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        console.log('🔍 [hideThankYouModal] Modal hidden successfully');
+      }
+    }
+    
+    generateModalDetailsHTML(submissionData) {
+      const { formData, cartItems } = submissionData;
+      
+      let html = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h5 class="font-medium text-graphite-900 mb-2">Contact Information</h5>
+            <div class="space-y-1 text-graphite-600">
+              <p><strong>Name:</strong> ${formData.name || 'Not provided'}</p>
+              <p><strong>Email:</strong> ${formData.email || 'Not provided'}</p>
+              <p><strong>Phone:</strong> ${formData.phone || 'Not provided'}</p>
+              <p><strong>Company:</strong> ${formData.company || 'Not provided'}</p>
+            </div>
+          </div>
+          
+          <div>
+            <h5 class="font-medium text-graphite-900 mb-2">Selected Items</h5>
+            <div class="space-y-1 text-graphite-600">
+              <p><strong>Pod:</strong> ${cartItems.pod ? cartItems.pod.title : 'None selected'}</p>
+              <p><strong>Duration:</strong> ${cartItems.pod ? cartItems.pod.reservationMonths + ' months' : 'Not set'}</p>
+              <p><strong>Packs:</strong> ${cartItems.packs.length} selected</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      if (formData.message) {
+        html += `
+          <div class="mt-4">
+            <h5 class="font-medium text-graphite-900 mb-2">Additional Requirements</h5>
+            <p class="text-graphite-600">${formData.message}</p>
+          </div>
+        `;
+      }
+      
+      if (cartItems.packs.length > 0) {
+        html += `
+          <div class="mt-4">
+            <h5 class="font-medium text-graphite-900 mb-2">Selected Packs</h5>
+            <ul class="list-disc list-inside space-y-1 text-graphite-600">
+              ${cartItems.packs.map(pack => `<li>${pack.title}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
+      html += `
+        <div class="mt-4 pt-4 border-t border-gray-200">
+          <p class="text-xs text-graphite-500">
+            <strong>Submission Time:</strong> ${new Date(submissionData.timestamp).toLocaleString()}
+          </p>
+        </div>
+      `;
+      
+      return html;
     }
   }
 
