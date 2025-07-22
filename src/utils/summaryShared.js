@@ -294,6 +294,99 @@ export class SummaryShared {
     }
   }
 
+  // New method for handling pack cart operations with UI updates
+  async handlePackCartOperation(packId, buttonElement) {
+    try {
+      const pack = packsCatalog.getPackById(packId);
+      
+      if (!pack) {
+        this.showNotification('Pack not found', 'error');
+        return null;
+      }
+
+      // Check current cart status
+      const cartStatus = await this.getPackCartStatus(packId);
+      
+      if (cartStatus.inCart) {
+        // Pack is in cart, remove it
+        await this.removePack(packId);
+        this.updatePackButton(buttonElement, pack, false);
+        this.showNotification('Pack removed from cart', 'success');
+        return pack;
+      } else {
+        // Pack is not in cart, check if pod exists
+        if (!cartStatus.hasPod) {
+          // Show modal to inform user they need a pod first
+          if (typeof window !== 'undefined' && window.showPodRequiredModal) {
+            window.showPodRequiredModal();
+          } else {
+            this.showNotification('Please select a pod first before adding packs', 'warning');
+          }
+          return null;
+        }
+
+        // Pod exists, add the pack
+        const packForCart = packsCatalog.getPackForCart(packId);
+        await this.addToCart(packForCart);
+        this.updatePackButton(buttonElement, pack, true);
+        this.showNotification('Pack added to cart successfully!', 'success');
+        return pack;
+      }
+    } catch (error) {
+      console.error('Error handling pack cart operation:', error);
+      this.showNotification('Failed to update pack in cart', 'error');
+      return null;
+    }
+  }
+
+  // Update pack button appearance based on cart status
+  updatePackButton(buttonElement, pack, isInCart) {
+    if (!buttonElement) return;
+
+    const buttonText = buttonElement.querySelector('span');
+    const buttonIcon = buttonElement.querySelector('svg');
+    
+    if (isInCart) {
+      // Pack is in cart - show remove state
+      buttonElement.classList.remove('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
+      buttonElement.classList.add('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+      
+      if (buttonText) buttonText.textContent = 'Remove Pack';
+      if (buttonIcon) {
+        buttonIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>';
+      }
+    } else {
+      // Pack is not in cart - show add state
+      buttonElement.classList.remove('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+      buttonElement.classList.add('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
+      
+      if (buttonText) buttonText.textContent = 'Add to Pod';
+      if (buttonIcon) {
+        buttonIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>';
+      }
+    }
+  }
+
+  // Initialize pack buttons with correct state
+  async initializePackButtons() {
+    try {
+      const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
+      
+      for (const button of packButtons) {
+        const packId = button.getAttribute('data-item-id');
+        if (packId) {
+          const cartStatus = await this.getPackCartStatus(packId);
+          const pack = packsCatalog.getPackById(packId);
+          if (pack) {
+            this.updatePackButton(button, pack, cartStatus.inCart);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error initializing pack buttons:', error);
+    }
+  }
+
   // Enhanced Pod selection with replacement confirmation
   async selectPodWithConfirmation(podId) {
     try {

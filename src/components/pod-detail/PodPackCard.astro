@@ -313,36 +313,34 @@ const getPackIcon = (pack: any) => {
 </div>
 
 <script>
+  // Import SummaryShared for cart operations
+  import { SummaryShared } from '../../utils/summaryShared.js';
+
   // Interactive functionality for pack cards
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.pack-card');
+  document.addEventListener('DOMContentLoaded', async () => {
+    const shared = new SummaryShared();
     
-    cards.forEach(card => {
-      const expandBtn = card.querySelector('.expand-btn');
-      const details = card.querySelector('.pack-details');
-      const actionText = card.querySelector('.pack-action-text');
-      const expandIcon = card.querySelector('.expand-icon');
-      
-      if (expandBtn && details && actionText && expandIcon) {
-        expandBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const isExpanded = details.classList.contains('hidden');
-          
-          if (isExpanded) {
-            details.classList.remove('hidden');
-            details.classList.add('animate-slide-down');
-            actionText.textContent = 'Show Less';
-            expandIcon.classList.add('rotate-180');
-          } else {
-            details.classList.add('hidden');
-            details.classList.remove('animate-slide-down');
-            actionText.textContent = 'View Details';
-            expandIcon.classList.remove('rotate-180');
-          }
-        });
-      }
+    // Initialize pack buttons with correct cart state
+    await shared.initializePackButtons();
+    
+    // Add event listeners for pack cart operations
+    const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
+    
+    packButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const packId = button.getAttribute('data-item-id');
+        if (packId) {
+          await shared.handlePackCartOperation(packId, button);
+        }
+      });
+    });
+    
+    // Listen for cart updates to refresh button states
+    window.addEventListener('cart-updated', async () => {
+      await shared.initializePackButtons();
     });
   });
 </script>
