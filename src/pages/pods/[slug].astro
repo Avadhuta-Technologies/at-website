@@ -60,6 +60,9 @@ const relevantPacks = getRelevantPacks(pod.name);
 ---
 
 <Layout title={`${pod.name} - Pod Details`} description={pod.tagline}>
+  <!-- Add meta tag with pod ID for debugging -->
+  <meta name="current-pod-id" content={pod.id} />
+  
   <!-- Add class to body for dark header -->
   <script>
     document.body.classList.add('dark-header-page');
@@ -68,116 +71,52 @@ const relevantPacks = getRelevantPacks(pod.name);
   <!-- Pod Detail Page Cart Handler -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Handle add to cart button clicks for pod detail page
+      // Get pod ID from meta tag
+      const podId = document.querySelector('meta[name="current-pod-id"]')?.getAttribute('content');
+      console.log('🔍 [PodDetail] Pod ID from meta:', podId);
+      
+      // Handle pack cart operations specifically for pod detail page
       document.addEventListener('click', async function(e) {
-        if (e.target.matches('[data-add-to-cart]')) {
-          e.preventDefault();
+        const button = e.target.closest('[data-add-to-cart][data-item-type="pack"]');
+        if (!button) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const packId = button.dataset.itemId;
+        console.log('🔍 [PodDetail] Pack button clicked:', { packId, podId });
+        
+        try {
+          const { SummaryShared } = await import('../../utils/summaryShared.js');
+          const shared = new SummaryShared();
           
-          const button = e.target;
-          const itemType = button.dataset.itemType;
+          // Check if pack is already in cart
+          const cartStatus = await shared.getPackCartStatus(packId);
           
-          // Special handling for pack addition from pod detail page
-          if (itemType === 'pack') {
-            const packId = button.dataset.itemId;
-            const podId = '${pod.id}'; // Pod ID from the current page
-            
-            console.log('🔍 [PodDetail] Adding pack from pod detail page:', { packId, podId });
-            
-            try {
-              // Import the summaryShared utility
-              const { SummaryShared } = await import('../../utils/summaryShared.js');
-              const shared = new SummaryShared();
-              
-              // Add both pod and pack, then navigate to summary
-              const success = await shared.addPodAndPack(podId, packId);
-              
-              if (success) {
-                // Navigation is handled in addPodAndPack method
-                console.log('Pod and pack added successfully, navigating to summary...');
-              } else {
-                console.error('Failed to add pod and pack');
-              }
-            } catch (error) {
-              console.error('Error in pod detail cart handler:', error);
-              showNotification('Failed to add items to cart', 'error');
-            }
-          } else if (itemType === 'pod') {
-            // Handle pod selection/replacement from pod detail page
-            const podId = button.dataset.itemId;
-            
-            console.log('🔍 [PodDetail] Pod selection from pod detail page:', { podId });
-            
-            try {
-              // Import the summaryShared utility
-              const { SummaryShared } = await import('/src/utils/summaryShared.js');
-              const shared = new SummaryShared();
-              
-              // Check if there's already a pod in cart
-              const cart = await shared.getCart();
-              const existingPod = cart.find(item => item.type === 'pod');
-              
-              if (existingPod) {
-                console.log('🔍 [PodDetail] Replacing existing pod:', existingPod.id, 'with new pod:', podId);
-                // Remove existing pod first (this will also remove all packs)
-                await shared.removePod();
-              }
-              
-              // Add the new pod
-              const selectedPod = await shared.selectPodWithConfirmation(podId);
-            const success = !!selectedPod;
-              
-              if (success) {
-                console.log('Pod selected successfully, navigating to summary...');
-                // Navigate to summary page
-                window.location.href = '/summary?step=1';
-              } else {
-                console.error('Failed to select pod');
-                showNotification('Failed to select pod', 'error');
-              }
-            } catch (error) {
-              console.error('Error in pod detail pod selection:', error);
-              showNotification('Failed to select pod', 'error');
-            }
+          if (cartStatus.inCart) {
+            // Remove pack
+            await shared.removePack(packId);
+            shared.showNotification('Pack removed from cart', 'success');
           } else {
-            // Handle other item types normally
-            const item = {
-              id: button.dataset.itemId,
-              type: button.dataset.itemType,
-              title: button.dataset.itemTitle,
-              description: button.dataset.itemDescription,
-              price: button.dataset.itemPrice
-            };
-            
-            try {
-              // Use localStorage directly
-              const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
-              const existingItem = cart.find(i => i.id === item.id && i.type === item.type);
-              
-              if (existingItem) {
-                existingItem.quantity += 1;
-              } else {
-                cart.push({ ...item, quantity: 1 });
+            if (!cartStatus.hasPod) {
+              // No pod in cart, add both current pod and pack
+              console.log('🔍 [PodDetail] Adding both pod and pack:', { podId, packId });
+              const success = await shared.addPodAndPack(podId, packId);
+              if (success) {
+                console.log('Pod and pack added successfully');
               }
-              
-              localStorage.setItem('novapod-cart', JSON.stringify(cart));
-              
-              // Dispatch cart-updated event
-              window.dispatchEvent(new CustomEvent('cart-updated'));
-              
-              // Update cart badge
-              const badge = document.querySelector('.cart-badge');
-              if (badge) {
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                badge.textContent = totalItems;
-                badge.style.display = totalItems > 0 ? 'flex' : 'none';
+            } else {
+              // Pod exists, just add pack
+              console.log('🔍 [PodDetail] Adding pack only:', packId);
+              const pack = await shared.addPack(packId);
+              if (pack) {
+                shared.showNotification('Pack added to cart successfully!', 'success');
               }
-              
-              showNotification('Item added to cart!');
-            } catch (error) {
-              console.error('Failed to add item to cart:', error);
-              showNotification('Failed to add item to cart');
             }
           }
+        } catch (error) {
+          console.error('Error in pod detail cart handler:', error);
+          showNotification('Failed to add items to cart', 'error');
         }
       });
       
@@ -190,12 +129,10 @@ const relevantPacks = getRelevantPacks(pod.name);
         
         document.body.appendChild(notification);
         
-        // Animate in
         setTimeout(() => {
           notification.classList.remove('translate-x-full');
         }, 100);
         
-        // Remove after 3 seconds
         setTimeout(() => {
           notification.classList.add('translate-x-full');
           setTimeout(() => {

@@ -316,27 +316,14 @@ const getPackIcon = (pack: any) => {
   // Import SummaryShared for cart operations
   import { SummaryShared } from '../../utils/summaryShared.js';
 
-  // Interactive functionality for pack cards
+  // Interactive functionality for pack cards on pod detail page
   document.addEventListener('DOMContentLoaded', async () => {
     const shared = new SummaryShared();
     
     // Initialize pack buttons with correct cart state
     await shared.initializePackButtons();
     
-    // Add event listeners for pack cart operations
-    const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
-    
-    packButtons.forEach(button => {
-      button.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const packId = button.getAttribute('data-item-id');
-        if (packId) {
-          await shared.handlePackCartOperation(packId, button);
-        }
-      });
-    });
+    // Remove direct event listener to avoid conflicts with page-level handler
     
     // Listen for cart updates to refresh button states
     window.addEventListener('cart-updated', async () => {

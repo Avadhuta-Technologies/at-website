@@ -387,6 +387,64 @@ export class SummaryShared {
     }
   }
 
+  // Special method for handling pack operations on pod detail pages
+  async handlePodDetailPackOperation(packId, currentPodId, buttonElement) {
+    try {
+      const pack = packsCatalog.getPackById(packId);
+      
+      if (!pack) {
+        this.showNotification('Pack not found', 'error');
+        return null;
+      }
+
+      // Check current cart status
+      const cartStatus = await this.getPackCartStatus(packId);
+      
+      if (cartStatus.inCart) {
+        // Pack is in cart, remove it
+        await this.removePack(packId);
+        this.updatePackButton(buttonElement, pack, false);
+        this.showNotification('Pack removed from cart', 'success');
+        return pack;
+      } else {
+        // Pack is not in cart, check if pod exists
+        if (!cartStatus.hasPod) {
+          // No pod in cart, add both current pod and pack
+          console.log('🔍 [handlePodDetailPackOperation] No pod in cart, adding both pod and pack:', { currentPodId, packId });
+          
+          // Add the current pod first
+          const pod = await this.selectPodWithConfirmation(currentPodId);
+          if (!pod) {
+            this.showNotification('Failed to add pod', 'error');
+            return null;
+          }
+          
+          // Add the pack
+          const packForCart = packsCatalog.getPackForCart(packId);
+          await this.addToCart(packForCart);
+          this.updatePackButton(buttonElement, pack, true);
+          
+          this.showNotification('Pod and pack added to cart successfully!', 'success');
+          return pack;
+        } else {
+          // Pod exists in cart, just add the pack
+          console.log('🔍 [handlePodDetailPackOperation] Pod exists in cart, adding pack only:', packId);
+          
+          const packForCart = packsCatalog.getPackForCart(packId);
+          await this.addToCart(packForCart);
+          this.updatePackButton(buttonElement, pack, true);
+          
+          this.showNotification('Pack added to cart successfully!', 'success');
+          return pack;
+        }
+      }
+    } catch (error) {
+      console.error('Error handling pod detail pack operation:', error);
+      this.showNotification('Failed to update pack in cart', 'error');
+      return null;
+    }
+  }
+
   // Enhanced Pod selection with replacement confirmation
   async selectPodWithConfirmation(podId) {
     try {
