@@ -52,7 +52,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 250000,
       basePriceUSD: 3000,
-      discountPercentage: 20,
+      discountPercentage: 15,
     },
     {
       id: "ar-vr-experience",
@@ -103,7 +103,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 300000,
       basePriceUSD: 3600,
-      discountPercentage: 20,
+      discountPercentage: 15,
     },
     {
       id: "ai-product-studio",
@@ -154,7 +154,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 350000,
       basePriceUSD: 4200,
-      discountPercentage: 20,
+      discountPercentage: 15,
     },
     {
       id: "product-launch",
@@ -205,7 +205,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 250000,
       basePriceUSD: 3000,
-      discountPercentage: 20,
+      discountPercentage: 15
     },
     {
       id: "admin-workflow-automation",
@@ -252,7 +252,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 200000,
       basePriceUSD: 2400,
-      discountPercentage: 20,
+      discountPercentage: 15,
     },
     {
       id: "ai-ml-integration",
@@ -299,7 +299,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 300000,
       basePriceUSD: 3600,
-      discountPercentage: 20,
+      discountPercentage: 15,
     },
     {
       id: "mobile-first-saas",
@@ -351,7 +351,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 300000,
       basePriceUSD: 3600,
-      discountPercentage: 20,
+      discountPercentage: 15,
     },
     {
       id: "devops-infra-automation",
@@ -400,7 +400,7 @@ export const podsCatalog = {
       ],
       basePriceINR: 200000,
       basePriceUSD: 2400,
-      discountPercentage: 20,
+      discountPercentage: 15,
     }
   ],
 

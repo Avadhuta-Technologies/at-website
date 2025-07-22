@@ -22,7 +22,7 @@ export const packsCatalog = {
           duration: "2 weeks",
           basePriceINR: 75000,
           basePriceUSD: 900,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "launch-gtm",
           deliverables: [
             "Brand Identity Kit - Logo, color palette, typography, and brand voice—all aligned to tell your story powerfully and consistently.",
@@ -74,7 +74,7 @@ export const packsCatalog = {
           duration: "1.5 weeks",
           basePriceINR: 45000,
           basePriceUSD: 550,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "launch-gtm",
           deliverables: [
             "Custom Business Website - A beautifully crafted, responsive website built on Webflow, Next.js, or WordPress—tailored to your goals, optimized for performance, and easy to manage.",
@@ -127,7 +127,7 @@ export const packsCatalog = {
           duration: "1 week",
           basePriceINR: 30000,
           basePriceUSD: 350,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "launch-gtm",
           deliverables: [
             "Logo Design - A custom logo (primary, secondary, and icon versions) that reflects your brand's personality and is ready for all mediums—digital, print, and social.",
@@ -187,7 +187,7 @@ export const packsCatalog = {
           duration: "3 weeks",
           basePriceINR: 95000,
           basePriceUSD: 1100,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "growth-optimization",
           deliverables: [
             "Website Optimization Audit - Detailed review of your website's UX, SEO, speed, and conversion flows—with prioritized action items to boost performance.",
@@ -240,7 +240,7 @@ export const packsCatalog = {
           duration: "2.5 weeks",
           basePriceINR: 70000,
           basePriceUSD: 825,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "growth-optimization",
           deliverables: [
             "Heuristic UX Audit - Expert review of your product's user experience across devices, benchmarked against usability best practices and modern UI standards.",
@@ -293,7 +293,7 @@ export const packsCatalog = {
           duration: "2 weeks",
           basePriceINR: 65000,
           basePriceUSD: 775,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "growth-optimization",
           deliverables: [
             "Conversion Funnel Analysis - Deep dive into your user journey to identify drop-off points and optimization opportunities.",
@@ -353,7 +353,7 @@ export const packsCatalog = {
           duration: "3 weeks",
           basePriceINR: 85000,
           basePriceUSD: 1000,
-          discountPercentage: 20,
+            discountPercentage: 0,
           category: "automation-efficiency",
           deliverables: [
             "Process Mapping & Audit - We start by understanding your current workflows—manual tasks, handoffs, bottlenecks—and identify where automation makes the most impact.",
@@ -406,7 +406,7 @@ export const packsCatalog = {
           duration: "3–4 weeks",
           basePriceINR: 110000,
           basePriceUSD: 1300,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "automation-efficiency",
           deliverables: [
             "Integration Requirements Mapping - We work with you to identify all the tools, platforms, and data flows that need to connect—CRMs, ERPs, payment gateways, analytics, internal apps, and more.",
@@ -459,7 +459,7 @@ export const packsCatalog = {
           duration: "4 weeks",
           basePriceINR: 125000,
           basePriceUSD: 1500,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "automation-efficiency",
           deliverables: [
             "Use-Case Definition & Persona Design - We help you define what your AI assistant should do—support, onboarding, lead qualification, FAQs, or internal automation—along with tone, voice, and boundaries.",
@@ -519,7 +519,7 @@ export const packsCatalog = {
           duration: "1.5 weeks",
           basePriceINR: 35000,
           basePriceUSD: 425,
-          discountPercentage: 20,
+            discountPercentage: 0,
           category: "specialized",
           deliverables: [
             "Compliance Needs Assessment - We analyze your business model, industry, geography, and data flows to determine which standards (GDPR, SOC 2, ISO 27001, HIPAA, etc.) apply to you.",
@@ -572,7 +572,7 @@ export const packsCatalog = {
           duration: "2 weeks",
           basePriceINR: 60000,
           basePriceUSD: 725,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "specialized",
           deliverables: [
             "Careers Page Design & Development - A compelling, branded careers page that highlights your culture, perks, and open roles—designed to attract the right kind of candidates.",
@@ -625,7 +625,7 @@ export const packsCatalog = {
           duration: "3 weeks",
           basePriceINR: 90000,
           basePriceUSD: 1050,
-          discountPercentage: 20,
+          discountPercentage: 0,
           category: "specialized",
           deliverables: [
             "Data Audit & Metrics Definition - We start by understanding your business goals and data sources. Then we define the right KPIs and success metrics tailored to your growth stage.",

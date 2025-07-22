@@ -1622,6 +1622,9 @@
           console.log('🔍 [Step3] Complete Submission Data:', submissionData);
           console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
           
+          // Clear form and cart after successful submission
+          await this.clearFormAndCart();
+          
           // Show thank you modal with details
           this.showThankYouModal(submissionData);
         });
@@ -1724,6 +1727,130 @@
       `;
       
       return html;
+    }
+    
+    async clearFormAndCart() {
+      console.log('🔍 [clearFormAndCart] ===== STARTING CLEAR OPERATION =====');
+      
+      try {
+        // Clear the form
+        const form = document.getElementById('reservation-form');
+        if (form) {
+          form.reset();
+          console.log('🔍 [clearFormAndCart] Form cleared successfully');
+        } else {
+          console.error('🔍 [clearFormAndCart] Form element not found');
+        }
+        
+        // Clear cart from localStorage
+        localStorage.removeItem('novapod-cart');
+        console.log('🔍 [clearFormAndCart] Cart removed from localStorage');
+        
+        // Clear cart from shared utility if available
+        if (this.shared && typeof this.shared.clearCart === 'function') {
+          await this.shared.clearCart();
+          console.log('🔍 [clearFormAndCart] Cart cleared via shared utility');
+        }
+        
+        // Update the order summary display to show empty state
+        this.updateOrderSummaryForEmptyCart();
+        
+        // Clear header cart count
+        this.updateHeaderCartCount(0);
+        
+        console.log('🔍 [clearFormAndCart] ===== CLEAR OPERATION COMPLETED =====');
+      } catch (error) {
+        console.error('🔍 [clearFormAndCart] Error clearing form and cart:', error);
+      }
+    }
+    
+    updateOrderSummaryForEmptyCart() {
+      console.log('🔍 [updateOrderSummaryForEmptyCart] Updating order summary for empty cart');
+      
+      // Update pod summary
+      const podTitle = document.getElementById('final-pod-title');
+      const podDuration = document.getElementById('final-pod-duration');
+      const podPrice = document.getElementById('final-pod-price');
+      
+      if (podTitle) podTitle.textContent = 'No Pod Selected';
+      if (podDuration) podDuration.textContent = 'Not set';
+      if (podPrice) podPrice.textContent = '₹0/month';
+      
+      // Update packs summary
+      const packsList = document.getElementById('final-packs-list');
+      if (packsList) {
+        packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
+      }
+      
+      // Update total
+      const totalPrice = document.getElementById('total-price');
+      if (totalPrice) {
+        totalPrice.textContent = '₹0';
+      }
+      
+      console.log('🔍 [updateOrderSummaryForEmptyCart] Order summary updated for empty cart');
+    }
+    
+    updateHeaderCartCount(count) {
+      console.log('🔍 [updateHeaderCartCount] Updating header cart count to:', count);
+      
+      try {
+        // Find all cart count elements in the header
+        const cartCountElements = document.querySelectorAll('[data-cart-count]');
+        const cartBadges = document.querySelectorAll('.cart-badge, .cart-count, [class*="cart-count"]');
+        
+        // Update elements with data-cart-count attribute
+        cartCountElements.forEach(element => {
+          element.textContent = count.toString();
+          element.setAttribute('data-cart-count', count.toString());
+          
+          // Hide element if count is 0
+          if (count === 0) {
+            element.style.display = 'none';
+          } else {
+            element.style.display = 'inline';
+          }
+        });
+        
+        // Update cart badge elements
+        cartBadges.forEach(element => {
+          element.textContent = count.toString();
+          
+          // Hide element if count is 0
+          if (count === 0) {
+            element.style.display = 'none';
+          } else {
+            element.style.display = 'inline';
+          }
+        });
+        
+        // Also try to find elements by common cart count selectors
+        const commonSelectors = [
+          '.header .cart-count',
+          '.navbar .cart-count', 
+          '.nav .cart-count',
+          '.cart-icon .count',
+          '.cart-badge .count',
+          '[class*="cart"] [class*="count"]'
+        ];
+        
+        commonSelectors.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(element => {
+            element.textContent = count.toString();
+            
+            if (count === 0) {
+              element.style.display = 'none';
+            } else {
+              element.style.display = 'inline';
+            }
+          });
+        });
+        
+        console.log('🔍 [updateHeaderCartCount] Header cart count updated successfully');
+      } catch (error) {
+        console.error('🔍 [updateHeaderCartCount] Error updating header cart count:', error);
+      }
     }
   }
 
