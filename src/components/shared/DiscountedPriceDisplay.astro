@@ -43,7 +43,7 @@ const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, disco
 const hasDiscount = discountPercentage > 0;
 ---
 
-<div class={`discounted-price-display ${sizeClasses[size]} ${className} ${variant === 'conversion' ? 'conversion-focused' : ''}`} 
+<div class={`discounted-price-display ${sizeClasses[size]} ${className}`} 
      data-base-price-inr={basePriceINR} 
      data-base-price-usd={basePriceUSD}
      data-discount-percentage={discountPercentage}
@@ -53,85 +53,31 @@ const hasDiscount = discountPercentage > 0;
      data-variant={variant}
      data-item-type={itemType}>
   
-  {variant === 'conversion' && hasDiscount ? (
-    <!-- Conversion-focused layout for better sales -->
-    <div class="conversion-layout">
-      <!-- Prominent Discount Badge -->
-      <div class={`discount-badge-prominent inline-block px-3 py-2 rounded-lg text-sm font-bold mb-3 ${getDiscountBadgeColor(discountPercentage)} animate-pulse`}>
-        <span class="block text-lg">🔥 {getDiscountBadgeText(discountPercentage)}</span>
-        <span class="block text-2xl font-black">{discountPercentage}% OFF</span>
+  <!-- Minimal Clean Design -->
+  <div class="price-display-minimal">
+    {showBadge && hasDiscount && (
+      <div class="discount-badge-minimal inline-block px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700 mb-2">
+        {discountPercentage}% OFF
       </div>
-      
-      <!-- Price Stack -->
-      <div class="price-stack">
-        <!-- Original Price (Large, Strikethrough) -->
-        <div class="original-price-large line-through text-gray-400 text-lg mb-1">
+    )}
+    
+    <div class="price-row flex items-baseline gap-2">
+      {showOriginalPrice && hasDiscount && (
+        <span class="original-price text-gray-500 line-through">
           {priceDisplay.originalPrice}
-        </div>
-        
-        <!-- Sale Price (Extra Large, Bold) -->
-        <div class="sale-price-extra-large font-black text-3xl text-red-600 mb-2">
-          {priceDisplay.discountedPrice}
-        </div>
-        
-        <!-- Savings Highlight -->
-        <div class="savings-highlight bg-green-100 text-green-800 px-3 py-2 rounded-lg text-sm font-bold inline-block">
-          💰 You Save {priceDisplay.savings}!
-        </div>
-      </div>
-    </div>
-  ) : variant === 'minimal' ? (
-    <!-- Minimal layout -->
-    <div class="minimal-layout">
-      {showBadge && hasDiscount && (
-        <div class={`discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-1 ${getDiscountBadgeColor(discountPercentage)}`}>
-          {getDiscountBadgeText(discountPercentage)} {discountPercentage}%
-        </div>
-      )}
-      <div class="price-container">
-        {showOriginalPrice && hasDiscount && (
-          <span class="original-price line-through text-gray-500 mr-2">
-            {priceDisplay.originalPrice}
-          </span>
-        )}
-        <span class="discounted-price font-bold text-gray-900">
-          {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
         </span>
-      </div>
-    </div>
-  ) : (
-    <!-- Default layout -->
-    <div class="default-layout">
-      <!-- Discount Badge -->
-      {showBadge && hasDiscount && (
-        <div class={`discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`}>
-          {getDiscountBadgeText(discountPercentage)} {discountPercentage}%
-        </div>
       )}
-      
-      <!-- Price Display -->
-      <div class="price-container">
-        <!-- Original Price (Strikethrough) -->
-        {showOriginalPrice && hasDiscount && (
-          <span class="original-price line-through text-gray-500 mr-2">
-            {priceDisplay.originalPrice}
-          </span>
-        )}
-        
-        <!-- Discounted Price -->
-        <span class="discounted-price font-bold text-gray-900">
-          {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
-        </span>
-        
-        <!-- Savings Text -->
-        {showSavings && hasDiscount && (
-          <span class="savings-text text-green-600 text-sm ml-2">
-            Save {priceDisplay.savings}
-          </span>
-        )}
-      </div>
+      <span class="final-price font-semibold text-gray-900">
+        {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
+      </span>
     </div>
-  )}
+    
+    {showSavings && hasDiscount && (
+      <div class="savings-text text-xs text-green-600 mt-1">
+        Save {priceDisplay.savings}
+      </div>
+    )}
+  </div>
 </div>
 
 <script>
@@ -140,42 +86,42 @@ const hasDiscount = discountPercentage > 0;
   // Initialize discounted price display based on user location
   async function initializeDiscountedPriceDisplay() {
     try {
-      // Get user location from global variable or detect
-      let userCurrency: 'INR' | 'USD' = 'INR'; // Default to INR for India
+      // Wait for user location to be available
+      if (typeof window === 'undefined') return;
       
       console.log('🌍 [DiscountedPriceDisplay] Checking user location...');
       
-      // Wait for location detection if not available
+      // Wait for location detection to complete
       if (!(window as any).userLocation) {
-        const locationInfo = document.getElementById('location-info');
-        if (!locationInfo) {
-          console.log('🌍 [DiscountedPriceDisplay] Waiting for location detection...');
-          // Wait a bit for location detection to complete
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
+        console.log('🌍 [DiscountedPriceDisplay] Waiting for location detection...');
+        return;
       }
       
-      if ((window as any).userLocation) {
-        userCurrency = (window as any).userLocation.currency;
-        console.log('🌍 [DiscountedPriceDisplay] Found userLocation:', (window as any).userLocation);
+      console.log('🌍 [DiscountedPriceDisplay] Found userLocation:', (window as any).userLocation);
+      
+      // Get location info
+      const locationInfo = document.getElementById('location-info');
+      let userCurrency: 'INR' | 'USD' = 'INR'; // Default
+      
+      if (locationInfo) {
+        console.log('🌍 [DiscountedPriceDisplay] Found location info:', {
+          country: locationInfo.getAttribute('data-country'),
+          currency: locationInfo.getAttribute('data-currency'),
+          timezone: locationInfo.getAttribute('data-timezone')
+        });
+        const currency = locationInfo.getAttribute('data-currency');
+        userCurrency = (currency === 'INR' || currency === 'USD') ? currency : 'INR';
+      } else if ((window as any).userLocation) {
+        console.log('🌍 [DiscountedPriceDisplay] Using window.userLocation');
+        userCurrency = (window as any).userLocation.currency || 'INR';
       } else {
-        // Try to get from location info element
-        const locationInfo = document.getElementById('location-info');
-        if (locationInfo) {
-          const currency = locationInfo.getAttribute('data-currency');
-          userCurrency = (currency === 'INR' || currency === 'USD') ? currency : 'INR';
-          console.log('🌍 [DiscountedPriceDisplay] Found location info:', {
-            country: locationInfo.getAttribute('data-country'),
-            currency: locationInfo.getAttribute('data-currency'),
-            timezone: locationInfo.getAttribute('data-timezone')
-          });
-        } else {
-          console.log('🌍 [DiscountedPriceDisplay] No location info found, defaulting to INR');
-        }
+        console.log('🌍 [DiscountedPriceDisplay] No location info found, defaulting to INR');
+        userCurrency = 'INR';
       }
       
       console.log('🌍 [DiscountedPriceDisplay] Using currency:', userCurrency);
       
+      // Update all price displays on the page
       const priceDisplays = document.querySelectorAll('.discounted-price-display');
       console.log('🌍 [DiscountedPriceDisplay] Found', priceDisplays.length, 'price displays to update');
       
@@ -198,70 +144,34 @@ const hasDiscount = discountPercentage > 0;
           itemType
         });
         
+        // Get updated price display
         const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, discountPercentage, userCurrency);
         
         // Update discount badge
-        const badge = display.querySelector('.discount-badge');
-        if (badge && discountPercentage > 0) {
-          badge.textContent = `${getDiscountBadgeText(discountPercentage)} ${discountPercentage}%`;
-          badge.className = `discount-badge inline-block px-2 py-1 rounded-full text-xs font-bold mb-2 ${getDiscountBadgeColor(discountPercentage)}`;
-        }
-
-        // Update discount badge prominent
-        const badgeProminent = display.querySelector('.discount-badge-prominent');
-        if (badgeProminent && discountPercentage > 0) {
-          badgeProminent.textContent = `🔥 ${getDiscountBadgeText(discountPercentage)}`;
-          badgeProminent.className = `discount-badge-prominent inline-block px-3 py-2 rounded-lg text-sm font-bold mb-3 ${getDiscountBadgeColor(discountPercentage)} animate-pulse`;
+        const badgeElement = display.querySelector('.discount-badge-minimal');
+        if (badgeElement && showBadge && discountPercentage > 0) {
+          badgeElement.textContent = `${discountPercentage}% OFF`;
+          badgeElement.className = `discount-badge-minimal inline-block px-2 py-1 rounded text-xs font-medium ${getDiscountBadgeColor(discountPercentage)} mb-2`;
         }
         
         // Update original price
-        const originalPrice = display.querySelector('.original-price');
-        if (originalPrice && discountPercentage > 0) {
-          originalPrice.textContent = priceDisplay.originalPrice;
-        }
-
-        // Update original price large
-        const originalPriceLarge = display.querySelector('.original-price-large');
-        if (originalPriceLarge && discountPercentage > 0) {
-          originalPriceLarge.textContent = priceDisplay.originalPrice;
+        const originalPriceElement = display.querySelector('.original-price');
+        if (originalPriceElement && showOriginalPrice && discountPercentage > 0) {
+          originalPriceElement.textContent = priceDisplay.originalPrice;
         }
         
-        // Update discounted price
-        const discountedPrice = display.querySelector('.discounted-price');
-        if (discountedPrice) {
-          discountedPrice.textContent = discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice;
-        }
-
-        // Update sale price extra large
-        const salePriceExtraLarge = display.querySelector('.sale-price-extra-large');
-        if (salePriceExtraLarge) {
-          salePriceExtraLarge.textContent = priceDisplay.discountedPrice;
+        // Update final price
+        const finalPriceElement = display.querySelector('.final-price');
+        if (finalPriceElement) {
+          finalPriceElement.textContent = discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice;
         }
         
         // Update savings text
-        const savingsText = display.querySelector('.savings-text');
-        if (savingsText && discountPercentage > 0) {
-          savingsText.textContent = `Save ${priceDisplay.savings}`;
+        const savingsElement = display.querySelector('.savings-text');
+        if (savingsElement && showSavings && discountPercentage > 0) {
+          savingsElement.textContent = `Save ${priceDisplay.savings}`;
         }
-
-        // Update savings highlight
-        const savingsHighlight = display.querySelector('.savings-highlight');
-        if (savingsHighlight && discountPercentage > 0) {
-          savingsHighlight.textContent = `💰 You Save ${priceDisplay.savings}!`;
-        }
-
-        // Update variant classes
-        if (variant === 'conversion') {
-          display.classList.add('conversion-focused');
-          display.classList.remove('default-layout', 'minimal-layout');
-        } else if (variant === 'minimal') {
-          display.classList.add('minimal-layout');
-          display.classList.remove('default-layout', 'conversion-focused');
-        } else {
-          display.classList.add('default-layout');
-          display.classList.remove('minimal-layout', 'conversion-focused');
-        }
-
+        
         // Update item type
         if (itemType) {
           display.setAttribute('data-item-type', itemType);
@@ -272,25 +182,61 @@ const hasDiscount = discountPercentage > 0;
     }
   }
 
-  // Initialize when DOM is ready
+  // Initialize on DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(initializeDiscountedPriceDisplay, 100);
-    });
+    document.addEventListener('DOMContentLoaded', initializeDiscountedPriceDisplay);
   } else {
     setTimeout(initializeDiscountedPriceDisplay, 100);
   }
 
-  // Listen for location changes
-  window.addEventListener('location-detected', () => {
-    console.log('🌍 [DiscountedPriceDisplay] Location detected event received');
-    setTimeout(initializeDiscountedPriceDisplay, 100);
-  });
-  window.addEventListener('location-changed', () => {
-    console.log('🌍 [DiscountedPriceDisplay] Location changed event received');
-    setTimeout(initializeDiscountedPriceDisplay, 100);
-  });
+  // Initialize when location is detected
+  if (typeof window !== 'undefined') {
+    window.addEventListener('location-detected', () => {
+      console.log('🌍 [DiscountedPriceDisplay] Location detected event received');
+      setTimeout(initializeDiscountedPriceDisplay, 100);
+    });
+    
+    window.addEventListener('location-changed', () => {
+      console.log('🌍 [DiscountedPriceDisplay] Location changed event received');
+      setTimeout(initializeDiscountedPriceDisplay, 100);
+    });
+    
+    // Fallback initialization
+    setTimeout(initializeDiscountedPriceDisplay, 2000);
+  }
+</script>
 
-  // Retry initialization after a delay to catch any delayed location detection
-  setTimeout(initializeDiscountedPriceDisplay, 2000);
-</script> 
+<style>
+  .price-display-minimal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  
+  .final-price {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .original-price {
+    color: #6b7280;
+    text-decoration: line-through;
+  }
+  
+  .savings-text {
+    color: #059669;
+    font-size: 0.75rem;
+  }
+  
+  .discount-badge-minimal {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+</style> 

@@ -6,16 +6,16 @@
   <!-- Step content will be loaded here -->
 </div>
 
-<script>
+<script client:load type="module">
   import { summaryShared } from '/src/utils/summaryShared.js';
 
   class SummaryStepCoordinator {
-      constructor() {
-    this.currentStep = 1;
-    this.shared = summaryShared;
-    this.currentEventListeners = [];
-    this.init();
-  }
+    constructor() {
+      this.currentStep = 1;
+      this.shared = summaryShared;
+      this.currentEventListeners = [];
+      this.init();
+    }
 
     async init() {
       console.log('🔍 [SummaryStepCoordinator] Initializing...');
@@ -96,7 +96,7 @@
       
       // Global pack action handler - only added once
       document.addEventListener('click', async (e) => {
-        const target = e.target as HTMLElement;
+        const target = e.target;
         
         // Handle pack add/remove buttons
         if (target && target.matches('button[data-pack-id]')) {
@@ -129,16 +129,9 @@
               await this.shared.removePack(packId);
             }
             
-            // Reload packs to update UI if we're on Step 2
+            // Refresh pack cards display immediately for better UX
             if (this.currentStep === 2) {
-              const cart = await this.shared.getCart();
-              const selectedPod = cart.find(item => item.type === 'pod');
-              if (selectedPod) {
-                await this.loadPacksForStep2(selectedPod);
-              }
-              
-              // Update selected packs display
-              this.updateSelectedPacksDisplay();
+              await this.refreshPackCards();
             }
           } finally {
             // Re-enable button after a short delay
@@ -149,7 +142,7 @@
         }
         
         // Handle delete pack buttons
-        const deleteBtn = target.closest('.delete-pack-btn') as HTMLElement;
+        const deleteBtn = target.closest('.delete-pack-btn');
         if (deleteBtn) {
           e.preventDefault();
           e.stopPropagation();
@@ -161,13 +154,7 @@
             
             // Refresh the packs display if we're on Step 2
             if (this.currentStep === 2) {
-              this.updateSelectedPacksDisplay();
-              // Also refresh the available packs to update their state
-              const cart = await this.shared.getCart();
-              const selectedPod = cart.find(item => item.type === 'pod');
-              if (selectedPod) {
-                await this.loadPacksForStep2(selectedPod);
-              }
+              await this.refreshPackCards();
             }
           }
         }
@@ -291,7 +278,7 @@
           <!-- Packs Section -->
           <div class="mb-8">
             <h3 id="packs-section-title" class="text-xl font-semibold text-graphite-900 mb-6">Available Packs</h3>
-            <div id="packs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="packs-grid">
               <!-- Packs will be dynamically loaded here -->
             </div>
           </div>
@@ -442,11 +429,11 @@
       if (selectedPod) {
         // Show selected pod
         console.log('🔍 [initializeStep1] Showing selected pod:', selectedPod);
-        this.showSelectedPod(selectedPod);
+        await this.showSelectedPod(selectedPod);
       } else {
         // Show available pods
         console.log('🔍 [initializeStep1] No pod found, showing available pods');
-        this.showAvailablePods();
+        await this.showAvailablePods();
       }
       
       this.addStep1EventListeners();
@@ -466,7 +453,13 @@
       if (selectedPod) {
         // Update the pod summary display
         console.log('🔍 [initializeStep2] Calling updatePodSummary...');
-        this.updatePodSummary(selectedPod);
+        await this.updatePodSummary(selectedPod);
+        
+        // Update pricing based on current reservation period
+        const currentMonths = selectedPod.reservationMonths || 3;
+        console.log('🔍 [initializeStep2] Updating pricing for', currentMonths, 'months');
+        await this.updatePricingForReservationPeriod(currentMonths);
+        
         // Load packs for the selected pod
         await this.loadPacksForStep2(selectedPod);
         // Update selected packs display
@@ -532,13 +525,13 @@
                     </svg>
                   </div>
                   <div>
-                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">${podItem.title || 'Selected Pod'}</h3>
-                    <p id="selected-pod-description" class="text-graphite-600">${podItem.description || 'Pod description'}</p>
+                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">${podItem.title || podItem.name || 'Selected Pod'}</h3>
+                    <p id="selected-pod-description" class="text-graphite-600">${podItem.description || podItem.tagline || 'Pod description'}</p>
                     <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}</span></p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">${podItem.price || '₹0/month'}</p>
+                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">Calculating...</p>
                   <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
                     Change Pod
                   </button>
@@ -549,54 +542,32 @@
               <div class="mb-6 pt-6 border-t border-mint-200">
                 <label class="block text-sm font-medium text-graphite-700 mb-3">Reservation Period</label>
                 
-                <!-- Custom Dropdown -->
-                <div class="relative w-full max-w-xs">
+                <!-- Duration Chips -->
+                <div class="flex flex-wrap gap-3">
                   <button 
-                    id="hire-period-dropdown-btn" 
-                    class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-left focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-all duration-200 hover:border-mint-400 flex items-center justify-between shadow-sm"
-                    data-selected="${podItem.reservationMonths || 3}"
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 1 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="1"
                   >
-                    <span id="hire-period-display" class="text-graphite-900 font-medium">
-                      ${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}
-                    </span>
-                    <svg class="w-5 h-5 text-graphite-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
+                    1 Month
                   </button>
-                  
-                  <!-- Dropdown Options -->
-                  <div id="hire-period-options" class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 invisible transition-all duration-200 transform scale-95 origin-top">
-                    <div class="py-2">
-                      <button 
-                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 1 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
-                        data-value="1"
-                      >
-                        <span>1 Month</span>
-                        ${(podItem.reservationMonths || 3) === 1 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
-                      </button>
-                      <button 
-                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 3 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
-                        data-value="3"
-                      >
-                        <span>3 Months</span>
-                        ${(podItem.reservationMonths || 3) === 3 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
-                      </button>
-                      <button 
-                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 6 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
-                        data-value="6"
-                      >
-                        <span>6 Months</span>
-                        ${(podItem.reservationMonths || 3) === 6 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
-                      </button>
-                      <button 
-                        class="w-full px-4 py-3 text-left hover:bg-mint-50 transition-colors duration-150 flex items-center justify-between ${(podItem.reservationMonths || 3) === 12 ? 'bg-mint-100 text-mint-700 font-medium' : 'text-graphite-700'}"
-                        data-value="12"
-                      >
-                        <span>12 Months</span>
-                        ${(podItem.reservationMonths || 3) === 12 ? '<svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
-                      </button>
-                    </div>
-                  </div>
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 3 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="3"
+                  >
+                    3 Months
+                  </button>
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 6 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="6"
+                  >
+                    6 Months
+                  </button>
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 12 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="12"
+                  >
+                    12 Months
+                  </button>
                 </div>
                 
                 <p class="text-sm text-graphite-500 mt-2">Select how long you'd like to reserve this pod</p>
@@ -658,11 +629,17 @@
             </div>
           </div>
         `;
+        
+        // Update the pod summary with correct pricing after HTML is rendered
+        await this.updatePodSummary(podItem);
       }
     }
 
     async showAvailablePods() {
+      console.log('🔍 [showAvailablePods] Starting to show available pods...');
+      
       const step1Content = document.getElementById('step-1-content');
+      console.log('🔍 [showAvailablePods] Step 1 content element found:', !!step1Content);
       
       if (step1Content) {
         // Show the original "Choose Your NovaPod" section
@@ -682,60 +659,90 @@
           </div>
         `;
         
+        console.log('🔍 [showAvailablePods] HTML set, now loading available pods...');
         await this.loadAvailablePods();
+        console.log('🔍 [showAvailablePods] Available pods loaded');
+      } else {
+        console.error('🔍 [showAvailablePods] Step 1 content element not found!');
       }
     }
 
     async loadAvailablePods() {
-      const pods = await this.shared.loadPods();
-      const grid = document.getElementById('available-pods-grid');
+      console.log('🔍 [loadAvailablePods] Starting to load available pods...');
       
-      if (!grid) return;
-      
-      grid.innerHTML = pods.map(pod => `
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-mint-300 transition-all duration-300 hover:shadow-lg flex flex-col h-full">
-          <!-- Header with icon and title -->
-          <div class="flex items-center space-x-4 mb-4">
-            <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-              </svg>
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-xl font-semibold text-graphite-900 truncate">${pod.name}</h3>
-            </div>
-          </div>
-          
-          <!-- Description -->
-          <p class="text-graphite-600 mb-4 flex-1">${pod.tagline}</p>
-          
-          <!-- Ideal for section -->
-          <div class="space-y-2 mb-4">
-            <h4 class="text-sm font-medium text-graphite-700">Ideal for:</h4>
-            <ul class="text-sm text-graphite-600 space-y-1">
-              ${pod.idealFor ? pod.idealFor.slice(0, 2).map(item => `<li>• ${item}</li>`).join('') : ''}
-            </ul>
-          </div>
-          
-          <!-- Pricing - positioned above button -->
-          <div class="mb-4">
-            ${pod.discountPercentage > 0 ? `
-              <div class="space-y-1">
-                <div class="text-sm text-gray-500 line-through">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</div>
-                <div class="text-lg font-bold text-mint-600">₹${((pod.basePriceINR * (100 - pod.discountPercentage) / 100) / 100000).toFixed(1)}L/month</div>
-                <div class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">${pod.discountPercentage}% OFF</div>
+      try {
+        const pods = await this.shared.loadPods();
+        console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
+        
+        const grid = document.getElementById('available-pods-grid');
+        console.log('🔍 [loadAvailablePods] Grid element found:', !!grid);
+        
+        if (!grid) {
+          console.error('🔍 [loadAvailablePods] Grid element not found!');
+          return;
+        }
+        
+        if (!pods || pods.length === 0) {
+          console.log('🔍 [loadAvailablePods] No pods found, showing empty state');
+          grid.innerHTML = '<p class="text-graphite-600 col-span-full text-center py-8">No pods are currently available.</p>';
+          return;
+        }
+        
+        console.log('🔍 [loadAvailablePods] Rendering', pods.length, 'pods');
+        
+        grid.innerHTML = pods.map(pod => `
+          <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-mint-300 transition-all duration-300 hover:shadow-lg flex flex-col h-full">
+            <!-- Header with icon and title -->
+            <div class="flex items-center space-x-4 mb-4">
+              <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
               </div>
-            ` : `
-              <span class="text-lg font-bold text-mint-600">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</span>
-            `}
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl font-semibold text-graphite-900 truncate">${pod.name}</h3>
+              </div>
+            </div>
+            
+            <!-- Description -->
+            <p class="text-graphite-600 mb-4 flex-1">${pod.tagline}</p>
+            
+            <!-- Ideal for section -->
+            <div class="space-y-2 mb-4">
+              <h4 class="text-sm font-medium text-graphite-700">Ideal for:</h4>
+              <ul class="text-sm text-graphite-600 space-y-1">
+                ${pod.idealFor ? pod.idealFor.slice(0, 2).map(item => `<li>• ${item}</li>`).join('') : ''}
+              </ul>
+            </div>
+            
+            <!-- Pricing - positioned above button -->
+            <div class="mb-4">
+              ${pod.discountPercentage > 0 ? `
+                <div class="space-y-1">
+                  <div class="text-sm text-gray-500 line-through">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</div>
+                  <div class="text-lg font-bold text-mint-600">₹${((pod.basePriceINR * (100 - pod.discountPercentage) / 100) / 100000).toFixed(1)}L/month</div>
+                  <div class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">${pod.discountPercentage}% OFF</div>
+                </div>
+              ` : `
+                <span class="text-lg font-bold text-mint-600">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</span>
+              `}
+            </div>
+            
+            <!-- CTA Button - always at bottom -->
+            <button class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 mt-auto" data-pod-id="${pod.id}">
+              Reserve Pod
+            </button>
           </div>
-          
-          <!-- CTA Button - always at bottom -->
-          <button class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 mt-auto" data-pod-id="${pod.id}">
-            Reserve Pod
-          </button>
-        </div>
-      `).join('');
+        `).join('');
+        
+        console.log('🔍 [loadAvailablePods] Pods rendered successfully');
+      } catch (error) {
+        console.error('🔍 [loadAvailablePods] Error loading pods:', error);
+        const grid = document.getElementById('available-pods-grid');
+        if (grid) {
+          grid.innerHTML = '<p class="text-red-600 col-span-full text-center py-8">Error loading pods. Please refresh the page.</p>';
+        }
+      }
     }
 
     async loadPacksForStep2(podItem) {
@@ -751,55 +758,74 @@
         return;
       }
       
-      // Get all available packs for tabs
+      // Get all available packs for categories
       const allPacks = await this.shared.loadAllPacks();
       const categories = this.shared.getPackCategories();
       
       title.textContent = 'Available Packs';
       
-      // Create tabbed interface
-      grid.innerHTML = `
-        <div class="col-span-full mb-6">
-          <!-- Tab Navigation -->
-          <div class="flex flex-wrap gap-2 mb-6">
-            <button class="tab-btn active px-4 py-2 rounded-lg font-medium transition-colors bg-mint-500 text-white" data-tab="recommended">
-              Recommended (${packs.length})
-            </button>
-            ${categories.map(category => `
-              <button class="tab-btn px-4 py-2 rounded-lg font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200" data-tab="${category.id}">
-                ${category.title} (${category.packs.length})
-              </button>
-            `).join('')}
-          </div>
-          
-          <!-- Tab Content -->
-          <div class="tab-content">
-            <!-- Recommended Packs Tab -->
-            <div id="tab-recommended" class="tab-pane active">
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${packs.map(pack => this.renderPackCard(pack)).join('')}
-              </div>
-            </div>
-            
-            <!-- Category Tabs -->
-            ${categories.map(category => `
-              <div id="tab-${category.id}" class="tab-pane hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  ${category.packs.map(pack => this.renderPackCard(pack)).join('')}
-                </div>
-              </div>
-            `).join('')}
+      // Create grouped interface
+      grid.innerHTML = await this.renderPacksSection(packs, categories);
+    }
+
+    async renderPacksSection(packs, categories) {
+      // Get current cart to check which packs are selected
+      const cart = this.getCurrentCart();
+      const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
+      
+      return `
+        <!-- Recommended Packs Section -->
+        <div class="mb-8">
+          <h4 class="text-lg font-semibold text-graphite-900 mb-4">Recommended Packs</h4>
+          <div class="flex overflow-x-auto pb-4">
+            ${packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
           </div>
         </div>
+        
+        <!-- Category Packs Sections -->
+        ${categories.map(category => `
+          <div class="mb-8">
+            <h4 class="text-lg font-semibold text-graphite-900 mb-4">${category.title}</h4>
+            <div class="flex overflow-x-auto pb-4">
+              ${category.packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
+            </div>
+          </div>
+        `).join('')}
       `;
-      
-      // Add tab functionality
-      this.addTabListeners();
     }
 
     renderPackCard(pack, isAdded = false) {
+      // Get current reservation period for pack pricing
+      let months = 3; // default
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        // Try to get from cart
+        const cart = this.getCurrentCart();
+        const selectedPod = cart.find(item => item.type === 'pod');
+        if (selectedPod && selectedPod.reservationMonths) {
+          months = selectedPod.reservationMonths;
+        }
+      }
+      
+      // Calculate total price for the duration
+      const totalPriceINR = pack.basePriceINR * months;
+      const discountedPriceINR = totalPriceINR * (100 - pack.discountPercentage) / 100;
+      
+      // Standardize price display - always use L for consistency
+      const formatPrice = (price) => {
+        if (price >= 100000) {
+          return `₹${(price / 100000).toFixed(1)}L`;
+        } else if (price >= 1000) {
+          return `₹${(price / 1000).toFixed(0)}K`;
+        } else {
+          return `₹${price}`;
+        }
+      };
+      
       return `
-        <div class="pack-card bg-white rounded-xl border-2 p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group ${isAdded ? 'border-mint-500 bg-mint-50' : 'border-gray-200'}" data-pack-id="${pack.id}">
+        <div class="pack-card bg-white rounded-xl min-w-[300px] p-6 mx-4 border border-gray-200 cursor-pointer ${isAdded ? 'border-mint-500' : ''}" data-pack-id="${pack.id}">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
@@ -809,12 +835,13 @@
             </div>
             <div class="text-right">
               ${pack.discountPercentage > 0 ? `
-                <div class="text-sm text-gray-500 line-through">₹${(pack.basePriceINR / 1000).toFixed(0)}K</div>
-                <div class="text-sm font-medium text-cerulean-600">₹${((pack.basePriceINR * (100 - pack.discountPercentage)) / 100000).toFixed(1)}L</div>
+                <div class="text-sm text-gray-500 line-through">${formatPrice(totalPriceINR)}</div>
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(discountedPriceINR)}</div>
                 <div class="text-xs text-green-600">${pack.discountPercentage}% OFF</div>
               ` : `
-                <div class="text-sm font-medium text-cerulean-600">₹${(pack.basePriceINR / 100000).toFixed(1)}L</div>
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(totalPriceINR)}</div>
               `}
+              <div class="text-xs text-gray-500">for ${months} months</div>
             </div>
           </div>
           
@@ -824,7 +851,7 @@
           <div class="flex items-center justify-between">
             <span class="text-sm text-graphite-500">${pack.duration}</span>
             <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${isAdded ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-cerulean-500 text-white hover:bg-cerulean-600'}" data-pack-id="${pack.id}" data-action="${isAdded ? 'remove' : 'add'}">
-              ${isAdded ? 'Remove' : 'Add Pack'}
+              ${isAdded ? 'Remove Pack' : 'Add Pack'}
             </button>
           </div>
         </div>
@@ -881,13 +908,38 @@
         `;
       }
       
+      // Get current reservation period for pack pricing
+      let months = 3; // default
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        const selectedPod = cart.find(item => item.type === 'pod');
+        if (selectedPod && selectedPod.reservationMonths) {
+          months = selectedPod.reservationMonths;
+        }
+      }
+      
+      // Standardize price display function
+      const formatPrice = (price) => {
+        if (price >= 100000) {
+          return `₹${(price / 100000).toFixed(1)}L`;
+        } else if (price >= 1000) {
+          return `₹${(price / 1000).toFixed(0)}K`;
+        } else {
+          return `₹${price}`;
+        }
+      };
+      
       const packPromises = selectedPacks.map(async (pack) => {
         // Get pack details from catalog
         const packDetails = await this.getPackDetails(pack.id);
         if (!packDetails) return '';
         
-        const finalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
-        const formattedPrice = `₹${(finalPrice / 100000).toFixed(1)}L`;
+        // Calculate monthly pack price with discount, then multiply by months
+        const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const totalPrice = monthlyPrice * months;
+        const formattedPrice = formatPrice(totalPrice);
         
         return `
           <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
@@ -927,13 +979,38 @@
         `;
       }
       
+      // Get current reservation period for pack pricing
+      let months = 3; // default
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        const selectedPod = cart.find(item => item.type === 'pod');
+        if (selectedPod && selectedPod.reservationMonths) {
+          months = selectedPod.reservationMonths;
+        }
+      }
+      
+      // Standardize price display function
+      const formatPrice = (price) => {
+        if (price >= 100000) {
+          return `₹${(price / 100000).toFixed(1)}L`;
+        } else if (price >= 1000) {
+          return `₹${(price / 1000).toFixed(0)}K`;
+        } else {
+          return `₹${price}`;
+        }
+      };
+      
       const packPromises = selectedPacks.map(async (pack) => {
         // Get pack details from catalog
         const packDetails = await this.getPackDetails(pack.id);
         if (!packDetails) return '';
         
-        const finalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
-        const formattedPrice = `₹${(finalPrice / 100000).toFixed(1)}L`;
+        // Calculate monthly pack price with discount, then multiply by months
+        const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const totalPrice = monthlyPrice * months;
+        const formattedPrice = formatPrice(totalPrice);
         
         return `
           <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
@@ -969,37 +1046,56 @@
       }
     }
 
-
-
-    addTabListeners() {
-      const tabButtons = document.querySelectorAll('.tab-btn');
-      const tabPanes = document.querySelectorAll('.tab-pane');
-      
-      tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const targetTab = button.getAttribute('data-tab');
+    async refreshPackCards() {
+      try {
+        console.log('🔍 [refreshPackCards] Starting pack cards refresh');
+        
+        // Get current cart to check which packs are selected
+        const cart = this.getCurrentCart();
+        const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
+        
+        console.log('🔍 [refreshPackCards] Selected pack IDs:', selectedPackIds);
+        
+        // Update all pack cards on the page
+        const packCards = document.querySelectorAll('.pack-card');
+        packCards.forEach(card => {
+          const packId = card.getAttribute('data-pack-id');
+          const button = card.querySelector('button[data-action]');
           
-          // Update active tab button
-          tabButtons.forEach(btn => {
-            btn.classList.remove('active', 'bg-mint-500', 'text-white');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
-          });
-          button.classList.add('active', 'bg-mint-500', 'text-white');
-          button.classList.remove('bg-gray-100', 'text-gray-700');
-          
-          // Update active tab pane
-          tabPanes.forEach(pane => {
-            pane.classList.remove('active');
-            pane.classList.add('hidden');
-          });
-          
-          const targetPane = document.getElementById(`tab-${targetTab}`);
-          if (targetPane) {
-            targetPane.classList.add('active');
-            targetPane.classList.remove('hidden');
+          if (packId && button) {
+            const isSelected = selectedPackIds.includes(packId);
+            
+            // Update card styling
+            if (isSelected) {
+              card.classList.add('ring-2', 'ring-mint-500', 'bg-mint-50');
+              card.classList.remove('bg-white');
+            } else {
+              card.classList.remove('ring-2', 'ring-mint-500', 'bg-mint-50');
+              card.classList.add('bg-white');
+            }
+            
+            // Update button
+            if (isSelected) {
+              button.textContent = 'Remove Pack';
+              button.setAttribute('data-action', 'remove');
+              button.classList.remove('bg-mint-500', 'hover:bg-mint-600');
+              button.classList.add('bg-red-500', 'hover:bg-red-600');
+            } else {
+              button.textContent = 'Add Pack';
+              button.setAttribute('data-action', 'add');
+              button.classList.remove('bg-red-500', 'hover:bg-red-600');
+              button.classList.add('bg-mint-500', 'hover:bg-mint-600');
+            }
           }
         });
-      });
+        
+        // Also refresh the selected packs list
+        await this.renderSelectedPacksWithDelete();
+        
+        console.log('🔍 [refreshPackCards] Pack cards refreshed successfully');
+      } catch (error) {
+        console.error('🔍 [refreshPackCards] Error refreshing pack cards:', error);
+      }
     }
 
     showNoPodWarning() {
@@ -1039,14 +1135,27 @@
       
       console.log('🔍 [updatePodSummary] Latest pod item:', latestPodItem);
       
+      // Determine which step we're in and use appropriate selectors
+      let selectors;
+      if (this.currentStep === 1) {
+        // Step 1 uses selected-pod-* selectors
+        selectors = {
+          titleSelector: '#selected-pod-title',
+          priceSelector: '#selected-pod-price'
+        };
+      } else {
+        // Step 2 uses summary-pod-* selectors
+        selectors = {
+          titleSelector: '#summary-pod-title',
+          priceSelector: '#summary-pod-price'
+        };
+      }
+      
       // Update the pod summary using shared utility
-      await this.shared.updatePodSummary(latestPodItem, {
-        titleSelector: '#summary-pod-title',
-        priceSelector: '#summary-pod-price'
-      });
+      await this.shared.updatePodSummary(latestPodItem, selectors);
       
       // Update the months display
-      const monthsElement = document.getElementById('summary-pod-months');
+      const monthsElement = document.getElementById('selected-pod-months') || document.getElementById('summary-pod-months');
       console.log('🔍 [updatePodSummary] monthsElement found:', !!monthsElement);
       
       if (monthsElement) {
@@ -1069,12 +1178,34 @@
         if (packItems.length === 0) {
           packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
         } else {
+          // Get current reservation period for pack pricing
+          let months = 3; // default
+          const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+          if (selectedChip) {
+            months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+          } else if (podItem.reservationMonths) {
+            months = podItem.reservationMonths;
+          }
+          
+          // Standardize price display function
+          const formatPrice = (price) => {
+            if (price >= 100000) {
+              return `₹${(price / 100000).toFixed(1)}L`;
+            } else if (price >= 1000) {
+              return `₹${(price / 1000).toFixed(0)}K`;
+            } else {
+              return `₹${price}`;
+            }
+          };
+          
           const packPromises = packItems.map(async (pack) => {
             const packDetails = await this.shared.getPackDetails(pack.id);
             if (!packDetails) return '';
             
-            const finalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
-            const formattedPrice = `₹${(finalPrice / 100000).toFixed(1)}L`;
+            // Calculate monthly pack price with discount, then multiply by months
+            const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+            const totalPrice = monthlyPrice * months;
+            const formattedPrice = formatPrice(totalPrice);
             
             return `
               <div class="flex items-center justify-between p-3 bg-white rounded-lg">
@@ -1141,18 +1272,18 @@
         const isPack = display.getAttribute('data-item-type') === 'pack';
         
         if (basePriceINR > 0) {
-          // Calculate total price - only apply reservation period to pods, not packs
-          const totalPriceINR = isPack ? basePriceINR : basePriceINR * months;
-          const totalPriceUSD = isPack ? basePriceUSD : basePriceUSD * months;
+          // Calculate total price - apply reservation period to both pods and packs (monthly pricing)
+          const totalPriceINR = basePriceINR * months;
+          const totalPriceUSD = basePriceUSD * months;
           
           // Apply discount
           const discountMultiplier = (100 - discountPercentage) / 100;
           const finalPriceINR = totalPriceINR * discountMultiplier;
           const finalPriceUSD = totalPriceUSD * discountMultiplier;
           
-          // Update the display
-          const priceElement = display.querySelector('.discounted-price, .sale-price-extra-large');
-          if (priceElement) {
+          // Update the final price display (new minimal design)
+          const finalPriceElement = display.querySelector('.final-price');
+          if (finalPriceElement) {
             // Format price based on user location
             let userCurrency = 'INR';
             if (typeof window !== 'undefined' && window.userLocation) {
@@ -1163,11 +1294,11 @@
               ? `₹${(finalPriceINR / 100000).toFixed(1)}L`
               : `$${(finalPriceUSD / 1000).toFixed(1)}K`;
             
-            priceElement.textContent = formattedPrice;
+            finalPriceElement.textContent = formattedPrice;
           }
           
-          // Update original price if it exists
-          const originalPriceElement = display.querySelector('.original-price, .original-price-large');
+          // Update original price if it exists (new minimal design)
+          const originalPriceElement = display.querySelector('.original-price');
           if (originalPriceElement) {
             let userCurrency = 'INR';
             if (typeof window !== 'undefined' && window.userLocation) {
@@ -1180,11 +1311,37 @@
             
             originalPriceElement.textContent = originalFormattedPrice;
           }
+          
+          // Update discount badge if it exists
+          const discountBadgeElement = display.querySelector('.discount-badge-minimal');
+          if (discountBadgeElement && discountPercentage > 0) {
+            discountBadgeElement.textContent = `${discountPercentage}% OFF`;
+          }
+          
+          // Update savings text if it exists
+          const savingsElement = display.querySelector('.savings-text');
+          if (savingsElement && discountPercentage > 0) {
+            let userCurrency = 'INR';
+            if (typeof window !== 'undefined' && window.userLocation) {
+              userCurrency = window.userLocation.currency;
+            }
+            
+            const savingsINR = totalPriceINR - finalPriceINR;
+            const savingsUSD = totalPriceUSD - finalPriceUSD;
+            
+            const savingsFormatted = userCurrency === 'INR' 
+              ? `₹${(savingsINR / 100000).toFixed(1)}L`
+              : `$${(savingsUSD / 1000).toFixed(1)}K`;
+            
+            savingsElement.textContent = `Save ${savingsFormatted}`;
+          }
         }
       });
     }
 
     addStep1EventListeners() {
+      console.log('🔍 [Step1] Adding event listeners...');
+      
       // Pod selection with replacement confirmation
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('[data-pod-id]')) {
@@ -1193,67 +1350,6 @@
           if (selectedPod) {
             await this.showSelectedPod(selectedPod);
           }
-        }
-      });
-
-      // Handle data-add-to-cart buttons in summary page
-      document.addEventListener('click', async (e) => {
-        const target = e.target as HTMLElement;
-        if (target && target.matches('[data-add-to-cart]')) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const addToCartBtn = target;
-          const itemId = addToCartBtn.getAttribute('data-item-id');
-          const itemType = addToCartBtn.getAttribute('data-item-type');
-          const itemTitle = addToCartBtn.getAttribute('data-item-title');
-          const itemDescription = addToCartBtn.getAttribute('data-item-description');
-          const itemPrice = addToCartBtn.getAttribute('data-item-price');
-          
-          if (itemId && itemType) {
-            const cartItem = {
-              id: itemId,
-              type: itemType,
-              title: itemTitle || '',
-              description: itemDescription || '',
-              price: itemPrice || '',
-              reservationMonths: itemType === 'pod' ? 3 : undefined
-            };
-            
-            // Add to cart using the shared cart service
-            const success = await this.shared.addToCart(cartItem);
-            if (success) {
-              // Show notification
-              this.shared.showNotification(`Added ${itemTitle || 'Item'} to cart!`);
-              
-              // Refresh the current step to show updated cart
-              await this.loadStep(this.currentStep);
-            }
-          }
-        }
-      });
-
-      // Change pod button
-      document.addEventListener('click', async (e) => {
-        const target = e.target as HTMLElement;
-        if (target && target.matches('#change-pod-btn')) {
-          console.log('🔍 Change pod button clicked');
-          await this.showAvailablePods();
-        }
-      });
-
-      // Remove pod button - using event delegation
-      document.addEventListener('click', async (e) => {
-        const target = e.target as HTMLElement;
-        const removeBtn = target.closest('#remove-pod-btn') as HTMLElement;
-        
-        if (removeBtn) {
-          console.log('🔍 [Step1] Remove pod button clicked');
-          e.preventDefault();
-          e.stopPropagation();
-          await this.shared.removePod();
-          // Immediately show available pods after removing
-          await this.showAvailablePods();
         }
       });
 
@@ -1270,107 +1366,79 @@
         }
       });
 
-      // Custom dropdown functionality
-      const dropdownBtn = document.getElementById('hire-period-dropdown-btn');
-      const dropdownOptions = document.getElementById('hire-period-options');
-      
-      if (dropdownBtn && dropdownOptions) {
-        // Toggle dropdown
-        dropdownBtn.addEventListener('click', (e) => {
+      // Change pod button
+      document.addEventListener('click', async (e) => {
+        if (e.target && e.target.matches('#change-pod-btn')) {
+          console.log('🔍 [Step1] Change pod button clicked');
+          this.showAvailablePods();
+        }
+      });
+
+      // Remove pod button
+      document.addEventListener('click', async (e) => {
+        if (e.target && e.target.matches('#remove-pod-btn')) {
+          console.log('🔍 [Step1] Remove pod button clicked');
+          await this.shared.removePod();
+          this.showAvailablePods();
+        }
+      });
+
+      // Custom duration chip functionality using event delegation
+      document.addEventListener('click', async (e) => {
+        const target = e.target;
+        
+        // Handle duration chip selection
+        if (target.matches('.duration-chip')) {
           e.preventDefault();
-          const isOpen = dropdownOptions.classList.contains('opacity-100');
+          const chip = target;
+          const months = parseInt(chip.getAttribute('data-duration') || '3');
+          console.log('🔍 [Step1] Duration chip selected:', months);
           
-          if (isOpen) {
-            // Close dropdown
-            dropdownOptions.classList.remove('opacity-100', 'visible', 'scale-100');
-            dropdownOptions.classList.add('opacity-0', 'invisible', 'scale-95');
-            dropdownBtn.querySelector('svg').classList.remove('rotate-180');
-          } else {
-            // Open dropdown
-            dropdownOptions.classList.remove('opacity-0', 'invisible', 'scale-95');
-            dropdownOptions.classList.add('opacity-100', 'visible', 'scale-100');
-            dropdownBtn.querySelector('svg').classList.add('rotate-180');
-          }
-        });
-        
-        // Handle option selection
-        dropdownOptions.addEventListener('click', async (e) => {
-          const target = e.target as HTMLElement;
-          const optionBtn = target.closest('button[data-value]') as HTMLElement;
+          // Update all chips to show selected state
+          const allChips = document.querySelectorAll('.duration-chip');
+          allChips.forEach(chipElement => {
+            const chipEl = chipElement;
+            const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '3');
+            
+            if (chipDuration === months) {
+              // Selected chip
+              chipEl.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
+            } else {
+              // Unselected chips
+              chipEl.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
+              chipEl.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+            }
+          });
           
-          if (optionBtn) {
-            const months = parseInt(optionBtn.getAttribute('data-value'));
-            console.log('🔍 [Step1] Custom dropdown option selected:', months);
-            
-            // Update the display
-            const displayElement = document.getElementById('hire-period-display');
-            if (displayElement) {
-              displayElement.textContent = `${months} Month${months > 1 ? 's' : ''}`;
-            }
-            
-            // Update the selected state
-            dropdownBtn.setAttribute('data-selected', months.toString());
-            
-            // Update all option buttons
-            const allOptions = dropdownOptions.querySelectorAll('button[data-value]');
-            allOptions.forEach(option => {
-              const optionValue = parseInt(option.getAttribute('data-value'));
-              if (optionValue === months) {
-                option.classList.add('bg-mint-100', 'text-mint-700', 'font-medium');
-                option.classList.remove('text-graphite-700');
-                // Add checkmark
-                option.innerHTML = `<span>${option.textContent.split('<')[0]}</span><svg class="w-5 h-5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
-              } else {
-                option.classList.remove('bg-mint-100', 'text-mint-700', 'font-medium');
-                option.classList.add('text-graphite-700');
-                // Remove checkmark
-                option.innerHTML = `<span>${option.textContent.split('<')[0]}</span>`;
-              }
-            });
-            
-            // Close dropdown
-            dropdownOptions.classList.remove('opacity-100', 'visible', 'scale-100');
-            dropdownOptions.classList.add('opacity-0', 'invisible', 'scale-95');
-            dropdownBtn.querySelector('svg').classList.remove('rotate-180');
-            
-            // Update storage
-            console.log('🔍 [Step1] Calling updateHirePeriod...');
-            await this.shared.updateHirePeriod(months);
-            console.log('🔍 [Step1] updateHirePeriod completed');
-            
-            // Update the months display in Step 1
-            const monthsDisplay = document.getElementById('selected-pod-months');
-            if (monthsDisplay) {
-              monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
-              console.log('🔍 [Step1] Updated months display in Step 1');
-            }
-            
-            // Update pricing dynamically based on new reservation period
-            await this.updatePricingForReservationPeriod(months);
-            
-            // Also verify the storage was updated
-            try {
-              const localStorageCart = localStorage.getItem('novapod-cart');
-              if (localStorageCart) {
-                const parsedCart = JSON.parse(localStorageCart);
-                const pod = parsedCart.find(item => item.type === 'pod');
-                console.log('🔍 [Step1] Pod in localStorage after update:', pod);
-              }
-            } catch (error) {
-              console.error('🔍 [Step1] Error checking localStorage:', error);
-            }
+          // Update storage
+          console.log('🔍 [Step1] Calling updateHirePeriod...');
+          await this.shared.updateHirePeriod(months);
+          console.log('🔍 [Step1] updateHirePeriod completed');
+          
+          // Update the months display in Step 1
+          const monthsDisplay = document.getElementById('selected-pod-months');
+          if (monthsDisplay) {
+            monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
+            console.log('🔍 [Step1] Updated months display in Step 1');
           }
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!dropdownBtn.contains(e.target as Node) && !dropdownOptions.contains(e.target as Node)) {
-            dropdownOptions.classList.remove('opacity-100', 'visible', 'scale-100');
-            dropdownOptions.classList.add('opacity-0', 'invisible', 'scale-95');
-            dropdownBtn.querySelector('svg').classList.remove('rotate-180');
+          
+          // Update pricing dynamically based on new reservation period
+          await this.updatePricingForReservationPeriod(months);
+          
+          // Also verify the storage was updated
+          try {
+            const localStorageCart = localStorage.getItem('novapod-cart');
+            if (localStorageCart) {
+              const parsedCart = JSON.parse(localStorageCart);
+              const pod = parsedCart.find(item => item.type === 'pod');
+              console.log('🔍 [Step1] Pod in localStorage after update:', pod);
+            }
+          } catch (error) {
+            console.error('🔍 [Step1] Error checking localStorage:', error);
           }
-        });
-      }
+        }
+      });
     }
 
     addStep2EventListeners() {
@@ -1381,7 +1449,7 @@
 
       // Edit pod button
       document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
+        const target = e.target;
         if (target && target.matches('#edit-pod-btn')) {
           this.shared.navigateToStep(1);
         }
@@ -1389,8 +1457,8 @@
 
       // Remove pod button - using event delegation
       document.addEventListener('click', async (e) => {
-        const target = e.target as HTMLElement;
-        const removeBtn = target.closest('#remove-pod-step2-btn') as HTMLElement;
+        const target = e.target;
+        const removeBtn = target.closest('#remove-pod-step2-btn');
         
         if (removeBtn) {
           console.log('🔍 [Step2] Remove pod button clicked');
@@ -1457,4 +1525,104 @@
       transform: translateY(0);
     }
   }
-</style> 
+
+  .duration-chip {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .duration-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .duration-chip:active {
+    transform: translateY(0);
+  }
+  
+  .duration-chip.bg-mint-500 {
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  }
+
+  /* Pack cards styling for single row layout */
+  .pack-card {
+    width: 300px;
+    min-width: 300px;
+    flex-shrink: 0;
+    height: 100%;
+    min-height: 200px;
+    margin-right: 2rem; /* 32px margin for better spacing */
+    margin-bottom: 1rem;  /* 16px bottom margin */
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb; /* Default border */
+  }
+
+  .pack-card:last-child {
+    margin-right: 0; /* Remove margin from last card */
+  }
+
+  /* Hover effects with proper border handling */
+  .pack-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border-color: #10b981; /* mint-500 color */
+  }
+
+  /* Selected state */
+  .pack-card.border-mint-500 {
+    border-color: #10b981;
+    background-color: #f0fdf4; /* mint-50 */
+  }
+
+  .pack-card.border-mint-500:hover {
+    border-color: #059669; /* mint-600 for hover */
+  }
+
+  /* Ensure pack cards have good spacing and readability */
+  .pack-card .p-6 {
+    padding: 1.5rem;
+  }
+
+  /* Improve text readability in pack cards */
+  .pack-card h3 {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .pack-card p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  /* Better spacing for pack card content */
+  .pack-card .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+
+  /* Smooth scrolling for horizontal overflow */
+  .overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+  }
+</style>

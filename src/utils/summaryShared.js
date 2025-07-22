@@ -679,9 +679,28 @@ export class SummaryShared {
         // Get pod details from catalog
         const podDetails = await this.getPodDetails(podItem.id);
         if (podDetails) {
-          // Get current reservation period from dropdown
-          const hirePeriodDropdown = document.querySelector('#hire-period-options');
-          const months = hirePeriodDropdown ? parseInt(hirePeriodDropdown.value) : 3;
+          // Get current reservation period - try multiple sources
+          let months = 3; // default
+          
+          // First, try to get from chip selection (Step 1)
+          const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+          if (selectedChip) {
+            months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+          } else {
+            // Fallback: check if any chip has the selected state
+            const allChips = document.querySelectorAll('.duration-chip');
+            for (const chip of allChips) {
+              if (chip.classList.contains('bg-mint-500')) {
+                months = parseInt(chip.getAttribute('data-duration') || '3');
+                break;
+              }
+            }
+            
+            // If no chips found (Step 2), use the pod's reservationMonths from cart
+            if (allChips.length === 0 && podItem.reservationMonths) {
+              months = podItem.reservationMonths;
+            }
+          }
           
           const totalPriceINR = podDetails.basePriceINR * months;
           const totalPriceUSD = podDetails.basePriceUSD * months;
@@ -758,9 +777,28 @@ export class SummaryShared {
     if (titleEl) titleEl.textContent = podItem.title || podItem.name;
     if (priceEl) priceEl.textContent = podItem.price || 'Price not available';
     
-    // Get current reservation period from dropdown
-    const hirePeriodDropdown = document.querySelector('#hire-period-options');
-    const months = hirePeriodDropdown ? parseInt(hirePeriodDropdown.value) : 3;
+    // Get current reservation period - try multiple sources
+    let months = 3; // default
+    
+    // First, try to get from chip selection (Step 1)
+    const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+    if (selectedChip) {
+      months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+    } else {
+      // Fallback: check if any chip has the selected state
+      const allChips = document.querySelectorAll('.duration-chip');
+      for (const chip of allChips) {
+        if (chip.classList.contains('bg-mint-500')) {
+          months = parseInt(chip.getAttribute('data-duration') || '3');
+          break;
+        }
+      }
+      
+      // If no chips found (Step 2/3), use the pod's reservationMonths from cart
+      if (allChips.length === 0 && podItem.reservationMonths) {
+        months = podItem.reservationMonths;
+      }
+    }
     if (durationEl) durationEl.textContent = `${months} months`;
   }
 
@@ -772,9 +810,28 @@ export class SummaryShared {
     let totalUSD = 0;
     
     try {
-      // Get current reservation period from dropdown
-      const hirePeriodDropdown = document.querySelector('#hire-period-options');
-      const months = hirePeriodDropdown ? parseInt(hirePeriodDropdown.value) : 3;
+      // Get current reservation period - try multiple sources
+      let months = 3; // default
+      
+      // First, try to get from chip selection (Step 1)
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        // Fallback: check if any chip has the selected state
+        const allChips = document.querySelectorAll('.duration-chip');
+        for (const chip of allChips) {
+          if (chip.classList.contains('bg-mint-500')) {
+            months = parseInt(chip.getAttribute('data-duration') || '3');
+            break;
+          }
+        }
+        
+        // If no chips found (Step 2/3), use the pod's reservationMonths from cart
+        if (allChips.length === 0 && podItem.reservationMonths) {
+          months = podItem.reservationMonths;
+        }
+      }
       
       // Add pod price
       if (podItem) {
@@ -790,14 +847,18 @@ export class SummaryShared {
         }
       }
       
-      // Add pack prices (packs are one-time, not multiplied by months)
+      // Add pack prices (packs are also monthly, so multiply by months)
       for (const pack of packItems) {
         const packDetails = await this.getPackDetails(pack.id);
         if (packDetails) {
-          // Apply discount
+          // Calculate monthly pack price with discount
           const discountMultiplier = (100 - packDetails.discountPercentage) / 100;
-          totalINR += packDetails.basePriceINR * discountMultiplier;
-          totalUSD += packDetails.basePriceUSD * discountMultiplier;
+          const monthlyPackPriceINR = packDetails.basePriceINR * discountMultiplier;
+          const monthlyPackPriceUSD = packDetails.basePriceUSD * discountMultiplier;
+          
+          // Multiply by months for total pack cost
+          totalINR += monthlyPackPriceINR * months;
+          totalUSD += monthlyPackPriceUSD * months;
         }
       }
 
