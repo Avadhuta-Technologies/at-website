@@ -1,6 +1,5 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { generateSlug } from '../../utils/slugUtils.js';
 
 // Import case study components
 import CaseStudyHeroSection from '../../components/case-studies/CaseStudyHeroSection.astro';
@@ -25,7 +24,7 @@ const pageDescription = caseStudy.problemStatement;
 // Generate static paths for all case studies
 export async function getStaticPaths() {
   return caseStudiesData.caseStudies.map(study => ({
-    params: { slug: generateSlug(study.title) },
+    params: { slug: study.id },
     props: { caseStudy: study }
   }));
 }

@@ -42,9 +42,9 @@ export const podsCatalog = {
         "Integrates with ERPs, CRMs, and shipping APIs"
       ],
       pastUseCases: [
-        "Multi-brand D2C store with Razorpay & NetSuite integration",
-        "Wholesale B2B portal with custom pricing workflows",
-        "Shopify-based subscription store with referral tracking"
+        "reach-ecommerce-store",
+        "orderlikho-order-delivery-management",
+        "ai-recommender-shopify-app"
       ],
       pricing: [
         "Starting at ₹2.5L/month (~$3K/month)",
@@ -93,9 +93,8 @@ export const podsCatalog = {
         "Polished visuals with optimized performance"
       ],
       pastUseCases: [
-        "AR-enabled virtual furniture try-on app for ecommerce",
-        "VR safety training simulation for a manufacturing firm",
-        "WebAR product showcase for a launch event"
+        "3d-interior-furnishing-tool",
+        "ai-room-interiors-generator"
       ],
       pricing: [
         "Starting at ₹3L/month (~$3.6K/month)",
@@ -144,9 +143,8 @@ export const podsCatalog = {
         "Transparent progress with usage and latency metrics"
       ],
       pastUseCases: [
-        "AI resume screener with OpenAI + Pinecone",
-        "Chat-based internal knowledge assistant",
-        "Audio transcription and summarization app"
+        "rinext-regulatory-intelligence",
+        "reconcile-updates-tool"
       ],
       pricing: [
         "Starting at ₹3.5L/month (~$4.2K/month)",
@@ -195,9 +193,8 @@ export const podsCatalog = {
         "Transparency: weekly reports, Git access, and architectural reviews"
       ],
       pastUseCases: [
-        "Candidate evaluation platform MVP",
-        "Internal CRM tool for early-stage sales",
-        "IoT dashboard for field data monitoring"
+        "brokerage-manager-saas-platform",
+        "smart-visitor-management-system"
       ],
       pricing: [
         "Starts at ₹2.5L/month (~$3K/month)",
@@ -243,9 +240,8 @@ export const podsCatalog = {
         "Secure, scalable, and auditable"
       ],
       pastUseCases: [
-        "Admin portal for managing field staff",
-        "Approval workflows for finance teams",
-        "Reporting dashboard for executive teams"
+        "as2-gateway-secure-document-exchange",
+        "digitalgemba-manufacturing"
       ],
       pricing: [
         "Starting at ₹2L/month (~$2.4K)"
@@ -289,15 +285,14 @@ export const podsCatalog = {
         "Expertise in OpenAI, HuggingFace, and vector DBs"
       ],
       pastUseCases: [
-        "Resume evaluation with OpenAI",
-        "Image OCR and tagging system",
-        "Recommendation engine for user engagement"
+        "ai-recommender-shopify-app",
+        "storytimeowls-storytelling-app"
       ],
       pricing: [
         "Starts at ₹3L/month (~$3.6K)",
         "PoC-based pricing also available"
       ],
-      basePriceINR: 300000,
+      basePriceINR: 300000, 
       basePriceUSD: 3600,
       discountPercentage: 15,
     },
@@ -341,9 +336,8 @@ export const podsCatalog = {
         "Rapid launch to app stores"
       ],
       pastUseCases: [
-        "Mobile CRM for sales teams on the go",
-        "Habit tracker SaaS with analytics backend",
-        "IoT control app with device sync and notifications"
+        "relive-tiktok-style-video-platform",
+        "vgas-gas-cylinder-booking"
       ],
       pricing: [
         "Starting at ₹3L/month (~$3.6K)",
@@ -390,9 +384,8 @@ export const podsCatalog = {
         "Infra cost savings and cloud strategy consulting"
       ],
       pastUseCases: [
-        "CI/CD for microservices on AWS ECS",
-        "GitHub → Docker → Production pipeline setup",
-        "Multi-tenant SaaS with containerized staging environments"
+        "pincode-deliverability-checker",
+        "karbonpoints-refurbished-electronics"
       ],
       pricing: [
         "Starting at ₹2L/month (~$2.4K)",

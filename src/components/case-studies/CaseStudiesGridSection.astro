@@ -1,6 +1,6 @@
 ---
-// Try importing directly from the case studies file
-import { caseStudiesData } from '../../content/case-studies/_case-studies.js';
+// Import from the correct index file
+import { caseStudiesData } from '../../content/case-studies/_index.js';
 import CaseStudyCard from './CaseStudyCard.astro';
 
 export interface Props {
@@ -13,44 +13,20 @@ export interface Props {
 
 const { data } = Astro.props;
 
-// Debug the import
-console.log('Raw caseStudiesData:', caseStudiesData);
-console.log('caseStudiesData.caseStudies:', caseStudiesData?.caseStudies);
-
+// Use provided data or fall back to all case studies
 const studies = Array.isArray(data) ? data : (data?.caseStudies || caseStudiesData?.caseStudies || []);
 const title = Array.isArray(data) ? "Case Studies" : ((data as any)?.title || "Case Studies");
 const subtitle = Array.isArray(data) ? "Real solutions, real results" : ((data as any)?.subtitle || "Real solutions, real results");
 
-// Add a test case study if no data is found
-const testStudy = {
-  id: "test-case-study",
-  title: "Test Case Study",
-  industry: "Technology",
-  badge: "Test",
-  badgeColor: "blue",
-  problemStatement: "This is a test case study to verify the component is working correctly.",
-  duration: "1 month",
-  teamComposition: "1 Developer",
-  techStack: ["React", "Node.js"],
-  solutionHighlights: ["Test feature 1", "Test feature 2"],
-  impact: ["Test impact 1"],
-  testimonial: {
-    quote: "This is a test testimonial.",
-    author: "Test Client"
-  }
-};
-
-const finalStudies = studies && studies.length > 0 ? studies : [testStudy];
-
 // Debug logging
 console.log('Props data:', data);
-console.log('Studies Array:', finalStudies);
-console.log('Studies Length:', finalStudies?.length);
-console.log('First Study:', finalStudies?.[0]);
+console.log('Studies Array:', studies);
+console.log('Studies Length:', studies?.length);
+console.log('First Study:', studies?.[0]);
 
 // Group case studies by industry
-const groupedStudies = finalStudies.reduce((acc, study) => {
-  const industry = study.industry;
+const groupedStudies = studies.reduce((acc, study) => {
+  const industry = study.industry || 'Other';
   if (!acc[industry]) {
     acc[industry] = [];
   }
@@ -63,40 +39,26 @@ console.log('Industries:', industries);
 console.log('Grouped Studies:', groupedStudies);
 ---
 
-<section id="case-studies-grid" class="py-20 bg-white">
-  <div class="container mx-auto px-4">
-    <!-- Section Header -->
-    <div class="max-w-3xl mx-auto text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">
-        {title}
-      </h2>
-      <p class="text-lg text-gray-600 leading-relaxed">
-        {subtitle}
-      </p>
-    </div>
-
-    <!-- Debug Info -->
-    <div class="text-center mb-4 text-sm text-gray-500">
-      Total Studies: {finalStudies?.length || 0} | Industries: {industries.length}
-      {finalStudies && finalStudies.length > 0 && (
-        <div class="mt-2">
-          First Study: {finalStudies[0].title} - {finalStudies[0].industry}
-        </div>
-      )}
+<section id="case-studies-grid" class="py-20">
+  <div class="container mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{title}</h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">{subtitle}</p>
     </div>
 
     <!-- Tabs Navigation -->
-    <div class="flex flex-wrap justify-center mb-16">
-      <div class="flex flex-wrap gap-2 md:gap-4 justify-center">
+    <div class="flex flex-wrap justify-center mb-12">
+      <div class="flex flex-wrap gap-1 md:gap-2 justify-center">
         <button 
-          class="tab-button active px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-lg transition-all duration-200 bg-primary-600 text-white hover:bg-primary-700"
+          class="tab-button active px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 bg-primary-600 text-white hover:bg-primary-700"
           data-tab="all"
         >
-          All Industries
+          All 
         </button>
         {industries.map((industry) => (
           <button 
-            class="tab-button px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-lg transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200"
+            class="tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200"
             data-tab={industry.toLowerCase().replace(/\s+/g, '-')}
           >
             {industry}
@@ -108,14 +70,14 @@ console.log('Grouped Studies:', groupedStudies);
     <!-- Tab Content -->
     <div class="tab-content" data-tab="all">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-        {finalStudies && finalStudies.length > 0 ? (
-          finalStudies.map((study: any, index: number) => (
-            <CaseStudyCard study={study} index={index} />
+        {studies && studies.length > 0 ? (
+          studies.map((study: any, index: number) => (
+            <CaseStudyCard caseStudy={study} />
           ))
         ) : (
           <div class="col-span-full text-center py-12">
             <p class="text-gray-500">No case studies found.</p>
-            <p class="text-gray-400 text-sm mt-2">Debug: studies length = {finalStudies?.length}</p>
+            <p class="text-gray-400 text-sm mt-2">Debug: studies length = {studies?.length}</p>
             <p class="text-gray-400 text-sm">Debug: caseStudiesData exists = {caseStudiesData ? 'Yes' : 'No'}</p>
           </div>
         )}
@@ -126,7 +88,7 @@ console.log('Grouped Studies:', groupedStudies);
       <div class="tab-content hidden" data-tab={industry.toLowerCase().replace(/\s+/g, '-')}>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {groupedStudies[industry].map((study: any, index: number) => (
-            <CaseStudyCard study={study} index={index} />
+            <CaseStudyCard caseStudy={study} />
           ))}
         </div>
       </div>
