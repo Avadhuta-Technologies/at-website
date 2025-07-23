@@ -1586,6 +1586,15 @@
           e.preventDefault();
           console.log('🔍 [Step3] Form submission started');
           
+          // Get the submit button and show loading state
+          const submitButton = form.querySelector('button[type="submit"]');
+          const originalButtonText = submitButton?.textContent || 'Reserve My NovaPod';
+          
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+          }
+          
           // Get form data
           const formData = new FormData(form);
           const formValues = {
@@ -1652,15 +1661,29 @@
               this.showThankYouModal(submissionData);
             } else {
               console.error('🔍 [Step3] HubSpot submission failed:', result.error);
-              // Still show thank you modal but log the error
-              await this.clearFormAndCart();
-              this.showThankYouModal(submissionData);
+              // Show error notification and preserve form data
+              this.shared.showNotification(
+                `Failed to submit reservation: ${result.error}. Please try again or contact support if the problem persists.`,
+                'error'
+              );
+              // Don't clear form or cart - let user retry
+              return; // Exit early to preserve form data
             }
           } catch (error) {
             console.error('🔍 [Step3] Error submitting to HubSpot:', error);
-            // Still show thank you modal but log the error
-            await this.clearFormAndCart();
-            this.showThankYouModal(submissionData);
+            // Show error notification and preserve form data
+            this.shared.showNotification(
+              'Failed to submit reservation due to a network error. Please check your connection and try again.',
+              'error'
+            );
+            // Don't clear form or cart - let user retry
+            return; // Exit early to preserve form data
+          } finally {
+            // Restore button state
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
           }
         });
       }
