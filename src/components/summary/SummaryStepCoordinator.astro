@@ -1586,6 +1586,15 @@
           e.preventDefault();
           console.log('🔍 [Step3] Form submission started');
           
+          // Get the submit button and show loading state
+          const submitButton = form.querySelector('button[type="submit"]');
+          const originalButtonText = submitButton?.textContent || 'Reserve My NovaPod';
+          
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+          }
+          
           // Get form data
           const formData = new FormData(form);
           const formValues = {
@@ -1622,11 +1631,60 @@
           console.log('🔍 [Step3] Complete Submission Data:', submissionData);
           console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
           
-          // Clear form and cart after successful submission
-          await this.clearFormAndCart();
-          
-          // Show thank you modal with details
-          this.showThankYouModal(submissionData);
+          try {
+            // Prepare data for HubSpot submission
+            const hubspotData = {
+              ...formValues,
+              selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
+              selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
+              source: 'NovaPod Reservation Form'
+            };
+            
+            console.log('🔍 [Step3] Submitting to HubSpot:', hubspotData);
+            
+            // Submit to HubSpot via API
+            const response = await fetch('/api/contact', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(hubspotData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              console.log('🔍 [Step3] HubSpot submission successful:', result);
+              // Clear form and cart after successful submission
+              await this.clearFormAndCart();
+              // Show thank you modal with details
+              this.showThankYouModal(submissionData);
+            } else {
+              console.error('🔍 [Step3] HubSpot submission failed:', result.error);
+              // Show error notification and preserve form data
+              this.shared.showNotification(
+                `Failed to submit reservation: ${result.error}. Please try again or contact support if the problem persists.`,
+                'error'
+              );
+              // Don't clear form or cart - let user retry
+              return; // Exit early to preserve form data
+            }
+          } catch (error) {
+            console.error('🔍 [Step3] Error submitting to HubSpot:', error);
+            // Show error notification and preserve form data
+            this.shared.showNotification(
+              'Failed to submit reservation due to a network error. Please check your connection and try again.',
+              'error'
+            );
+            // Don't clear form or cart - let user retry
+            return; // Exit early to preserve form data
+          } finally {
+            // Restore button state
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
+          }
         });
       }
       

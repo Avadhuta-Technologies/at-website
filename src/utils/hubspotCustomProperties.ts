@@ -61,6 +61,20 @@ export const requiredCustomProperties: HubSpotCustomProperty[] = [
     type: 'string',
     groupName: 'contactinformation',
     description: 'Detailed description of the project requirements and goals'
+  },
+  {
+    name: 'selected_pod',
+    label: 'Selected Pod',
+    type: 'string',
+    groupName: 'contactinformation',
+    description: 'Name of the pod that the user wants to reserve'
+  },
+  {
+    name: 'selected_packs',
+    label: 'Selected Packs',
+    type: 'string',
+    groupName: 'contactinformation',
+    description: 'Comma-separated list of pack names that the user wants to buy'
   }
 ];
 
