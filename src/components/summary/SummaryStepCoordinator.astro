@@ -1565,7 +1565,7 @@
           console.log('🔍 [Step2] Continue to Step 3 button clicked');
           console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step2] About to call nextStep()');
-          summaryShared.nextStep();
+          this.summaryShared.nextStep();
           console.log('🔍 [Step2] nextStep() called');
         } else if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected'))) {
           console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
@@ -1575,7 +1575,7 @@
       // Go to step 1 button
       document.addEventListener('click', (e) => {
         if (e.target && e.target.matches('#go-to-step1-btn')) {
-          summaryShared.navigateToStep(1);
+          this.summaryShared.navigateToStep(1);
         }
       });
     }
