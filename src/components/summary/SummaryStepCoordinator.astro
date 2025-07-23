@@ -6,8 +6,9 @@
   <!-- Step content will be loaded here -->
 </div>
 
-<script client:load type="module">
-  import { summaryShared } from '/src/utils/summaryShared.js';
+<script client:load>
+  // Import will be handled by Astro's build process
+  import { summaryShared } from '../../utils/summaryShared.js';
 
   class SummaryStepCoordinator {
     constructor() {
