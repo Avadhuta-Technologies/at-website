@@ -11,7 +11,6 @@ export const homeFinalCTAData = {
     url: "/explore-pods"
   },
   contactInfo: {
-    email1: "vikram@avadhutatech.com",
-    email2: "vinay@avadhutatech.com"
+    email1: "support@novapod.ai"
   }
 }; 

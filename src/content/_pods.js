@@ -446,7 +446,7 @@ export const podsData = {
     title: "Start Your Pod",
     description: "Need clarity on which pod fits your goals? Book a free 30-min call and we'll help you define the best setup.",
     buttonText: "Book a Free Discovery Call",
-    email: "hello@avadhutatech.com",
+    email: "support@novapod.ai",
     downloadLink: "Download Pod Services Deck"
   }
 }; 

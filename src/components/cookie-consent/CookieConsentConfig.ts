@@ -102,7 +102,7 @@ export const config: CookieConsentConfig = {
             {
               title: 'More information',
               description:
-                'For any query in relation to my policy on cookies and your choices, please <a class="cc__link" href="mailto:support@avadhutatech.com">contact us</a>.',
+                'For any query in relation to my policy on cookies and your choices, please <a class="cc__link" href="mailto:support@novapod.ai">contact us</a>.',
             },
           ],
         },

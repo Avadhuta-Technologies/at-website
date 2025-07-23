@@ -48,7 +48,7 @@ const getStepIcon = (step: any, index: number) => {
 // Get color scheme based on step
 const getStepColorClasses = (index: number) => {
   const colorSchemes = [
-    'from-blue-500/10 to-purple-500/10 border-blue-200/30', // Step 1
+    'from-[#22c55e]/10 to-[#0ea5e9]/10 border-[#22c55e]/30', // Step 1
     'from-green-500/10 to-teal-500/10 border-green-200/30', // Step 2
     'from-orange-500/10 to-red-500/10 border-orange-200/30', // Step 3
     'from-purple-500/10 to-pink-500/10 border-purple-200/30' // Step 4
@@ -76,8 +76,8 @@ const getStepColorClasses = (index: number) => {
             <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
             
             <!-- Decorative Background Elements -->
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
-            <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
+            <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-[#0ea5e9]/50 to-[#22c55e]/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
             
             <!-- Card Content -->
             <div class="relative p-6 flex flex-col h-full">

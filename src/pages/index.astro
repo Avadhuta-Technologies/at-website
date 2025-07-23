@@ -89,7 +89,7 @@ import {
         
         if (selectedPod && selectedPod.id === itemId) {
           // This pod is selected - show "Remove Pod"
-          buttonElement.classList.remove('bg-gradient-to-r', 'from-blue-500', 'to-purple-500', 'hover:from-blue-600', 'hover:to-purple-600');
+          buttonElement.classList.remove('bg-gradient-to-r', 'from-[#22c55e]', 'to-[#0ea5e9]', 'hover:from-[#16a34a]', 'hover:to-[#0284c7]');
           buttonElement.classList.add('bg-red-500', 'hover:bg-red-600');
           if (buttonText.textContent) {
             buttonText.textContent = 'Remove Pod';
@@ -97,7 +97,7 @@ import {
         } else {
           // This pod is not selected - show "Reserve Pod"
           buttonElement.classList.remove('bg-red-500', 'hover:bg-red-600');
-          buttonElement.classList.add('bg-gradient-to-r', 'from-blue-500', 'to-purple-500', 'hover:from-blue-600', 'hover:to-purple-600');
+          buttonElement.classList.add('bg-gradient-to-r', 'from-[#22c55e]', 'to-[#0ea5e9]', 'hover:from-[#16a34a]', 'hover:to-[#0284c7]');
           if (buttonText.textContent) {
             buttonText.textContent = 'Reserve Pod';
           }
