@@ -1,0 +1,192 @@
+---
+// Debug component for location testing
+---
+
+<div id="location-debug" class="fixed bottom-4 right-4 bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-50 max-w-sm">
+  <h3 class="text-sm font-semibold mb-2">🌍 Location Debug</h3>
+  <div class="text-xs space-y-1 mb-3">
+    <div><strong>Country:</strong> <span id="debug-country">Loading...</span></div>
+    <div><strong>Currency:</strong> <span id="debug-currency">Loading...</span></div>
+    <div><strong>Timezone:</strong> <span id="debug-timezone">Loading...</span></div>
+    <div><strong>Cache Age:</strong> <span id="debug-cache-age">Loading...</span></div>
+  </div>
+  <div class="space-y-2">
+    <button id="force-refresh-location" class="w-full bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600 transition-colors">
+      🔄 Force Refresh Location
+    </button>
+    <button id="clear-cache-debug" class="w-full bg-orange-500 text-white text-xs px-3 py-1 rounded hover:bg-orange-600 transition-colors">
+      🗑️ Clear Cache
+    </button>
+    <button id="test-india-debug" class="w-full bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600 transition-colors">
+      🇮🇳 Test India
+    </button>
+    <button id="test-us-debug" class="w-full bg-red-500 text-white text-xs px-3 py-1 rounded hover:bg-red-600 transition-colors">
+      🇺🇸 Test US
+    </button>
+    <button id="hide-debug" class="w-full bg-gray-500 text-white text-xs px-3 py-1 rounded hover:bg-gray-600 transition-colors">
+      ❌ Hide
+    </button>
+  </div>
+</div>
+
+<script>
+  import { forceRefreshLocation, setCustomLocation, clearLocationCache } from '../../utils/locationUtils.js';
+
+  function updateDebugDisplay() {
+    const locationInfo = document.getElementById('location-info');
+    const countryElement = document.getElementById('debug-country');
+    const currencyElement = document.getElementById('debug-currency');
+    const timezoneElement = document.getElementById('debug-timezone');
+    const cacheAgeElement = document.getElementById('debug-cache-age');
+    
+    if (locationInfo && countryElement && currencyElement && timezoneElement && cacheAgeElement) {
+      countryElement.textContent = locationInfo.getAttribute('data-country') || 'Unknown';
+      currencyElement.textContent = locationInfo.getAttribute('data-currency') || 'Unknown';
+      timezoneElement.textContent = locationInfo.getAttribute('data-timezone') || 'Unknown';
+      
+      // Calculate cache age
+      const timestamp = locationInfo.getAttribute('data-timestamp');
+      if (timestamp) {
+        const age = Date.now() - parseInt(timestamp);
+        const minutes = Math.round(age / (1000 * 60));
+        const hours = Math.round(age / (1000 * 60 * 60));
+        
+        if (hours > 0) {
+          cacheAgeElement.textContent = `${hours}h ${minutes % 60}m old`;
+        } else {
+          cacheAgeElement.textContent = `${minutes}m old`;
+        }
+      } else {
+        cacheAgeElement.textContent = 'No timestamp';
+      }
+    } else if (countryElement && currencyElement && timezoneElement && cacheAgeElement) {
+      countryElement.textContent = 'Not detected';
+      currencyElement.textContent = 'Not detected';
+      timezoneElement.textContent = 'Not detected';
+      cacheAgeElement.textContent = 'N/A';
+    }
+  }
+
+  // Force refresh location
+  document.getElementById('force-refresh-location')?.addEventListener('click', async () => {
+    console.log('🔄 Force refreshing location...');
+    try {
+      const newLocation = await forceRefreshLocation();
+      
+      // Update global location
+      (window as any).userLocation = newLocation;
+      
+      // Update location info element
+      const locationInfo = document.getElementById('location-info');
+      if (locationInfo) {
+        locationInfo.setAttribute('data-country', newLocation.country);
+        locationInfo.setAttribute('data-currency', newLocation.currency);
+        locationInfo.setAttribute('data-timezone', newLocation.timezone);
+        locationInfo.setAttribute('data-timestamp', newLocation.timestamp?.toString() || '');
+      }
+      
+      // Dispatch location change event
+      window.dispatchEvent(new CustomEvent('location-changed'));
+      
+      updateDebugDisplay();
+      console.log('🔄 Location refreshed:', newLocation);
+    } catch (error) {
+      console.error('Failed to refresh location:', error);
+    }
+  });
+
+  // Clear cache
+  document.getElementById('clear-cache-debug')?.addEventListener('click', () => {
+    console.log('🗑️ Clearing location cache...');
+    clearLocationCache();
+    
+    // Reload page to force fresh detection
+    window.location.reload();
+  });
+
+  // Test India location
+  document.getElementById('test-india-debug')?.addEventListener('click', () => {
+    console.log('🇮🇳 Setting test India location...');
+    setCustomLocation({
+      country: 'India',
+      countryCode: 'IN',
+      currency: 'INR',
+      timezone: 'Asia/Kolkata'
+    });
+    
+    // Update global location
+    (window as any).userLocation = {
+      country: 'India',
+      countryCode: 'IN',
+      currency: 'INR',
+      timezone: 'Asia/Kolkata',
+      timestamp: Date.now()
+    };
+    
+    // Update location info element
+    const locationInfo = document.getElementById('location-info');
+    if (locationInfo) {
+      locationInfo.setAttribute('data-country', 'India');
+      locationInfo.setAttribute('data-currency', 'INR');
+      locationInfo.setAttribute('data-timezone', 'Asia/Kolkata');
+      locationInfo.setAttribute('data-timestamp', Date.now().toString());
+    }
+    
+    // Dispatch location change event
+    window.dispatchEvent(new CustomEvent('location-changed'));
+    
+    updateDebugDisplay();
+  });
+
+  // Test US location
+  document.getElementById('test-us-debug')?.addEventListener('click', () => {
+    console.log('🇺🇸 Setting test US location...');
+    setCustomLocation({
+      country: 'United States',
+      countryCode: 'US',
+      currency: 'USD',
+      timezone: 'America/New_York'
+    });
+    
+    // Update global location
+    (window as any).userLocation = {
+      country: 'United States',
+      countryCode: 'US',
+      currency: 'USD',
+      timezone: 'America/New_York',
+      timestamp: Date.now()
+    };
+    
+    // Update location info element
+    const locationInfo = document.getElementById('location-info');
+    if (locationInfo) {
+      locationInfo.setAttribute('data-country', 'United States');
+      locationInfo.setAttribute('data-currency', 'USD');
+      locationInfo.setAttribute('data-timezone', 'America/New_York');
+      locationInfo.setAttribute('data-timestamp', Date.now().toString());
+    }
+    
+    // Dispatch location change event
+    window.dispatchEvent(new CustomEvent('location-changed'));
+    
+    updateDebugDisplay();
+  });
+
+  // Hide debug panel
+  document.getElementById('hide-debug')?.addEventListener('click', () => {
+    const debugPanel = document.getElementById('location-debug');
+    if (debugPanel) {
+      debugPanel.style.display = 'none';
+    }
+  });
+
+  // Listen for location changes
+  window.addEventListener('location-detected', updateDebugDisplay);
+  window.addEventListener('location-changed', updateDebugDisplay);
+  window.addEventListener('location-refreshed', updateDebugDisplay);
+
+  // Update display on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(updateDebugDisplay, 1000);
+  });
+</script> 

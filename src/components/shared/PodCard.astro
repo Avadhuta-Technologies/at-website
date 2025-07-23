@@ -1,4 +1,6 @@
 ---
+import { generatePodSlug } from '../../utils/slugUtils.js';
+
 interface Props {
   pod: {
     id: string;
@@ -121,7 +123,7 @@ const { id, title, description, price, priceNote, features, technologies, icon, 
       </div>
       
       <!-- Learn More Link -->
-      <a href={`/pods/${id}`} class="inline-flex items-center text-blue-500 text-blue-600 hover:bg-blue-50 text-sm">
+      <a href={`/pods/${generatePodSlug(title)}`} class="inline-flex items-center text-blue-500 text-blue-600 hover:bg-blue-50 text-sm">
         Learn more about this pod
         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { catalogUtils } from '../../content/catalog/_index.js';
 import { packsCatalog } from '../../content/catalog/_packs.js';
+import { generatePodSlug } from '../../utils/slugUtils.js';
 import {
   PodHeroSection,
   PodIdealForSection,
@@ -19,10 +20,10 @@ export async function getStaticPaths() {
   const { pods } = catalogUtils.getAllProducts();
   return pods.map((pod) => {
     // Generate slug from pod name
-    const slug = pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    const slug = generatePodSlug(pod.name);
     return {
       params: { slug },
-      props: { pod },
+      props: { pod, slug },
     };
   });
 }
@@ -46,7 +47,7 @@ const getRelevantPacks = (podName: string) => {
   };
   
   // Generate slug from pod name for matching
-  const podSlug = podName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const podSlug = generatePodSlug(podName);
   
   // Get recommended pack IDs for this pod
   const recommendedPackIds = packRecommendations[podSlug] || ['launch-pack', 'growth-pack'];
@@ -59,13 +60,93 @@ const relevantPacks = getRelevantPacks(pod.name);
 ---
 
 <Layout title={`${pod.name} - Pod Details`} description={pod.tagline}>
+  <!-- Add meta tag with pod ID for debugging -->
+  <meta name="current-pod-id" content={pod.id} />
+  
   <!-- Add class to body for dark header -->
   <script>
     document.body.classList.add('dark-header-page');
   </script>
   
+  <!-- Pod Detail Page Cart Handler -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get pod ID from meta tag
+      const podId = document.querySelector('meta[name="current-pod-id"]')?.getAttribute('content');
+      console.log('🔍 [PodDetail] Pod ID from meta:', podId);
+      
+      // Handle pack cart operations specifically for pod detail page
+      document.addEventListener('click', async function(e) {
+        const button = e.target.closest('[data-add-to-cart][data-item-type="pack"]');
+        if (!button) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const packId = button.dataset.itemId;
+        console.log('🔍 [PodDetail] Pack button clicked:', { packId, podId });
+        
+        try {
+          const { SummaryShared } = await import('../../utils/summaryShared.js');
+          const shared = new SummaryShared();
+          
+          // Check if pack is already in cart
+          const cartStatus = await shared.getPackCartStatus(packId);
+          
+          if (cartStatus.inCart) {
+            // Remove pack
+            await shared.removePack(packId);
+            shared.showNotification('Pack removed from cart', 'success');
+          } else {
+            if (!cartStatus.hasPod) {
+              // No pod in cart, add both current pod and pack
+              console.log('🔍 [PodDetail] Adding both pod and pack:', { podId, packId });
+              const success = await shared.addPodAndPack(podId, packId);
+              if (success) {
+                console.log('Pod and pack added successfully');
+              }
+            } else {
+              // Pod exists, just add pack
+              console.log('🔍 [PodDetail] Adding pack only:', packId);
+              const pack = await shared.addPack(packId);
+              if (pack) {
+                shared.showNotification('Pack added to cart successfully!', 'success');
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error in pod detail cart handler:', error);
+          showNotification('Failed to add items to cart', 'error');
+        }
+      });
+      
+      // Show notification function
+      function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+        notification.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        setTimeout(() => {
+          notification.classList.add('translate-x-full');
+          setTimeout(() => {
+            if (document.body.contains(notification)) {
+              document.body.removeChild(notification);
+            }
+          }, 300);
+        }, 3000);
+      }
+    });
+  </script>
+  
   <!-- Hero Section -->
-  <PodHeroSection pod={pod} />
+  <PodHeroSection pod={{ ...pod, id: pod.id }} />
 
   <!-- Ideal For Section -->
   <PodIdealForSection idealFor={pod.idealFor} />
@@ -92,7 +173,7 @@ const relevantPacks = getRelevantPacks(pod.name);
   <PodAddPacksSection relevantPacks={relevantPacks} />
 
   <!-- Ready to Launch CTA Section -->
-  <PodReadyToLaunchSection pod={pod} />
+  <PodReadyToLaunchSection pod={{ ...pod, id: pod.id }} />
 </Layout>
 
 <style>

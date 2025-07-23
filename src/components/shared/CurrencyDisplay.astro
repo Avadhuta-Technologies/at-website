@@ -1,0 +1,85 @@
+---
+export interface Props {
+  amountINR: number;
+  amountUSD: number;
+  showSecondary?: boolean;
+  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { 
+  amountINR, 
+  amountUSD, 
+  showSecondary = true, 
+  className = "",
+  size = 'md'
+} = Astro.props;
+
+// Size classes
+const sizeClasses = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg'
+};
+---
+
+<div class={`currency-display ${sizeClasses[size]} ${className}`} 
+     data-amount-inr={amountINR} 
+     data-amount-usd={amountUSD}
+     data-show-secondary={showSecondary}>
+  <span class="primary-price">₹{(amountINR / 100000).toFixed(1)}L</span>
+  {showSecondary && (
+    <span class="secondary-price text-gray-500 ml-2">(${(amountUSD / 1000).toFixed(0)}K)</span>
+  )}
+</div>
+
+<script>
+  import { detectUserLocation, formatINRPrice, formatUSDPrice } from '../../utils/locationUtils.js';
+
+  // Initialize currency display based on user location
+  async function initializeCurrencyDisplay() {
+    try {
+      const location = await detectUserLocation();
+      const currencyDisplays = document.querySelectorAll('.currency-display');
+      
+      currencyDisplays.forEach(display => {
+        const amountINR = parseInt(display.getAttribute('data-amount-inr') || '0');
+        const amountUSD = parseInt(display.getAttribute('data-amount-usd') || '0');
+        const showSecondary = display.getAttribute('data-show-secondary') === 'true';
+        
+        const primaryPrice = display.querySelector('.primary-price');
+        const secondaryPrice = display.querySelector('.secondary-price');
+        
+        if (location.currency === 'INR') {
+          // Show INR as primary, USD as secondary
+          if (primaryPrice) {
+            primaryPrice.textContent = formatINRPrice(amountINR);
+          }
+          if (secondaryPrice && showSecondary) {
+            secondaryPrice.textContent = `(${formatUSDPrice(amountUSD)})`;
+          }
+        } else {
+          // Show USD as primary, INR as secondary
+          if (primaryPrice) {
+            primaryPrice.textContent = formatUSDPrice(amountUSD);
+          }
+          if (secondaryPrice && showSecondary) {
+            secondaryPrice.textContent = `(${formatINRPrice(amountINR)})`;
+          }
+        }
+      });
+    } catch (error) {
+      console.warn('Failed to initialize currency display:', error);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCurrencyDisplay);
+  } else {
+    initializeCurrencyDisplay();
+  }
+
+  // Listen for location changes (useful for testing)
+  window.addEventListener('location-changed', initializeCurrencyDisplay);
+</script> 

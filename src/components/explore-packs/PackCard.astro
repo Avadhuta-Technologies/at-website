@@ -1,17 +1,22 @@
 ---
+import { generatePackSlug } from '../../utils/slugUtils.js';
+import CurrencyDisplay from '../shared/CurrencyDisplay.astro';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+
 export interface Props {
   pack: {
     id: string;
     title: string;
     description: string;
-    price: string;
-    priceUSD: string;
     duration: string;
     badge: string;
     badgeColor: string;
     icon: string;
     deliverables?: string[];
     features?: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
   index?: number;
 }
@@ -249,7 +254,12 @@ const getPackIcon = (pack: any) => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
           </svg>
         </div>
-        <span class="font-semibold text-gray-900">{pack.price} / {pack.priceUSD}</span>
+        <DiscountedPriceDisplay 
+          basePriceINR={pack.basePriceINR}
+          basePriceUSD={pack.basePriceUSD}
+          discountPercentage={pack.discountPercentage || 0}
+          size="sm"
+        />
       </div>
     </div>
     
@@ -317,7 +327,7 @@ const getPackIcon = (pack: any) => {
             </svg>
           </button>
           <a 
-            href={`/packs/${pack.id}`} 
+            href={`/packs/${generatePackSlug(pack.title)}`} 
             class="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
           >
             <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -346,36 +356,34 @@ const getPackIcon = (pack: any) => {
 </div>
 
 <script>
+  // Import SummaryShared for cart operations
+  import { SummaryShared } from '../../utils/summaryShared.js';
+
   // Interactive functionality for pack cards
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.pack-card');
+  document.addEventListener('DOMContentLoaded', async () => {
+    const shared = new SummaryShared();
     
-    cards.forEach(card => {
-      const expandBtn = card.querySelector('.expand-btn');
-      const details = card.querySelector('.pack-details');
-      const actionText = card.querySelector('.pack-action-text');
-      const expandIcon = card.querySelector('.expand-icon');
-      
-      if (expandBtn && details && actionText && expandIcon) {
-        expandBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const isExpanded = details.classList.contains('hidden');
-          
-          if (isExpanded) {
-            details.classList.remove('hidden');
-            details.classList.add('animate-slide-down');
-            actionText.textContent = 'Show Less';
-            expandIcon.classList.add('rotate-180');
-          } else {
-            details.classList.add('hidden');
-            details.classList.remove('animate-slide-down');
-            actionText.textContent = 'View Details';
-            expandIcon.classList.remove('rotate-180');
-          }
-        });
-      }
+    // Initialize pack buttons with correct cart state
+    await shared.initializePackButtons();
+    
+    // Add event listeners for pack cart operations
+    const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
+    
+    packButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const packId = button.getAttribute('data-item-id');
+        if (packId) {
+          await shared.handlePackCartOperation(packId, button);
+        }
+      });
+    });
+    
+    // Listen for cart updates to refresh button states
+    window.addEventListener('cart-updated', async () => {
+      await shared.initializePackButtons();
     });
   });
 </script>

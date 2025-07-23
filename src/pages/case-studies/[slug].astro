@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { generateSlug } from '../../utils/slugUtils.js';
+
+// Import case study components
+import CaseStudyHeroSection from '../../components/case-studies/CaseStudyHeroSection.astro';
+import CaseStudyApproachSection from '../../components/case-studies/CaseStudyApproachSection.astro';
+import CaseStudySolutionSection from '../../components/case-studies/CaseStudySolutionSection.astro';
+import CaseStudyImpactSection from '../../components/case-studies/CaseStudyImpactSection.astro';
+import CaseStudyTechSection from '../../components/case-studies/CaseStudyTechSection.astro';
+import CaseStudyProjectDetailsSection from '../../components/case-studies/CaseStudyProjectDetailsSection.astro';
+import CaseStudyTestimonialSection from '../../components/case-studies/CaseStudyTestimonialSection.astro';
+import CaseStudyCTASection from '../../components/case-studies/CaseStudyCTASection.astro';
+
+// Import case studies content
+import { caseStudiesData } from '../../content/case-studies/_index.js';
+
+// Get the case study from props (provided by getStaticPaths)
+const { caseStudy } = Astro.props;
+
+// Page metadata
+const pageTitle = `${caseStudy.title} - Case Study - Avadhuta Tech`;
+const pageDescription = caseStudy.problemStatement;
+
+// Generate static paths for all case studies
+export async function getStaticPaths() {
+  return caseStudiesData.caseStudies.map(study => ({
+    params: { slug: generateSlug(study.title) },
+    props: { caseStudy: study }
+  }));
+}
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Hero Section -->
+  <CaseStudyHeroSection caseStudy={caseStudy} />
+
+  <!-- Our Approach Section -->
+  <CaseStudyApproachSection ourApproach={caseStudy.ourApproach} />
+
+  <!-- Solution Highlights Section -->
+  <CaseStudySolutionSection solutionHighlights={caseStudy.solutionHighlights} />
+
+  <!-- Impact Section -->
+  <CaseStudyImpactSection impact={caseStudy.impact} />
+
+  <!-- Technologies Section -->
+  <CaseStudyTechSection techStack={caseStudy.techStack} />
+
+  <!-- Project Details Section -->
+  <CaseStudyProjectDetailsSection 
+    engagementType={caseStudy.engagementType}
+    duration={caseStudy.duration}
+    teamComposition={caseStudy.teamComposition}
+  />
+
+  <!-- Testimonial Section -->
+  {caseStudy.testimonial && (
+    <CaseStudyTestimonialSection testimonial={caseStudy.testimonial} />
+  )}
+
+  <!-- Call to Action Section -->
+  <CaseStudyCTASection callToAction={caseStudy.callToAction} />
+</Layout> 

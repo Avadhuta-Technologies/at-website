@@ -1,43 +1,71 @@
 ---
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+import { packsCatalog } from '../../content/catalog/_packs.js';
+
 export interface Props {
-  data: {
-    title: string;
-    packs: Array<{
-      title: string;
-      price: string;
-      priceUSD: string;
-      features: string[];
-    }>;
-  };
+  title?: string;
   className?: string;
 }
 
-const { data, className = "" } = Astro.props;
+const { title = "Add-on Packs", className = "" } = Astro.props;
+
+// Get all packs from catalog
+const allPacks = packsCatalog.availablePacks;
 ---
 
-<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+<section class={`py-16 ${className}`}>
   <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-dark mb-8 text-center gradient-title">{data.title}</h2>
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{title}</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Enhance your pod with specialized add-on packs
+      </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {data.packs.map((pack) => (
-        <div class="bg-white rounded-xl shadow-lg p-6">
+      {allPacks.map((pack) => (
+        <div class="bg-white rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-green-500 transition-all duration-300">
           <h3 class="text-xl font-bold text-dark mb-2">{pack.title}</h3>
-          <div class="text-3xl font-bold text-green-600 mb-2">{pack.price}</div>
-          <p class="text-sm text-gray-600">{pack.priceUSD}</p>
+          
+          <!-- Updated Price Display -->
+          <div class="mb-4">
+            <DiscountedPriceDisplay 
+              basePriceINR={pack.basePriceINR}
+              basePriceUSD={pack.basePriceUSD}
+              discountPercentage={pack.discountPercentage}
+              showBadge={true}
+              showSavings={true}
+              showOriginalPrice={true}
+              size="lg"
+              variant="conversion"
+            />
+            <p class="text-sm text-gray-600 mt-1">per month</p>
+          </div>
           
           <ul class="mt-6 space-y-3">
-            {pack.features.map((feature) => (
+            {pack.deliverables.slice(0, 3).map((feature) => (
               <li class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <span class="text-gray-600">{feature}</span>
+                <span class="text-gray-600 text-sm">{feature}</span>
               </li>
             ))}
+            {pack.deliverables.length > 3 && (
+              <li class="text-sm text-primary-600 font-medium">
+                +{pack.deliverables.length - 3} more features
+              </li>
+            )}
           </ul>
+          
+          <div class="mt-6">
+            <a href={`/packs/${pack.id}`} class="inline-flex items-center px-6 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-all duration-300">
+              Learn More
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       ))}
     </div>

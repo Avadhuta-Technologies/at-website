@@ -1,62 +1,39 @@
 ---
 import PackCard from './PackCard.astro';
+import { packsCatalog } from '../../content/catalog/_packs.js';
 
 export interface Props {
-  data: {
-    title: string;
-    subtitle: string;
-    categories: Array<{
-      id: string;
-      title: string;
-      description: string;
-      packs: Array<{
-        id: string;
-        title: string;
-        description: string;
-        price: string;
-        priceUSD: string;
-        duration: string;
-        badge: string;
-        badgeColor: string;
-        icon: string;
-        features: string[];
-        idealFor: string[];
-        addOns: string[];
-        whyItWorks: string;
-        testimonials: Array<{
-          quote: string;
-          author: string;
-          role: string;
-        }>;
-        cta: {
-          title: string;
-          subtitle: string;
-          primaryButton: string;
-          secondaryButton: string;
-        };
-      }>;
-    }>;
-  };
+  title?: string;
+  subtitle?: string;
+  className?: string;
 }
 
-const { data } = Astro.props;
+const { 
+  title = "Available Packs", 
+  subtitle = "Choose the perfect pack for your project needs",
+  className = "" 
+} = Astro.props;
+
+// Get all packs from catalog and group by category
+const allPacks = packsCatalog.availablePacks;
+const categories = packsCatalog.packCategories;
 ---
 
-<section id="packs-section" class="py-20 ">
+<section id="packs-section" class={`py-20 ${className}`}>
   <div class="container mx-auto px-4">
     <!-- Section Header -->
     <div class="max-w-4xl mx-auto text-center mb-16">
       <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 gradient-title">
-        {data.title}
+        {title}
       </h2>
       <p class="text-xl text-gray-600 leading-relaxed">
-        {data.subtitle}
+        {subtitle}
       </p>
     </div>
     
     <!-- Categories -->
     <div class="space-y-16">
-      {data.categories.map((category) => (
+      {categories.map((category) => (
         <div class="category-section">
           <!-- Category Header -->
           <div class="text-center mb-12">

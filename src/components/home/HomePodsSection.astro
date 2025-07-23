@@ -27,11 +27,13 @@ if (data.featuredPodIds) {
 const validPods = pods.filter(pod => 
   pod && 
   typeof pod === 'object' && 
+  'id' in pod &&
   'name' in pod && 
   'tagline' in pod && 
   'idealFor' in pod && 
   'whatsInPod' in pod
 ) as Array<{
+  id: string;
   name: string;
   tagline: string;
   idealFor: string[];

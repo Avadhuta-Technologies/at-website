@@ -1,10 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import HomePackCard from './HomePackCard.astro';
-import { homePacksData, getHomePacks } from '../../content/home/_packs.js';
+import { packsCatalog } from '../../content/catalog/_packs.js';
 
-const { title, subtitle } = homePacksData;
-const packs = getHomePacks();
+// Get featured packs from catalog (first 4 packs)
+const packs = packsCatalog.availablePacks.slice(0, 4);
 ---
 
 <section class="py-16 lg:py-20 relative overflow-hidden">
@@ -15,7 +15,7 @@ const packs = getHomePacks();
         <span class="gradient-text"> Packs</span>
       </h2>
       <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-        {subtitle}
+        Enhance your pod with specialized add-on packs for specific needs
       </p>
     </div>
 

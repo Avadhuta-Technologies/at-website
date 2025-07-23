@@ -1,9 +1,14 @@
 ---
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+
 interface Props {
   pod: {
+    id: string;
     name: string;
     tagline: string;
-    pricing: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
 }
 
@@ -20,10 +25,21 @@ const { pod } = Astro.props;
     <div class="max-w-2xl mx-auto">
       <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
         <div class="text-center mb-8">
-          <div class="text-4xl font-bold text-gray-900 mb-2">{pod.pricing[0]}</div>
-          {pod.pricing[1] && (
-            <div class="text-gray-600 mb-4">{pod.pricing[1]}</div>
-          )}
+          <!-- Updated Price Display -->
+          <div class="mb-4">
+            <DiscountedPriceDisplay 
+              basePriceINR={pod.basePriceINR}
+              basePriceUSD={pod.basePriceUSD}
+              discountPercentage={pod.discountPercentage}
+              showBadge={true}
+              showSavings={true}
+              showOriginalPrice={true}
+              size="xl"
+              variant="conversion"
+            />
+            <p class="text-sm text-gray-600 mt-1">per month</p>
+          </div>
+          
           <div class="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -32,20 +48,240 @@ const { pod } = Astro.props;
           </div>
         </div>
         
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button 
-            data-add-to-cart
-            data-item-id={pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}
-            data-item-type="pod"
-            data-item-title={pod.name}
-            data-item-description={pod.tagline}
-            data-item-price={pod.pricing[0]}
-            class="px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-            Reserve Pod
-          </button>
-          <a href="/contact" class="px-8 py-4 border-2 border-primary-600 text-primary-600 font-semibold rounded-xl hover:bg-primary-50 transition-all duration-300">Contact Us</a>
+        <!-- Rest of the pricing content -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">Development Team</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">Design & UX</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">QA & Testing</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span class="text-gray-600">Infrastructure</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
+          <div class="flex items-center justify-between py-3">
+            <span class="text-gray-600">Deployment</span>
+            <span class="font-semibold text-gray-900">Included</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</section> 
+</section>
+
+<script>
+  // Get the current pod ID from the button's data attribute
+  let currentPodId = '';
+  
+  // Function to get pod ID from button data attribute
+  function getCurrentPodId() {
+    const button = document.querySelector('.pod-pricing-cta-btn');
+    if (button) {
+      return button.getAttribute('data-item-id') || '';
+    }
+    return '';
+  }
+  
+  // Check localStorage and update CTA button accordingly
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔵 [PodPricingSection] DOMContentLoaded - updating CTA button');
+    
+    // Get current pod ID from button data attribute
+    currentPodId = getCurrentPodId();
+    console.log('🔵 [PodPricingSection] Current pod ID from button:', currentPodId);
+    
+    // Immediate check with localStorage
+    try {
+      const cart = JSON.parse(localStorage.getItem('novapod-cart') || '[]');
+      const selectedPod = cart.find((item: any) => item.type === 'pod');
+      console.log('🔵 [PodPricingSection] Immediate localStorage check - cart:', cart);
+      console.log('🔵 [PodPricingSection] Immediate localStorage check - selectedPod:', selectedPod);
+      console.log('🔵 [PodPricingSection] Current pod ID:', currentPodId);
+      
+      if (selectedPod && selectedPod.id === currentPodId) {
+        console.log('🔵 [PodPricingSection] Pod is in cart - should show Remove Pod');
+      } else {
+        console.log('🔵 [PodPricingSection] Pod is not in cart - should show Reserve Pod');
+      }
+    } catch (error) {
+      console.error('🔵 [PodPricingSection] Error in immediate localStorage check:', error);
+    }
+    
+    setTimeout(() => {
+      updatePodPricingCTA();
+    }, 100);
+  });
+
+  // Listen for cart updates
+  document.addEventListener('cart-updated', function() {
+    console.log('🔵 [PodPricingSection] Cart updated event received - updating CTA button');
+    // Update current pod ID in case it changed
+    currentPodId = getCurrentPodId();
+    setTimeout(() => {
+      updatePodPricingCTA();
+    }, 100);
+  });
+
+  // Function to update pod pricing CTA button based on cart state
+  async function updatePodPricingCTA() {
+    try {
+      console.log('🔵 [PodPricingSection] updatePodPricingCTA called');
+      
+      // Import the shared utility
+      const { SummaryShared } = await import('../../utils/summaryShared.js');
+      const shared = new SummaryShared();
+      const cart = await shared.getCart();
+      const selectedPod = cart.find((item: any) => item.type === 'pod');
+      
+      console.log('🔵 [PodPricingSection] Current cart:', cart);
+      console.log('🔵 [PodPricingSection] Selected pod:', selectedPod);
+      console.log('🔵 [PodPricingSection] Current pod ID:', currentPodId);
+      
+      let button = document.querySelector('.pod-pricing-cta-btn') as HTMLElement;
+      console.log('🔵 [PodPricingSection] Found button with .pod-pricing-cta-btn:', button);
+      
+      // Update current pod ID before fallback selectors
+      currentPodId = getCurrentPodId();
+      
+      // Fallback selectors if button not found
+      if (!button) {
+        button = document.querySelector(`[data-add-to-cart][data-item-id="${currentPodId}"]`) as HTMLElement;
+        console.log('🔵 [PodPricingSection] Found button with fallback selector:', button);
+      }
+      
+      if (!button) {
+        button = document.querySelector(`#pod-pricing-cta-${currentPodId}`) as HTMLElement;
+        console.log('🔵 [PodPricingSection] Found button with ID selector:', button);
+      }
+      
+      const ctaText = button?.querySelector('.cta-text');
+      console.log('🔵 [PodPricingSection] Found ctaText:', ctaText);
+      
+      if (button && ctaText) {
+        console.log('🔵 [PodPricingSection] Button and ctaText found - updating...');
+        console.log('🔵 [PodPricingSection] Current button text:', ctaText.textContent);
+        console.log('🔵 [PodPricingSection] Current button classes:', button.className);
+        
+        if (selectedPod && selectedPod.id === currentPodId) {
+          // This pod is already in cart - show "Remove Pod"
+          console.log('🔵 [PodPricingSection] Pod is in cart - updating to "Remove Pod"');
+          
+          // Update classes
+          button.classList.remove('bg-primary-600', 'hover:bg-primary-700');
+          button.classList.add('bg-red-500', 'hover:bg-red-600');
+          console.log('🔵 [PodPricingSection] Updated button classes:', button.className);
+          
+          // Update action
+          button.setAttribute('data-action', 'remove');
+          console.log('🔵 [PodPricingSection] Updated data-action to: remove');
+          
+          // Update text
+          ctaText.textContent = 'Remove Pod';
+          console.log('🔵 [PodPricingSection] Updated button text to: Remove Pod');
+          
+          // Update icon to trash/remove icon
+          const icon = button.querySelector('svg');
+          if (icon) {
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>';
+            console.log('🔵 [PodPricingSection] Updated icon to trash icon');
+          }
+        } else {
+          // This pod is not in cart - show "Reserve Pod"
+          console.log('🔵 [PodPricingSection] Pod is not in cart - updating to "Reserve Pod"');
+          
+          // Update classes
+          button.classList.remove('bg-red-500', 'hover:bg-red-600');
+          button.classList.add('bg-primary-600', 'hover:bg-primary-700');
+          console.log('🔵 [PodPricingSection] Updated button classes:', button.className);
+          
+          // Update action
+          button.setAttribute('data-action', 'add');
+          console.log('🔵 [PodPricingSection] Updated data-action to: add');
+          
+          // Update text
+          ctaText.textContent = 'Reserve Pod';
+          console.log('🔵 [PodPricingSection] Updated button text to: Reserve Pod');
+          
+          // Update icon back to arrow icon
+          const icon = button.querySelector('svg');
+          if (icon) {
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>';
+            console.log('🔵 [PodPricingSection] Updated icon to arrow icon');
+          }
+        }
+        
+        console.log('🔵 [PodPricingSection] Final button text:', ctaText.textContent);
+        console.log('🔵 [PodPricingSection] Final button classes:', button.className);
+      } else {
+        console.log('🔵 [PodPricingSection] Button or ctaText not found!');
+        console.log('🔵 [PodPricingSection] Button:', button);
+        console.log('🔵 [PodPricingSection] ctaText:', ctaText);
+      }
+    } catch (error) {
+      console.error('🔵 [PodPricingSection] Error updating CTA button:', error);
+    }
+  }
+
+  // Handle CTA button clicks
+  document.addEventListener('click', async function(e) {
+    console.log('🔵 [PodPricingSection] Click event detected on:', e.target);
+    
+    if (e.target && (e.target as Element).closest('.pod-pricing-cta-btn')) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const button = (e.target as Element).closest('.pod-pricing-cta-btn') as HTMLElement;
+      if (button) {
+        const action = button.getAttribute('data-action') || 'add';
+        const podId = button.getAttribute('data-item-id');
+        const buttonText = button.querySelector('.cta-text')?.textContent;
+        
+        console.log('🔵 [PodPricingSection] CTA button clicked:', { 
+          action, 
+          podId, 
+          buttonText,
+          buttonClasses: button.className 
+        });
+        
+        try {
+          const { SummaryShared } = await import('../../utils/summaryShared.js');
+          const shared = new SummaryShared();
+          
+          if (action === 'add') {
+            // Add pod to cart
+            console.log('🔵 [PodPricingSection] Attempting to add pod to cart...');
+            const selectedPod = await shared.selectPodWithConfirmation(podId);
+            const success = !!selectedPod;
+            if (success) {
+              console.log('🔵 [PodPricingSection] Pod added to cart successfully');
+              // Navigate to summary page
+              window.location.href = '/summary?step=1';
+            } else {
+              console.log('🔵 [PodPricingSection] Failed to add pod to cart');
+            }
+          } else if (action === 'remove') {
+            // Remove pod from cart
+            console.log('🔵 [PodPricingSection] Attempting to remove pod from cart...');
+            const success = await shared.removePod();
+            if (success) {
+              console.log('🔵 [PodPricingSection] Pod removed from cart successfully');
+              // Update button appearance
+              updatePodPricingCTA();
+            } else {
+              console.log('🔵 [PodPricingSection] Failed to remove pod from cart');
+            }
+          }
+        } catch (error) {
+          console.error('🔵 [PodPricingSection] Error handling CTA button:', error);
+        }
+      }
+    }
+  });
+</script> 

@@ -1,0 +1,100 @@
+---
+// This component detects user location and makes it available globally
+---
+
+<script>
+  import { detectUserLocation, setCustomLocation, forceRefreshLocation, validateAndRefreshLocation } from '../../utils/locationUtils.js';
+
+  // Global location detection
+  async function initializeLocationDetection() {
+    try {
+      console.log('🌍 [LocationDetector] Starting location detection...');
+      const location = await validateAndRefreshLocation();
+      
+      // Store location globally
+      (window as any).userLocation = location;
+      
+      // Add location info to page
+      const locationInfo = document.createElement('div');
+      locationInfo.id = 'location-info';
+      locationInfo.style.display = 'none';
+      locationInfo.setAttribute('data-country', location.country);
+      locationInfo.setAttribute('data-currency', location.currency);
+      locationInfo.setAttribute('data-timezone', location.timezone);
+      locationInfo.setAttribute('data-timestamp', location.timestamp?.toString() || '');
+      
+      document.body.appendChild(locationInfo);
+      
+      console.log('🌍 [LocationDetector] User location detected:', location);
+      console.log('🌍 [LocationDetector] Currency set to:', location.currency);
+      
+      // Dispatch event for other components
+      window.dispatchEvent(new CustomEvent('location-detected', { 
+        detail: location 
+      }));
+      
+      // Update currency displays if they exist
+      const currencyDisplays = document.querySelectorAll('.currency-display');
+      if (currencyDisplays.length > 0) {
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
+      
+    } catch (error) {
+      console.warn('🌍 [LocationDetector] Failed to detect location:', error);
+      
+      // Set fallback location
+      const fallbackLocation = {
+        country: 'India',
+        countryCode: 'IN',
+        currency: 'INR' as const,
+        timezone: 'Asia/Kolkata',
+        timestamp: Date.now()
+      };
+      
+      console.log('🌍 [LocationDetector] Using fallback location:', fallbackLocation);
+      
+      (window as any).userLocation = fallbackLocation;
+      setCustomLocation(fallbackLocation);
+    }
+  }
+
+  // Initialize location detection
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeLocationDetection);
+  } else {
+    initializeLocationDetection();
+  }
+
+  // Listen for location refresh events
+  window.addEventListener('location-refreshed', (event) => {
+    console.log('🌍 [LocationDetector] Location refreshed event received:', event.detail);
+    const newLocation = event.detail;
+    
+    // Update global location
+    (window as any).userLocation = newLocation;
+    
+    // Update location info element
+    const locationInfo = document.getElementById('location-info');
+    if (locationInfo) {
+      locationInfo.setAttribute('data-country', newLocation.country);
+      locationInfo.setAttribute('data-currency', newLocation.currency);
+      locationInfo.setAttribute('data-timezone', newLocation.timezone);
+      locationInfo.setAttribute('data-timestamp', newLocation.timestamp?.toString() || '');
+    }
+    
+    // Dispatch location change event
+    window.dispatchEvent(new CustomEvent('location-changed'));
+  });
+
+  // Expose location utilities globally for testing
+  (window as any).locationUtils = {
+    detectUserLocation,
+    setCustomLocation,
+    forceRefreshLocation,
+    validateAndRefreshLocation,
+    getUserCurrency: async () => {
+      const location = await detectUserLocation();
+      return location.currency;
+    }
+  };
+</script> 

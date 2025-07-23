@@ -141,16 +141,61 @@ const { data = homeFeaturedData, className = "" } = Astro.props;
                 </div>
               </div>
               
-              <a href={pack.cta.url} class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                {pack.cta.text}
-                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </a>
+              <div class="flex gap-3">
+                <button 
+                  data-add-to-cart
+                  data-item-id={pack.id}
+                  data-item-type="pack"
+                  data-item-title={pack.title}
+                  data-item-description={pack.description}
+                  data-item-price={pack.price}
+                  class="flex-1 inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                  <span>Add to Pod</span>
+                </button>
+                <a href={pack.cta.url} class="flex-1 inline-flex items-center justify-center px-4 py-3 border-2 border-green-500 text-green-600 font-semibold rounded-xl hover:bg-green-50 transition-all duration-300">
+                  View Details
+                </a>
+              </div>
             </div>
           </div>
         ))}
       </div>
     </div>
   </div>
-</section> 
+</section>
+
+<script>
+  // Import SummaryShared for cart operations
+  import { SummaryShared } from '../../utils/summaryShared.js';
+
+  // Interactive functionality for featured section
+  document.addEventListener('DOMContentLoaded', async () => {
+    const shared = new SummaryShared();
+    
+    // Initialize pack buttons with correct cart state
+    await shared.initializePackButtons();
+    
+    // Add event listeners for pack cart operations
+    const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
+    
+    packButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const packId = button.getAttribute('data-item-id');
+        if (packId) {
+          await shared.handlePackCartOperation(packId, button);
+        }
+      });
+    });
+    
+    // Listen for cart updates to refresh button states
+    window.addEventListener('cart-updated', async () => {
+      await shared.initializePackButtons();
+    });
+  });
+</script> 
