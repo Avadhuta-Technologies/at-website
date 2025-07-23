@@ -36,7 +36,7 @@ const { data } = Astro.props;
                   {field.label} {field.required && <span class="text-red-500">*</span>}
                 </label>
                 <input
-                  type={field.type}
+                  type={field.type as any}
                   id={field.name}
                   name={field.name}
                   placeholder={field.placeholder}
@@ -124,7 +124,7 @@ const { data } = Astro.props;
         
         // Show loading state
         if (submitButton && submitText && loadingText) {
-          submitButton.disabled = true;
+          (submitButton as HTMLButtonElement).disabled = true;
           submitText.classList.add('hidden');
           loadingText.classList.remove('hidden');
         }
@@ -134,15 +134,45 @@ const { data } = Astro.props;
         if (errorMessage) errorMessage.classList.add('hidden');
         
         try {
-          // Simulate form submission (replace with actual API call)
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Collect form data
+          const formData = new FormData(form as HTMLFormElement);
           
-          // Show success message
-          if (successMessage) {
-            successMessage.classList.remove('hidden');
-            form.reset();
+          // Convert FormData to JSON
+          const jsonData: Record<string, string> = {};
+          formData.forEach((value, key) => {
+            if (value && typeof value === 'string') {
+              jsonData[key] = value;
+            }
+          });
+          
+          // Submit to API
+          const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData)
+          });
+          
+          const result = await response.json();
+          
+          console.log('Form submission result:', result);
+          
+          if (result.success) {
+            // Show success message
+            if (successMessage) {
+              successMessage.classList.remove('hidden');
+              (form as HTMLFormElement).reset();
+            }
+          } else {
+            // Show error message
+            if (errorMessage) {
+              errorMessage.classList.remove('hidden');
+            }
+            console.error('Form submission failed:', result.error);
           }
         } catch (error) {
+          console.error('Form submission error:', error);
           // Show error message
           if (errorMessage) {
             errorMessage.classList.remove('hidden');
@@ -150,7 +180,7 @@ const { data } = Astro.props;
         } finally {
           // Reset button state
           if (submitButton && submitText && loadingText) {
-            submitButton.disabled = false;
+            (submitButton as HTMLButtonElement).disabled = false;
             submitText.classList.remove('hidden');
             loadingText.classList.add('hidden');
           }

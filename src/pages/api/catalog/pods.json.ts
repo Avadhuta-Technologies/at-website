@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import { podsCatalog } from '../../../content/catalog/_pods.js';
 
