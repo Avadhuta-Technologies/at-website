@@ -1,0 +1,111 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="16" cy="16" r="16" fill="url(#paint0_linear_favicon)"/>
+  <g filter="url(#filter0_d_favicon)">
+    <mask id="mask0_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="11" y="6" width="10" height="6">
+      <path d="M11.2975 6.3967H20.3058V11.7762H11.2975V6.3967Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask0_favicon)">
+      <path d="M15.7851 6.3988L11.3333 8.9883L15.8595 11.6412L20.27 9.02L15.7851 6.3988Z" fill="#A3E5C9"/>
+    </g>
+    <mask id="mask1_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="15" y="9" width="5" height="8">
+      <path d="M15.7135 9.9002H20.3058V17.843H15.7135V9.9002Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask1_favicon)">
+      <path d="M20.2699 9.02L15.8594 11.6412L15.8016 17.841L20.3071 14.1977L20.2699 9.02Z" fill="url(#paint1_linear_favicon)"/>
+    </g>
+    <mask id="mask2_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="11" y="9" width="5" height="8">
+      <path d="M11.2975 9.9002H15.8898V17.843H11.2975V9.9002Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask2_favicon)">
+      <path d="M11.3332 8.9883L11.296 14.1667L15.8015 16.8409L15.8594 11.6412L11.3332 8.9883Z" fill="#24C660"/>
+    </g>
+  </g>
+  <g filter="url(#filter1_d_favicon)">
+    <mask id="mask3_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="15" width="10" height="6">
+      <path d="M7.6611 15.2893H16.6694V20.6688H7.6611V15.2893Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask3_favicon)">
+      <path d="M11.1488 15.2914L7.697 17.8809L11.2231 20.5338L15.6336 17.9126L11.1488 15.2914Z" fill="#A3E5C9"/>
+    </g>
+  </g>
+  <mask id="mask4_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="11" y="17" width="5" height="8">
+    <path d="M11.0771 17.7927H15.6694V25.7356H11.0771V17.7927Z" fill="white"/>
+  </mask>
+  <g mask="url(#mask4_favicon)">
+    <path d="M15.6336 17.9126L11.2231 20.5338L11.1653 25.7335L15.6708 22.0903L15.6336 17.9126Z" fill="url(#paint2_linear_favicon)"/>
+  </g>
+  <mask id="mask5_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="17" width="5" height="8">
+    <path d="M7.6611 17.7927H11.2534V25.7356H7.6611V17.7927Z" fill="white"/>
+  </mask>
+  <g mask="url(#mask5_favicon)">
+    <path d="M7.6969 17.8809L7.6597 22.0593L11.1652 25.7335L11.2231 20.5338L7.6969 17.8809Z" fill="#24C660"/>
+  </g>
+  <g filter="url(#filter2_d_favicon)">
+    <mask id="mask6_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="16" y="14" width="10" height="6">
+      <path d="M16.4628 14.8926H25.471V19.2721H16.4628V14.8926Z" fill="white"/>
+    </mask>
+    <g mask="url(#mask6_favicon)">
+      <path d="M19.9503 14.8946L16.4985 17.4842L20.0246 20.1371L23.4351 17.5159L19.9503 14.8946Z" fill="#A3E5C9"/>
+    </g>
+  </g>
+  <mask id="mask7_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="20" y="17" width="5" height="8">
+    <path d="M20.8787 17.396H24.4709V25.3388H20.8787V17.396Z" fill="white"/>
+  </mask>
+  <g mask="url(#mask7_favicon)">
+    <path d="M23.4349 17.5158L20.0244 20.137L19.9666 25.3368L23.4721 21.6935L23.4349 17.5158Z" fill="url(#paint3_linear_favicon)"/>
+  </g>
+  <mask id="mask8_favicon" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="16" y="17" width="5" height="8">
+    <path d="M16.4626 17.396H20.0549V25.3388H16.4626V17.396Z" fill="white"/>
+  </mask>
+  <g mask="url(#mask8_favicon)">
+    <path d="M16.4984 17.4841L16.4612 22.6625L19.9667 25.3367L20.0245 20.137L16.4984 17.4841Z" fill="#24C660"/>
+  </g>
+  <defs>
+    <filter id="filter0_d_favicon" x="9.2975" y="6.3988" width="13.0083" height="13.4422" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="2"/>
+      <feGaussianBlur stdDeviation="1"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_favicon"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_favicon" result="shape"/>
+    </filter>
+    <filter id="filter1_d_favicon" x="7.697" y="15.2914" width="16.9366" height="8.2424" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dx="8" dy="2"/>
+      <feGaussianBlur stdDeviation="1"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.13 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_favicon"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_favicon" result="shape"/>
+    </filter>
+    <filter id="filter2_d_favicon" x="6.4985" y="4.8946" width="22.9366" height="23.2424" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dx="2"/>
+      <feGaussianBlur stdDeviation="4"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.13 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_favicon"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_favicon" result="shape"/>
+    </filter>
+    <linearGradient id="paint0_linear_favicon" x1="16" y1="0" x2="16" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22C55E"/>
+      <stop offset="1" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear_favicon" x1="18.5543" y1="9.02" x2="18.5543" y2="17.841" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10A6E8"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="paint2_linear_favicon" x1="13.9181" y1="17.9126" x2="13.9181" y2="25.7335" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10A6E8"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="paint3_linear_favicon" x1="21.7195" y1="17.5158" x2="21.7195" y2="25.3368" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10A6E8"/>
+      <stop offset="1" stop-color="#22C55E" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+</svg> 
