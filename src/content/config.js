@@ -156,7 +156,6 @@ const homeCollection = defineCollection({
       })),
       contactInfo: z.object({
         email1: z.string(),
-        email2: z.string(),
       }),
     }),
   }),

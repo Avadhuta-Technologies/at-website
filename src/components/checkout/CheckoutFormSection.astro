@@ -122,7 +122,7 @@ const { data } = Astro.props;
             
             <div class="flex flex-wrap gap-4">
               {data.termsSection.links.map((link) => (
-                <a href={link.url} class="text-primary-600 hover:underline text-sm">
+                <a href={link.url} target={link.target || "_self"} class="text-primary-600 hover:underline text-sm">
                   {link.text}
                 </a>
               ))}

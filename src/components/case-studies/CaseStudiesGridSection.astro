@@ -37,38 +37,120 @@ const groupedStudies = studies.reduce((acc, study) => {
 const industries = Object.keys(groupedStudies);
 console.log('Industries:', industries);
 console.log('Grouped Studies:', groupedStudies);
+
+// Get URL parameters for initial tab selection
+const urlParams = new URLSearchParams(Astro.url.search);
+const initialIndustry = urlParams.get('industry');
+
+// Function to decode URL parameter properly (handle both + and %20)
+function decodeURLParameter(param: string | null): string | null {
+  if (!param) return null;
+  
+  // First decode percent encoding, then replace + with spaces
+  return decodeURIComponent(param).replace(/\+/g, ' ');
+}
+
+// Function to find matching industry using includes()
+function findMatchingIndustry(industryParam: string | null, availableIndustries: string[]): string | null {
+  if (!industryParam) return null;
+  
+  // Properly decode the URL parameter
+  const decodedParam = decodeURLParameter(industryParam);
+  const normalizedParam = decodedParam.toLowerCase().trim();
+  
+  console.log('🔍 Matching process:');
+  console.log('  - Raw URL Parameter:', industryParam);
+  console.log('  - Decoded Parameter:', decodedParam);
+  console.log('  - Normalized Param:', normalizedParam);
+  console.log('  - Available Industries:', availableIndustries);
+  
+  // First try exact match
+  const exactMatch = availableIndustries.find(industry => 
+    industry.toLowerCase() === normalizedParam
+  );
+  if (exactMatch) {
+    console.log('  ✅ Exact match found:', exactMatch);
+    return exactMatch;
+  }
+  
+  // Then try includes match
+  const includesMatch = availableIndustries.find(industry => {
+    const normalizedIndustry = industry.toLowerCase();
+    const hasMatch = normalizedIndustry.includes(normalizedParam) || 
+                    normalizedParam.includes(normalizedIndustry);
+    
+    console.log(`  - Checking "${industry}": ${normalizedIndustry} includes "${normalizedParam}" = ${normalizedIndustry.includes(normalizedParam)}`);
+    console.log(`  - Checking "${industry}": "${normalizedParam}" includes ${normalizedIndustry} = ${normalizedParam.includes(normalizedIndustry)}`);
+    
+    return hasMatch;
+  });
+  
+  if (includesMatch) {
+    console.log('  ✅ Includes match found:', includesMatch);
+    return includesMatch;
+  }
+  
+  console.log('  ❌ No match found');
+  return null;
+}
+
+const matchedIndustry = findMatchingIndustry(initialIndustry, industries);
+const initialTab = matchedIndustry ? matchedIndustry.toLowerCase()
+  .replace(/[^a-z0-9\s]/g, '-') // Replace special chars with hyphens
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/-+/g, '-') // Replace multiple hyphens with single
+  .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
+  : 'all';
+
+// Debug logging for URL parameter matching
+console.log('🔗 URL Parameter Debug:');
+console.log('  - Raw URL:', Astro.url.href);
+console.log('  - Search Params:', Astro.url.search);
+console.log('  - URL Industry Param:', initialIndustry);
+console.log('  - Available Industries:', industries);
+console.log('  - Matched Industry:', matchedIndustry);
+console.log('  - Initial Tab:', initialTab);
 ---
 
-<section id="case-studies-grid" class="py-20">
+<section id="case-studies-grid" class="pb-20">
   <div class="container mx-auto">
-    <!-- Header -->
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{title}</h2>
-      <p class="text-lg text-gray-600 max-w-3xl mx-auto">{subtitle}</p>
-    </div>
 
     <!-- Tabs Navigation -->
     <div class="flex flex-wrap justify-center mb-12">
       <div class="flex flex-wrap gap-1 md:gap-2 justify-center">
         <button 
-          class="tab-button active px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 bg-primary-600 text-white hover:bg-primary-700"
+          class={`tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 ${initialTab === 'all' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           data-tab="all"
         >
           All 
         </button>
-        {industries.map((industry) => (
-          <button 
-            class="tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200"
-            data-tab={industry.toLowerCase().replace(/\s+/g, '-')}
-          >
-            {industry}
-          </button>
-        ))}
+        {industries.map((industry) => {
+          // Create a more robust tab name that handles special characters
+          const industryTab = industry.toLowerCase()
+            .replace(/[^a-z0-9\s]/g, '-') // Replace special chars with hyphens
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/-+/g, '-') // Replace multiple hyphens with single
+            .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+          
+          const isActive = initialTab === industryTab;
+          
+          // Debug logging for tab states
+          console.log(`Tab "${industry}": tab="${industryTab}", isActive=${isActive}, initialTab="${initialTab}"`);
+          
+          return (
+            <button 
+              class={`tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              data-tab={industryTab}
+            >
+              {industry}
+            </button>
+          );
+        })}
       </div>
     </div>
 
     <!-- Tab Content -->
-    <div class="tab-content" data-tab="all">
+    <div class={`tab-content ${initialTab === 'all' ? '' : 'hidden'}`} data-tab="all">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
         {studies && studies.length > 0 ? (
           studies.map((study: any, index: number) => (
@@ -84,15 +166,29 @@ console.log('Grouped Studies:', groupedStudies);
       </div>
     </div>
 
-    {industries.map((industry) => (
-      <div class="tab-content hidden" data-tab={industry.toLowerCase().replace(/\s+/g, '-')}>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {groupedStudies[industry].map((study: any, index: number) => (
-            <CaseStudyCard caseStudy={study} />
-          ))}
+    {industries.map((industry) => {
+      // Create a more robust tab name that handles special characters
+      const industryTab = industry.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '-') // Replace special chars with hyphens
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+      
+      const isActive = initialTab === industryTab;
+      
+      // Debug logging for content visibility
+      console.log(`Content "${industry}": tab="${industryTab}", isActive=${isActive}, hidden=${!isActive}`);
+      
+      return (
+        <div class={`tab-content ${isActive ? '' : 'hidden'}`} data-tab={industryTab}>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {groupedStudies[industry].map((study: any, index: number) => (
+              <CaseStudyCard caseStudy={study} />
+            ))}
+          </div>
         </div>
-      </div>
-    ))}
+      );
+    })}
   </div>
 </section>
 
@@ -124,6 +220,23 @@ console.log('Grouped Studies:', groupedStudies);
       observer.observe(card);
     });
 
+    // Function to update URL without page reload
+    function updateURL(tabName) {
+      const url = new URL(window.location);
+      if (tabName === 'all') {
+        url.searchParams.delete('industry');
+      } else {
+        // Convert tab name back to industry name (e.g., 'interior-design' -> 'Interior Design')
+        const industryName = tabName.split('-').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+        
+        // Don't double-encode - searchParams.set() handles encoding automatically
+        url.searchParams.set('industry', industryName);
+      }
+      window.history.replaceState({}, '', url);
+    }
+
     // Tab functionality
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
@@ -150,7 +263,66 @@ console.log('Grouped Studies:', groupedStudies);
             });
           }
         });
+
+        // Update URL
+        updateURL(targetTab);
       });
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const industry = urlParams.get('industry');
+      
+      // Use the same matching logic as server-side
+      function decodeURLParameter(param) {
+        if (!param) return null;
+        
+        // First decode percent encoding, then replace + with spaces
+        return decodeURIComponent(param).replace(/\+/g, ' ');
+      }
+      
+      function findMatchingIndustry(industryParam, availableIndustries) {
+        if (!industryParam) return null;
+        
+        // Properly decode the URL parameter
+        const decodedParam = decodeURLParameter(industryParam);
+        const normalizedParam = decodedParam.toLowerCase().trim();
+        
+        // First try exact match
+        const exactMatch = availableIndustries.find(industry => 
+          industry.toLowerCase() === normalizedParam
+        );
+        if (exactMatch) return exactMatch;
+        
+        // Then try includes match
+        const includesMatch = availableIndustries.find(industry => {
+          const normalizedIndustry = industry.toLowerCase();
+          return normalizedIndustry.includes(normalizedParam) || 
+                 normalizedParam.includes(normalizedIndustry);
+        });
+        
+        return includesMatch;
+      }
+      
+      // Get available industries from the page
+      const availableIndustries = Array.from(document.querySelectorAll('.tab-button'))
+        .map(btn => btn.textContent.trim())
+        .filter(text => text !== 'All');
+      
+      const matchedIndustry = findMatchingIndustry(industry, availableIndustries);
+      const targetTab = matchedIndustry ? matchedIndustry.toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '-') // Replace special chars with hyphens
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
+        : 'all';
+      
+      // Find and click the appropriate tab button
+      const targetButton = document.querySelector(`[data-tab="${targetTab}"]`);
+      if (targetButton) {
+        targetButton.click();
+      }
     });
   });
 </script>
