@@ -4,6 +4,9 @@ import Header from '../components/layout/Header.astro';
 import BackToTop from '../components/layout/BackToTop.astro';
 import MadeWithButton from '../components/layout/MadeWithButton.astro';
 import CartDrawer from '../components/shared/CartDrawer.astro';
+import PodRequiredModal from '../components/shared/PodRequiredModal.astro';
+import PodReplacementModal from '../components/shared/PodReplacementModal.astro';
+import LocationDetector from '../components/shared/LocationDetector.astro';
 import CookieConsent from '../components/cookie-consent/CookieConsent.astro';
 
 
@@ -16,6 +19,9 @@ interface Props {
 }
 
 const { description, title, image, theme = 'auto' } = Astro.props;
+
+// Default NovaPod logo for social media sharing
+const defaultImage = image || '/assets/logo/novapod_ai_logo.svg';
 ---
 
 <!DOCTYPE html>
@@ -61,19 +67,24 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={image || '/assets/logo/novapod_ai_logo.svg'} />
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image" content={image || '/assets/logo/novapod_ai_logo.svg'} />
     
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Meta Theme Color -->
+    <meta name="theme-color" content="#22c55e" />
+    <meta name="msapplication-TileColor" content="#22c55e" />
     
     <!-- Preload Critical Resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -86,9 +97,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" as="style" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" />
     
-    <!-- Satoshi Font (self-hosted) -->
-    <link rel="preload" href="/fonts/satoshi.css" as="style" />
-    <link rel="stylesheet" href="/fonts/satoshi.css" />
+
     
     <!-- Critical CSS -->
     <style is:global>
@@ -504,6 +513,9 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <!-- Utility Components -->
     <BackToTop />
     <CartDrawer />
+    <PodRequiredModal />
+    <PodReplacementModal />
+    <LocationDetector />
     
     <!-- Theme Script (loads early for better UX) -->
     <script>
@@ -564,9 +576,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
       })();
     </script>
     
-    <!-- Non-critical JavaScript loaded asynchronously -->
-    <script type="module" src="/scripts/global-cart-init.js"></script>
-    <script src="/scripts/cart-service-init.js" is:inline></script>
+
     <script type="module" src="/scripts/stickymenu.js"></script>
     <script type="module" src="/scripts/dropdown.js"></script>
 

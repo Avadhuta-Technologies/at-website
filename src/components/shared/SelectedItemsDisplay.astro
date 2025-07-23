@@ -117,56 +117,49 @@
 
 <script>
   class SelectedItemsDisplay {
-    private cartService: any;
-
     constructor() {
-      this.cartService = null;
       this.init();
     }
 
     async init() {
       console.log('🟡 [SelectedItemsDisplay] Initializing...');
       
-      // Wait for cart service to be available
-      if (typeof window !== 'undefined' && (window as any).cartService) {
-        console.log('🟡 [SelectedItemsDisplay] CartService found, initializing...');
-        this.cartService = (window as any).cartService;
-        await this.loadSelectedItems();
-        
-        // Listen for cart updates
-        window.addEventListener('cart-updated', () => {
-          console.log('🟡 [SelectedItemsDisplay] Cart updated event received');
-          this.loadSelectedItems();
-        });
-        
-        console.log('🟡 [SelectedItemsDisplay] Initialization complete');
-      } else {
-        console.log('🟡 [SelectedItemsDisplay] CartService not available, retrying in 100ms...');
-        // Retry after a short delay
-        setTimeout(() => this.init(), 100);
-      }
+      await this.loadSelectedItems();
+      
+      // Listen for cart updates
+      window.addEventListener('cart-updated', () => {
+        console.log('🟡 [SelectedItemsDisplay] Cart updated event received');
+        this.loadSelectedItems();
+      });
+      
+      console.log('🟡 [SelectedItemsDisplay] Initialization complete');
     }
 
     async loadSelectedItems() {
       console.log('🟡 [SelectedItemsDisplay] loadSelectedItems called');
-      
-      if (!this.cartService) {
-        console.error('🟡 [SelectedItemsDisplay] CartService not available');
-        return;
-      }
 
       try {
         console.log('🟡 [SelectedItemsDisplay] Showing loading state...');
         this.showLoading();
         
-        console.log('🟡 [SelectedItemsDisplay] Getting cart from service...');
-        const cart = await this.cartService.getCart();
+        console.log('🟡 [SelectedItemsDisplay] Getting cart from localStorage...');
+        const cart = this.getCartFromLocalStorage();
         console.log('🟡 [SelectedItemsDisplay] Cart received:', cart);
         
         this.renderItems(cart);
       } catch (error) {
         console.error('🟡 [SelectedItemsDisplay] Error loading selected items:', error);
         this.showEmpty();
+      }
+    }
+
+    getCartFromLocalStorage() {
+      try {
+        const cartData = localStorage.getItem('novapod-cart');
+        return cartData ? JSON.parse(cartData) : [];
+      } catch (error) {
+        console.error('🟡 [SelectedItemsDisplay] Error reading localStorage:', error);
+        return [];
       }
     }
 
@@ -364,32 +357,26 @@
   (window as any).removeFromCart = async function(itemId: string, itemType: string) {
     console.log('🟡 [SelectedItemsDisplay] removeFromCart called with:', { itemId, itemType });
     
-    if (typeof window === 'undefined') {
-      console.error('🟡 [SelectedItemsDisplay] Window is undefined');
-      return;
-    }
-    
-    const cartService = (window as any).cartService;
-    if (!cartService) {
-      console.error('🟡 [SelectedItemsDisplay] CartService not available on window');
-      return;
-    }
-    
     try {
-      console.log('🟡 [SelectedItemsDisplay] Calling cartService.removeItemById...');
-      const result = await cartService.removeItemById(itemId, itemType);
-      console.log('🟡 [SelectedItemsDisplay] removeItemById result:', result);
-      
-      if (result) {
-        cartService.showNotification('Item removed from selection');
+      // Remove item from localStorage
+      const cartData = localStorage.getItem('novapod-cart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        const updatedCart = cart.filter((item: any) => !(item.id === itemId && item.type === itemType));
+        localStorage.setItem('novapod-cart', JSON.stringify(updatedCart));
+        
+        // Dispatch cart-updated event
+        window.dispatchEvent(new CustomEvent('cart-updated'));
+        
         console.log('🟡 [SelectedItemsDisplay] Item removed successfully');
+        alert('Item removed from selection');
       } else {
-        console.error('🟡 [SelectedItemsDisplay] Failed to remove item');
-        cartService.showNotification('Failed to remove item', 'error');
+        console.error('🟡 [SelectedItemsDisplay] No cart data found');
+        alert('Failed to remove item');
       }
     } catch (error) {
       console.error('🟡 [SelectedItemsDisplay] Error removing item:', error);
-      cartService.showNotification('Error removing item', 'error');
+      alert('Error removing item');
     }
   };
 
@@ -402,9 +389,9 @@
     // Add a test function for debugging
     (window as any).testRemoveFromCart = async function() {
       console.log('🟡 [SelectedItemsDisplay] Test remove function called');
-      const cartService = (window as any).cartService;
-      if (cartService) {
-        const cart = await cartService.getCart();
+      const cartData = localStorage.getItem('novapod-cart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
         console.log('🟡 [SelectedItemsDisplay] Current cart:', cart);
         if (cart.length > 0) {
           const firstItem = cart[0];
@@ -414,7 +401,7 @@
           console.log('🟡 [SelectedItemsDisplay] Cart is empty');
         }
       } else {
-        console.error('🟡 [SelectedItemsDisplay] CartService not available');
+        console.log('🟡 [SelectedItemsDisplay] No cart data found');
       }
     };
   }

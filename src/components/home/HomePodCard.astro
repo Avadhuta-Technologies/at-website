@@ -1,6 +1,10 @@
 ---
+import { generatePodSlug } from '../../utils/slugUtils.js';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+
 export interface Props {
   pod: {
+    id: string;
     name: string;
     tagline: string;
     idealFor: string[];
@@ -14,6 +18,9 @@ export interface Props {
     whyTrust: string[];
     pastUseCases: string[];
     pricing: string[];
+    basePriceINR: number;
+    basePriceUSD: number;
+    discountPercentage: number;
   };
   index: number;
 }
@@ -62,7 +69,7 @@ const getPodColorClasses = (pod: any) => {
 };
 ---
 
-<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer">
+<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer" data-pod-slug={generatePodSlug(pod.name)}>
   <!-- Card Background with Gradient -->
   <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
@@ -103,6 +110,20 @@ const getPodColorClasses = (pod: any) => {
       </div>
     </div>
     
+    <!-- Updated Price Display -->
+    <div class="mb-4">
+      <DiscountedPriceDisplay 
+        basePriceINR={pod.basePriceINR}
+        basePriceUSD={pod.basePriceUSD}
+        discountPercentage={pod.discountPercentage}
+        showBadge={true}
+        showSavings={true}
+        showOriginalPrice={true}
+        size="md"
+        variant="conversion"
+      />
+    </div>
+
     <!-- Vertical Highlights Layout -->
     <div class="grid grid-cols-3 gap-3 mb-5">
       <!-- Ideal For -->
@@ -156,7 +177,7 @@ const getPodColorClasses = (pod: any) => {
       <!-- Reserve Pod Button -->
       <button 
         data-add-to-cart
-        data-item-id={pod.name.toLowerCase().replace(/\s+/g, '-')}
+        data-item-id={pod.id}
         data-item-type="pod"
         data-item-title={pod.name}
         data-item-description={pod.tagline}
@@ -164,11 +185,11 @@ const getPodColorClasses = (pod: any) => {
         <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        Reserve Pod
+        <span class="cta-text">Reserve Pod</span>
       </button>
       
       <!-- Details Link -->
-      <a href={`/pods/${pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')}`} class="inline-flex items-center justify-center px-4 py-2.5 text-gray-600 hover:text-gray-700 font-semibold transition-colors border border-gray-200 rounded-lg hover:bg-gray-50 text-sm">
+      <a href={`/pods/${generatePodSlug(pod.name)}`} class="inline-flex items-center justify-center px-4 py-2.5 text-gray-600 hover:text-gray-700 font-semibold transition-colors border border-gray-200 rounded-lg hover:bg-gray-50 text-sm">
         Details
         <svg class="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -292,6 +313,29 @@ const getPodColorClasses = (pod: any) => {
 
     .highlight-text {
       font-size: 0.75rem;
-    }
-  }
-</style> 
+      }
+}
+</style>
+
+<script>
+  // Handle pod card clicks
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+      // Check if the clicked element is a pod card
+      const podCard = e.target.closest('.pod-card');
+      if (podCard) {
+        // Check if the click was on a button or link (CTA elements)
+        const isCTAElement = e.target.closest('button, a, [data-add-to-cart]');
+        
+        if (!isCTAElement) {
+          // Get the pod slug from the data attribute
+          const podSlug = podCard.getAttribute('data-pod-slug');
+          if (podSlug) {
+            // Navigate to the pod details page
+            window.location.href = `/pods/${podSlug}`;
+          }
+        }
+      }
+    });
+  });
+</script> 

@@ -1,6 +1,8 @@
 ---
 import { getBadgeStyle, getDotColor, getGradientClass } from '../../utils/colorUtils';
 import { catalogUtils } from '../../content/catalog/_index.js';
+import { generatePackSlug } from '../../utils/slugUtils.js';
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
 
 export interface Props {
   packId: string; // Use packId instead of individual props
@@ -38,8 +40,8 @@ const {
 } = pack;
 
 // Default URLs if not provided
-const defaultLearnMoreUrl = `/packs/${id}`;
-const defaultActionUrl = `/packs/${id}`;
+const defaultLearnMoreUrl = `/packs/${generatePackSlug(title)}`;
+const defaultActionUrl = `/packs/${generatePackSlug(title)}`;
 const defaultActionText = 'Add Pack';
 
 const finalLearnMoreUrl = learnMoreUrl || defaultLearnMoreUrl;
@@ -135,8 +137,12 @@ const finalActionText = actionText || defaultActionText;
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
           <div>
-            {priceINR && <span class="font-bold text-base text-dark ">{priceINR}</span>}
-            {priceUSD && <span class="text-xs text-gray-500 ml-2">({priceUSD})</span>}
+            <DiscountedPriceDisplay 
+              basePriceINR={pack.basePriceINR}
+              basePriceUSD={pack.basePriceUSD}
+              discountPercentage={pack.discountPercentage || 0}
+              size="sm"
+            />
           </div>
           {duration && <span class="text-xs text-gray-500">{duration}</span>}
         </div>
@@ -152,7 +158,7 @@ const finalActionText = actionText || defaultActionText;
           data-item-description={description}
           data-item-price={priceINR}
           data-item-duration={duration}
-          class="flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
+          class="pack-cart-btn flex-1 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl text-sm">
           Add Pack
         </button>
         <a href={finalLearnMoreUrl} class="flex-1 border-2 text-center py-2.5 px-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 border-blue-500 text-blue-600 hover:bg-blue-50
@@ -197,4 +203,37 @@ const finalActionText = actionText || defaultActionText;
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
-</style> 
+</style>
+
+<script>
+  // Import SummaryShared for cart operations
+  import { SummaryShared } from '../../utils/summaryShared.js';
+
+  // Interactive functionality for pack cards
+  document.addEventListener('DOMContentLoaded', async () => {
+    const shared = new SummaryShared();
+    
+    // Initialize pack buttons with correct cart state
+    await shared.initializePackButtons();
+    
+    // Add event listeners for pack cart operations
+    const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
+    
+    packButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const packId = button.getAttribute('data-item-id');
+        if (packId) {
+          await shared.handlePackCartOperation(packId, button);
+        }
+      });
+    });
+    
+    // Listen for cart updates to refresh button states
+    window.addEventListener('cart-updated', async () => {
+      await shared.initializePackButtons();
+    });
+  });
+</script> 

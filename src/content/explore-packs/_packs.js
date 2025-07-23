@@ -11,8 +11,6 @@ export const exploreAvailablePacksData = {
       id: pack.id,
       title: pack.title,
       description: pack.description,
-      price: pack.priceINR,
-      priceUSD: pack.priceUSD,
       duration: pack.duration,
       badge: pack.badge,
       badgeColor: pack.badgeColor,
@@ -22,7 +20,10 @@ export const exploreAvailablePacksData = {
       addOns: pack.addOns,
       whyItWorks: pack.whyItWorks,
       testimonials: pack.testimonials,
-      cta: pack.cta
+      cta: pack.cta,
+      basePriceINR: pack.basePriceINR,
+      basePriceUSD: pack.basePriceUSD,
+      discountPercentage: pack.discountPercentage || 0
     }))
   }))
 }; 

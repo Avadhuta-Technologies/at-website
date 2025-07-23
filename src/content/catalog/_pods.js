@@ -1,3 +1,5 @@
+import { generatePodSlug } from '../../utils/slugUtils.js';
+
 export const podsCatalog = {  
   availablePods: [
     {
@@ -47,7 +49,10 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹2.5L/month (~$3K/month)",
         "Includes dev, design, QA, infrastructure, and deployment"
-      ]
+      ],
+      basePriceINR: 250000,
+      basePriceUSD: 3000,
+      discountPercentage: 15,
     },
     {
       id: "ar-vr-experience",
@@ -95,7 +100,10 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹3L/month (~$3.6K/month)",
         "Includes full development, 3D assets, testing, and deployment"
-      ]
+      ],
+      basePriceINR: 300000,
+      basePriceUSD: 3600,
+      discountPercentage: 15,
     },
     {
       id: "ai-product-studio",
@@ -143,7 +151,10 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹3.5L/month (~$4.2K/month)",
         "Includes design, dev, infra, and AI pipelines"
-      ]
+      ],
+      basePriceINR: 350000,
+      basePriceUSD: 4200,
+      discountPercentage: 15,
     },
     {
       id: "product-launch",
@@ -191,7 +202,10 @@ export const podsCatalog = {
       pricing: [
         "Starts at ₹2.5L/month (~$3K/month)",
         "Includes dev, design, testing, DevOps & coordination"
-      ]
+      ],
+      basePriceINR: 250000,
+      basePriceUSD: 3000,
+      discountPercentage: 15
     },
     {
       id: "admin-workflow-automation",
@@ -235,7 +249,10 @@ export const podsCatalog = {
       ],
       pricing: [
         "Starting at ₹2L/month (~$2.4K)"
-      ]
+      ],
+      basePriceINR: 200000,
+      basePriceUSD: 2400,
+      discountPercentage: 15,
     },
     {
       id: "ai-ml-integration",
@@ -279,7 +296,10 @@ export const podsCatalog = {
       pricing: [
         "Starts at ₹3L/month (~$3.6K)",
         "PoC-based pricing also available"
-      ]
+      ],
+      basePriceINR: 300000,
+      basePriceUSD: 3600,
+      discountPercentage: 15,
     },
     {
       id: "mobile-first-saas",
@@ -328,7 +348,10 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹3L/month (~$3.6K)",
         "Includes mobile dev, backend dev, design, testing, and deployment"
-      ]
+      ],
+      basePriceINR: 300000,
+      basePriceUSD: 3600,
+      discountPercentage: 15,
     },
     {
       id: "devops-infra-automation",
@@ -374,13 +397,23 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹2L/month (~$2.4K)",
         "One-time infra setup plans available as well"
-      ]
+      ],
+      basePriceINR: 200000,
+      basePriceUSD: 2400,
+      discountPercentage: 15,
     }
   ],
 
   // Utility functions for working with pod data
   getPodById: (id) => {
     return podsCatalog.availablePods.find(pod => pod.id === id) || null;
+  },
+
+  getPodBySlug: (slug) => {
+    return podsCatalog.availablePods.find(pod => {
+      const podSlug = generatePodSlug(pod.name);
+      return podSlug === slug;
+    }) || null;
   },
 
   getPodsByCategory: (category) => {
@@ -401,8 +434,9 @@ export const podsCatalog = {
       type: "pod",
       title: pod.name,
       description: pod.tagline,
-      price: pod.pricing ? pod.pricing[0] : 'Contact Us',
-      basePrice: 250000, // Default base price, can be customized per pod
+      basePriceINR: pod.basePriceINR,
+      basePriceUSD: pod.basePriceUSD,
+      discountPercentage: pod.discountPercentage,
       icon: "🚀", // Default icon
       badge: "Popular",
       badgeColor: "green",

@@ -1,4 +1,6 @@
 ---
+import { generateSlug } from '../../utils/slugUtils.js';
+
 export interface Props {
   study: {
     id: string;
@@ -166,7 +168,7 @@ const getStudyIcon = (study: any) => {
 };
 ---
 
-<div class="case-study-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-study-id={study.id}>
+<a href={`/case-studies/${generateSlug(study.title)}`} class="case-study-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer block">
   <!-- Card Background with Glass Morphism -->
   <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
   
@@ -224,120 +226,17 @@ const getStudyIcon = (study: any) => {
       </div>
     </div>
     
-    <!-- Expandable Content (Hidden by default) -->
-    <div class="study-details hidden mt-4 space-y-4">
-      <!-- Tech Stack -->
-      {study.techStack && study.techStack.length > 0 && (
-        <div>
-          <h4 class="text-sm font-semibold text-gray-800 mb-2">Tech Stack</h4>
-          <div class="flex flex-wrap gap-2">
-            {study.techStack.map((tech: string) => (
-              <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100/80 text-gray-700 border border-gray-200/50">
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      <!-- Solution Highlights -->
-      {study.solutionHighlights && study.solutionHighlights.length > 0 && (
-        <div>
-          <h4 class="text-sm font-semibold text-gray-800 mb-2">Key Features</h4>
-          <ul class="space-y-1">
-            {study.solutionHighlights.slice(0, 3).map((highlight: string) => (
-              <li class="flex items-start text-xs text-gray-600">
-                <svg class="w-3 h-3 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                {highlight}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      
-      <!-- Impact -->
-      {study.impact && study.impact.length > 0 && (
-        <div>
-          <h4 class="text-sm font-semibold text-gray-800 mb-2">Impact</h4>
-          <ul class="space-y-1">
-            {study.impact.map((impact: string) => (
-              <li class="flex items-start text-xs text-gray-600">
-                <svg class="w-3 h-3 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-                {impact}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      
-      <!-- Testimonial -->
-      {study.testimonial && (
-        <div class="bg-gray-50/80 rounded-lg p-3 border border-gray-200/50">
-          <blockquote class="text-xs text-gray-600 italic mb-2">
-            "{study.testimonial.quote}"
-          </blockquote>
-          <cite class="text-xs text-gray-500 font-medium">— {study.testimonial.author}</cite>
-        </div>
-      )}
-    </div>
-    
     <!-- Action Bar -->
     <div class="flex items-center justify-between pt-4 border-t border-gray-100/50 mt-auto">
-      <span class="text-sm text-gray-500 font-medium study-action-text">View Details</span>
-      <div class="flex items-center space-x-2">
-        <button class="expand-btn w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <svg class="w-3 h-3 text-white expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-        <a href={`/case-studies/${study.id}`} class="w-6 h-6 bg-gradient-to-r from-primary-600 to-primary-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-          <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </a>
+      <span class="text-sm text-gray-500 font-medium">View Details</span>
+      <div class="w-6 h-6 bg-gradient-to-r from-primary-600 to-primary-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
       </div>
     </div>
   </div>
-</div>
-
-<script>
-  // Interactive functionality for case study cards
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = document.querySelectorAll('.case-study-card');
-    
-    cards.forEach(card => {
-      const expandBtn = card.querySelector('.expand-btn');
-      const details = card.querySelector('.study-details');
-      const actionText = card.querySelector('.study-action-text');
-      const expandIcon = card.querySelector('.expand-icon');
-      
-      if (expandBtn && details && actionText && expandIcon) {
-        expandBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const isExpanded = details.classList.contains('hidden');
-          
-          if (isExpanded) {
-            details.classList.remove('hidden');
-            details.classList.add('animate-slide-down');
-            actionText.textContent = 'Show Less';
-            expandIcon.classList.add('rotate-180');
-          } else {
-            details.classList.add('hidden');
-            details.classList.remove('animate-slide-down');
-            actionText.textContent = 'View Details';
-            expandIcon.classList.remove('rotate-180');
-          }
-        });
-      }
-    });
-  });
-</script>
+</a>
 
 <style>
   /* Case Study Card Animations */
@@ -351,27 +250,6 @@ const getStudyIcon = (study: any) => {
   .case-study-card.animate {
     opacity: 1;
     transform: translateY(0);
-  }
-
-  /* Expand Animation */
-  .animate-slide-down {
-    animation: slideDown 0.3s ease-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Icon rotation */
-  .expand-icon.rotate-180 {
-    transform: rotate(180deg);
   }
 
   /* Hover Effects */

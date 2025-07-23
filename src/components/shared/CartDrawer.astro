@@ -67,25 +67,17 @@
     constructor() {
       this.isOpen = false;
       this.isMinimized = false;
-      this.cartService = null;
       this.init();
     }
 
     async init() {
-      // Wait for cart service to be available
-      if (typeof window !== 'undefined' && window.cartService) {
-        this.cartService = window.cartService;
-        this.setupEventListeners();
+      this.setupEventListeners();
+      this.loadCart();
+      
+      // Listen for cart updates
+      window.addEventListener('cart-updated', () => {
         this.loadCart();
-        
-        // Listen for cart updates
-        window.addEventListener('cart-updated', () => {
-          this.loadCart();
-        });
-      } else {
-        // Retry after a short delay
-        setTimeout(() => this.init(), 100);
-      }
+      });
     }
 
     setupEventListeners() {
@@ -121,14 +113,22 @@
     }
 
     async loadCart() {
-      if (!this.cartService) return;
-
       try {
-        const cart = await this.cartService.getCart();
+        const cart = this.getCartFromLocalStorage();
         this.renderCart(cart);
       } catch (error) {
         console.error('Error loading cart:', error);
         this.showEmpty();
+      }
+    }
+
+    getCartFromLocalStorage() {
+      try {
+        const cartData = localStorage.getItem('novapod-cart');
+        return cartData ? JSON.parse(cartData) : [];
+      } catch (error) {
+        console.error('Error reading localStorage:', error);
+        return [];
       }
     }
 
@@ -235,8 +235,17 @@
             const itemId = cartItem.getAttribute('data-item-id');
             const itemType = cartItem.getAttribute('data-item-type');
             
-            if (itemId && itemType && this.cartService) {
-              await this.cartService.removeItemById(itemId, itemType);
+            if (itemId && itemType) {
+              // Remove item from localStorage
+              const cartData = localStorage.getItem('novapod-cart');
+              if (cartData) {
+                const cart = JSON.parse(cartData);
+                const updatedCart = cart.filter((item: any) => !(item.id === itemId && item.type === itemType));
+                localStorage.setItem('novapod-cart', JSON.stringify(updatedCart));
+                
+                // Dispatch cart-updated event
+                window.dispatchEvent(new CustomEvent('cart-updated'));
+              }
             }
           }
         });

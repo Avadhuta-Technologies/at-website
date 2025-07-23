@@ -40,3 +40,73 @@ import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPod
   <ExplorePodsCTASection />
 </Layout>
 
+<script>
+  // Global event handler for pod CTA buttons and data-add-to-cart buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', async function(e) {
+      // Handle dynamic pod CTA buttons
+      if (e.target && (e.target as HTMLElement).matches('.pod-cta-btn')) {
+        e.preventDefault();
+        
+        const button = e.target as HTMLElement;
+        const action = button.getAttribute('data-action');
+        const podId = button.getAttribute('data-pod-id');
+        
+        console.log('🔍 [ExplorePods] Pod CTA button clicked:', { action, podId });
+        
+        try {
+          // Import the summaryShared utility
+          const { SummaryShared } = await import('../utils/summaryShared.js');
+          const shared = new SummaryShared();
+          
+          if (action === 'add') {
+            // Add pod to cart with confirmation if replacing
+            const selectedPod = await shared.selectPodWithConfirmation(podId);
+            if (selectedPod) {
+              console.log('Pod added to cart successfully');
+              // Navigate to summary page after successful pod reservation
+              window.location.href = '/summary?step=1';
+            }
+          } else if (action === 'remove') {
+            // Remove pod from cart
+            const success = await shared.removePod();
+            if (success) {
+              console.log('Pod removed from cart successfully');
+            }
+          }
+        } catch (error) {
+          console.error('Error handling pod CTA button:', error);
+        }
+      }
+      
+      // Handle regular data-add-to-cart buttons (fallback)
+      if (e.target && (e.target as HTMLElement).matches('[data-add-to-cart]')) {
+        e.preventDefault();
+        
+        const button = e.target as HTMLElement;
+        const itemType = button.dataset?.itemType;
+        
+        if (itemType === 'pod') {
+          const podId = button.dataset?.itemId;
+          
+          try {
+            // Import the summaryShared utility
+            const { SummaryShared } = await import('../utils/summaryShared.js');
+            const shared = new SummaryShared();
+            
+            // Add pod to cart with confirmation if replacing
+            const selectedPod = await shared.selectPodWithConfirmation(podId);
+            if (selectedPod) {
+              console.log('Pod added to cart successfully via data-add-to-cart');
+              // Navigate to summary page after successful pod reservation
+              window.location.href = '/summary?step=1';
+            }
+          } catch (error) {
+            console.error('Error handling data-add-to-cart button:', error);
+          }
+        }
+      }
+    });
+  });
+</script>
+

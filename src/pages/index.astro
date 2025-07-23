@@ -69,3 +69,136 @@ import {
     /* Any home page specific styles can go here */
   }
 </style>
+
+<script>
+  // Function to update home pod button appearances based on cart state
+  async function updateHomePodButtons() {
+    try {
+      const { SummaryShared } = await import('../utils/summaryShared.js');
+      const shared = new SummaryShared();
+      const cart = await shared.getCart();
+      const selectedPod = cart.find((item: any) => item.type === 'pod');
+      
+      // Get all pod buttons on home page
+      const podButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pod"]');
+      
+      podButtons.forEach((button: Element) => {
+        const buttonElement = button as HTMLElement;
+        const itemId = buttonElement.getAttribute('data-item-id');
+        const buttonText = buttonElement.querySelector('.cta-text') || buttonElement;
+        
+        if (selectedPod && selectedPod.id === itemId) {
+          // This pod is selected - show "Remove Pod"
+          buttonElement.classList.remove('bg-gradient-to-r', 'from-blue-500', 'to-purple-500', 'hover:from-blue-600', 'hover:to-purple-600');
+          buttonElement.classList.add('bg-red-500', 'hover:bg-red-600');
+          if (buttonText.textContent) {
+            buttonText.textContent = 'Remove Pod';
+          }
+        } else {
+          // This pod is not selected - show "Reserve Pod"
+          buttonElement.classList.remove('bg-red-500', 'hover:bg-red-600');
+          buttonElement.classList.add('bg-gradient-to-r', 'from-blue-500', 'to-purple-500', 'hover:from-blue-600', 'hover:to-purple-600');
+          if (buttonText.textContent) {
+            buttonText.textContent = 'Reserve Pod';
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error updating home pod buttons:', error);
+    }
+  }
+
+  // Global event handler for data-add-to-cart buttons on home page
+  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', async function(e) {
+      if (e.target && (e.target as HTMLElement).matches('[data-add-to-cart]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = e.target as HTMLElement;
+        const itemId = button.getAttribute('data-item-id');
+        const itemType = button.getAttribute('data-item-type');
+        const itemTitle = button.getAttribute('data-item-title');
+        const itemDescription = button.getAttribute('data-item-description');
+        
+        console.log('🔍 [Home] Add to cart clicked:', { itemId, itemType, itemTitle });
+        
+        if (itemId && itemType) {
+          try {
+            // Import the shared utility
+            const { SummaryShared } = await import('../utils/summaryShared.js');
+            const shared = new SummaryShared();
+            
+            // Check if this pod is already in cart
+            const cart = await shared.getCart();
+            const existingPod = cart.find((item: any) => item.type === 'pod');
+            
+            if (existingPod && existingPod.id === itemId) {
+              // Pod is already in cart - remove it
+              const success = await shared.removePod();
+              if (success) {
+                shared.showNotification(`${itemTitle || 'Pod'} removed from cart!`);
+                // Update button appearance
+                updateHomePodButtons();
+              } else {
+                shared.showNotification('Failed to remove pod from cart', 'error');
+              }
+            } else {
+              // Pod is not in cart - add it with confirmation if replacing
+              if (itemType === 'pod') {
+                const selectedPod = await shared.selectPodWithConfirmation(itemId);
+                if (selectedPod) {
+                  shared.showNotification(`${itemTitle || 'Pod'} added to cart!`);
+                  // Navigate to summary page
+                  window.location.href = '/summary?step=1';
+                }
+              } else {
+                // For non-pod items, use regular addToCart
+                const cartItem = {
+                  id: itemId,
+                  type: itemType,
+                  title: itemTitle || '',
+                  description: itemDescription || '',
+                  price: '',
+                  reservationMonths: itemType === 'pod' ? 3 : undefined
+                };
+                
+                const success = await shared.addToCart(cartItem);
+                
+                if (success) {
+                  shared.showNotification(`${itemTitle || 'Item'} added to cart!`);
+                  window.location.href = '/summary?step=1';
+                } else {
+                  shared.showNotification('Failed to add item to cart', 'error');
+                }
+              }
+            }
+          } catch (error) {
+            console.error('🔍 [Home] Error adding to cart:', error);
+            
+            // Fallback notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            notification.textContent = 'Error adding to cart';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+              notification.remove();
+            }, 3000);
+          }
+        }
+      }
+    });
+  });
+
+  // Update button appearances on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHomePodButtons();
+  });
+
+  // Update button appearances when cart changes
+  window.addEventListener('cart-updated', () => {
+    updateHomePodButtons();
+  });
+
+</script>

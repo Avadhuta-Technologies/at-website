@@ -10,6 +10,8 @@ export interface ContactFormData {
   budget?: string;
   timeline?: string;
   project_details?: string;
+  selected_pod?: string;
+  selected_packs?: string;
   [key: string]: any;
 }
 
@@ -27,6 +29,8 @@ export interface HubSpotContact {
     budget_range?: string;
     project_timeline?: string;
     project_details?: string;
+    selected_pod?: string;
+    selected_packs?: string;
     [key: string]: any;
   };
 }
@@ -100,6 +104,8 @@ export class HubSpotService {
       budget_range: contactData.budget_range || '',
       project_timeline: contactData.project_timeline || '',
       project_details: contactData.project_details || '',
+      selected_pod: contactData.selected_pod || '',
+      selected_packs: contactData.selected_packs || '',
     };
 
     console.log('Creating HubSpot contact with properties:', properties);
@@ -273,25 +279,6 @@ export class HubSpotService {
       let company: HubSpotCompany | undefined;
       let deal: HubSpotDeal | undefined;
 
-      // Create or find company if company name is provided
-    //   if (formData.company) {
-    //     try {
-    //       company = await this.getOrCreateCompany({
-    //         name: formData.company,
-    //         domain: formData.email.split('@')[1], // Extract domain from email
-    //       });
-
-    //       // Associate contact with company (optional - don't fail if it doesn't work)
-    //       try {
-    //         await this.associateContactWithCompany(contact.id, company.id);
-    //       } catch (associationError) {
-    //         console.warn('Failed to associate contact with company:', associationError);
-    //       }
-    //     } catch (companyError) {
-    //       console.warn('Failed to get or create company:', companyError);
-    //     }
-    //   }
-
       // Create deal/lead
       try {
         deal = await this.createDeal({
@@ -338,7 +325,7 @@ export class HubSpotService {
               ]
             }
           ],
-          properties: ['email', 'firstname', 'lastname', 'phone', 'jobtitle', 'project_type', 'budget_range', 'project_timeline', 'project_details'],
+          properties: ['email', 'firstname', 'lastname', 'phone', 'jobtitle', 'project_type', 'budget_range', 'project_timeline', 'project_details', 'selected_pod', 'selected_packs'],
           limit: 1
         }),
       });
@@ -387,6 +374,12 @@ export class HubSpotService {
       }
       if (contactData.project_details && !existingContact.properties.project_details) {
         updateProperties.project_details = contactData.project_details;
+      }
+      if (contactData.selected_pod && !existingContact.properties.selected_pod) {
+        updateProperties.selected_pod = contactData.selected_pod;
+      }
+      if (contactData.selected_packs && !existingContact.properties.selected_packs) {
+        updateProperties.selected_packs = contactData.selected_packs;
       }
       
       // Only update if there are properties to update

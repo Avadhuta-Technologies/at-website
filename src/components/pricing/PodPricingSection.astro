@@ -1,43 +1,66 @@
 ---
+import DiscountedPriceDisplay from '../shared/DiscountedPriceDisplay.astro';
+import { podsCatalog } from '../../content/catalog/_pods.js';
+
 export interface Props {
-  data: {
-    title: string;
-    pods: Array<{
-      title: string;
-      price: string;
-      priceUSD: string;
-      teamMembers: string[];
-    }>;
-  };
+  title?: string;
   className?: string;
 }
 
-const { data, className = "" } = Astro.props;
+const { title = "Pod Pricing", className = "" } = Astro.props;
+
+// Get pods from catalog
+const pods = podsCatalog.availablePods;
 ---
 
-<section class="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+<section class={`py-16 ${className}`}>
   <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-dark mb-8 text-center gradient-title">{data.title}</h2>
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{title}</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Choose the perfect pod for your project needs
+      </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {data.pods.map((pod) => (
+      {pods.map((pod) => (
         <div class="bg-white rounded-xl shadow-lg p-6 border-2 border-transparent hover:border-blue-500 transition-all duration-300">
-          <h3 class="text-xl font-bold text-dark mb-2">{pod.title}</h3>
-          <div class="text-3xl font-bold text-blue-600 mb-2">{pod.price}</div>
-          <p class="text-sm text-gray-600">{pod.priceUSD}</p>
+          <h3 class="text-xl font-bold text-dark mb-2">{pod.name}</h3>
+          
+          <!-- Updated Price Display -->
+          <div class="mb-4">
+            <DiscountedPriceDisplay 
+              basePriceINR={pod.basePriceINR}
+              basePriceUSD={pod.basePriceUSD}
+              discountPercentage={pod.discountPercentage}
+              showBadge={true}
+              showSavings={true}
+              showOriginalPrice={true}
+              size="lg"
+              variant="conversion"
+            />
+            <p class="text-sm text-gray-600 mt-1">per month</p>
+          </div>
           
           <ul class="mt-6 space-y-3">
-            {pod.teamMembers.map((member) => (
+            {pod.whatsInPod.teamComposition.map((member) => (
               <li class="flex items-center">
-                <svg class="w-5 h-5 text-blue-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                 </svg>
                 <span class="text-gray-600">{member}</span>
               </li>
             ))}
           </ul>
+          
+          <div class="mt-6">
+            <a href={`/pods/${pod.id}`} class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-300">
+              Learn More
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       ))}
     </div>

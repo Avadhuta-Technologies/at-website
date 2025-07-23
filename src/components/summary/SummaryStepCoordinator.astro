@@ -6,121 +6,255 @@
   <!-- Step content will be loaded here -->
 </div>
 
-<script>
+<script client:load type="module">
   import { summaryShared } from '/src/utils/summaryShared.js';
 
   class SummaryStepCoordinator {
     constructor() {
       this.currentStep = 1;
       this.shared = summaryShared;
+      this.currentEventListeners = [];
       this.init();
     }
 
     async init() {
-      // Wait for shared utilities to initialize
-      while (!this.shared.cartService) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      console.log('🔍 [SummaryStepCoordinator] Initializing...');
+      
+      // Initialize shared utilities (no longer depends on cartService)
+      await this.shared.init();
       
       this.setupEventListeners();
       this.loadStep(this.currentStep);
+      console.log('🔍 [SummaryStepCoordinator] Initialization complete');
     }
 
     setupEventListeners() {
       // Listen for step changes
       window.addEventListener('step-changed', (e) => {
         const newStep = e.detail.step;
-        console.log('Step coordinator received step change:', newStep);
+        console.log('🔍 [StepCoordinator] Step coordinator received step change:', newStep);
+        console.log('🔍 [StepCoordinator] Current step before change:', this.currentStep);
+        
         if (newStep >= 1 && newStep <= 3) {
           this.currentStep = newStep;
+          
+          // Store current step in DOM element for shared utility to access
+          const stepCoordinator = document.getElementById('step-coordinator');
+          if (stepCoordinator) {
+            stepCoordinator._currentStep = newStep;
+          }
+          
+          console.log('🔍 [StepCoordinator] Loading step:', newStep);
           this.loadStep(newStep);
+        } else {
+          console.log('🔍 [StepCoordinator] Invalid step number:', newStep);
+        }
+      });
+      
+      // Listen for cart updates to refresh UI
+      window.addEventListener('cart-updated', async (e) => {
+        console.log('🔍 [CartUpdated] Event received, current step:', this.currentStep);
+        
+        if (this.currentStep === 1) {
+          // Check if we still have a pod after the update
+          const cart = await this.shared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          
+          // Also check localStorage as fallback
+          let localStoragePod = null;
+          try {
+            const localStorageCart = localStorage.getItem('novapod-cart');
+            if (localStorageCart) {
+              const parsedCart = JSON.parse(localStorageCart);
+              localStoragePod = parsedCart.find(item => item.type === 'pod');
+            }
+          } catch (error) {
+            // Ignore localStorage errors
+          }
+          
+          if (selectedPod || localStoragePod) {
+            // Still have a pod, show selected pod
+            const podToShow = selectedPod || localStoragePod;
+            console.log('🔍 [CartUpdated] Step 1 - Showing selected pod:', podToShow);
+            this.showSelectedPod(podToShow);
+          } else {
+            // No pod, show available pods
+            console.log('🔍 [CartUpdated] Step 1 - Showing available pods');
+            this.showAvailablePods();
+          }
+        } else if (this.currentStep === 2) {
+          // Update Step 2 pod summary if cart was updated
+          const cart = await this.shared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          
+          if (selectedPod) {
+            console.log('🔍 [CartUpdated] Step 2 - Updating pod summary with:', selectedPod);
+            this.updatePodSummary(selectedPod);
+          }
+          
+          // Update selected packs display
+          await this.updateSelectedPacksDisplay();
+        }
+      });
+      
+      // Global pack action handler - only added once
+      document.addEventListener('click', async (e) => {
+        const target = e.target;
+        
+        console.log('🔍 [Global] Click detected on:', target);
+        console.log('🔍 [Global] Target matches button[data-pack-id]:', target && target.matches('button[data-pack-id]'));
+        
+        // Handle pack add/remove buttons
+        if (target && target.matches('button[data-pack-id]')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const packId = target.getAttribute('data-pack-id');
+          const currentAction = target.getAttribute('data-action');
+          
+          // Determine the correct action based on button text and current state
+          let action;
+          if (target.textContent.trim() === 'Add Pack' || currentAction === 'add') {
+            action = 'add';
+          } else if (target.textContent.trim() === 'Remove Pack' || currentAction === 'remove') {
+            action = 'remove';
+          } else {
+            console.error('🔍 [Global] Unknown button state:', target.textContent, 'data-action:', currentAction);
+            return;
+          }
+          
+          console.log('🔍 [Global] ===== PACK ACTION START =====');
+          console.log('🔍 [Global] Button text:', target.textContent.trim());
+          console.log('🔍 [Global] Data action:', currentAction);
+          console.log('🔍 [Global] Determined action:', action, 'for pack:', packId);
+          console.log('🔍 [Global] Current step:', this.currentStep);
+          console.log('🔍 [Global] Button disabled state:', target.disabled);
+          
+          // Add a small delay to prevent rapid clicks
+          if (target.disabled) {
+            console.log('🔍 [Global] Button already processing, ignoring click');
+            return;
+          }
+          
+          target.disabled = true;
+          console.log('🔍 [Global] Button disabled for processing');
+          
+          try {
+            if (action === 'add') {
+              console.log('🔍 [Global] ===== ADDING PACK =====');
+              // Check if pod exists before adding pack
+              const hasPod = await this.shared.hasPod();
+              console.log('🔍 [Global] Has pod:', hasPod);
+              if (!hasPod) {
+                this.shared.showNotification('Please select a NovaPod first to add packs', 'warning');
+                return;
+              }
+              await this.shared.addPack(packId);
+              console.log('🔍 [Global] ===== PACK ADDED SUCCESSFULLY =====');
+            } else if (action === 'remove') {
+              console.log('🔍 [Global] ===== REMOVING PACK =====');
+              await this.shared.removePack(packId);
+              console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
+            }
+            
+            // Refresh pack cards display immediately for better UX
+            if (this.currentStep === 2) {
+              console.log('🔍 [Global] ===== REFRESHING UI =====');
+              await this.refreshPackCards();
+              await this.updateSelectedPacksDisplay();
+              console.log('🔍 [Global] ===== UI REFRESHED =====');
+            }
+          } catch (error) {
+            console.error('🔍 [Global] Error in pack action:', error);
+          } finally {
+            // Re-enable button after a short delay
+            setTimeout(() => {
+              target.disabled = false;
+              console.log('🔍 [Global] ===== PACK ACTION END - Button re-enabled =====');
+            }, 500);
+          }
+        }
+        
+        // Handle delete pack buttons in selected packs container
+        const deleteBtn = target.closest('#selected-packs-list button[data-action="remove"]');
+        if (deleteBtn && deleteBtn.getAttribute('data-pack-id')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const packId = deleteBtn.getAttribute('data-pack-id');
+          if (packId) {
+            console.log('🔍 [Global] Deleting pack from selected packs:', packId);
+            await this.shared.removePack(packId);
+            
+            // Refresh the packs display if we're on Step 2
+            if (this.currentStep === 2) {
+              await this.refreshPackCards();
+              await this.updateSelectedPacksDisplay();
+            }
+          }
         }
       });
     }
 
     async loadStep(step) {
+      console.log('🔍 [loadStep] Loading step:', step);
       const coordinator = document.getElementById('step-coordinator');
-      if (!coordinator) return;
+      if (!coordinator) {
+        console.error('🔍 [loadStep] Step coordinator element not found');
+        return;
+      }
+
+      // Update URL with current step
+      this.updateURL(step);
+
+      // Clean up existing event listeners before loading new step
+      this.cleanupEventListeners();
 
       switch (step) {
         case 1:
+          console.log('🔍 [loadStep] Loading Step 1');
           await this.loadStep1();
           break;
         case 2:
+          console.log('🔍 [loadStep] Loading Step 2');
           await this.loadStep2();
           break;
         case 3:
+          console.log('🔍 [loadStep] Loading Step 3');
           await this.loadStep3();
           break;
+        default:
+          console.error('🔍 [loadStep] Unknown step:', step);
       }
+    }
+
+    updateURL(step) {
+      try {
+        const url = new URL(window.location);
+        url.searchParams.set('step', step.toString());
+        window.history.replaceState({}, '', url);
+        console.log('🔍 [updateURL] Updated URL to step:', step);
+      } catch (error) {
+        console.error('🔍 [updateURL] Error updating URL:', error);
+      }
+    }
+
+    cleanupEventListeners() {
+      console.log('🔍 [cleanupEventListeners] Cleaning up event listeners');
+      // Store references to event listeners so we can remove them
+      if (this.currentEventListeners) {
+        this.currentEventListeners.forEach(listener => {
+          document.removeEventListener('click', listener);
+        });
+      }
+      this.currentEventListeners = [];
     }
 
     async loadStep1() {
       const coordinator = document.getElementById('step-coordinator');
       coordinator.innerHTML = `
         <div id="step-1-content" class="step-content">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl lg:text-4xl font-bold text-graphite-900 mb-4 gradient-title">
-              Choose Your NovaPod
-            </h2>
-            <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
-              Select the perfect NovaPod solution for your business needs. Each pod is designed to deliver exceptional results.
-            </p>
-          </div>
-
-          <!-- Selected Pod Display -->
-          <div id="selected-pod-display" class="hidden mb-8">
-            <div class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-8 border border-mint-200">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-mint-500 rounded-xl flex items-center justify-center">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">Selected Pod</h3>
-                    <p id="selected-pod-description" class="text-graphite-600">Pod description</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">₹0/month</p>
-                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
-                    Change Pod
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Hire Period Selection -->
-              <div class="mt-6 pt-6 border-t border-mint-200">
-                <label class="block text-sm font-medium text-graphite-700 mb-3">Hire Period</label>
-                <select id="hire-period-select" class="w-full max-w-xs px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-colors">
-                  <option value="1">1 Month</option>
-                  <option value="3" selected>3 Months</option>
-                  <option value="6">6 Months</option>
-                  <option value="12">12 Months</option>
-                </select>
-              </div>
-
-              <!-- CTA Button -->
-              <div class="mt-6 space-y-3">
-                <button id="start-journey-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                  Start My Pod Journey
-                </button>
-                <button id="remove-pod-btn" class="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
-                  <span>Remove Pod</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Available Pods Grid -->
-          <div id="available-pods-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Pods will be dynamically loaded here -->
-          </div>
+          <!-- Content will be dynamically loaded based on cart state -->
         </div>
       `;
 
@@ -142,7 +276,7 @@
 
           <!-- Selected Pod Summary -->
           <div id="pod-summary" class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-6 mb-8 border border-mint-200">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center">
                   <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,6 +286,7 @@
                 <div>
                   <h3 id="summary-pod-title" class="text-lg font-semibold text-graphite-900">Your Pod</h3>
                   <p id="summary-pod-price" class="text-mint-600 font-medium">₹0/month</p>
+                  <p id="summary-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">Loading...</span></p>
                 </div>
               </div>
               <div class="flex items-center space-x-3">
@@ -167,23 +302,31 @@
             </div>
           </div>
 
+          <!-- Selected Packs Section -->
+          <div id="selected-packs-section" class="bg-white rounded-2xl p-6 mb-8 border border-gray-200 shadow-sm">
+            <h3 class="text-lg font-semibold text-graphite-900 mb-4">Selected Packs</h3>
+            <div id="selected-packs-list" class="space-y-3 mb-6">
+              ${this.renderSelectedPacksWithDelete()}
+            </div>
+            <!-- Continue button in selected packs container -->
+            <div class="flex justify-end items-center pt-4 border-t border-gray-200">
+              <button id="step2-continue-btn-selected" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
+                Continue
+              </button>
+            </div>
+          </div>
+
           <!-- Packs Section -->
           <div class="mb-8">
             <h3 id="packs-section-title" class="text-xl font-semibold text-graphite-900 mb-6">Available Packs</h3>
-            <div id="packs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="packs-grid">
               <!-- Packs will be dynamically loaded here -->
             </div>
           </div>
 
           <!-- Navigation -->
-          <div class="flex justify-between items-center pt-8 border-t border-gray-200">
-            <button id="back-btn" class="flex items-center space-x-2 text-graphite-600 hover:text-graphite-800 font-medium transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-              <span>Back</span>
-            </button>
-            <button id="continue-btn" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
+          <div class="flex justify-end items-center pt-8 border-t border-gray-200">
+            <button id="step2-continue-btn" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
               Continue
             </button>
           </div>
@@ -194,7 +337,13 @@
     }
 
     async loadStep3() {
+      console.log('🔍 [loadStep3] Starting Step 3 load');
       const coordinator = document.getElementById('step-coordinator');
+      if (!coordinator) {
+        console.error('🔍 [loadStep3] Step coordinator element not found');
+        return;
+      }
+      
       coordinator.innerHTML = `
         <div id="step-3-content" class="step-content">
           <div class="text-center mb-12">
@@ -276,14 +425,34 @@
             </div>
           </div>
 
-          <!-- Navigation -->
-          <div class="flex justify-between items-center pt-8 border-t border-gray-200 mt-12">
-            <button id="back-btn" class="flex items-center space-x-2 text-graphite-600 hover:text-graphite-800 font-medium transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-              <span>Back</span>
-            </button>
+          <!-- Navigation removed - no back button in Step 3 -->
+        </div>
+        
+        <!-- Thank You Modal -->
+        <div id="thank-you-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+          <div class="bg-white rounded-2xl p-8 max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="text-center mb-6">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-graphite-900 mb-2">Thank You!</h3>
+              <p class="text-graphite-600">Your NovaPod reservation has been submitted successfully.</p>
+            </div>
+            
+            <div class="bg-gray-50 rounded-lg p-6 mb-6">
+              <h4 class="font-semibold text-graphite-900 mb-4">Reservation Details</h4>
+              <div id="modal-reservation-details" class="space-y-3 text-sm">
+                <!-- Details will be populated here -->
+              </div>
+            </div>
+            
+            <div class="flex justify-center">
+              <button id="close-modal-btn" class="bg-mint-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-mint-600 transition-colors">
+                Close
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -292,38 +461,87 @@
     }
 
     async initializeStep1() {
-      console.log('🔍 Initializing Step 1...');
-      const cart = await this.shared.getCart();
-      console.log('🔍 Current cart items:', cart);
+      console.log('🔍 [initializeStep1] Starting initialization...');
       
-      const selectedPod = cart.find(item => item.type === 'pod');
-      console.log('🔍 Selected pod found:', selectedPod);
+      // Get cart data from localStorage (single source of truth)
+      let cart = [];
+      let selectedPod = null;
+      
+      try {
+        // Try shared.getCart() first
+        cart = await this.shared.getCart();
+        console.log('🔍 [initializeStep1] Cart from shared.getCart():', cart);
+        selectedPod = cart.find(item => item.type === 'pod');
+        console.log('🔍 [initializeStep1] Selected pod from shared.getCart():', selectedPod);
+      } catch (error) {
+        console.error('🔍 [initializeStep1] Error with shared.getCart():', error);
+      }
+      
+      // Fallback: Direct localStorage check
+      if (!selectedPod) {
+        try {
+          const localStorageCart = localStorage.getItem('novapod-cart');
+          console.log('🔍 [initializeStep1] Direct localStorage value:', localStorageCart);
+          
+          if (localStorageCart) {
+            const parsedCart = JSON.parse(localStorageCart);
+            console.log('🔍 [initializeStep1] Parsed localStorage cart:', parsedCart);
+            selectedPod = parsedCart.find(item => item.type === 'pod');
+            console.log('🔍 [initializeStep1] Selected pod from direct localStorage:', selectedPod);
+          }
+        } catch (error) {
+          console.error('🔍 [initializeStep1] Error reading direct localStorage:', error);
+        }
+      }
       
       if (selectedPod) {
-        console.log('🔍 Showing selected pod display');
-        this.showSelectedPod(selectedPod);
+        // Show selected pod
+        console.log('🔍 [initializeStep1] Showing selected pod:', selectedPod);
+        await this.showSelectedPod(selectedPod);
       } else {
-        console.log('🔍 No pod selected, showing available pods');
-        this.showAvailablePods();
+        // Show available pods
+        console.log('🔍 [initializeStep1] No pod found, showing available pods');
+        await this.showAvailablePods();
       }
       
       this.addStep1EventListeners();
+      console.log('🔍 [initializeStep1] Initialization complete');
     }
 
     async initializeStep2() {
+      console.log('🔍 [initializeStep2] Starting initialization...');
+      
+      // Get cart data from localStorage (single source of truth)
       const cart = await this.shared.getCart();
       const selectedPod = cart.find(item => item.type === 'pod');
+      console.log('🔍 [initializeStep2] Cart from localStorage:', cart);
+      console.log('🔍 [initializeStep2] Selected pod:', selectedPod);
+      console.log('🔍 [initializeStep2] Selected pod reservationMonths:', selectedPod?.reservationMonths);
       
       if (selectedPod) {
         // Update the pod summary display
-        this.updatePodSummary(selectedPod);
+        console.log('🔍 [initializeStep2] Calling updatePodSummary...');
+        await this.updatePodSummary(selectedPod);
+        
+        // Update pricing based on current reservation period
+        const currentMonths = selectedPod.reservationMonths || 3;
+        console.log('🔍 [initializeStep2] Updating pricing for', currentMonths, 'months');
+        await this.updatePricingForReservationPeriod(currentMonths);
+        
         // Load packs for the selected pod
         await this.loadPacksForStep2(selectedPod);
+        // Update selected packs display
+        await this.updateSelectedPacksDisplay();
       } else {
-        this.showNoPodWarning();
+        console.log('🔍 [initializeStep2] No pod found, redirecting to Step 1');
+        this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
+        // Navigate back to Step 1
+        this.shared.navigateToStep(1);
+        return;
       }
       
       this.addStep2EventListeners();
+      console.log('🔍 [initializeStep2] Initialization complete');
     }
 
     async initializeStep3() {
@@ -336,7 +554,13 @@
       console.log('🔍 Step 3 - Selected packs:', selectedPacks);
       
       if (selectedPod) {
-        this.updateFinalSummary(selectedPod, selectedPacks);
+        await this.updateFinalSummary(selectedPod, selectedPacks);
+      } else {
+        console.log('🔍 [initializeStep3] No pod found, redirecting to Step 1');
+        this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
+        // Navigate back to Step 1
+        this.shared.navigateToStep(1);
+        return;
       }
       
       this.addStep3EventListeners();
@@ -344,72 +568,249 @@
     }
 
     async showSelectedPod(podItem) {
-      const selectedDisplay = document.getElementById('selected-pod-display');
-      const availableGrid = document.getElementById('available-pods-grid');
+      const step1Content = document.getElementById('step-1-content');
       
-      if (selectedDisplay) selectedDisplay.classList.remove('hidden');
-      if (availableGrid) availableGrid.classList.add('hidden');
-      
-      this.shared.updatePodSummary(podItem, {
-        titleSelector: '#selected-pod-title',
-        priceSelector: '#selected-pod-price',
-        descriptionSelector: '#selected-pod-description'
-      });
+      if (step1Content) {
+        // Replace the entire step 1 content with selected pod display
+        step1Content.innerHTML = `
+          <div class="text-center mb-12">
+            <h2 class="text-3xl lg:text-4xl font-bold text-graphite-900 mb-4 gradient-title">
+              Your Selected NovaPod
+            </h2>
+            <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
+              Review your selected pod and customize your reservation period.
+            </p>
+          </div>
+
+          <!-- Selected Pod Display -->
+          <div class="max-w-2xl mx-auto mb-8">
+            <div class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-8 border border-mint-200">
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-4">
+                  <div class="w-16 h-16 bg-mint-500 rounded-xl flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">${podItem.title || podItem.name || 'Selected Pod'}</h3>
+                    <p id="selected-pod-description" class="text-graphite-600">${podItem.description || podItem.tagline || 'Pod description'}</p>
+                    <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}</span></p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">Calculating...</p>
+                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
+                    Change Pod
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Hire Period Selection -->
+              <div class="mb-6 pt-6 border-t border-mint-200">
+                <label class="block text-sm font-medium text-graphite-700 mb-3">Reservation Period</label>
+                
+                <!-- Duration Chips -->
+                <div class="flex flex-wrap gap-3">
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 1 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="1"
+                  >
+                    1 Month
+                  </button>
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 3 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="3"
+                  >
+                    3 Months
+                  </button>
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 6 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="6"
+                  >
+                    6 Months
+                  </button>
+                  <button 
+                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 12 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
+                    data-duration="12"
+                  >
+                    12 Months
+                  </button>
+                </div>
+                
+                <p class="text-sm text-graphite-500 mt-2">Select how long you'd like to reserve this pod</p>
+              </div>
+
+              <!-- Pod Details -->
+              <div class="mb-6 pt-6 border-t border-mint-200">
+                <h4 class="text-sm font-semibold text-graphite-800 mb-3">What's Included</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Dedicated Team</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Full-time Availability</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Project Management</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <span class="text-sm text-graphite-700">Quality Assurance</span>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- Action Buttons -->
+              <div class="space-y-3">
+                <button id="step1-continue-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  Continue to Step 2
+                </button>
+                <button id="remove-pod-btn" class="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  <span>Remove Pod</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Update the pod summary with correct pricing after HTML is rendered
+        await this.updatePodSummary(podItem);
+      }
     }
 
     async showAvailablePods() {
-      const selectedDisplay = document.getElementById('selected-pod-display');
-      const availableGrid = document.getElementById('available-pods-grid');
+      console.log('🔍 [showAvailablePods] Starting to show available pods...');
       
-      if (selectedDisplay) selectedDisplay.classList.add('hidden');
-      if (availableGrid) {
-        availableGrid.classList.remove('hidden');
+      const step1Content = document.getElementById('step-1-content');
+      console.log('🔍 [showAvailablePods] Step 1 content element found:', !!step1Content);
+      
+      if (step1Content) {
+        // Show the original "Choose Your NovaPod" section
+        step1Content.innerHTML = `
+          <div class="text-center mb-12">
+            <h2 class="text-3xl lg:text-4xl font-bold text-graphite-900 mb-4 gradient-title">
+              Choose Your NovaPod
+            </h2>
+            <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
+              Select the perfect NovaPod solution for your business needs. Each pod is designed to deliver exceptional results.
+            </p>
+          </div>
+
+          <!-- Available Pods Grid -->
+          <div id="available-pods-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Pods will be dynamically loaded here -->
+          </div>
+        `;
+        
+        console.log('🔍 [showAvailablePods] HTML set, now loading available pods...');
         await this.loadAvailablePods();
+        console.log('🔍 [showAvailablePods] Available pods loaded');
+      } else {
+        console.error('🔍 [showAvailablePods] Step 1 content element not found!');
       }
     }
 
     async loadAvailablePods() {
-      const pods = await this.shared.loadPods();
-      const grid = document.getElementById('available-pods-grid');
+      console.log('🔍 [loadAvailablePods] Starting to load available pods...');
       
-      if (!grid) return;
-      
-      grid.innerHTML = pods.map(pod => `
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-mint-300 transition-all duration-300 hover:shadow-lg flex flex-col h-full">
-          <!-- Header with icon and title -->
-          <div class="flex items-center space-x-4 mb-4">
-            <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-              </svg>
+      try {
+        const pods = await this.shared.loadPods();
+        console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
+        
+        const grid = document.getElementById('available-pods-grid');
+        console.log('🔍 [loadAvailablePods] Grid element found:', !!grid);
+        
+        if (!grid) {
+          console.error('🔍 [loadAvailablePods] Grid element not found!');
+          return;
+        }
+        
+        if (!pods || pods.length === 0) {
+          console.log('🔍 [loadAvailablePods] No pods found, showing empty state');
+          grid.innerHTML = '<p class="text-graphite-600 col-span-full text-center py-8">No pods are currently available.</p>';
+          return;
+        }
+        
+        console.log('🔍 [loadAvailablePods] Rendering', pods.length, 'pods');
+        
+        grid.innerHTML = pods.map(pod => `
+          <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-mint-300 transition-all duration-300 hover:shadow-lg flex flex-col h-full">
+            <!-- Header with icon and title -->
+            <div class="flex items-center space-x-4 mb-4">
+              <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl font-semibold text-graphite-900 truncate">${pod.name}</h3>
+              </div>
             </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-xl font-semibold text-graphite-900 truncate">${pod.name}</h3>
+            
+            <!-- Description -->
+            <p class="text-graphite-600 mb-4 flex-1">${pod.tagline}</p>
+            
+            <!-- Ideal for section -->
+            <div class="space-y-2 mb-4">
+              <h4 class="text-sm font-medium text-graphite-700">Ideal for:</h4>
+              <ul class="text-sm text-graphite-600 space-y-1">
+                ${pod.idealFor ? pod.idealFor.slice(0, 2).map(item => `<li>• ${item}</li>`).join('') : ''}
+              </ul>
             </div>
+            
+            <!-- Pricing - positioned above button -->
+            <div class="mb-4">
+              ${pod.discountPercentage > 0 ? `
+                <div class="space-y-1">
+                  <div class="text-sm text-gray-500 line-through">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</div>
+                  <div class="text-lg font-bold text-mint-600">₹${((pod.basePriceINR * (100 - pod.discountPercentage) / 100) / 100000).toFixed(1)}L/month</div>
+                  <div class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">${pod.discountPercentage}% OFF</div>
+                </div>
+              ` : `
+                <span class="text-lg font-bold text-mint-600">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</span>
+              `}
+            </div>
+            
+            <!-- CTA Button - always at bottom -->
+            <button class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 mt-auto" data-pod-id="${pod.id}">
+              Reserve Pod
+            </button>
           </div>
-          
-          <!-- Description -->
-          <p class="text-graphite-600 mb-4 flex-1">${pod.tagline}</p>
-          
-          <!-- Ideal for section -->
-          <div class="space-y-2 mb-4">
-            <h4 class="text-sm font-medium text-graphite-700">Ideal for:</h4>
-            <ul class="text-sm text-graphite-600 space-y-1">
-              ${pod.idealFor ? pod.idealFor.slice(0, 2).map(item => `<li>• ${item}</li>`).join('') : ''}
-            </ul>
-          </div>
-          
-          <!-- Pricing - positioned above button -->
-          <div class="mb-4">
-            <span class="text-lg font-bold text-mint-600">${pod.pricing ? pod.pricing[0] : 'Contact Us'}</span>
-          </div>
-          
-          <!-- CTA Button - always at bottom -->
-          <button class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 mt-auto" data-pod-id="${pod.id}">
-            Reserve Pod
-          </button>
-        </div>
-      `).join('');
+        `).join('');
+        
+        console.log('🔍 [loadAvailablePods] Pods rendered successfully');
+      } catch (error) {
+        console.error('🔍 [loadAvailablePods] Error loading pods:', error);
+        const grid = document.getElementById('available-pods-grid');
+        if (grid) {
+          grid.innerHTML = '<p class="text-red-600 col-span-full text-center py-8">Error loading pods. Please refresh the page.</p>';
+        }
+      }
     }
 
     async loadPacksForStep2(podItem) {
@@ -425,55 +826,74 @@
         return;
       }
       
-      // Get all available packs for tabs
+      // Get all available packs for categories
       const allPacks = await this.shared.loadAllPacks();
       const categories = this.shared.getPackCategories();
       
       title.textContent = 'Available Packs';
       
-      // Create tabbed interface
-      grid.innerHTML = `
-        <div class="col-span-full mb-6">
-          <!-- Tab Navigation -->
-          <div class="flex flex-wrap gap-2 mb-6">
-            <button class="tab-btn active px-4 py-2 rounded-lg font-medium transition-colors bg-mint-500 text-white" data-tab="recommended">
-              Recommended (${packs.length})
-            </button>
-            ${categories.map(category => `
-              <button class="tab-btn px-4 py-2 rounded-lg font-medium transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200" data-tab="${category.id}">
-                ${category.title} (${category.packs.length})
-              </button>
-            `).join('')}
-          </div>
-          
-          <!-- Tab Content -->
-          <div class="tab-content">
-            <!-- Recommended Packs Tab -->
-            <div id="tab-recommended" class="tab-pane active">
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${packs.map(pack => this.renderPackCard(pack)).join('')}
-              </div>
-            </div>
-            
-            <!-- Category Tabs -->
-            ${categories.map(category => `
-              <div id="tab-${category.id}" class="tab-pane hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  ${category.packs.map(pack => this.renderPackCard(pack)).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-      
-      // Add tab functionality
-      this.addTabListeners();
+      // Create grouped interface
+      grid.innerHTML = await this.renderPacksSection(packs, categories);
     }
 
-    renderPackCard(pack) {
+    async renderPacksSection(packs, categories) {
+      // Get current cart to check which packs are selected
+      const cart = this.getCurrentCart();
+      const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
+      
       return `
-        <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-cerulean-300 transition-all duration-300 hover:shadow-lg ${pack.isAdded ? 'ring-2 ring-cerulean-500' : ''}">
+        <!-- Recommended Packs Section -->
+        <div class="mb-8">
+          <h4 class="text-lg font-semibold text-graphite-900 mb-4">Recommended Packs</h4>
+          <div class="flex overflow-x-auto pb-4">
+            ${packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
+          </div>
+        </div>
+        
+        <!-- Category Packs Sections -->
+        ${categories.map(category => `
+          <div class="mb-8">
+            <h4 class="text-lg font-semibold text-graphite-900 mb-4">${category.title}</h4>
+            <div class="flex overflow-x-auto pb-4">
+              ${category.packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    renderPackCard(pack, isAdded = false) {
+      // Get current reservation period for pack pricing
+      let months = 3; // default
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        // Try to get from cart
+        const cart = this.getCurrentCart();
+        const selectedPod = cart.find(item => item.type === 'pod');
+        if (selectedPod && selectedPod.reservationMonths) {
+          months = selectedPod.reservationMonths;
+        }
+      }
+      
+      // Calculate total price for the duration
+      const totalPriceINR = pack.basePriceINR * months;
+      const discountedPriceINR = totalPriceINR * (100 - pack.discountPercentage) / 100;
+      
+      // Standardize price display - always use L for consistency
+      const formatPrice = (price) => {
+        if (price >= 100000) {
+          return `₹${(price / 100000).toFixed(1)}L`;
+        } else if (price >= 1000) {
+          return `₹${(price / 1000).toFixed(0)}K`;
+        } else {
+          return `₹${price}`;
+        }
+      };
+      
+      return `
+        <div class="pack-card bg-white rounded-xl min-w-[300px] p-6 mx-4 border border-gray-200 cursor-pointer ${isAdded ? 'border-mint-500' : ''}" data-pack-id="${pack.id}">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
@@ -481,7 +901,16 @@
               </div>
               ${pack.badge ? `<span class="px-2 py-1 text-xs font-medium rounded-full ${pack.badgeColor === 'green' ? 'bg-green-100 text-green-800' : pack.badgeColor === 'blue' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}">${pack.badge}</span>` : ''}
             </div>
-            <span class="text-sm font-medium text-cerulean-600">${pack.priceINR}</span>
+            <div class="text-right">
+              ${pack.discountPercentage > 0 ? `
+                <div class="text-sm text-gray-500 line-through">${formatPrice(totalPriceINR)}</div>
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(discountedPriceINR)}</div>
+                <div class="text-xs text-green-600">${pack.discountPercentage}% OFF</div>
+              ` : `
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(totalPriceINR)}</div>
+              `}
+              <div class="text-xs text-gray-500">for ${months} months</div>
+            </div>
           </div>
           
           <h3 class="text-lg font-semibold text-graphite-900 mb-2">${pack.title}</h3>
@@ -489,43 +918,265 @@
           
           <div class="flex items-center justify-between">
             <span class="text-sm text-graphite-500">${pack.duration}</span>
-            <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${pack.isAdded ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-cerulean-500 text-white hover:bg-cerulean-600'}" data-pack-id="${pack.id}" data-action="${pack.isAdded ? 'remove' : 'add'}">
-              ${pack.isAdded ? 'Remove' : 'Add Pack'}
+            <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${isAdded ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-cerulean-500 text-white hover:bg-cerulean-600'}" data-pack-id="${pack.id}" data-action="${isAdded ? 'remove' : 'add'}">
+              ${isAdded ? 'Remove Pack' : 'Add Pack'}
             </button>
           </div>
         </div>
       `;
     }
 
-    addTabListeners() {
-      const tabButtons = document.querySelectorAll('.tab-btn');
-      const tabPanes = document.querySelectorAll('.tab-pane');
+    getCurrentCart() {
+      try {
+        const cartData = localStorage.getItem('novapod-cart');
+        return cartData ? JSON.parse(cartData) : [];
+      } catch (error) {
+        console.error('Error reading cart from localStorage:', error);
+        return [];
+      }
+    }
+
+    async getPackDetails(packId) {
+      try {
+        // Import catalog data dynamically
+        const { packsCatalog } = await import('/src/content/catalog/_packs.js');
+        
+        // Search through all categories to find the pack
+        for (const category of packsCatalog.packCategories) {
+          const pack = category.packs.find(p => p.id === packId);
+          if (pack) {
+            return pack;
+          }
+        }
+        
+        // If not found in categories, search in availablePacks
+        const pack = packsCatalog.availablePacks.find(p => p.id === packId);
+        if (pack) {
+          return pack;
+        }
+        
+        console.error('Pack not found in catalog:', packId);
+        return null;
+      } catch (error) {
+        console.error('Error getting pack details from catalog:', error);
+        return null;
+      }
+    }
+
+    async renderSelectedPacks() {
+      const cart = this.getCurrentCart();
+      const selectedPacks = cart.filter(item => item.type === 'pack');
       
-      tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const targetTab = button.getAttribute('data-tab');
+      if (selectedPacks.length === 0) {
+        return `
+          <div class="text-center py-4">
+            <p class="text-sm text-graphite-500">No packs selected yet</p>
+            <p class="text-xs text-graphite-400 mt-1">Add packs in Step 2 to enhance your pod</p>
+          </div>
+        `;
+      }
+      
+      // Get current reservation period for pack pricing
+      let months = 3; // default
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        const selectedPod = cart.find(item => item.type === 'pod');
+        if (selectedPod && selectedPod.reservationMonths) {
+          months = selectedPod.reservationMonths;
+        }
+      }
+      
+      // Standardize price display function
+      const formatPrice = (price) => {
+        if (price >= 100000) {
+          return `₹${(price / 100000).toFixed(1)}L`;
+        } else if (price >= 1000) {
+          return `₹${(price / 1000).toFixed(0)}K`;
+        } else {
+          return `₹${price}`;
+        }
+      };
+      
+      const packPromises = selectedPacks.map(async (pack) => {
+        // Get pack details from catalog
+        const packDetails = await this.getPackDetails(pack.id);
+        if (!packDetails) return '';
+        
+        // Calculate monthly pack price with discount, then multiply by months
+        const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const totalPrice = monthlyPrice * months;
+        const formattedPrice = formatPrice(totalPrice);
+        
+        return `
+          <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
+              </div>
+              <div>
+                <span class="font-medium text-graphite-900 text-sm">${packDetails.title || 'Pack'}</span>
+                <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
+              </div>
+            </div>
+            <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
+          </div>
+        `;
+      });
+      
+      const packResults = await Promise.all(packPromises);
+      return packResults.join('');
+    }
+
+    async renderSelectedPacksWithDelete() {
+      const cart = this.getCurrentCart();
+      const selectedPacks = cart.filter(item => item.type === 'pack');
+      
+      if (selectedPacks.length === 0) {
+        return `
+          <div class="text-center py-6">
+            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+            </div>
+            <p class="text-sm text-graphite-500">No packs selected yet</p>
+            <p class="text-xs text-graphite-400 mt-1">Browse and add packs below to enhance your pod</p>
+          </div>
+        `;
+      }
+      
+      // Get current reservation period for pack pricing
+      let months = 3; // default
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      if (selectedChip) {
+        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      } else {
+        const selectedPod = cart.find(item => item.type === 'pod');
+        if (selectedPod && selectedPod.reservationMonths) {
+          months = selectedPod.reservationMonths;
+        }
+      }
+      
+      // Standardize price display function
+      const formatPrice = (price) => {
+        if (price >= 100000) {
+          return `₹${(price / 100000).toFixed(1)}L`;
+        } else if (price >= 1000) {
+          return `₹${(price / 1000).toFixed(0)}K`;
+        } else {
+          return `₹${price}`;
+        }
+      };
+      
+      const packPromises = selectedPacks.map(async (pack) => {
+        // Get pack details from catalog
+        const packDetails = await this.getPackDetails(pack.id);
+        if (!packDetails) return '';
+        
+        // Calculate monthly pack price with discount, then multiply by months
+        const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const totalPrice = monthlyPrice * months;
+        const formattedPrice = formatPrice(totalPrice);
+        
+        return `
+          <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
+              </div>
+              <div>
+                <span class="font-medium text-graphite-900 text-sm">${packDetails.title || 'Pack'}</span>
+                <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-3">
+              <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
+              <button class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors" data-pack-id="${pack.id}" data-action="remove" title="Remove Pack">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      const packResults = await Promise.all(packPromises);
+      return packResults.join('');
+    }
+
+    async updateSelectedPacksDisplay() {
+      console.log('🔍 [updateSelectedPacksDisplay] ===== STARTING UPDATE =====');
+      const selectedPacksList = document.getElementById('selected-packs-list');
+      if (selectedPacksList) {
+        console.log('🔍 [updateSelectedPacksDisplay] Found selected-packs-list element');
+        const newContent = await this.renderSelectedPacksWithDelete();
+        console.log('🔍 [updateSelectedPacksDisplay] New content length:', newContent.length);
+        selectedPacksList.innerHTML = newContent;
+        console.log('🔍 [updateSelectedPacksDisplay] ===== UPDATE COMPLETED =====');
+      } else {
+        console.error('🔍 [updateSelectedPacksDisplay] selected-packs-list element not found');
+      }
+    }
+
+    async refreshPackCards() {
+      console.log('🔍 [refreshPackCards] ===== STARTING PACK CARDS REFRESH =====');
+      try {
+        const cart = this.getCurrentCart();
+        const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
+        
+        console.log('🔍 [refreshPackCards] Selected pack IDs:', selectedPackIds);
+        
+        const packCards = document.querySelectorAll('.pack-card');
+        console.log('🔍 [refreshPackCards] Found pack cards:', packCards.length);
+        
+        packCards.forEach(card => {
+          const packId = card.getAttribute('data-pack-id');
+          const button = card.querySelector('button[data-action]');
           
-          // Update active tab button
-          tabButtons.forEach(btn => {
-            btn.classList.remove('active', 'bg-mint-500', 'text-white');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
-          });
-          button.classList.add('active', 'bg-mint-500', 'text-white');
-          button.classList.remove('bg-gray-100', 'text-gray-700');
-          
-          // Update active tab pane
-          tabPanes.forEach(pane => {
-            pane.classList.remove('active');
-            pane.classList.add('hidden');
-          });
-          
-          const targetPane = document.getElementById(`tab-${targetTab}`);
-          if (targetPane) {
-            targetPane.classList.add('active');
-            targetPane.classList.remove('hidden');
+          if (packId && button) {
+            const isSelected = selectedPackIds.includes(packId);
+            console.log('🔍 [refreshPackCards] Processing pack:', packId, 'isSelected:', isSelected, 'current action:', button.getAttribute('data-action'));
+            
+            // Update card styling
+            if (isSelected) {
+              card.classList.add('ring-2', 'ring-mint-500', 'bg-mint-50');
+              card.classList.remove('bg-white');
+            } else {
+              card.classList.remove('ring-2', 'ring-mint-500', 'bg-mint-50');
+              card.classList.add('bg-white');
+            }
+            
+            // Update button
+            if (isSelected) {
+              button.textContent = 'Remove Pack';
+              button.setAttribute('data-action', 'remove');
+              // Completely replace the class attribute to avoid conflicts
+              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-red-500 text-white hover:bg-red-600';
+              button.disabled = false; // Ensure button is enabled
+              console.log('🔍 [refreshPackCards] Button classes after update (selected):', button.className);
+            } else {
+              button.textContent = 'Add Pack';
+              button.setAttribute('data-action', 'add');
+              // Completely replace the class attribute to avoid conflicts
+              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-cerulean-500 text-white hover:bg-cerulean-600';
+              button.disabled = false; // Ensure button is enabled
+              console.log('🔍 [refreshPackCards] Button classes after update (not selected):', button.className);
+            }
+            
+            console.log('🔍 [refreshPackCards] Updated button for pack:', packId, 'new action:', button.getAttribute('data-action'), 'disabled:', button.disabled);
           }
         });
-      });
+        
+        // Update the selected packs display in the DOM
+        await this.updateSelectedPacksDisplay();
+        
+        console.log('🔍 [refreshPackCards] ===== PACK CARDS REFRESH COMPLETED =====');
+      } catch (error) {
+        console.error('🔍 [refreshPackCards] Error refreshing pack cards:', error);
+      }
     }
 
     showNoPodWarning() {
@@ -551,15 +1202,53 @@
       }
     }
 
-    updatePodSummary(podItem) {
-      this.shared.updatePodSummary(podItem, {
-        titleSelector: '#summary-pod-title',
-        priceSelector: '#summary-pod-price'
-      });
+    async updatePodSummary(podItem) {
+      console.log('🔍 [updatePodSummary] Updating pod summary with:', podItem);
+      
+      // Get the latest pod data from localStorage
+      const cart = await this.shared.getCart();
+      const latestPodItem = cart.find(item => item.type === 'pod');
+      
+      if (!latestPodItem) {
+        console.error('🔍 [updatePodSummary] No pod found in cart');
+        return;
+      }
+      
+      console.log('🔍 [updatePodSummary] Latest pod item:', latestPodItem);
+      
+      // Determine which step we're in and use appropriate selectors
+      let selectors;
+      if (this.currentStep === 1) {
+        // Step 1 uses selected-pod-* selectors
+        selectors = {
+          titleSelector: '#selected-pod-title',
+          priceSelector: '#selected-pod-price'
+        };
+      } else {
+        // Step 2 uses summary-pod-* selectors
+        selectors = {
+          titleSelector: '#summary-pod-title',
+          priceSelector: '#summary-pod-price'
+        };
+      }
+      
+      // Update the pod summary using shared utility
+      await this.shared.updatePodSummary(latestPodItem, selectors);
+      
+      // Update the months display
+      const monthsElement = document.getElementById('selected-pod-months') || document.getElementById('summary-pod-months');
+      console.log('🔍 [updatePodSummary] monthsElement found:', !!monthsElement);
+      
+      if (monthsElement) {
+        const months = latestPodItem.reservationMonths || 3;
+        console.log('🔍 [updatePodSummary] Using months:', months, 'from latestPodItem.reservationMonths:', latestPodItem.reservationMonths);
+        monthsElement.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
+        console.log('🔍 [updatePodSummary] Updated months display');
+      }
     }
 
-    updateFinalSummary(podItem, packItems) {
-      this.shared.updatePodSummary(podItem, {
+    async updateFinalSummary(podItem, packItems) {
+      await this.shared.updatePodSummary(podItem, {
         titleSelector: '#final-pod-title',
         priceSelector: '#final-pod-price',
         descriptionSelector: '#final-pod-duration'
@@ -570,115 +1259,312 @@
         if (packItems.length === 0) {
           packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
         } else {
-          packsList.innerHTML = packItems.map(pack => `
-            <div class="flex items-center justify-between p-3 bg-white rounded-lg">
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
-                  <span class="text-white text-sm">${pack.icon || '📦'}</span>
+          // Get current reservation period for pack pricing
+          let months = 3; // default
+          const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+          if (selectedChip) {
+            months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+          } else if (podItem.reservationMonths) {
+            months = podItem.reservationMonths;
+          }
+          
+          // Standardize price display function
+          const formatPrice = (price) => {
+            if (price >= 100000) {
+              return `₹${(price / 100000).toFixed(1)}L`;
+            } else if (price >= 1000) {
+              return `₹${(price / 1000).toFixed(0)}K`;
+            } else {
+              return `₹${price}`;
+            }
+          };
+          
+          const packPromises = packItems.map(async (pack) => {
+            const packDetails = await this.shared.getPackDetails(pack.id);
+            if (!packDetails) return '';
+            
+            // Calculate monthly pack price with discount, then multiply by months
+            const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+            const totalPrice = monthlyPrice * months;
+            const formattedPrice = formatPrice(totalPrice);
+            
+            return `
+              <div class="flex items-center justify-between p-3 bg-white rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                    <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
+                  </div>
+                  <span class="font-medium text-graphite-900">${packDetails.title}</span>
                 </div>
-                <span class="font-medium text-graphite-900">${pack.title}</span>
+                <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
               </div>
-              <span class="font-semibold text-cerulean-600">${pack.priceINR}</span>
-            </div>
-          `).join('');
+            `;
+          });
+          
+          const packResults = await Promise.all(packPromises);
+          packsList.innerHTML = packResults.join('');
         }
       }
 
-      this.shared.updateTotalPrice(podItem, packItems);
+      await this.shared.updateTotalPrice(podItem, packItems);
+    }
+
+    async updatePricingForReservationPeriod(months) {
+      console.log('🔍 [updatePricingForReservationPeriod] Updating pricing for', months, 'months');
+      
+      try {
+        // Get current cart
+        const cart = await this.shared.getCart();
+        const selectedPod = cart.find(item => item.type === 'pod');
+        
+        if (selectedPod) {
+          // Update pod pricing in Step 1
+          if (this.currentStep === 1) {
+            await this.updatePodSummary(selectedPod);
+          }
+          
+          // Update pod pricing in Step 2
+          if (this.currentStep === 2) {
+            await this.updatePodSummary(selectedPod);
+          }
+          
+          // Update total pricing in Step 3
+          if (this.currentStep === 3) {
+            const selectedPacks = cart.filter(item => item.type === 'pack');
+            await this.updateFinalSummary(selectedPod, selectedPacks);
+            await this.shared.updateTotalPrice(selectedPod, selectedPacks);
+          }
+          
+          // Update all DiscountedPriceDisplay components on the page
+          this.updateAllPriceDisplays(months);
+        }
+      } catch (error) {
+        console.error('🔍 [updatePricingForReservationPeriod] Error updating pricing:', error);
+      }
+    }
+
+    updateAllPriceDisplays(months) {
+      // Update all DiscountedPriceDisplay components on the page
+      const priceDisplays = document.querySelectorAll('.discounted-price-display');
+      priceDisplays.forEach(display => {
+        const basePriceINR = parseInt(display.getAttribute('data-base-price-inr') || '0');
+        const basePriceUSD = parseInt(display.getAttribute('data-base-price-usd') || '0');
+        const discountPercentage = parseInt(display.getAttribute('data-discount-percentage') || '0');
+        const isPack = display.getAttribute('data-item-type') === 'pack';
+        
+        if (basePriceINR > 0) {
+          // Calculate total price - apply reservation period to both pods and packs (monthly pricing)
+          const totalPriceINR = basePriceINR * months;
+          const totalPriceUSD = basePriceUSD * months;
+          
+          // Apply discount
+          const discountMultiplier = (100 - discountPercentage) / 100;
+          const finalPriceINR = totalPriceINR * discountMultiplier;
+          const finalPriceUSD = totalPriceUSD * discountMultiplier;
+          
+          // Update the final price display (new minimal design)
+          const finalPriceElement = display.querySelector('.final-price');
+          if (finalPriceElement) {
+            // Format price based on user location
+            let userCurrency = 'INR';
+            if (typeof window !== 'undefined' && window.userLocation) {
+              userCurrency = window.userLocation.currency;
+            }
+            
+            const formattedPrice = userCurrency === 'INR' 
+              ? `₹${(finalPriceINR / 100000).toFixed(1)}L`
+              : `$${(finalPriceUSD / 1000).toFixed(1)}K`;
+            
+            finalPriceElement.textContent = formattedPrice;
+          }
+          
+          // Update original price if it exists (new minimal design)
+          const originalPriceElement = display.querySelector('.original-price');
+          if (originalPriceElement) {
+            let userCurrency = 'INR';
+            if (typeof window !== 'undefined' && window.userLocation) {
+              userCurrency = window.userLocation.currency;
+            }
+            
+            const originalFormattedPrice = userCurrency === 'INR' 
+              ? `₹${(totalPriceINR / 100000).toFixed(1)}L`
+              : `$${(totalPriceUSD / 1000).toFixed(1)}K`;
+            
+            originalPriceElement.textContent = originalFormattedPrice;
+          }
+          
+          // Update discount badge if it exists
+          const discountBadgeElement = display.querySelector('.discount-badge-minimal');
+          if (discountBadgeElement && discountPercentage > 0) {
+            discountBadgeElement.textContent = `${discountPercentage}% OFF`;
+          }
+          
+          // Update savings text if it exists
+          const savingsElement = display.querySelector('.savings-text');
+          if (savingsElement && discountPercentage > 0) {
+            let userCurrency = 'INR';
+            if (typeof window !== 'undefined' && window.userLocation) {
+              userCurrency = window.userLocation.currency;
+            }
+            
+            const savingsINR = totalPriceINR - finalPriceINR;
+            const savingsUSD = totalPriceUSD - finalPriceUSD;
+            
+            const savingsFormatted = userCurrency === 'INR' 
+              ? `₹${(savingsINR / 100000).toFixed(1)}L`
+              : `$${(savingsUSD / 1000).toFixed(1)}K`;
+            
+            savingsElement.textContent = `Save ${savingsFormatted}`;
+          }
+        }
+      });
     }
 
     addStep1EventListeners() {
-      // Pod selection
+      console.log('🔍 [Step1] Adding event listeners...');
+      
+      // Pod selection with replacement confirmation
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('[data-pod-id]')) {
           const podId = e.target.getAttribute('data-pod-id');
-          await this.shared.selectPod(podId);
-          const cart = await this.shared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
+          const selectedPod = await this.shared.selectPodWithConfirmation(podId);
           if (selectedPod) {
             await this.showSelectedPod(selectedPod);
           }
         }
       });
 
+      // Start journey button (Step 1 only)
+      document.addEventListener('click', async (e) => {
+        if (e.target && e.target.matches('#step1-continue-btn') && this.currentStep === 1) {
+          console.log('🔍 [Step1] Continue to Step 2 button clicked');
+          console.log('🔍 [Step1] Current step before nextStep():', this.currentStep);
+          console.log('🔍 [Step1] About to call nextStep()');
+          this.shared.nextStep();
+          console.log('🔍 [Step1] nextStep() called');
+        } else if (e.target && e.target.matches('#step1-continue-btn')) {
+          console.log('🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:', this.currentStep, ')');
+        }
+      });
+
       // Change pod button
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('#change-pod-btn')) {
-          await this.showAvailablePods();
+          console.log('🔍 [Step1] Change pod button clicked');
+          this.showAvailablePods();
         }
       });
 
       // Remove pod button
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('#remove-pod-btn')) {
+          console.log('🔍 [Step1] Remove pod button clicked');
           await this.shared.removePod();
-          await this.showAvailablePods();
+          this.showAvailablePods();
         }
       });
 
-      // Start journey button
+      // Custom duration chip functionality using event delegation
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#start-journey-btn')) {
-          this.shared.nextStep();
-        }
-      });
-
-      // Hire period change
-      document.addEventListener('change', (e) => {
-        if (e.target && e.target.matches('#hire-period-select')) {
-          this.shared.updateHirePeriod(e.target.value);
+        const target = e.target;
+        
+        // Handle duration chip selection
+        if (target.matches('.duration-chip')) {
+          e.preventDefault();
+          const chip = target;
+          const months = parseInt(chip.getAttribute('data-duration') || '3');
+          console.log('🔍 [Step1] Duration chip selected:', months);
+          
+          // Update all chips to show selected state
+          const allChips = document.querySelectorAll('.duration-chip');
+          allChips.forEach(chipElement => {
+            const chipEl = chipElement;
+            const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '3');
+            
+            if (chipDuration === months) {
+              // Selected chip
+              chipEl.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
+            } else {
+              // Unselected chips
+              chipEl.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
+              chipEl.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+            }
+          });
+          
+          // Update storage
+          console.log('🔍 [Step1] Calling updateHirePeriod...');
+          await this.shared.updateHirePeriod(months);
+          console.log('🔍 [Step1] updateHirePeriod completed');
+          
+          // Update the months display in Step 1
+          const monthsDisplay = document.getElementById('selected-pod-months');
+          if (monthsDisplay) {
+            monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
+            console.log('🔍 [Step1] Updated months display in Step 1');
+          }
+          
+          // Update pricing dynamically based on new reservation period
+          await this.updatePricingForReservationPeriod(months);
+          
+          // Also verify the storage was updated
+          try {
+            const localStorageCart = localStorage.getItem('novapod-cart');
+            if (localStorageCart) {
+              const parsedCart = JSON.parse(localStorageCart);
+              const pod = parsedCart.find(item => item.type === 'pod');
+              console.log('🔍 [Step1] Pod in localStorage after update:', pod);
+            }
+          } catch (error) {
+            console.error('🔍 [Step1] Error checking localStorage:', error);
+          }
         }
       });
     }
 
     addStep2EventListeners() {
-      // Pack add/remove
-      document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('[data-pack-id]')) {
-          const packId = e.target.getAttribute('data-pack-id');
-          const action = e.target.getAttribute('data-action');
-          
-          if (action === 'add') {
-            await this.shared.addPack(packId);
-          } else if (action === 'remove') {
-            await this.shared.removePack(packId);
-          }
-          
-          // Reload packs to update UI
-          const cart = await this.shared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
-          if (selectedPod) {
-            await this.loadPacksForStep2(selectedPod);
-          }
-        }
-      });
+      console.log('🔍 [Step2] Adding event listeners...');
+      
+      // Pack event listeners are now handled globally in setupEventListeners()
+      // Only add Step 2 specific listeners here
 
       // Edit pod button
       document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#edit-pod-btn')) {
-          this.shared.previousStep();
+        const target = e.target;
+        if (target && target.matches('#edit-pod-btn')) {
+          this.shared.navigateToStep(1);
         }
       });
 
-      // Remove pod button
+      // Remove pod button - using event delegation
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#remove-pod-step2-btn')) {
+        const target = e.target;
+        const removeBtn = target.closest('#remove-pod-step2-btn');
+        
+        if (removeBtn) {
+          console.log('🔍 [Step2] Remove pod button clicked');
+          e.preventDefault();
+          e.stopPropagation();
           await this.shared.removePod();
-          this.showNoPodWarning();
+          this.shared.navigateToStep(1);
         }
       });
 
-      // Back button
-      document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#back-btn')) {
-          this.shared.previousStep();
-        }
-      });
+      // Back button removed from Step 2
 
-      // Continue button
+      // Continue button (Step 2 only)
       document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#continue-btn')) {
+        console.log('🔍 [Step2] Click event detected, target:', e.target);
+        console.log('🔍 [Step2] Target matches #step2-continue-btn:', e.target && e.target.matches('#step2-continue-btn'));
+        console.log('🔍 [Step2] Target matches #step2-continue-btn-selected:', e.target && e.target.matches('#step2-continue-btn-selected'));
+        if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected')) && this.currentStep === 2) {
+          console.log('🔍 [Step2] Continue to Step 3 button clicked');
+          console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
+          console.log('🔍 [Step2] About to call nextStep()');
           this.shared.nextStep();
+          console.log('🔍 [Step2] nextStep() called');
+        } else if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected'))) {
+          console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
         }
       });
 
@@ -693,18 +1579,336 @@
     addStep3EventListeners() {
       console.log('🔍 Adding Step 3 event listeners...');
       
-      // Back button
+      // Form submission
+      const form = document.getElementById('reservation-form');
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          console.log('🔍 [Step3] Form submission started');
+          
+          // Get the submit button and show loading state
+          const submitButton = form.querySelector('button[type="submit"]');
+          const originalButtonText = submitButton?.textContent || 'Reserve My NovaPod';
+          
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+          }
+          
+          // Get form data
+          const formData = new FormData(form);
+          const formValues = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            company: formData.get('company'),
+            message: formData.get('message')
+          };
+          
+          // Get cart data
+          const cart = await this.shared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          const selectedPacks = cart.filter(item => item.type === 'pack');
+          
+          // Create submission data
+          const submissionData = {
+            timestamp: new Date().toISOString(),
+            formData: formValues,
+            cartItems: {
+              pod: selectedPod,
+              packs: selectedPacks
+            },
+            totalItems: cart.length,
+            step: this.currentStep
+          };
+          
+          // Log everything to console
+          console.log('🔍 [Step3] ===== FORM SUBMISSION DATA =====');
+          console.log('🔍 [Step3] Form Values:', formValues);
+          console.log('🔍 [Step3] Cart Items:', cart);
+          console.log('🔍 [Step3] Selected Pod:', selectedPod);
+          console.log('🔍 [Step3] Selected Packs:', selectedPacks);
+          console.log('🔍 [Step3] Complete Submission Data:', submissionData);
+          console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
+          
+          try {
+            // Prepare data for HubSpot submission
+            const hubspotData = {
+              ...formValues,
+              selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
+              selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
+              source: 'NovaPod Reservation Form'
+            };
+            
+            console.log('🔍 [Step3] Submitting to HubSpot:', hubspotData);
+            
+            // Submit to HubSpot via API
+            const response = await fetch('/api/contact', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(hubspotData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              console.log('🔍 [Step3] HubSpot submission successful:', result);
+              // Clear form and cart after successful submission
+              await this.clearFormAndCart();
+              // Show thank you modal with details
+              this.showThankYouModal(submissionData);
+            } else {
+              console.error('🔍 [Step3] HubSpot submission failed:', result.error);
+              // Show error notification and preserve form data
+              this.shared.showNotification(
+                `Failed to submit reservation: ${result.error}. Please try again or contact support if the problem persists.`,
+                'error'
+              );
+              // Don't clear form or cart - let user retry
+              return; // Exit early to preserve form data
+            }
+          } catch (error) {
+            console.error('🔍 [Step3] Error submitting to HubSpot:', error);
+            // Show error notification and preserve form data
+            this.shared.showNotification(
+              'Failed to submit reservation due to a network error. Please check your connection and try again.',
+              'error'
+            );
+            // Don't clear form or cart - let user retry
+            return; // Exit early to preserve form data
+          } finally {
+            // Restore button state
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
+          }
+        });
+      }
+      
+      // Modal close button
       document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#back-btn')) {
-          console.log('🔍 Back button clicked in Step 3');
-          this.shared.previousStep();
+        if (e.target && e.target.matches('#close-modal-btn')) {
+          this.hideThankYouModal();
         }
       });
-
-      // Form submission
-      console.log('🔍 Calling shared.addFormListeners()...');
-      this.shared.addFormListeners();
+      
       console.log('🔍 Step 3 event listeners added');
+    }
+    
+    showThankYouModal(submissionData) {
+      console.log('🔍 [showThankYouModal] Showing thank you modal');
+      
+      const modal = document.getElementById('thank-you-modal');
+      const detailsContainer = document.getElementById('modal-reservation-details');
+      
+      if (modal && detailsContainer) {
+        // Populate modal with submission details
+        const detailsHTML = this.generateModalDetailsHTML(submissionData);
+        detailsContainer.innerHTML = detailsHTML;
+        
+        // Show modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        console.log('🔍 [showThankYouModal] Modal displayed successfully');
+      } else {
+        console.error('🔍 [showThankYouModal] Modal elements not found');
+      }
+    }
+    
+    hideThankYouModal() {
+      console.log('🔍 [hideThankYouModal] Hiding thank you modal');
+      
+      const modal = document.getElementById('thank-you-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        console.log('🔍 [hideThankYouModal] Modal hidden successfully');
+      }
+    }
+    
+    generateModalDetailsHTML(submissionData) {
+      const { formData, cartItems } = submissionData;
+      
+      let html = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h5 class="font-medium text-graphite-900 mb-2">Contact Information</h5>
+            <div class="space-y-1 text-graphite-600">
+              <p><strong>Name:</strong> ${formData.name || 'Not provided'}</p>
+              <p><strong>Email:</strong> ${formData.email || 'Not provided'}</p>
+              <p><strong>Phone:</strong> ${formData.phone || 'Not provided'}</p>
+              <p><strong>Company:</strong> ${formData.company || 'Not provided'}</p>
+            </div>
+          </div>
+          
+          <div>
+            <h5 class="font-medium text-graphite-900 mb-2">Selected Items</h5>
+            <div class="space-y-1 text-graphite-600">
+              <p><strong>Pod:</strong> ${cartItems.pod ? cartItems.pod.title : 'None selected'}</p>
+              <p><strong>Duration:</strong> ${cartItems.pod ? cartItems.pod.reservationMonths + ' months' : 'Not set'}</p>
+              <p><strong>Packs:</strong> ${cartItems.packs.length} selected</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      if (formData.message) {
+        html += `
+          <div class="mt-4">
+            <h5 class="font-medium text-graphite-900 mb-2">Additional Requirements</h5>
+            <p class="text-graphite-600">${formData.message}</p>
+          </div>
+        `;
+      }
+      
+      if (cartItems.packs.length > 0) {
+        html += `
+          <div class="mt-4">
+            <h5 class="font-medium text-graphite-900 mb-2">Selected Packs</h5>
+            <ul class="list-disc list-inside space-y-1 text-graphite-600">
+              ${cartItems.packs.map(pack => `<li>${pack.title}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+      
+      html += `
+        <div class="mt-4 pt-4 border-t border-gray-200">
+          <p class="text-xs text-graphite-500">
+            <strong>Submission Time:</strong> ${new Date(submissionData.timestamp).toLocaleString()}
+          </p>
+        </div>
+      `;
+      
+      return html;
+    }
+    
+    async clearFormAndCart() {
+      console.log('🔍 [clearFormAndCart] ===== STARTING CLEAR OPERATION =====');
+      
+      try {
+        // Clear the form
+        const form = document.getElementById('reservation-form');
+        if (form) {
+          form.reset();
+          console.log('🔍 [clearFormAndCart] Form cleared successfully');
+        } else {
+          console.error('🔍 [clearFormAndCart] Form element not found');
+        }
+        
+        // Clear cart from localStorage
+        localStorage.removeItem('novapod-cart');
+        console.log('🔍 [clearFormAndCart] Cart removed from localStorage');
+        
+        // Clear cart from shared utility if available
+        if (this.shared && typeof this.shared.clearCart === 'function') {
+          await this.shared.clearCart();
+          console.log('🔍 [clearFormAndCart] Cart cleared via shared utility');
+        }
+        
+        // Update the order summary display to show empty state
+        this.updateOrderSummaryForEmptyCart();
+        
+        // Clear header cart count
+        this.updateHeaderCartCount(0);
+        
+        console.log('🔍 [clearFormAndCart] ===== CLEAR OPERATION COMPLETED =====');
+      } catch (error) {
+        console.error('🔍 [clearFormAndCart] Error clearing form and cart:', error);
+      }
+    }
+    
+    updateOrderSummaryForEmptyCart() {
+      console.log('🔍 [updateOrderSummaryForEmptyCart] Updating order summary for empty cart');
+      
+      // Update pod summary
+      const podTitle = document.getElementById('final-pod-title');
+      const podDuration = document.getElementById('final-pod-duration');
+      const podPrice = document.getElementById('final-pod-price');
+      
+      if (podTitle) podTitle.textContent = 'No Pod Selected';
+      if (podDuration) podDuration.textContent = 'Not set';
+      if (podPrice) podPrice.textContent = '₹0/month';
+      
+      // Update packs summary
+      const packsList = document.getElementById('final-packs-list');
+      if (packsList) {
+        packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
+      }
+      
+      // Update total
+      const totalPrice = document.getElementById('total-price');
+      if (totalPrice) {
+        totalPrice.textContent = '₹0';
+      }
+      
+      console.log('🔍 [updateOrderSummaryForEmptyCart] Order summary updated for empty cart');
+    }
+    
+    updateHeaderCartCount(count) {
+      console.log('🔍 [updateHeaderCartCount] Updating header cart count to:', count);
+      
+      try {
+        // Find all cart count elements in the header
+        const cartCountElements = document.querySelectorAll('[data-cart-count]');
+        const cartBadges = document.querySelectorAll('.cart-badge, .cart-count, [class*="cart-count"]');
+        
+        // Update elements with data-cart-count attribute
+        cartCountElements.forEach(element => {
+          element.textContent = count.toString();
+          element.setAttribute('data-cart-count', count.toString());
+          
+          // Hide element if count is 0
+          if (count === 0) {
+            element.style.display = 'none';
+          } else {
+            element.style.display = 'inline';
+          }
+        });
+        
+        // Update cart badge elements
+        cartBadges.forEach(element => {
+          element.textContent = count.toString();
+          
+          // Hide element if count is 0
+          if (count === 0) {
+            element.style.display = 'none';
+          } else {
+            element.style.display = 'inline';
+          }
+        });
+        
+        // Also try to find elements by common cart count selectors
+        const commonSelectors = [
+          '.header .cart-count',
+          '.navbar .cart-count', 
+          '.nav .cart-count',
+          '.cart-icon .count',
+          '.cart-badge .count',
+          '[class*="cart"] [class*="count"]'
+        ];
+        
+        commonSelectors.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(element => {
+            element.textContent = count.toString();
+            
+            if (count === 0) {
+              element.style.display = 'none';
+            } else {
+              element.style.display = 'inline';
+            }
+          });
+        });
+        
+        console.log('🔍 [updateHeaderCartCount] Header cart count updated successfully');
+      } catch (error) {
+        console.error('🔍 [updateHeaderCartCount] Error updating header cart count:', error);
+      }
     }
   }
 
@@ -727,4 +1931,104 @@
       transform: translateY(0);
     }
   }
-</style> 
+
+  .duration-chip {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .duration-chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .duration-chip:active {
+    transform: translateY(0);
+  }
+  
+  .duration-chip.bg-mint-500 {
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  }
+
+  /* Pack cards styling for single row layout */
+  .pack-card {
+    width: 300px;
+    min-width: 300px;
+    flex-shrink: 0;
+    height: 100%;
+    min-height: 200px;
+    margin-right: 2rem; /* 32px margin for better spacing */
+    margin-bottom: 1rem;  /* 16px bottom margin */
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb; /* Default border */
+  }
+
+  .pack-card:last-child {
+    margin-right: 0; /* Remove margin from last card */
+  }
+
+  /* Hover effects with proper border handling */
+  .pack-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border-color: #10b981; /* mint-500 color */
+  }
+
+  /* Selected state */
+  .pack-card.border-mint-500 {
+    border-color: #10b981;
+    background-color: #f0fdf4; /* mint-50 */
+  }
+
+  .pack-card.border-mint-500:hover {
+    border-color: #059669; /* mint-600 for hover */
+  }
+
+  /* Ensure pack cards have good spacing and readability */
+  .pack-card .p-6 {
+    padding: 1.5rem;
+  }
+
+  /* Improve text readability in pack cards */
+  .pack-card h3 {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .pack-card p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  /* Better spacing for pack card content */
+  .pack-card .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+
+  /* Smooth scrolling for horizontal overflow */
+  .overflow-x-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+  }
+</style>

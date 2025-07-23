@@ -17,6 +17,8 @@ export const formFieldToHubSpotMapping: FormFieldMapping = {
   project: 'project_type',
   budget: 'budget_range',
   timeline: 'project_timeline',
+  selected_pod: 'selected_pod',
+  selected_packs: 'selected_packs',
 };
 
 export function mapFormDataToHubSpot(formData: FormData): ContactFormData {
