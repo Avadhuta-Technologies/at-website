@@ -96,17 +96,5 @@ import { detectUserLocation } from '../utils/locationUtils.js';
         </div>
       `;
     });
-
-    // Display packs
-    cartSummary.packItems.forEach((pack: any) => {
-      const packPrice = userCurrency === 'INR' ? pack.basePriceINR : pack.basePriceUSD;
-      const discountAmount = (packPrice * pack.discountPercentage) / 100;
-      const finalPrice = packPrice - discountAmount;
-      
-      const formattedOriginalPrice = userCurrency === 'INR' 
-        ? `₹${(packPrice / 1000).toFixed(0)}K` 
-        : `$${(packPrice / 1000).toFixed(0)}K`;
-      
-      const formattedFinalPrice = userCurrency === 'INR' 
-        ? `₹${(finalPrice / 1000).toFixed(0)}K` 
-        : `
+  }
+</script>
