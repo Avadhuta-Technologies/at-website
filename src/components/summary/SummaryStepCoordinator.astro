@@ -6,23 +6,26 @@
   <!-- Step content will be loaded here -->
 </div>
 
-<script client:load type="module">
-  // Import will be handled by Astro's build process
-  import { summaryShared } from '../../utils/summaryShared.js';
+<script>
+  import { SummaryShared } from '../../utils/summaryShared.js';
 
   class SummaryStepCoordinator {
+    private currentStep: number;
+    private currentEventListeners: any[];
+    private summaryShared: SummaryShared;
+
     constructor() {
       this.currentStep = 1;
-      this.shared = summaryShared;
       this.currentEventListeners = [];
+      this.summaryShared = new SummaryShared();
       this.init();
     }
 
     async init() {
       console.log('🔍 [SummaryStepCoordinator] Initializing...');
       
-      // Initialize shared utilities (no longer depends on cartService)
-      await this.shared.init();
+      // Initialize shared utilities
+      await this.summaryShared.init();
       
       this.setupEventListeners();
       this.loadStep(this.currentStep);
@@ -58,7 +61,7 @@
         
         if (this.currentStep === 1) {
           // Check if we still have a pod after the update
-          const cart = await this.shared.getCart();
+          const cart = await this.summaryShared.getCart();
           const selectedPod = cart.find(item => item.type === 'pod');
           
           // Also check localStorage as fallback
@@ -85,7 +88,7 @@
           }
         } else if (this.currentStep === 2) {
           // Update Step 2 pod summary if cart was updated
-          const cart = await this.shared.getCart();
+          const cart = await this.summaryShared.getCart();
           const selectedPod = cart.find(item => item.type === 'pod');
           
           if (selectedPod) {
@@ -144,17 +147,17 @@
             if (action === 'add') {
               console.log('🔍 [Global] ===== ADDING PACK =====');
               // Check if pod exists before adding pack
-              const hasPod = await this.shared.hasPod();
+              const hasPod = await this.summaryShared.hasPod();
               console.log('🔍 [Global] Has pod:', hasPod);
               if (!hasPod) {
-                this.shared.showNotification('Please select a NovaPod first to add packs', 'warning');
+                this.summaryShared.showNotification('Please select a NovaPod first to add packs', 'warning');
                 return;
               }
-              await this.shared.addPack(packId);
+              await this.summaryShared.addPack(packId);
               console.log('🔍 [Global] ===== PACK ADDED SUCCESSFULLY =====');
             } else if (action === 'remove') {
               console.log('🔍 [Global] ===== REMOVING PACK =====');
-              await this.shared.removePack(packId);
+              await this.summaryShared.removePack(packId);
               console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
             }
             
@@ -185,7 +188,7 @@
           const packId = deleteBtn.getAttribute('data-pack-id');
           if (packId) {
             console.log('🔍 [Global] Deleting pack from selected packs:', packId);
-            await this.shared.removePack(packId);
+            await this.summaryShared.removePack(packId);
             
             // Refresh the packs display if we're on Step 2
             if (this.currentStep === 2) {
@@ -469,13 +472,13 @@
       let selectedPod = null;
       
       try {
-        // Try shared.getCart() first
-        cart = await this.shared.getCart();
-        console.log('🔍 [initializeStep1] Cart from shared.getCart():', cart);
+        // Try this.summaryShared.getCart() first
+        cart = await this.summaryShared.getCart();
+        console.log('🔍 [initializeStep1] Cart from this.summaryShared.getCart():', cart);
         selectedPod = cart.find(item => item.type === 'pod');
-        console.log('🔍 [initializeStep1] Selected pod from shared.getCart():', selectedPod);
+        console.log('🔍 [initializeStep1] Selected pod from this.summaryShared.getCart():', selectedPod);
       } catch (error) {
-        console.error('🔍 [initializeStep1] Error with shared.getCart():', error);
+        console.error('🔍 [initializeStep1] Error with this.summaryShared.getCart():', error);
       }
       
       // Fallback: Direct localStorage check
@@ -513,7 +516,7 @@
       console.log('🔍 [initializeStep2] Starting initialization...');
       
       // Get cart data from localStorage (single source of truth)
-      const cart = await this.shared.getCart();
+      const cart = await this.summaryShared.getCart();
       const selectedPod = cart.find(item => item.type === 'pod');
       console.log('🔍 [initializeStep2] Cart from localStorage:', cart);
       console.log('🔍 [initializeStep2] Selected pod:', selectedPod);
@@ -535,9 +538,9 @@
         await this.updateSelectedPacksDisplay();
       } else {
         console.log('🔍 [initializeStep2] No pod found, redirecting to Step 1');
-        this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
+        this.summaryShared.showNotification('Please select a NovaPod first to proceed', 'warning');
         // Navigate back to Step 1
-        this.shared.navigateToStep(1);
+        this.summaryShared.navigateToStep(1);
         return;
       }
       
@@ -547,7 +550,7 @@
 
     async initializeStep3() {
       console.log('🔍 Initializing Step 3...');
-      const cart = await this.shared.getCart();
+      const cart = await this.summaryShared.getCart();
       const selectedPod = cart.find(item => item.type === 'pod');
       const selectedPacks = cart.filter(item => item.type === 'pack');
       
@@ -558,9 +561,9 @@
         await this.updateFinalSummary(selectedPod, selectedPacks);
       } else {
         console.log('🔍 [initializeStep3] No pod found, redirecting to Step 1');
-        this.shared.showNotification('Please select a NovaPod first to proceed', 'warning');
+        this.summaryShared.showNotification('Please select a NovaPod first to proceed', 'warning');
         // Navigate back to Step 1
-        this.shared.navigateToStep(1);
+        this.summaryShared.navigateToStep(1);
         return;
       }
       
@@ -739,9 +742,9 @@
     async loadAvailablePods() {
       console.log('🔍 [loadAvailablePods] Starting to load available pods...');
       
-      try {
-        const pods = await this.shared.loadPods();
-        console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
+              try {
+          const pods = await this.summaryShared.loadPods();
+          console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
         
         const grid = document.getElementById('available-pods-grid');
         console.log('🔍 [loadAvailablePods] Grid element found:', !!grid);
@@ -815,7 +818,7 @@
     }
 
     async loadPacksForStep2(podItem) {
-      const packs = await this.shared.loadRecommendedPacks(podItem);
+      const packs = await this.summaryShared.loadRecommendedPacks(podItem);
       const grid = document.getElementById('packs-grid');
       const title = document.getElementById('packs-section-title');
       
@@ -828,8 +831,8 @@
       }
       
       // Get all available packs for categories
-      const allPacks = await this.shared.loadAllPacks();
-      const categories = this.shared.getPackCategories();
+      const allPacks = await this.summaryShared.loadAllPacks();
+      const categories = this.summaryShared.getPackCategories();
       
       title.textContent = 'Available Packs';
       
@@ -1207,7 +1210,7 @@
       console.log('🔍 [updatePodSummary] Updating pod summary with:', podItem);
       
       // Get the latest pod data from localStorage
-      const cart = await this.shared.getCart();
+      const cart = await this.summaryShared.getCart();
       const latestPodItem = cart.find(item => item.type === 'pod');
       
       if (!latestPodItem) {
@@ -1234,7 +1237,7 @@
       }
       
       // Update the pod summary using shared utility
-      await this.shared.updatePodSummary(latestPodItem, selectors);
+      await this.summaryShared.updatePodSummary(latestPodItem, selectors);
       
       // Update the months display
       const monthsElement = document.getElementById('selected-pod-months') || document.getElementById('summary-pod-months');
@@ -1249,7 +1252,7 @@
     }
 
     async updateFinalSummary(podItem, packItems) {
-      await this.shared.updatePodSummary(podItem, {
+      await this.summaryShared.updatePodSummary(podItem, {
         titleSelector: '#final-pod-title',
         priceSelector: '#final-pod-price',
         descriptionSelector: '#final-pod-duration'
@@ -1281,7 +1284,7 @@
           };
           
           const packPromises = packItems.map(async (pack) => {
-            const packDetails = await this.shared.getPackDetails(pack.id);
+            const packDetails = await this.summaryShared.getPackDetails(pack.id);
             if (!packDetails) return '';
             
             // Calculate monthly pack price with discount, then multiply by months
@@ -1292,22 +1295,22 @@
             return `
               <div class="flex items-center justify-between p-3 bg-white rounded-lg">
                 <div class="flex items-center space-x-3">
-                  <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
-                    <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
-                  </div>
-                  <span class="font-medium text-graphite-900">${packDetails.title}</span>
+                <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
+                  <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
                 </div>
-                <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
+                <span class="font-medium text-graphite-900">${packDetails.title}</span>
               </div>
-            `;
-          });
-          
-          const packResults = await Promise.all(packPromises);
-          packsList.innerHTML = packResults.join('');
-        }
+              <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
+            </div>
+          `;
+        });
+        
+        const packResults = await Promise.all(packPromises);
+        packsList.innerHTML = packResults.join('');
       }
+    }
 
-      await this.shared.updateTotalPrice(podItem, packItems);
+    await this.summaryShared.updateTotalPrice(podItem, packItems);
     }
 
     async updatePricingForReservationPeriod(months) {
@@ -1329,12 +1332,12 @@
             await this.updatePodSummary(selectedPod);
           }
           
-          // Update total pricing in Step 3
-          if (this.currentStep === 3) {
-            const selectedPacks = cart.filter(item => item.type === 'pack');
-            await this.updateFinalSummary(selectedPod, selectedPacks);
-            await this.shared.updateTotalPrice(selectedPod, selectedPacks);
-          }
+                  // Update total pricing in Step 3
+        if (this.currentStep === 3) {
+          const selectedPacks = cart.filter(item => item.type === 'pack');
+          await this.updateFinalSummary(selectedPod, selectedPacks);
+          await this.summaryShared.updateTotalPrice(selectedPod, selectedPacks);
+        }
           
           // Update all DiscountedPriceDisplay components on the page
           this.updateAllPriceDisplays(months);
@@ -1428,7 +1431,7 @@
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('[data-pod-id]')) {
           const podId = e.target.getAttribute('data-pod-id');
-          const selectedPod = await this.shared.selectPodWithConfirmation(podId);
+          const selectedPod = await this.summaryShared.selectPodWithConfirmation(podId);
           if (selectedPod) {
             await this.showSelectedPod(selectedPod);
           }
@@ -1441,7 +1444,7 @@
           console.log('🔍 [Step1] Continue to Step 2 button clicked');
           console.log('🔍 [Step1] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step1] About to call nextStep()');
-          this.shared.nextStep();
+          this.summaryShared.nextStep();
           console.log('🔍 [Step1] nextStep() called');
         } else if (e.target && e.target.matches('#step1-continue-btn')) {
           console.log('🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:', this.currentStep, ')');
@@ -1460,7 +1463,7 @@
       document.addEventListener('click', async (e) => {
         if (e.target && e.target.matches('#remove-pod-btn')) {
           console.log('🔍 [Step1] Remove pod button clicked');
-          await this.shared.removePod();
+          await this.summaryShared.removePod();
           this.showAvailablePods();
         }
       });
@@ -1495,7 +1498,7 @@
           
           // Update storage
           console.log('🔍 [Step1] Calling updateHirePeriod...');
-          await this.shared.updateHirePeriod(months);
+          await this.summaryShared.updateHirePeriod(months);
           console.log('🔍 [Step1] updateHirePeriod completed');
           
           // Update the months display in Step 1
@@ -1533,7 +1536,7 @@
       document.addEventListener('click', (e) => {
         const target = e.target;
         if (target && target.matches('#edit-pod-btn')) {
-          this.shared.navigateToStep(1);
+          this.summaryShared.navigateToStep(1);
         }
       });
 
@@ -1546,8 +1549,8 @@
           console.log('🔍 [Step2] Remove pod button clicked');
           e.preventDefault();
           e.stopPropagation();
-          await this.shared.removePod();
-          this.shared.navigateToStep(1);
+          await summaryShared.removePod();
+          summaryShared.navigateToStep(1);
         }
       });
 
@@ -1562,7 +1565,7 @@
           console.log('🔍 [Step2] Continue to Step 3 button clicked');
           console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step2] About to call nextStep()');
-          this.shared.nextStep();
+          summaryShared.nextStep();
           console.log('🔍 [Step2] nextStep() called');
         } else if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected'))) {
           console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
@@ -1572,7 +1575,7 @@
       // Go to step 1 button
       document.addEventListener('click', (e) => {
         if (e.target && e.target.matches('#go-to-step1-btn')) {
-          this.shared.navigateToStep(1);
+          summaryShared.navigateToStep(1);
         }
       });
     }
@@ -1607,7 +1610,7 @@
           };
           
           // Get cart data
-          const cart = await this.shared.getCart();
+          const cart = await this.summaryShared.getCart();
           const selectedPod = cart.find(item => item.type === 'pod');
           const selectedPacks = cart.filter(item => item.type === 'pack');
           
@@ -1663,7 +1666,7 @@
             } else {
               console.error('🔍 [Step3] HubSpot submission failed:', result.error);
               // Show error notification and preserve form data
-              this.shared.showNotification(
+              this.summaryShared.showNotification(
                 `Failed to submit reservation: ${result.error}. Please try again or contact support if the problem persists.`,
                 'error'
               );
@@ -1673,7 +1676,7 @@
           } catch (error) {
             console.error('🔍 [Step3] Error submitting to HubSpot:', error);
             // Show error notification and preserve form data
-            this.shared.showNotification(
+            this.summaryShared.showNotification(
               'Failed to submit reservation due to a network error. Please check your connection and try again.',
               'error'
             );
@@ -1806,8 +1809,8 @@
         console.log('🔍 [clearFormAndCart] Cart removed from localStorage');
         
         // Clear cart from shared utility if available
-        if (this.shared && typeof this.shared.clearCart === 'function') {
-          await this.shared.clearCart();
+        if (this.summaryShared && typeof this.summaryShared.clearCart === 'function') {
+          await this.summaryShared.clearCart();
           console.log('🔍 [clearFormAndCart] Cart cleared via shared utility');
         }
         
