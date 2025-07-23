@@ -4,6 +4,7 @@ import Header from '../components/layout/Header.astro';
 import BackToTop from '../components/layout/BackToTop.astro';
 import MadeWithButton from '../components/layout/MadeWithButton.astro';
 import CartDrawer from '../components/shared/CartDrawer.astro';
+import CookieConsent from '../components/cookie-consent/CookieConsent.astro';
 
 
 
@@ -20,6 +21,34 @@ const { description, title, image, theme = 'auto' } = Astro.props;
 <!DOCTYPE html>
 <html lang="en" data-theme={theme}>
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RYY7NM4K5W"></script>
+    <script>
+      declare global {
+        interface Window {
+          dataLayer: Record<string, any>[];
+          gtag: (...args: any[]) => void;
+        }
+      }
+
+      // Initialize dataLayer
+      window.dataLayer = window.dataLayer || [];
+
+      // Define gtag function
+      window.gtag = function gtag(...args: any[]) {
+        window.dataLayer.push(arguments);
+      };
+
+      // Load GA4 with denied default consents
+      window.gtag('js', new Date());
+      window.gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+      });
+      window.gtag('config', 'G-RYY7NM4K5W');
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
@@ -547,5 +576,7 @@ const { description, title, image, theme = 'auto' } = Astro.props;
     <script type="module" src="/scripts/scrollAnimations.js"></script> 
     <script type="module" src="/scripts/interactiveElements.js"></script>
     <script type="module" src="/scripts/scrollUtils.js"></script>
+    
+    <CookieConsent />
   </body>
 </html>
