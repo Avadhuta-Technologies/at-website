@@ -1,34 +1,46 @@
 ---
-interface Props {
-  pastUseCases: string[];
-}
+import CaseStudyCard from '../case-studies/CaseStudyCard.astro';
+import { caseStudiesData } from '../../content/case-studies/_index.js';
 
 const { pastUseCases } = Astro.props;
+
+// Fetch case study data for the provided IDs
+const caseStudies = pastUseCases
+  .map(id => {
+    const found = caseStudiesData.caseStudies.find(study => study.id === id);
+    if (!found) {
+      console.warn(`Case study with ID "${id}" not found in case studies data`);
+    }
+    return found;
+  })
+  .filter(Boolean); // Simple filter to remove undefined entries
 ---
 
-<section class="py-20 ">
+<section class="py-20">
   <div class="container mx-auto px-4">
     <div class="max-w-3xl mx-auto text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">Past Use Cases</h2>
       <p class="text-lg text-gray-600 leading-relaxed">Real projects we've successfully delivered</p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-      {pastUseCases.map((useCase: string, index: number) => (
-        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
-          <div class="flex items-start">
-            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-gray-900 text-lg mb-2">Case Study {index + 1}</h3>
-              <p class="text-gray-600 leading-relaxed">{useCase}</p>
-            </div>
-          </div>
+    {caseStudies.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        {caseStudies.map((caseStudy) => (
+          caseStudy && caseStudy.id && caseStudy.title ? (
+            <CaseStudyCard caseStudy={caseStudy} />
+          ) : null
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
         </div>
-      ))}
-    </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No Case Studies Available</h3>
+        <p class="text-gray-600">Case studies for this pod will be added soon.</p>
+      </div>
+    )}
   </div>
 </section> 

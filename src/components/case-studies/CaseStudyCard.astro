@@ -1,266 +1,165 @@
 ---
-import { generateSlug } from '../../utils/slugUtils.js';
+const { caseStudy } = Astro.props;
 
-export interface Props {
-  study: {
-    id: string;
-    title: string;
-    industry: string;
-    badge: string;
-    badgeColor: string;
-    problemStatement: string;
-    duration: string;
-    teamComposition: string;
-    techStack?: string[];
-    solutionHighlights?: string[];
-    impact?: string[];
-    testimonial?: {
-      quote: string;
-      author: string;
-    };
-    callToAction?: string;
-  };
-  index?: number;
+// Check if caseStudy exists and has required properties
+if (!caseStudy || !caseStudy.id || !caseStudy.title) {
+  return null; // Don't render anything if caseStudy is invalid
 }
 
-const { study, index = 0 } = Astro.props;
-
-interface ColorClasses {
-  bg: string;
-  border: string;
-  text: string;
-  badge: string;
-  iconBg: string;
-}
-
-// Color mapping for different badge colors
-const getColorClasses = (color: string): ColorClasses => {
-  const colorMap: Record<string, ColorClasses> = {
-    blue: { 
-      bg: 'bg-blue-50/80', 
-      border: 'border-blue-200/50', 
-      text: 'text-blue-700', 
-      badge: 'bg-blue-100/90 text-blue-800 backdrop-blur-sm',
-      iconBg: 'bg-blue-100/80'
-    },
-    green: { 
-      bg: 'bg-green-50/80', 
-      border: 'border-green-200/50', 
-      text: 'text-green-700', 
-      badge: 'bg-green-100/90 text-green-800 backdrop-blur-sm',
-      iconBg: 'bg-green-100/80'
-    },
-    purple: { 
-      bg: 'bg-purple-50/80', 
-      border: 'border-purple-200/50', 
-      text: 'text-purple-700', 
-      badge: 'bg-purple-100/90 text-purple-800 backdrop-blur-sm',
-      iconBg: 'bg-purple-100/80'
-    },
-    pink: { 
-      bg: 'bg-pink-50/80', 
-      border: 'border-pink-200/50', 
-      text: 'text-pink-700', 
-      badge: 'bg-pink-100/90 text-pink-800 backdrop-blur-sm',
-      iconBg: 'bg-pink-100/80'
-    },
-    orange: { 
-      bg: 'bg-orange-50/80', 
-      border: 'border-orange-200/50', 
-      text: 'text-orange-700', 
-      badge: 'bg-orange-100/90 text-orange-800 backdrop-blur-sm',
-      iconBg: 'bg-orange-100/80'
-    },
-    teal: { 
-      bg: 'bg-teal-50/80', 
-      border: 'border-teal-200/50', 
-      text: 'text-teal-700', 
-      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
-      iconBg: 'bg-teal-100/80'
-    },
-    indigo: { 
-      bg: 'bg-indigo-50/80', 
-      border: 'border-indigo-200/50', 
-      text: 'text-indigo-700', 
-      badge: 'bg-indigo-100/90 text-indigo-800 backdrop-blur-sm',
-      iconBg: 'bg-indigo-100/80'
-    }
+// Get badge color classes
+const getBadgeColor = (color) => {
+  const colorMap = {
+    blue: 'bg-blue-50 text-blue-700 border-blue-200',
+    green: 'bg-green-50 text-green-700 border-green-200',
+    purple: 'bg-purple-50 text-purple-700 border-purple-200',
+    orange: 'bg-orange-50 text-orange-700 border-orange-200',
+    red: 'bg-red-50 text-red-700 border-red-200',
+    yellow: 'bg-yellow-50 text-yellow-700 border-yellow-200'
   };
-  return colorMap[color] || colorMap.blue;
-};
-
-const colors = getColorClasses(study.badgeColor);
-
-// Generate contextual icon based on study content
-const getStudyIcon = (study: any) => {
-  const title = study.title.toLowerCase();
-  const industry = study.industry.toLowerCase();
-  const techStack = study.techStack?.join(' ').toLowerCase() || '';
-  const problemStatement = study.problemStatement.toLowerCase();
-  
-  // Industry-based icons
-  if (industry.includes('ecommerce') || title.includes('store') || title.includes('marketplace')) {
-    return '🛒';
-  }
-  if (industry.includes('interior') || title.includes('3d') || title.includes('design')) {
-    return '🏠';
-  }
-  if (industry.includes('pharmacovigilance') || industry.includes('healthcare')) {
-    return '💊';
-  }
-  if (industry.includes('finance') || title.includes('payment')) {
-    return '💰';
-  }
-  if (industry.includes('education')) {
-    return '📚';
-  }
-  if (industry.includes('manufacturing')) {
-    return '🏭';
-  }
-  if (industry.includes('retail')) {
-    return '🛍️';
-  }
-  
-  // Technology-based icons
-  if (title.includes('ai') || techStack.includes('ai') || techStack.includes('openai')) {
-    return '🤖';
-  }
-  if (title.includes('3d') || techStack.includes('three.js')) {
-    return '🎨';
-  }
-  if (title.includes('gateway') || title.includes('exchange') || title.includes('as2')) {
-    return '🔗';
-  }
-  if (title.includes('reconcile') || title.includes('automation')) {
-    return '⚙️';
-  }
-  if (title.includes('intelligence') || title.includes('regulatory')) {
-    return '📊';
-  }
-  if (title.includes('diagnostic') || title.includes('health')) {
-    return '🔍';
-  }
-  if (title.includes('secure') || title.includes('security')) {
-    return '🔐';
-  }
-  
-  // Problem-based icons
-  if (problemStatement.includes('ecommerce') || problemStatement.includes('store')) {
-    return '🛒';
-  }
-  if (problemStatement.includes('ai') || problemStatement.includes('generation')) {
-    return '🤖';
-  }
-  if (problemStatement.includes('3d') || problemStatement.includes('visualization')) {
-    return '🎨';
-  }
-  if (problemStatement.includes('regulatory') || problemStatement.includes('compliance')) {
-    return '📋';
-  }
-  if (problemStatement.includes('automation') || problemStatement.includes('manual')) {
-    return '⚙️';
-  }
-  if (problemStatement.includes('secure') || problemStatement.includes('exchange')) {
-    return '🔐';
-  }
-  
-  return '💼';
+  return colorMap[color] || 'bg-gray-50 text-gray-700 border-gray-200';
 };
 ---
 
-<a href={`/case-studies/${generateSlug(study.title)}`} class="case-study-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer block">
-  <!-- Card Background with Glass Morphism -->
-  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+<div class="case-study-card group relative bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer overflow-hidden" data-case-study-id={caseStudy.id}>
+  <!-- Gradient Background Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-br from-[#22c55e]/5 to-[#0ea5e9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
   
-  <!-- Decorative Background Elements -->
-  <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100/50 to-purple-100/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
-  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
-  
-  <!-- Card Content -->
-  <div class="relative p-6 flex flex-col h-full">
-    <!-- Card Header -->
-    <div class="flex items-start justify-between mb-4">
-      <div class={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}>
-        <span class="text-2xl">{getStudyIcon(study)}</span>
-      </div>
-      <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${colors.badge} border border-current/20`}>
-        {study.badge}
-      </span>
+  <!-- Header Section -->
+  <div class="relative p-6 pb-4">
+    <!-- Badge and Duration Row -->
+    <div class="flex items-center justify-between mb-4">
+      {caseStudy.badge && (
+        <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${getBadgeColor(caseStudy.badgeColor || 'gray')}`}>
+          {caseStudy.badge}
+        </span>
+      )}
+      {caseStudy.duration && (
+        <span class="text-xs text-gray-500 font-medium">
+          {caseStudy.duration}
+        </span>
+      )}
     </div>
     
-    <!-- Title and Industry -->
-    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">
-      {study.title}
+    <!-- Title -->
+    <h3 class="font-bold text-gray-900 text-xl mb-3 group-hover:text-[#22c55e] transition-colors duration-300 leading-tight">
+      {caseStudy.title}
     </h3>
     
-    <div class="flex items-center space-x-2 mb-4">
-      <span class="text-sm text-gray-500 font-medium">
-        {study.industry}
-      </span>
-    </div>
-    
     <!-- Problem Statement -->
-    <div class="flex-1 mb-6">
-      <p class="text-gray-600 leading-relaxed text-sm study-description">
-        {study.problemStatement}
+    {caseStudy.problemStatement && (
+      <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+        {caseStudy.problemStatement}
       </p>
+    )}
+  </div>
+  
+  <!-- Tech Stack Section -->
+  {caseStudy.techStack && caseStudy.techStack.length > 0 && (
+    <div class="relative px-6 pb-4">
+      <div class="flex flex-wrap gap-2">
+        {caseStudy.techStack.slice(0, 4).map((tech) => (
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-50 text-gray-700 border border-gray-100 group-hover:bg-gray-100 transition-colors duration-200">
+            {tech}
+          </span>
+        ))}
+        {caseStudy.techStack.length > 4 && (
+          <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-50 text-gray-700 border border-gray-100">
+            +{caseStudy.techStack.length - 4} more
+          </span>
+        )}
+      </div>
     </div>
-    
-    <!-- Project Details -->
-    <div class="space-y-3 mb-6">
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-green-100/80 rounded-lg flex items-center justify-center mr-3">
+  )}
+  
+  <!-- Impact Section -->
+  {caseStudy.impact && caseStudy.impact.length > 0 && (
+    <div class="relative px-6 pb-4">
+      <div class="flex items-center space-x-2 p-3 bg-green-50 rounded-xl border border-green-100">
+        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
           <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
           </svg>
         </div>
-        <span class="text-sm text-gray-600 font-medium">{study.duration}</span>
-      </div>
-      <div class="flex items-center">
-        <div class="w-8 h-8 bg-blue-100/80 rounded-lg flex items-center justify-center mr-3">
-          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-green-800 font-medium leading-tight">
+            {caseStudy.impact[0]}
+          </p>
         </div>
-        <span class="text-sm text-gray-600 font-medium">{study.teamComposition}</span>
       </div>
     </div>
-    
-    <!-- Action Bar -->
-    <div class="flex items-center justify-between pt-4 border-t border-gray-100/50 mt-auto">
-      <span class="text-sm text-gray-500 font-medium">View Details</span>
-      <div class="w-6 h-6 bg-gradient-to-r from-primary-600 to-primary-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
+  )}
+  
+  <!-- Footer Section -->
+  <div class="relative px-6 py-4 border-t border-gray-50 bg-gray-25">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 bg-gradient-to-br from-[#22c55e] to-[#0ea5e9] rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <span class="text-sm font-semibold text-gray-900">View Details</span>
       </div>
+      <svg class="w-5 h-5 text-gray-400 group-hover:text-[#22c55e] group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
     </div>
   </div>
-</a>
+  
+  <!-- Hover Effect Border -->
+  <div class="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-[#22c55e]/20 transition-colors duration-300 pointer-events-none"></div>
+</div>
 
 <style>
-  /* Case Study Card Animations */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .bg-gray-25 {
+    background-color: #fafafa;
+  }
+  
   .case-study-card {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block !important;
+    will-change: transform;
   }
-
-  .case-study-card.animate {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Hover Effects */
+  
   .case-study-card:hover {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
   }
+</style>
 
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .case-study-card {
-      padding: 1.5rem;
-    }
+<script>
+  // Simple slug generation function
+  function generateSlug(text) {
+    if (!text) return '';
+    
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '-')  // Replace non-alphanumeric chars with hyphens
+      .replace(/-+/g, '-')         // Replace multiple hyphens with single hyphen
+      .replace(/^-|-$/g, '');      // Remove leading/trailing hyphens
   }
-</style> 
+  
+  // Handle card click to navigate to case study detail page
+  document.addEventListener('DOMContentLoaded', function() {
+    const caseStudyCards = document.querySelectorAll('.case-study-card');
+    
+    caseStudyCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const caseStudyId = this.getAttribute('data-case-study-id');
+        if (caseStudyId) {
+          // Find the case study data to get the title for slug generation
+          const caseStudyTitle = this.querySelector('h3')?.textContent;
+          if (caseStudyTitle) {
+            // Use the proper slug generation utility
+            const slug = generateSlug(caseStudyTitle);
+            window.location.href = `/case-studies/${slug}`;
+          }
+        }
+      });
+    });
+  });
+</script> 
