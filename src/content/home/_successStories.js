@@ -3,6 +3,7 @@ export const homeSuccessStoriesData = {
   subtitle: "Real results from real projects",
   caseStudies: [
     {
+      id: "smart-visitor-management-system",
       title: "Security Patrol App Revamp — With Ongoing Feature Delivery",
       engagement: "👥 Full-Stack Dev Pod",
       success: "🔄 Legacy Modernization & Continuous Delivery",
@@ -21,6 +22,7 @@ export const homeSuccessStoriesData = {
       readMoreLink: "/case-studies/security-patrol-app"
     },
     {
+      id: "reach-ecommerce-store",
       title: "E-commerce Feature Expansion — Payments + Analytics",
       engagement: "🎯 Feature Add-On Pack",
       success: "💸 Revenue-Ready Feature Rollout",

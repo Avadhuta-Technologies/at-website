@@ -6,6 +6,9 @@ if (!caseStudy || !caseStudy.id || !caseStudy.title) {
   return null; // Don't render anything if caseStudy is invalid
 }
 
+// Use the case study ID as the slug for navigation
+const caseStudySlug = caseStudy.id;
+
 // Get badge color classes
 const getBadgeColor = (color) => {
   const colorMap = {
@@ -20,7 +23,7 @@ const getBadgeColor = (color) => {
 };
 ---
 
-<div class="case-study-card group relative bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer overflow-hidden" data-case-study-id={caseStudy.id}>
+<div class="case-study-card group relative bg-white rounded-2xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer overflow-hidden" data-case-study-id={caseStudy.id} data-case-study-slug={caseStudySlug}>
   <!-- Gradient Background Overlay -->
   <div class="absolute inset-0 bg-gradient-to-br from-[#22c55e]/5 to-[#0ea5e9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
   
@@ -132,32 +135,22 @@ const getBadgeColor = (color) => {
 </style>
 
 <script>
-  // Simple slug generation function
-  function generateSlug(text) {
-    if (!text) return '';
-    
-    return text
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, '-')  // Replace non-alphanumeric chars with hyphens
-      .replace(/-+/g, '-')         // Replace multiple hyphens with single hyphen
-      .replace(/^-|-$/g, '');      // Remove leading/trailing hyphens
-  }
-  
   // Handle card click to navigate to case study detail page
   document.addEventListener('DOMContentLoaded', function() {
     const caseStudyCards = document.querySelectorAll('.case-study-card');
     
     caseStudyCards.forEach(card => {
-      card.addEventListener('click', function() {
-        const caseStudyId = this.getAttribute('data-case-study-id');
-        if (caseStudyId) {
-          // Find the case study data to get the title for slug generation
-          const caseStudyTitle = this.querySelector('h3')?.textContent;
-          if (caseStudyTitle) {
-            // Use the proper slug generation utility
-            const slug = generateSlug(caseStudyTitle);
-            window.location.href = `/case-studies/${slug}`;
-          }
+      card.addEventListener('click', function(e) {
+        // Prevent navigation if clicking on links or buttons inside the card
+        const target = e.target;
+        if (target && (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+            target.closest && (target.closest('a') || target.closest('button')))) {
+          return;
+        }
+        
+        const caseStudySlug = this.getAttribute('data-case-study-slug');
+        if (caseStudySlug) {
+          window.location.href = `/case-studies/${caseStudySlug}`;
         }
       });
     });
