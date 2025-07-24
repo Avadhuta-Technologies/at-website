@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Parameter Test - Case Studies</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-link { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; text-decoration: none; color: #333; border-radius: 5px; }
+        .test-link:hover { background: #e0e0e0; }
+        .expected { background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .debug { background: #fff3cd; padding: 10px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 URL Parameter Test - Case Studies</h1>
+    
+    <div class="debug">
+        <h3>🔍 Debug Information:</h3>
+        <p>Current URL: <span id="current-url"></span></p>
+        <p>URL Parameters: <span id="url-params"></span></p>
+        <p>Industry Parameter: <span id="industry-param"></span></p>
+    </div>
+
+    <h2>🧪 Test Cases:</h2>
+    
+    <div class="expected">
+        <h3>✅ Expected Behavior:</h3>
+        <ul>
+            <li>URL parameter should be read on page load</li>
+            <li>Matching industry tab should be activated</li>
+            <li>Only case studies for that industry should be shown</li>
+            <li>URL should update when tabs are clicked</li>
+            <li>Browser back/forward should work correctly</li>
+        </ul>
+    </div>
+
+    <h3>🔗 Test URLs:</h3>
+    
+    <a href="/case-studies" class="test-link">
+        📋 All Case Studies (No parameter)
+    </a>
+    
+    <a href="/case-studies?industry=ecommerce" class="test-link">
+        🛒 Ecommerce Case Studies
+    </a>
+    
+    <a href="/case-studies?industry=manufacturing" class="test-link">
+        🏭 Manufacturing Case Studies
+    </a>
+    
+    <a href="/case-studies?industry=pharmacovigilance" class="test-link">
+        💊 Pharmacovigilance Case Studies
+    </a>
+    
+    <a href="/case-studies?industry=mobile-apps-edtech-parenting" class="test-link">
+        📱 Mobile Apps / EdTech / Parenting Case Studies
+    </a>
+    
+    <a href="/case-studies?industry=interior-design" class="test-link">
+        🏠 Interior Design Case Studies
+    </a>
+    
+    <a href="/case-studies?industry=saas-commodity-trading" class="test-link">
+        💼 SaaS / Commodity Trading Case Studies
+    </a>
+
+    <h3>🔍 Debug Steps:</h3>
+    <ol>
+        <li>Click on any test link above</li>
+        <li>Check browser console for debug logs</li>
+        <li>Verify the correct tab is active</li>
+        <li>Verify only relevant case studies are shown</li>
+        <li>Try clicking different tabs</li>
+        <li>Test browser back/forward buttons</li>
+    </ol>
+
+    <script>
+        // Display current URL information
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('url-params').textContent = window.location.search;
+        document.getElementById('industry-param').textContent = new URLSearchParams(window.location.search).get('industry') || 'None';
+        
+        console.log('🔧 [URL Test] Page loaded');
+        console.log('🔧 [URL Test] Current URL:', window.location.href);
+        console.log('🔧 [URL Test] Search params:', window.location.search);
+        console.log('🔧 [URL Test] Industry param:', new URLSearchParams(window.location.search).get('industry'));
+    </script>
+</body>
+</html> 

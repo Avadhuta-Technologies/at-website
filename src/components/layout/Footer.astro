@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { generateCaseStudiesUrl, getAvailableIndustries } from '../../utils/industryUtils.js';
 
 // Filter blog entries with 'draft: false' & date before current date
 const publishedBlogEntries = await getCollection('blog', ({ data }) => {
@@ -91,23 +92,38 @@ const footerLinks = [
     header: 'Case Studies',
     links: [
       {
-        name: 'E-commerce Platform',
-        href: '/case-studies?industry=Ecommerce',
+        name: 'Ecommerce',
+        href: generateCaseStudiesUrl('Ecommerce'),
         isExternal: false,
       },
       {
         name: 'Manufacturing',
-        href: '/case-studies?industry=Manufacturing',
+        href: generateCaseStudiesUrl('Manufacturing'),
         isExternal: false,
       },
       {
-        name: 'Mobile App Development',
-        href: '/case-studies?industry=Mobile Apps',
+        name: 'Pharmacovigilance',
+        href: generateCaseStudiesUrl('Pharmacovigilance'),
+        isExternal: false,
+      },
+      {
+        name: 'Mobile Apps / EdTech / Parenting',
+        href: generateCaseStudiesUrl('Mobile Apps / EdTech / Parenting'),
         isExternal: false,
       },
       {
         name: 'Interior Design',
-        href: '/case-studies?industry=Interior Design',
+        href: generateCaseStudiesUrl('Interior Design'),
+        isExternal: false,
+      },
+      {
+        name: 'SaaS / Commodity Trading',
+        href: generateCaseStudiesUrl('SaaS / Commodity Trading'),
+        isExternal: false,
+      },
+      {
+        name: 'Mobile Apps / Utility & Delivery',
+        href: generateCaseStudiesUrl('Mobile Apps / Utility & Delivery'),
         isExternal: false,
       },
     ],

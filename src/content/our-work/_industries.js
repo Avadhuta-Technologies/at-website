@@ -3,8 +3,8 @@ export const ourWorkIndustriesData = {
   subtitle: "",
   industries: [
     {
-      name: 'AI & Automation',
-      description: 'We develop intelligent systems that think, learn, and adapt — whether it’s improving hiring decisions or generating room layouts.',
+      name: 'SaaS / Workplace Automation / Facility Management',
+      description: 'We develop intelligent systems that think, learn, and adapt — whether it\'s improving hiring decisions or generating room layouts.',
       projects: [
         {
           title: 'AI-Powered Interview Assistant',
@@ -17,7 +17,7 @@ export const ourWorkIndustriesData = {
       ]
     },
     {
-      name: 'Retail, Design & eCommerce',
+      name: 'Ecommerce',
       description: 'We help brands go digital with personalized user journeys, visual tools, and robust product catalog handling.',
       projects: [
         {
@@ -31,7 +31,7 @@ export const ourWorkIndustriesData = {
       ]
     },
     {
-      name: 'Healthcare & Pharma',
+      name: 'Pharmacovigilance',
       description: 'We understand the high-stakes nature of healthcare and pharmaceutical technology. Our solutions are designed with compliance, accuracy, and process clarity at their core.',
       projects: [
         {
@@ -45,7 +45,7 @@ export const ourWorkIndustriesData = {
       ]
     },
     {
-      name: 'Security & Field Ops',
+      name: 'Mobile Apps / Utility & Delivery',
       description: 'We build rugged mobile-first systems for on-ground staff, ensuring real-time visibility, traceability, and accountability.',
       projects: [
         {
