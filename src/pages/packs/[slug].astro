@@ -20,9 +20,106 @@ export async function getStaticPaths() {
 }
 
 const { pack } = Astro.props;
+
+// Generate comprehensive meta information for the pack
+const generateMetaInfo = (pack: any) => {
+  const title = `${pack.title} - NovaPod AI`;
+  const description = pack.description || `Professional ${pack.title} services. Get your dedicated development pack for scalable, high-quality solutions.`;
+  
+  // Create a more detailed description for better SEO
+  const detailedDescription = `${pack.description} Duration: ${pack.duration}. Starting at ₹${(pack.basePriceINR / 1000).toFixed(0)}K. Get your professional development pack today.`;
+  
+  // Generate keywords based on pack content
+  const keywords = [
+    pack.title,
+    'development pack',
+    'software services',
+    'custom development',
+    'professional services',
+    'NovaPod AI',
+    pack.category || 'development'
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = `${pack.title} - NovaPod AI Development Pack`;
+  
+  // Generate canonical URL
+  const canonicalUrl = `https://novapod.ai/packs/${generatePackSlug(pack.title)}`;
+  
+  return {
+    title,
+    description: detailedDescription,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo(pack);
 ---
 
-<Layout title={`${pack.title} - Pack Details`} description={pack.description}>
+<Layout 
+  title={metaInfo.title} 
+  description={metaInfo.description}
+  image={metaInfo.image}
+>
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
+  
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": pack.title,
+    "description": metaInfo.description,
+    "provider": {
+      "@type": "Organization",
+      "name": "NovaPod AI",
+      "url": "https://novapod.ai"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": pack.basePriceINR,
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock"
+    },
+    "image": metaInfo.image,
+    "url": metaInfo.canonicalUrl,
+    "serviceType": pack.category || "Development Pack"
+  })} />
+  
   <!-- Add class to body for dark header -->
   <script>
     document.body.classList.add('dark-header-page');
