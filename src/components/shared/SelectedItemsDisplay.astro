@@ -249,32 +249,19 @@
               </div>
             </div>
             <button 
-              class="remove-pod-btn ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+              class="remove-pod-btn ml-4 p-2 text-gray-600 hover:text-red-500 transition-colors !text-gray-600"
               title="Remove pod"
               data-item-id="${pod.id}"
               data-item-type="pod"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
               </svg>
             </button>
           </div>
         `;
         
-        // Add event listener to the remove button
-        const removeBtn = podItem.querySelector('.remove-pod-btn');
-        if (removeBtn) {
-          removeBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const itemId = removeBtn.getAttribute('data-item-id');
-            const itemType = removeBtn.getAttribute('data-item-type');
-            console.log('🟡 [SelectedItemsDisplay] Remove pod button clicked:', { itemId, itemType });
-            
-            if (itemId && itemType) {
-              await (window as any).removeFromCart(itemId, itemType);
-            }
-          });
-        }
+        // Event delegation will handle the remove button clicks
       }
     }
 
@@ -296,33 +283,20 @@
                 </div>
               </div>
               <button 
-                class="remove-pack-btn ml-4 p-2 text-gray-400 hover:text-red-500 transition-colors"
+                class="remove-pack-btn ml-4 p-2 text-gray-600 hover:text-red-500 transition-colors !text-gray-600"
                 title="Remove pack"
                 data-item-id="${pack.id}"
                 data-item-type="pack"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                 </svg>
               </button>
             </div>
           </div>
         `).join('');
         
-        // Add event listeners to all remove pack buttons
-        const removeBtns = packsList.querySelectorAll('.remove-pack-btn');
-        removeBtns.forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            const itemId = btn.getAttribute('data-item-id');
-            const itemType = btn.getAttribute('data-item-type');
-            console.log('🟡 [SelectedItemsDisplay] Remove pack button clicked:', { itemId, itemType });
-            
-            if (itemId && itemType) {
-              await (window as any).removeFromCart(itemId, itemType);
-            }
-          });
-        });
+        // Event delegation will handle the remove pack button clicks
       }
     }
 
@@ -352,6 +326,35 @@
       }
     }
   }
+
+  // Event delegation for remove buttons
+  document.addEventListener('click', async (e) => {
+    const target = e.target as HTMLElement;
+    const removePodBtn = target.closest('.remove-pod-btn') as HTMLElement;
+    const removePackBtn = target.closest('.remove-pack-btn') as HTMLElement;
+    
+    if (removePodBtn) {
+      e.preventDefault();
+      const itemId = removePodBtn.getAttribute('data-item-id');
+      const itemType = removePodBtn.getAttribute('data-item-type');
+      console.log('🟡 [SelectedItemsDisplay] Remove pod button clicked:', { itemId, itemType });
+      
+      if (itemId && itemType) {
+        await (window as any).removeFromCart(itemId, itemType);
+      }
+    }
+    
+    if (removePackBtn) {
+      e.preventDefault();
+      const itemId = removePackBtn.getAttribute('data-item-id');
+      const itemType = removePackBtn.getAttribute('data-item-type');
+      console.log('🟡 [SelectedItemsDisplay] Remove pack button clicked:', { itemId, itemType });
+      
+      if (itemId && itemType) {
+        await (window as any).removeFromCart(itemId, itemType);
+      }
+    }
+  });
 
   // Global function for removing items
   (window as any).removeFromCart = async function(itemId: string, itemType: string) {
@@ -413,5 +416,16 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  
+  /* Ensure remove button text is visible */
+  .remove-pod-btn,
+  .remove-pack-btn {
+    color: #4b5563 !important; /* text-gray-600 */
+  }
+  
+  .remove-pod-btn:hover,
+  .remove-pack-btn:hover {
+    color: #ef4444 !important; /* text-red-500 */
   }
 </style> 

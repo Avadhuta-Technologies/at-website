@@ -151,18 +151,20 @@ const metaInfo = generateMetaInfo();
 </Layout>
 
 <script>
-  // Global event handler for pod CTA buttons and data-add-to-cart buttons
+  // Global event handler for pod CTA buttons and data-add-to-cart buttons - using event delegation
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', async function(e) {
+      const target = e.target as HTMLElement;
+      
       // Handle dynamic pod CTA buttons
-      if (e.target && (e.target as HTMLElement).matches('.pod-cta-btn')) {
+      const podCtaButton = target.closest('.pod-cta-btn') as HTMLElement;
+      if (podCtaButton) {
         e.preventDefault();
         
-        const button = e.target as HTMLElement;
-        const action = button.getAttribute('data-action');
-        const podId = button.getAttribute('data-pod-id');
+        const action = podCtaButton.getAttribute('data-action');
+        const podId = podCtaButton.getAttribute('data-pod-id');
         
-        console.log('🔍 [ExplorePods] Pod CTA button clicked:', { action, podId });
+        console.log(`🔍 [${new Date().toISOString()}] [ExplorePods] Pod CTA button clicked:`, { action, podId });
         
         try {
           // Import the summaryShared utility
@@ -173,7 +175,7 @@ const metaInfo = generateMetaInfo();
             // Add pod to cart with confirmation if replacing
             const selectedPod = await shared.selectPodWithConfirmation(podId);
             if (selectedPod) {
-              console.log('Pod added to cart successfully');
+              console.log(`🔍 [${new Date().toISOString()}] [ExplorePods] Pod added to cart successfully`);
               // Navigate to summary page after successful pod reservation
               window.location.href = '/summary?step=1';
             }
@@ -181,7 +183,7 @@ const metaInfo = generateMetaInfo();
             // Remove pod from cart
             const success = await shared.removePod();
             if (success) {
-              console.log('Pod removed from cart successfully');
+              console.log(`🔍 [${new Date().toISOString()}] [ExplorePods] Pod removed from cart successfully`);
             }
           }
         } catch (error) {
@@ -190,14 +192,14 @@ const metaInfo = generateMetaInfo();
       }
       
       // Handle regular data-add-to-cart buttons (fallback)
-      if (e.target && (e.target as HTMLElement).matches('[data-add-to-cart]')) {
+      const addToCartButton = target.closest('[data-add-to-cart]') as HTMLElement;
+      if (addToCartButton) {
         e.preventDefault();
         
-        const button = e.target as HTMLElement;
-        const itemType = button.dataset?.itemType;
+        const itemType = addToCartButton.dataset?.itemType;
         
         if (itemType === 'pod') {
-          const podId = button.dataset?.itemId;
+          const podId = addToCartButton.dataset?.itemId;
           
           try {
             // Import the summaryShared utility

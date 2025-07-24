@@ -53,27 +53,29 @@ const hasDiscount = discountPercentage > 0;
      data-variant={variant}
      data-item-type={itemType}>
   
-  <!-- Minimal Clean Design -->
-  <div class="price-display-minimal">
+  <!-- Enhanced Card-Style Design -->
+  <div class="price-display-card">
+    {showOriginalPrice && hasDiscount && (
+      <div class="original-price-card text-gray-500 text-lg line-through">
+        {priceDisplay.originalPrice}
+      </div>
+    )}
+    
     {showBadge && hasDiscount && (
-      <div class="discount-badge-minimal inline-block px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700 mb-2">
+      <div class="discount-badge-card inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
         {discountPercentage}% OFF
       </div>
     )}
     
-    <div class="price-row flex items-baseline gap-2">
-      {showOriginalPrice && hasDiscount && (
-        <span class="original-price text-gray-500 line-through">
-          {priceDisplay.originalPrice}
-        </span>
-      )}
-      <span class="final-price font-semibold text-gray-900">
-        {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
-      </span>
+    <div class="final-price-card text-4xl font-bold text-gray-900">
+      {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
     </div>
     
     {showSavings && hasDiscount && (
-      <div class="savings-text text-xs text-green-600 mt-1">
+      <div class="savings-text-card text-green-600 font-semibold text-sm">
         Save {priceDisplay.savings}
       </div>
     )}
@@ -148,26 +150,26 @@ const hasDiscount = discountPercentage > 0;
         const priceDisplay = getDiscountedPriceDisplay(basePriceINR, basePriceUSD, discountPercentage, userCurrency);
         
         // Update discount badge
-        const badgeElement = display.querySelector('.discount-badge-minimal');
+        const badgeElement = display.querySelector('.discount-badge-card');
         if (badgeElement && showBadge && discountPercentage > 0) {
           badgeElement.textContent = `${discountPercentage}% OFF`;
-          badgeElement.className = `discount-badge-minimal inline-block px-2 py-1 rounded text-xs font-medium ${getDiscountBadgeColor(discountPercentage)} mb-2`;
+          badgeElement.className = `discount-badge-card inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold`;
         }
         
         // Update original price
-        const originalPriceElement = display.querySelector('.original-price');
+        const originalPriceElement = display.querySelector('.original-price-card');
         if (originalPriceElement && showOriginalPrice && discountPercentage > 0) {
           originalPriceElement.textContent = priceDisplay.originalPrice;
         }
         
         // Update final price
-        const finalPriceElement = display.querySelector('.final-price');
+        const finalPriceElement = display.querySelector('.final-price-card');
         if (finalPriceElement) {
           finalPriceElement.textContent = discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice;
         }
         
         // Update savings text
-        const savingsElement = display.querySelector('.savings-text');
+        const savingsElement = display.querySelector('.savings-text-card');
         if (savingsElement && showSavings && discountPercentage > 0) {
           savingsElement.textContent = `Save ${priceDisplay.savings}`;
         }
@@ -207,36 +209,31 @@ const hasDiscount = discountPercentage > 0;
 </script>
 
 <style>
-  .price-display-minimal {
+  .price-display-card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .price-row {
-    display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 0.5rem;
   }
   
-  .final-price {
-    font-weight: 600;
-    color: #111827;
-  }
-  
-  .original-price {
+  .original-price-card {
     color: #6b7280;
     text-decoration: line-through;
   }
   
-  .savings-text {
-    color: #059669;
-    font-size: 0.75rem;
+  .discount-badge-card {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
   }
   
-  .discount-badge-minimal {
-    background-color: #f0fdf4;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+  .final-price-card {
+    font-weight: 700;
+    color: #111827;
+  }
+  
+  .savings-text-card {
+    color: #059669;
+    font-weight: 600;
   }
 </style> 
