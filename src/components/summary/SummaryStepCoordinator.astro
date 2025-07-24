@@ -8,6 +8,7 @@
 
 <script>
   import { SummaryShared } from '../../utils/summaryShared.js';
+  import { generatePodSlug, generatePackSlug } from '../../utils/slugUtils.js';
 
   class SummaryStepCoordinator {
     private currentStep: number;
@@ -597,7 +598,14 @@
                     </svg>
                   </div>
                   <div>
-                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">${podItem.title || podItem.name || 'Selected Pod'}</h3>
+                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">
+                      <a href="/pods/${generatePodSlug(podItem.title || podItem.name)}" class="hover:text-mint-600 transition-colors cursor-pointer" title="View pod details">
+                        ${podItem.title || podItem.name || 'Selected Pod'}
+                        <svg class="w-4 h-4 inline ml-1 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                      </a>
+                    </h3>
                     <p id="selected-pod-description" class="text-graphite-600">${podItem.description || podItem.tagline || 'Pod description'}</p>
                     <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}</span></p>
                   </div>
@@ -687,16 +695,33 @@
 
 
               <!-- Action Buttons -->
-              <div class="space-y-3">
-                <button id="step1-continue-btn" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                  Continue to Step 2
-                </button>
-                <button id="remove-pod-btn" class="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="flex flex-col sm:flex-row gap-3">
+
+                <!-- Tertiary CTA: Remove Pod (minimal focus) -->
+                <button id="remove-pod-btn" class="px-4 py-3 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 border border-gray-200 hover:border-red-200">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                   </svg>
-                  <span>Remove Pod</span>
+                  <span class="hidden sm:inline">Remove</span>
                 </button>
+
+                 <!-- Secondary CTA: View Details -->
+                <button id="view-pod-details-btn" class="flex-1 border-2 border-gray-300 text-gray-700 py-4 px-6 rounded-xl font-semibold text-lg hover:border-mint-400 hover:text-mint-600 hover:bg-mint-50 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                  <span>View Details</span>
+                </button>
+                
+                <!-- Primary CTA: Continue to Step 2 -->
+                <button id="step1-continue-btn" class="flex-1 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  Continue to Step 2
+                </button>
+                
+               
+                
+                
               </div>
             </div>
           </div>
@@ -917,7 +942,14 @@
             </div>
           </div>
           
-          <h3 class="text-lg font-semibold text-graphite-900 mb-2">${pack.title}</h3>
+          <h3 class="text-lg font-semibold text-graphite-900 mb-2">
+            <a href="/packs/${generatePackSlug(pack.title)}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+              ${pack.title}
+              <svg class="w-4 h-4 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+          </h3>
           <p class="text-graphite-600 mb-4">${pack.description}</p>
           
           <div class="flex items-center justify-between">
@@ -1020,7 +1052,14 @@
                 <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
               </div>
               <div>
-                <span class="font-medium text-graphite-900 text-sm">${packDetails.title || 'Pack'}</span>
+                <span class="font-medium text-graphite-900 text-sm">
+                  <a href="/packs/${generatePackSlug(packDetails.title || 'Pack')}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+                    ${packDetails.title || 'Pack'}
+                    <svg class="w-3 h-3 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </a>
+                </span>
                 <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
               </div>
             </div>
@@ -1091,7 +1130,14 @@
                 <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
               </div>
               <div>
-                <span class="font-medium text-graphite-900 text-sm">${packDetails.title || 'Pack'}</span>
+                <span class="font-medium text-graphite-900 text-sm">
+                  <a href="/packs/${generatePackSlug(packDetails.title || 'Pack')}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+                    ${packDetails.title || 'Pack'}
+                    <svg class="w-3 h-3 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </a>
+                </span>
                 <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
               </div>
             </div>
@@ -1298,7 +1344,14 @@
                 <div class="w-8 h-8 bg-cerulean-500 rounded-lg flex items-center justify-center">
                   <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
                 </div>
-                <span class="font-medium text-graphite-900">${packDetails.title}</span>
+                <span class="font-medium text-graphite-900">
+                  <a href="/packs/${generatePackSlug(packDetails.title)}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+                    ${packDetails.title}
+                    <svg class="w-3 h-3 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </a>
+                </span>
               </div>
               <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
             </div>
@@ -1442,17 +1495,36 @@
         }
       });
 
-      // Start journey button (Step 1 only) - using event delegation
+      // Start journey button (Step 1 only) - using event delegation with double-click protection
       document.addEventListener('click', async (e) => {
         const target = e.target;
         const continueBtn = target.closest('#step1-continue-btn');
         
         if (continueBtn && this.currentStep === 1) {
-          console.log('🔍 [Step1] Continue to Step 2 button clicked');
+          // Prevent double-clicks
+          if (continueBtn.disabled) {
+            console.log(`🔍 [${new Date().toISOString()}] [Step1] Continue button already processing, ignoring duplicate click`);
+            return;
+          }
+          
+          console.log(`🔍 [${new Date().toISOString()}] [Step1] Continue to Step 2 button clicked`);
           console.log('🔍 [Step1] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step1] About to call nextStep()');
-          this.summaryShared.nextStep();
-          console.log('🔍 [Step1] nextStep() called');
+          
+          // Disable button to prevent double-clicks
+          continueBtn.disabled = true;
+          const originalText = continueBtn.textContent;
+          continueBtn.textContent = 'Loading...';
+          
+          try {
+            this.summaryShared.nextStep();
+            console.log('🔍 [Step1] nextStep() called');
+          } catch (error) {
+            console.error(`🔍 [${new Date().toISOString()}] [Step1] Error navigating to Step 2:`, error);
+            // Re-enable button on error
+            continueBtn.disabled = false;
+            continueBtn.textContent = originalText;
+          }
         } else if (continueBtn) {
           console.log('🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:', this.currentStep, ')');
         }
@@ -1477,6 +1549,58 @@
           e.stopPropagation();
           await this.summaryShared.removePod();
           this.showAvailablePods();
+        }
+      });
+
+      // View pod details button - using event delegation with double-click protection
+      document.addEventListener('click', async (e) => {
+        const target = e.target;
+        const viewDetailsBtn = target.closest('#view-pod-details-btn');
+        
+        if (viewDetailsBtn) {
+          // Prevent double-clicks
+          if (viewDetailsBtn.disabled) {
+            console.log(`🔍 [${new Date().toISOString()}] [Step1] View details button already processing, ignoring duplicate click`);
+            return;
+          }
+          
+          console.log(`🔍 [${new Date().toISOString()}] [Step1] View pod details button clicked`);
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Disable button to prevent double-clicks
+          viewDetailsBtn.disabled = true;
+          const originalText = viewDetailsBtn.innerHTML;
+          viewDetailsBtn.innerHTML = `
+            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span>Loading...</span>
+          `;
+          
+          try {
+            // Get the current pod from cart
+            const cart = await this.summaryShared.getCart();
+            const podItem = cart.find(item => item.type === 'pod');
+            
+            if (podItem && podItem.id) {
+              // Navigate to the pod details page
+              const podSlug = generatePodSlug(podItem.title || podItem.name);
+              console.log(`🔍 [${new Date().toISOString()}] [Step1] Navigating to pod details: /pods/${podSlug}`);
+              window.location.href = `/pods/${podSlug}`;
+            } else {
+              this.summaryShared.showNotification('No pod selected to view details', 'warning');
+              // Re-enable button on error
+              viewDetailsBtn.disabled = false;
+              viewDetailsBtn.innerHTML = originalText;
+            }
+          } catch (error) {
+            console.error(`🔍 [${new Date().toISOString()}] [Step1] Error navigating to pod details:`, error);
+            this.summaryShared.showNotification('Failed to navigate to pod details', 'error');
+            // Re-enable button on error
+            viewDetailsBtn.disabled = false;
+            viewDetailsBtn.innerHTML = originalText;
+          }
         }
       });
 

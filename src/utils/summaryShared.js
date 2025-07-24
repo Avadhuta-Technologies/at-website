@@ -1,5 +1,6 @@
 // Shared utilities for summary components - Using catalog as single source of truth
 import { catalogUtils, podsCatalog, packsCatalog } from '../content/catalog/_index.js';
+import { generatePodSlug } from './slugUtils.js';
 
 export class SummaryShared {
   constructor() {
@@ -866,7 +867,25 @@ export class SummaryShared {
     const priceEl = document.querySelector(priceSelector);
     const descEl = document.querySelector(descriptionSelector);
     
-    if (titleEl) titleEl.textContent = podItem.title || podItem.name;
+    if (titleEl) {
+      // Make all pod titles clickable links
+      const podTitle = podItem.title || podItem.name || 'Selected Pod';
+      
+      // Determine icon size based on the title selector
+      let iconSize = 'w-4 h-4';
+      if (titleSelector === '#summary-pod-title' || titleSelector === '#final-pod-title') {
+        iconSize = 'w-3 h-3'; // Smaller icon for Step 2 and Step 3
+      }
+      
+      titleEl.innerHTML = `
+        <a href="/pods/${generatePodSlug(podTitle)}" class="hover:text-mint-600 transition-colors cursor-pointer" title="View pod details">
+          ${podTitle}
+          <svg class="${iconSize} inline ml-1 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </a>
+      `;
+    }
     if (descEl) descEl.textContent = podItem.description || podItem.tagline;
     
     // Calculate price based on catalog data and reservation period
