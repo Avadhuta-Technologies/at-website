@@ -874,7 +874,7 @@ export const packsData = {
     title: "Ready to Get Started?",
     description: "Need help choosing the right pack? Book a free consultation and we'll help you pick the perfect solution for your goals.",
     buttonText: "Book a Free Consultation",
-    email: "hello@avadhutatech.com",
+    email: "support@novapod.ai",
     downloadLink: "Download Pack Services Deck"
   }
 }; 

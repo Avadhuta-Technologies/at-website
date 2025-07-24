@@ -2,7 +2,7 @@
 export const APP_CONFIG = {
   NAME: 'Avadhuta Technologies',
   DOMAIN: 'avadhutatech.com',
-  EMAIL: 'hello@avadhutatech.com',
+  EMAIL: 'support@novapod.ai',
   PHONE: '+91-XXXXXXXXXX',
   ADDRESS: 'India',
 } as const;
@@ -76,7 +76,7 @@ export const ANIMATION_DELAYS = {
 
 // Common gradients
 export const GRADIENTS = {
-  PRIMARY: 'from-blue-500 via-purple-500 to-pink-500',
+  PRIMARY: 'from-[#22c55e] via-[#0ea5e9] to-[#0284c7]',
   SECONDARY: 'from-green-500 via-emerald-500 to-teal-500',
   SUCCESS: 'from-green-400 to-emerald-500',
   WARNING: 'from-orange-400 to-red-500',

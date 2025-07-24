@@ -7,7 +7,7 @@ export const ourWorkCTAData = {
     url: "/contact"
   },
   secondaryButton: {
-    text: "contact@avadhutatech.com",
-    url: "mailto:contact@avadhutatech.com"
+    text: "support@novapod.ai",
+    url: "mailto:support@novapod.ai"
   }
 }; 

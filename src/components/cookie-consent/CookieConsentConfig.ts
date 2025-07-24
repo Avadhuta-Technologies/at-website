@@ -65,7 +65,7 @@ export const config: CookieConsentConfig = {
           acceptNecessaryBtn: 'Reject all',
           showPreferencesBtn: 'Manage preferences', 
           footer:
-            '<a href="#link">Privacy Policy</a>\n<a href="#link">Terms and conditions</a>',
+            '<a href="/assets/Privacy Policy.pdf" target="_blank">Privacy Policy</a>\n<a href="/assets/Terms & Conditions.pdf" target="_blank">Terms and conditions</a>',
         },
         preferencesModal: {
           title: 'Consent Preferences Center',
@@ -78,7 +78,7 @@ export const config: CookieConsentConfig = {
             {
               title: 'Cookie Usage',
               description:
-                'NovaPod uses cookies and similar technologies to ensure the proper functioning of our website, enhance your browsing experience, analyze site traffic, and personalize content. You can choose which categories of cookies to allow. For more details, please see our Cookie Policy',
+                'NovaPod uses cookies and similar technologies to ensure the proper functioning of our website, enhance your browsing experience, analyze site traffic, and personalize content. You can choose which categories of cookies to allow. For more details, please see our <a href="/assets/Cookie Policy.pdf" target="_blank">Cookie Policy</a>',
             },
             {
               title:
@@ -102,7 +102,7 @@ export const config: CookieConsentConfig = {
             {
               title: 'More information',
               description:
-                'For any query in relation to my policy on cookies and your choices, please <a class="cc__link" href="mailto:support@avadhutatech.com">contact us</a>.',
+                'For any query in relation to my policy on cookies and your choices, please <a class="cc__link" href="mailto:support@novapod.ai">contact us</a>.',
             },
           ],
         },

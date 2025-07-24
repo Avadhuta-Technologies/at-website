@@ -57,9 +57,104 @@ const getRelevantPacks = (podName: string) => {
 };
 
 const relevantPacks = getRelevantPacks(pod.name);
+
+// Generate comprehensive meta information for the pod
+const generateMetaInfo = (pod: any) => {
+  const title = `${pod.name} - NovaPod AI`;
+  const description = pod.tagline || `Professional ${pod.name} development team. Get your dedicated development pod for scalable, high-quality solutions.`;
+  
+  // Create a more detailed description for better SEO
+  const detailedDescription = `${pod.tagline} ${pod.whatsInPod?.description || ''} Starting at ₹${(pod.basePriceINR / 100000).toFixed(1)}L/month. Get your dedicated development team today.`;
+  
+  // Generate keywords based on pod content
+  const keywords = [
+    pod.name,
+    'development pod',
+    'dedicated team',
+    'software development',
+    'custom development',
+    'NovaPod AI'
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = `${pod.name} - NovaPod AI Development Team`;
+  
+  // Generate canonical URL
+  const canonicalUrl = `https://novapod.ai/pods/${generatePodSlug(pod.name)}`;
+  
+  return {
+    title,
+    description: detailedDescription,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo(pod);
 ---
 
-<Layout title={`${pod.name} - Pod Details`} description={pod.tagline}>
+<Layout 
+  title={metaInfo.title} 
+  description={metaInfo.description}
+  image={metaInfo.image}
+>
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
+  
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": pod.name,
+    "description": metaInfo.description,
+    "provider": {
+      "@type": "Organization",
+      "name": "NovaPod AI",
+      "url": "https://novapod.ai"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": pod.basePriceINR,
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock"
+    },
+    "image": metaInfo.image,
+    "url": metaInfo.canonicalUrl
+  })} />
+  
   <!-- Add meta tag with pod ID for debugging -->
   <meta name="current-pod-id" content={pod.id} />
   
@@ -77,7 +172,8 @@ const relevantPacks = getRelevantPacks(pod.name);
       
       // Handle pack cart operations specifically for pod detail page
       document.addEventListener('click', async function(e) {
-        const button = e.target.closest('[data-add-to-cart][data-item-type="pack"]');
+        const target = e.target as HTMLElement;
+        const button = target?.closest('[data-add-to-cart][data-item-type="pack"]') as HTMLElement;
         if (!button) return;
         
         e.preventDefault();
@@ -121,7 +217,7 @@ const relevantPacks = getRelevantPacks(pod.name);
       });
       
       // Show notification function
-      function showNotification(message, type = 'success') {
+      function showNotification(message: string, type: 'success' | 'error' = 'success') {
         const notification = document.createElement('div');
         const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
         notification.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;

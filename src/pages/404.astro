@@ -1,9 +1,56 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Breadcrumb from '../components/layout/Breadcrumb.astro';
+
+// Generate comprehensive meta information for the 404 page
+const generateMetaInfo = () => {
+  const title = "404 - Page Not Found | NovaPod AI";
+  const description = "The page you're looking for doesn't exist. Navigate back to our homepage to explore our development pods and services.";
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = '404 - Page Not Found - NovaPod AI';
+  
+  // Generate canonical URL
+  const canonicalUrl = 'https://novapod.ai/404';
+  
+  return {
+    title,
+    description,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo();
 ---
 
-<Layout title="404 - Page Not Found" description="The page you're looking for doesn't exist">
+<Layout 
+  title={metaInfo.title}
+  description={metaInfo.description}
+  image={metaInfo.image}
+>
+  <!-- SEO Meta Tags for 404 page -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
+  
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:site_name" content="NovaPod AI" />
+  
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  
   <Breadcrumb title="404 - Page Not Found" />
   
   <section class="pt-20 pb-8 lg:pt-[120px] lg:pb-[70px]">

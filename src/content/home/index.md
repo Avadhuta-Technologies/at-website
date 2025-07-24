@@ -281,6 +281,5 @@ finalCTA:
     - label: "Talk to a Pod Strategist"
       href: "#"
   contactInfo:
-    email1: "vikram@avadhutatech.com"
-    email2: "vinay@avadhutatech.com"
+    email1: "support@novapod.ai"
 ---

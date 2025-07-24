@@ -24,23 +24,14 @@ const {
 const { title, subtitle, projects = [], categories = [] } = data;
 ---
 
-<section class={`py-20 bg-white ${className}`}>
+<section class={`pt-4 pb-2 ${className}`}>
   <div class="container mx-auto px-4">
-    <!-- Section Header -->
-    <div class="max-w-3xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">
-        {title}
-      </h2>
-      <p class="text-lg text-gray-600 leading-relaxed">
-        {subtitle}
-      </p>
-    </div>
     
     <!-- Filter Tabs -->
     <div class="flex flex-wrap justify-center gap-4 mb-12">
       {categories.map((category: string) => (
         <button 
-          class="portfolio-filter-btn active" 
+          class="portfolio-filter-btn" 
           data-category={category}
           data-filter="category"
         >

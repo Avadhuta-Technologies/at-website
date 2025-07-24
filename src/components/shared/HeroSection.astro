@@ -57,8 +57,8 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
 
       <!-- Main Heading -->
       <h1 data-animate="fade-in-up" class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-        <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-          {title}
+        <span class="bg-gradient-to-r from-[#22c55e] via-[#0ea5e9] to-[#0284c7] bg-clip-text text-transparent">
+          {data.heroTitle}
         </span>
       </h1>
       
@@ -74,9 +74,9 @@ const secondaryButton = data?.secondaryButton || secondaryButtonProp;
       <!-- CTA Buttons -->
       <div data-animate="fade-in-up" class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 cta-buttons">
         {primaryButton && (
-          <a href={primaryButton.href} data-button-label={primaryButton.label} onclick="if(window.handleButtonClick) { window.handleButtonClick(event, this.getAttribute('data-button-label')); } else { console.log('handleButtonClick not available'); }" class="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
+          <a href={primaryButton.href} data-button-label={primaryButton.label} onclick="if(window.handleButtonClick) { window.handleButtonClick(event, this.getAttribute('data-button-label')); } else { console.log('handleButtonClick not available'); }" class="group relative px-8 py-4 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] text-white font-semibold rounded-xl hover:from-[#16a34a] hover:to-[#0284c7] transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl primary-btn">
             <span class="relative z-10">{primaryButton.label}</span>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#16a34a] to-[#0284c7] rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </a>
         )}
         {secondaryButton && (
