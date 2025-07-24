@@ -222,20 +222,22 @@ const metaInfo = generateMetaInfo();
     }
   }
 
-  // Global event handler for data-add-to-cart buttons on home page
+  // Global event handler for data-add-to-cart buttons on home page - using event delegation
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', async function(e) {
-      if (e.target && (e.target as HTMLElement).matches('[data-add-to-cart]')) {
+      const target = e.target as HTMLElement;
+      const button = target.closest('[data-add-to-cart]') as HTMLElement;
+      
+      if (button) {
         e.preventDefault();
         e.stopPropagation();
         
-        const button = e.target as HTMLElement;
         const itemId = button.getAttribute('data-item-id');
         const itemType = button.getAttribute('data-item-type');
         const itemTitle = button.getAttribute('data-item-title');
         const itemDescription = button.getAttribute('data-item-description');
         
-        console.log('🔍 [Home] Add to cart clicked:', { itemId, itemType, itemTitle });
+        console.log(`🔍 [${new Date().toISOString()}] [Home] Add to cart clicked:`, { itemId, itemType, itemTitle });
         
         if (itemId && itemType) {
           try {

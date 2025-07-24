@@ -226,11 +226,14 @@
     }
 
     addRemoveListeners() {
-      const removeBtns = document.querySelectorAll('.remove-item-btn');
-      removeBtns.forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+      // Use event delegation for remove buttons
+      document.addEventListener('click', async (e) => {
+        const target = e.target as HTMLElement;
+        const removeBtn = target.closest('.remove-item-btn') as HTMLElement;
+        
+        if (removeBtn) {
           e.preventDefault();
-          const cartItem = btn.closest('.cart-item');
+          const cartItem = removeBtn.closest('.cart-item');
           if (cartItem) {
             const itemId = cartItem.getAttribute('data-item-id');
             const itemType = cartItem.getAttribute('data-item-type');
@@ -248,7 +251,7 @@
               }
             }
           }
-        });
+        }
       });
     }
 

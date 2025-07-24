@@ -186,7 +186,7 @@ export class SummaryShared {
   }
 
   async removePod() {
-    console.log('🔍 [removePod] Starting pod removal...');
+    console.log(`🔍 [${new Date().toISOString()}] [removePod] Starting pod removal...`);
     
     // Show global loader to prevent user interactions
     this.showGlobalLoader('Removing pod...');
@@ -194,16 +194,16 @@ export class SummaryShared {
     try {
       const cart = await this.getCart();
       const podItem = cart.find(item => item.type === 'pod');
-      console.log('🔍 [removePod] Found pod item:', podItem);
+      console.log(`🔍 [${new Date().toISOString()}] [removePod] Found pod item:`, podItem);
       
       if (podItem) {
         // Remove pod from localStorage
-        console.log('🔍 [removePod] Removing pod from localStorage...');
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] Removing pod from localStorage...`);
         await this.removeFromCart(podItem.id, 'pod');
         
         // Also remove all packs since they depend on the pod
         const packItems = cart.filter(item => item.type === 'pack');
-        console.log('🔍 [removePod] Removing packs:', packItems.length);
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] Removing packs: ${packItems.length}`);
         for (const pack of packItems) {
           await this.removeFromCart(pack.id, 'pack');
         }
@@ -218,24 +218,24 @@ export class SummaryShared {
             }
           }
           keysToRemove.forEach(key => localStorage.removeItem(key));
-          console.log('🔍 [removePod] Cleared additional cart-related storage');
+          console.log(`🔍 [${new Date().toISOString()}] [removePod] Cleared additional cart-related storage`);
         } catch (storageError) {
           console.error('🔍 [removePod] Error clearing additional storage:', storageError);
         }
         
         this.hideGlobalLoader();
         this.showNotification('Pod and all packs removed from cart', 'success');
-        console.log('🔍 [removePod] Pod removal completed successfully');
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] Pod removal completed successfully`);
         
         // Verify that storage is completely cleared
         try {
           const verifyCart = await this.getCart();
-          console.log('🔍 [removePod] Verification - localStorage cart:', verifyCart);
+          console.log(`🔍 [${new Date().toISOString()}] [removePod] Verification - localStorage cart:`, verifyCart);
           
           if (verifyCart.length === 0) {
-            console.log('🔍 [removePod] ✅ Storage verification passed - localStorage cleared');
+            console.log(`🔍 [${new Date().toISOString()}] [removePod] ✅ Storage verification passed - localStorage cleared`);
           } else {
-            console.log('🔍 [removePod] ⚠️ Storage verification failed - data remains:', verifyCart);
+            console.log(`🔍 [${new Date().toISOString()}] [removePod] ⚠️ Storage verification failed - data remains:`, verifyCart);
           }
         } catch (verifyError) {
           console.error('🔍 [removePod] Error during verification:', verifyError);
@@ -243,7 +243,7 @@ export class SummaryShared {
         
         return true;
       } else {
-        console.log('🔍 [removePod] No pod found in cart');
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] No pod found in cart`);
         this.hideGlobalLoader();
       }
     } catch (error) {
@@ -290,7 +290,16 @@ export class SummaryShared {
 
   // Enhanced Pack operations - using catalog data with pod requirement check
   async addPack(packId) {
+    // Prevent double-clicks by checking if already processing
+    if (this.isProcessingPackOperation) {
+      console.log(`🔍 [${new Date().toISOString()}] [addPack] Already processing pack operation, ignoring duplicate call for packId: ${packId}`);
+      return null;
+    }
+    
+    this.isProcessingPackOperation = true;
+    
     try {
+      console.log(`🔍 [${new Date().toISOString()}] [addPack] Starting pack addition for: ${packId}`);
       // Show global loader to prevent user interactions
       this.showGlobalLoader('Processing pack...');
       
@@ -335,18 +344,39 @@ export class SummaryShared {
       
       this.hideGlobalLoader();
       this.showNotification('Pack added to cart successfully!', 'success');
+      
+      // Add a small delay before resetting the flag to prevent rapid successive calls
+      setTimeout(() => {
+        console.log(`🔍 [${new Date().toISOString()}] [addPack] Processing complete, resetting flag (delayed)`);
+        this.isProcessingPackOperation = false;
+      }, 100);
+      
       return pack;
     } catch (error) {
       console.error('Error adding pack to cart:', error);
       this.hideGlobalLoader();
       this.showNotification('Failed to add pack to cart', 'error');
+      
+      // Reset flag immediately on error
+      console.log(`🔍 [${new Date().toISOString()}] [addPack] Error occurred, resetting flag immediately`);
+      this.isProcessingPackOperation = false;
+      
       return null;
     }
   }
 
   // New method for handling pack cart operations with UI updates
   async handlePackCartOperation(packId, buttonElement) {
+    // Prevent double-clicks by checking if already processing
+    if (this.isProcessingPackCartOperation) {
+      console.log(`🔍 [${new Date().toISOString()}] [handlePackCartOperation] Already processing pack cart operation, ignoring duplicate call for packId: ${packId}`);
+      return null;
+    }
+    
+    this.isProcessingPackCartOperation = true;
+    
     try {
+      console.log(`🔍 [${new Date().toISOString()}] [handlePackCartOperation] Starting pack cart operation for: ${packId}`);
       // Show global loader to prevent user interactions
       this.showGlobalLoader('Processing pack...');
       
@@ -394,6 +424,13 @@ export class SummaryShared {
       console.error('Error handling pack cart operation:', error);
       this.hideGlobalLoader();
       this.showNotification('Failed to update pack in cart', 'error');
+      
+      // Add a small delay before resetting the flag to prevent rapid successive calls
+      setTimeout(() => {
+        console.log(`🔍 [${new Date().toISOString()}] [handlePackCartOperation] Processing complete, resetting flag (delayed)`);
+        this.isProcessingPackCartOperation = false;
+      }, 100);
+      
       return null;
     }
   }
@@ -506,7 +543,16 @@ export class SummaryShared {
 
   // Enhanced Pod selection with replacement confirmation
   async selectPodWithConfirmation(podId) {
+    // Prevent double-clicks by checking if already processing
+    if (this.isProcessingPodSelection) {
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Already processing pod selection, ignoring duplicate call for podId: ${podId}`);
+      return null;
+    }
+    
+    this.isProcessingPodSelection = true;
+    
     try {
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Starting pod selection for: ${podId}`);
       // Show global loader to prevent user interactions
       this.showGlobalLoader('Processing pod selection...');
       
@@ -525,8 +571,8 @@ export class SummaryShared {
       const cart = await this.getCart();
       const existingPod = cart.find(item => item.type === 'pod');
       
-      console.log('🔍 [selectPodWithConfirmation] Current cart state:', cart);
-      console.log('🔍 [selectPodWithConfirmation] Existing pod found:', existingPod);
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Current cart state:`, cart);
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Existing pod found:`, existingPod);
       
       // Double-check: also verify in localStorage directly
       let localStoragePod = null;
@@ -540,14 +586,14 @@ export class SummaryShared {
         console.error('Error checking localStorage:', error);
       }
       
-      console.log('🔍 [selectPodWithConfirmation] localStorage pod check:', localStoragePod);
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] localStorage pod check:`, localStoragePod);
       
       // Get the current pod (either from cart or localStorage)
       const currentPod = existingPod || localStoragePod;
       
       const isCartEmpty = this.isCartEmpty();
       
-      console.log('🔍 [selectPodWithConfirmation] Current pod check:', {
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Current pod check:`, {
         currentPod,
         selectedPodId: podId,
         currentPodId: currentPod?.id,
@@ -561,16 +607,16 @@ export class SummaryShared {
       
       // Check if the selected pod is the same as the current pod
       // Only show "already selected" message if there's actually a valid pod in the cart
-      if (currentPod && currentPod.id && currentPod.id === podId && !isCartEmpty) {
-        console.log('🔍 [selectPodWithConfirmation] Same pod selected, no action needed');
-        this.hideGlobalLoader();
-        this.showNotification(`Pod ${pod.name} is already selected`, 'info');
-        return pod;
-      }
+      // if (currentPod && currentPod.id && currentPod.id === podId && !isCartEmpty) {
+      //   console.log('🔍 [selectPodWithConfirmation] Same pod selected, no action needed');
+      //   this.hideGlobalLoader();
+      //   this.showNotification(`Pod ${pod.name} is already selected`, 'info');
+      //   return pod;
+      // }
       
       // Only show confirmation if there's actually a different pod in the cart
       if ((existingPod && existingPod.id) || (localStoragePod && localStoragePod.id)) {
-        console.log('🔍 [selectPodWithConfirmation] Existing pod found, showing replacement confirmation');
+        console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Existing pod found, showing replacement confirmation`);
         // Hide loader before showing modal
         this.hideGlobalLoader();
         
@@ -580,38 +626,69 @@ export class SummaryShared {
             window.showPodReplacementModal(existingPod, pod, async (currentPod, newPod) => {
               // User confirmed replacement - show loader again
               this.showGlobalLoader('Replacing pod...');
-              console.log('🔍 [selectPodWithConfirmation] User confirmed replacement');
+              console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] User confirmed replacement`);
               await this.removePod(); // This removes the current pod and all packs
               const podForCart = podsCatalog.getPodForCart(podId);
               await this.addToCart(podForCart);
               this.hideGlobalLoader();
               this.showNotification(`Pod replaced with ${newPod.title || newPod.name}`, 'success');
+              
+              // Add a small delay before resetting the flag to prevent rapid successive calls
+              setTimeout(() => {
+                console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Processing complete, resetting flag (delayed)`);
+                this.isProcessingPodSelection = false;
+              }, 100);
+              
               resolve(newPod);
+            }, () => {
+              // User cancelled - reset flag immediately
+              console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] User cancelled, resetting flag immediately`);
+              this.isProcessingPodSelection = false;
+              resolve(null);
             });
           });
         } else {
           // Fallback without modal
-          console.log('🔍 [selectPodWithConfirmation] Modal not available, using fallback');
+          console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Modal not available, using fallback`);
           await this.removePod();
           const podForCart = podsCatalog.getPodForCart(podId);
           await this.addToCart(podForCart);
           this.hideGlobalLoader();
           this.showNotification(`Pod replaced with ${pod.name}`, 'success');
+          
+          // Add a small delay before resetting the flag to prevent rapid successive calls
+          setTimeout(() => {
+            console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Processing complete, resetting flag (delayed)`);
+            this.isProcessingPodSelection = false;
+          }, 100);
+          
           return pod;
         }
       } else {
-        console.log('🔍 [selectPodWithConfirmation] No existing pod, adding directly');
+        console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] No existing pod, adding directly`);
         // No existing pod, add directly
         const podForCart = podsCatalog.getPodForCart(podId);
         await this.addToCart(podForCart);
         this.hideGlobalLoader();
         this.showNotification(`Pod ${pod.name} added to cart`, 'success');
+        
+        // Add a small delay before resetting the flag to prevent rapid successive calls
+        setTimeout(() => {
+          console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Processing complete, resetting flag (delayed)`);
+          this.isProcessingPodSelection = false;
+        }, 100);
+        
         return pod;
       }
     } catch (error) {
       console.error('Error selecting pod with confirmation:', error);
       this.hideGlobalLoader();
       this.showNotification('Failed to select pod', 'error');
+      
+      // Reset flag immediately on error
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Error occurred, resetting flag immediately`);
+      this.isProcessingPodSelection = false;
+      
       return null;
     }
   }
@@ -1200,20 +1277,28 @@ export class SummaryShared {
 
   // Global Loader Management
   showGlobalLoader(message = 'Processing...') {
+    console.log('🔍 [showGlobalLoader] Starting to show global loader with message:', message);
+    
     // Create loader overlay if it doesn't exist
     let loader = document.getElementById('global-loader');
     if (!loader) {
+      console.log('🔍 [showGlobalLoader] Creating new loader element');
       loader = document.createElement('div');
       loader.id = 'global-loader';
-      loader.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]';
+      loader.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
       loader.innerHTML = `
-        <div class="bg-white rounded-lg p-6 flex flex-col items-center space-y-4">
+        <div class="bg-white rounded-lg p-6 flex flex-col items-center space-y-4 shadow-xl">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           <p class="text-gray-700 font-medium">${message}</p>
         </div>
       `;
       document.body.appendChild(loader);
+      console.log('🔍 [showGlobalLoader] Loader element created and appended to body');
+      
+      // Force a reflow to ensure the loader is visible
+      loader.offsetHeight;
     } else {
+      console.log('🔍 [showGlobalLoader] Updating existing loader message');
       // Update message if loader exists
       const messageElement = loader.querySelector('p');
       if (messageElement) {
@@ -1224,19 +1309,41 @@ export class SummaryShared {
     // Disable all interactive elements
     this.disableUserInteractions();
     
-    console.log('🔍 [showGlobalLoader] Global loader shown');
+    console.log('🔍 [showGlobalLoader] Global loader shown successfully');
+    
+    // Add a small delay to ensure the loader is visible
+    setTimeout(() => {
+      console.log('🔍 [showGlobalLoader] Loader should now be visible');
+    }, 100);
   }
 
   hideGlobalLoader() {
+    console.log('🔍 [hideGlobalLoader] Starting to hide global loader');
+    
     const loader = document.getElementById('global-loader');
     if (loader) {
+      console.log('🔍 [hideGlobalLoader] Found loader element, removing it');
       loader.remove();
+    } else {
+      console.log('🔍 [hideGlobalLoader] No loader element found to hide');
     }
     
     // Re-enable all interactive elements
     this.enableUserInteractions();
     
-    console.log('🔍 [hideGlobalLoader] Global loader hidden');
+    console.log('🔍 [hideGlobalLoader] Global loader hidden successfully');
+  }
+
+  // Add a method to show loader with minimum display time
+  async showGlobalLoaderWithDelay(message = 'Processing...', minDisplayTime = 500) {
+    this.showGlobalLoader(message);
+    
+    // Ensure loader is visible for at least the minimum time
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, minDisplayTime);
+    });
   }
 
   disableUserInteractions() {
