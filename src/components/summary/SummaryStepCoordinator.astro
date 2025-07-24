@@ -298,10 +298,10 @@
                 <button id="edit-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
                   Edit Pod
                 </button>
-                <button id="remove-pod-step2-btn" class="text-red-600 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors" title="Remove Pod">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
+                        <button id="remove-pod-step2-btn" class="text-gray-600 hover:text-red-500 p-2 rounded-lg hover:bg-red-50/50 transition-colors bg-transparent !text-gray-600" title="Remove Pod">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
                 </button>
               </div>
             </div>
@@ -698,10 +698,10 @@
               <div class="flex flex-col sm:flex-row gap-3">
 
                 <!-- Tertiary CTA: Remove Pod (minimal focus) -->
-                <button id="remove-pod-btn" class="px-4 py-3 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 border border-gray-200 hover:border-red-200">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                  </svg>
+                        <button id="remove-pod-btn" class="px-4 py-3 text-gray-600 hover:text-red-500 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 bg-transparent hover:bg-red-50/50 !text-gray-600">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
                   <span class="hidden sm:inline">Remove</span>
                 </button>
 
@@ -1143,10 +1143,10 @@
             </div>
             <div class="flex items-center space-x-3">
               <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
-              <button class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors" data-pack-id="${pack.id}" data-action="remove" title="Remove Pack">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
+                      <button class="text-gray-600 hover:text-red-500 p-1 rounded hover:bg-red-50/50 transition-colors bg-transparent !text-gray-600" data-pack-id="${pack.id}" data-action="remove" title="Remove Pack">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
               </button>
             </div>
           </div>
@@ -1204,7 +1204,7 @@
               button.textContent = 'Remove Pack';
               button.setAttribute('data-action', 'remove');
               // Completely replace the class attribute to avoid conflicts
-              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-red-500 text-white hover:bg-red-600';
+              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-600 hover:text-red-500 bg-transparent hover:bg-red-50/50 !text-gray-600';
               button.disabled = false; // Ensure button is enabled
               console.log('🔍 [refreshPackCards] Button classes after update (selected):', button.className);
             } else {
@@ -2175,5 +2175,22 @@
 
   .overflow-x-auto::-webkit-scrollbar-thumb:hover {
     background: #a0aec0;
+  }
+  
+  /* Ensure remove button text is visible */
+  #remove-pod-btn,
+  #remove-pod-step2-btn,
+  .remove-pod-btn,
+  .remove-pack-btn,
+  [data-action="remove"] {
+    color: #4b5563 !important; /* text-gray-600 */
+  }
+  
+  #remove-pod-btn:hover,
+  #remove-pod-step2-btn:hover,
+  .remove-pod-btn:hover,
+  .remove-pack-btn:hover,
+  [data-action="remove"]:hover {
+    color: #ef4444 !important; /* text-red-500 */
   }
 </style>

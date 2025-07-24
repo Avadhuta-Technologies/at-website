@@ -179,7 +179,7 @@ const { pod } = Astro.props;
           
           // Update classes
           button.classList.remove('bg-primary-600', 'hover:bg-primary-700');
-          button.classList.add('bg-red-500', 'hover:bg-red-600');
+          button.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
           console.log('🔵 [PodReadyToLaunchSection] Updated button classes:', button.className);
           
           // Update action
@@ -201,7 +201,7 @@ const { pod } = Astro.props;
           console.log('🔵 [PodReadyToLaunchSection] Pod is not in cart - updating to "Reserve Pod"');
           
           // Update classes
-          button.classList.remove('bg-red-500', 'hover:bg-red-600');
+          button.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
           button.classList.add('bg-primary-600', 'hover:bg-primary-700');
           console.log('🔵 [PodReadyToLaunchSection] Updated button classes:', button.className);
           

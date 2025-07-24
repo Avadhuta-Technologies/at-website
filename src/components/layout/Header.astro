@@ -5,11 +5,15 @@ const menuitems = [
     path: "/",
   },
   { title: "Our Work", path: "/our-work", description: "Explore our latest projects and achievements" },
-  { title: "Case Studies", path: "/case-studies", description: "Real success stories and results" },
+  // { title: "Case Studies", path: "/case-studies", description: "Real success stories and results" },
   {
     title: "Explore Pods",
     path: "/explore-pods",
   },
+  {
+    title: "Contact",
+    path: "/contact",
+  }
 ];
 ---
 
@@ -178,13 +182,8 @@ const menuitems = [
         </button>
         
         <!-- Desktop Action Buttons -->
-        <div class="hidden sm:flex items-center gap-3 lg:gap-4 flex-shrink-0 flex-nowrap">
-          <a
-            href="/contact"
-            class="py-2 px-4 lg:px-[22px] text-sm lg:text-base font-inter font-medium text-graphite-700 hover:text-mint-600 transition-all duration-300 flex-shrink-0 glass-hover rounded-lg"
-          >
-            Contact
-          </a>
+        <div class="hidden sm:flex items-center gap-3 lg:gap-4 flex-shrink-0 flex-nowrap ml-3">
+          
           <a
             href="/explore-pods"
             class="rounded-lg py-2 px-4 lg:px-6 text-sm lg:text-base 

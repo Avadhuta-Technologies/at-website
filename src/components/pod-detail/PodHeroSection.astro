@@ -192,7 +192,7 @@ const { pod } = Astro.props;
           
           // Update classes
           button.classList.remove('bg-primary-600', 'hover:bg-primary-700');
-          button.classList.add('bg-red-500', 'hover:bg-red-600');
+          button.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
           console.log('🔵 [PodHeroSection] Updated button classes:', button.className);
           
           // Update action
@@ -214,7 +214,7 @@ const { pod } = Astro.props;
           console.log('🔵 [PodHeroSection] Pod is not in cart - updating to "Reserve Pod"');
           
           // Update classes
-          button.classList.remove('bg-red-500', 'hover:bg-red-600');
+          button.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
           button.classList.add('bg-primary-600', 'hover:bg-primary-700');
           console.log('🔵 [PodHeroSection] Updated button classes:', button.className);
           
@@ -301,4 +301,24 @@ const { pod } = Astro.props;
       }
     }
   });
-</script> 
+</script>
+
+<style>
+  /* Ensure remove button text is visible in pod hero section */
+  .pod-hero-cta-btn[data-action="remove"] {
+    color: #4b5563 !important; /* text-gray-600 */
+  }
+  
+  .pod-hero-cta-btn[data-action="remove"]:hover {
+    color: #ef4444 !important; /* text-red-500 */
+  }
+  
+  /* Override any inherited white text */
+  .pod-hero-cta-btn.text-gray-600 {
+    color: #4b5563 !important;
+  }
+  
+  .pod-hero-cta-btn.text-gray-600:hover {
+    color: #ef4444 !important;
+  }
+</style> 

@@ -446,7 +446,7 @@ export class SummaryShared {
     if (isInCart) {
       // Pack is in cart - show remove state
       buttonElement.classList.remove('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
-      buttonElement.classList.add('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+              buttonElement.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
       
       if (buttonText) buttonText.textContent = 'Remove Pack';
       if (buttonIcon) {
@@ -454,7 +454,7 @@ export class SummaryShared {
       }
     } else {
       // Pack is not in cart - show add state
-      buttonElement.classList.remove('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+              buttonElement.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
       buttonElement.classList.add('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
       
       if (buttonText) buttonText.textContent = 'Add to Pod';
