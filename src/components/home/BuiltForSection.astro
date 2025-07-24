@@ -35,7 +35,7 @@ const { data = builtForData, className = "" } = Astro.props;
           <!-- Card Header -->
           <div class="p-8">
             <div class="flex items-center mb-6">
-              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+              <div class="w-16 h-16 bg-gradient-to-br from-[#22c55e] to-[#0ea5e9] rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
                 <img src={audience.icon} alt={audience.title} class="w-8 h-8 filter brightness-0 invert" />
               </div>
               <div>
@@ -66,7 +66,7 @@ const { data = builtForData, className = "" } = Astro.props;
             </ul>
 
             <!-- CTA Button -->
-            <a href={audience.cta.url} class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+            <a href={audience.cta.url} class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] text-white font-semibold rounded-xl hover:from-[#16a34a] hover:to-[#0284c7] transition-all duration-300 transform hover:scale-105">
               {audience.cta.text}
               <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -75,7 +75,7 @@ const { data = builtForData, className = "" } = Astro.props;
           </div>
 
           <!-- Decorative Elements -->
-          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-bl-full opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#22c55e] to-[#0ea5e9] rounded-bl-full opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
           <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-br from-green-100 to-blue-100 rounded-tr-full opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
         </div>
       ))}

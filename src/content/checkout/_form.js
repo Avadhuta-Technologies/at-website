@@ -76,8 +76,8 @@ export const checkoutFormData = {
     title: "Terms & Conditions",
     description: "By completing this order, you agree to our terms of service and privacy policy.",
     links: [
-      { text: "Terms of Service", url: "/terms" },
-      { text: "Privacy Policy", url: "/privacy" },
+      { text: "Terms of Service", url: "/assets/Terms & Conditions.pdf", target: "_blank" },
+      { text: "Privacy Policy", url: "/assets/Privacy Policy.pdf", target: "_blank" },
       { text: "Refund Policy", url: "/refund" }
     ]
   },

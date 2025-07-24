@@ -14,7 +14,6 @@ export interface Props {
     };
     contactInfo?: {
       email1: string;
-      email2: string;
     };
   };
 }
@@ -88,12 +87,6 @@ const { data } = Astro.props;
               class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300 text-sm"
             >
               {data.contactInfo.email1}
-            </a>
-            <a 
-              href={`mailto:${data.contactInfo.email2}`}
-              class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300 text-sm"
-            >
-              {data.contactInfo.email2}
             </a>
           </div>
         </div>

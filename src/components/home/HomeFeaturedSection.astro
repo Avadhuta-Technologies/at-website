@@ -33,7 +33,7 @@ const { data = homeFeaturedData, className = "" } = Astro.props;
             <!-- Card Header -->
             <div class="p-8 flex-1">
               <div class="flex items-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                <div class="w-16 h-16 bg-gradient-to-br from-[#22c55e] to-[#0ea5e9] rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
                   <img src={pod.icon} alt={pod.title} class="w-8 h-8 filter brightness-0 invert" />
                 </div>
                 <div>
@@ -75,7 +75,7 @@ const { data = homeFeaturedData, className = "" } = Astro.props;
                 </div>
               </div>
               
-              <a href={pod.cta.url} class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <a href={pod.cta.url} class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] text-white font-semibold rounded-xl hover:from-[#16a34a] hover:to-[#0284c7] transition-all duration-300 transform hover:scale-105 shadow-lg">
                 {pod.cta.text}
                 <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
