@@ -313,4 +313,36 @@
 .z-modal-backdrop { z-index: vars.$z-modal-backdrop; }
 .z-modal { z-index: vars.$z-modal; }
 .z-popover { z-index: vars.$z-popover; }
-.z-tooltip { z-index: vars.$z-tooltip; } 
+.z-tooltip { z-index: vars.$z-tooltip; }
+
+// Global Loader Styles
+.loading {
+  pointer-events: none;
+  user-select: none;
+  
+  * {
+    pointer-events: none !important;
+  }
+  
+  button, a, input, select, textarea, [data-add-to-cart], .pod-cta-btn {
+    pointer-events: none !important;
+    opacity: 0.6;
+  }
+}
+
+#global-loader {
+  backdrop-filter: blur(4px);
+  
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+} 

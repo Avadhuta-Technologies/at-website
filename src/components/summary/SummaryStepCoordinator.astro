@@ -1438,15 +1438,18 @@
         }
       });
 
-      // Start journey button (Step 1 only)
+      // Start journey button (Step 1 only) - using event delegation
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#step1-continue-btn') && this.currentStep === 1) {
+        const target = e.target;
+        const continueBtn = target.closest('#step1-continue-btn');
+        
+        if (continueBtn && this.currentStep === 1) {
           console.log('🔍 [Step1] Continue to Step 2 button clicked');
           console.log('🔍 [Step1] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step1] About to call nextStep()');
           this.summaryShared.nextStep();
           console.log('🔍 [Step1] nextStep() called');
-        } else if (e.target && e.target.matches('#step1-continue-btn')) {
+        } else if (continueBtn) {
           console.log('🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:', this.currentStep, ')');
         }
       });
@@ -1459,10 +1462,15 @@
         }
       });
 
-      // Remove pod button
+      // Remove pod button - using event delegation to handle clicks on child elements
       document.addEventListener('click', async (e) => {
-        if (e.target && e.target.matches('#remove-pod-btn')) {
+        const target = e.target;
+        const removeBtn = target.closest('#remove-pod-btn');
+        
+        if (removeBtn) {
           console.log('🔍 [Step1] Remove pod button clicked');
+          e.preventDefault();
+          e.stopPropagation();
           await this.summaryShared.removePod();
           this.showAvailablePods();
         }
@@ -1532,10 +1540,12 @@
       // Pack event listeners are now handled globally in setupEventListeners()
       // Only add Step 2 specific listeners here
 
-      // Edit pod button
+      // Edit pod button - using event delegation
       document.addEventListener('click', (e) => {
         const target = e.target;
-        if (target && target.matches('#edit-pod-btn')) {
+        const editBtn = target.closest('#edit-pod-btn');
+        
+        if (editBtn) {
           this.summaryShared.navigateToStep(1);
         }
       });
@@ -1556,25 +1566,28 @@
 
       // Back button removed from Step 2
 
-      // Continue button (Step 2 only)
+      // Continue button (Step 2 only) - using event delegation
       document.addEventListener('click', (e) => {
-        console.log('🔍 [Step2] Click event detected, target:', e.target);
-        console.log('🔍 [Step2] Target matches #step2-continue-btn:', e.target && e.target.matches('#step2-continue-btn'));
-        console.log('🔍 [Step2] Target matches #step2-continue-btn-selected:', e.target && e.target.matches('#step2-continue-btn-selected'));
-        if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected')) && this.currentStep === 2) {
+        const target = e.target;
+        const continueBtn = target.closest('#step2-continue-btn, #step2-continue-btn-selected');
+        
+        if (continueBtn && this.currentStep === 2) {
           console.log('🔍 [Step2] Continue to Step 3 button clicked');
           console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step2] About to call nextStep()');
           this.summaryShared.nextStep();
           console.log('🔍 [Step2] nextStep() called');
-        } else if ((e.target && e.target.matches('#step2-continue-btn') || e.target && e.target.matches('#step2-continue-btn-selected'))) {
+        } else if (continueBtn) {
           console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
         }
       });
 
-      // Go to step 1 button
+      // Go to step 1 button - using event delegation
       document.addEventListener('click', (e) => {
-        if (e.target && e.target.matches('#go-to-step1-btn')) {
+        const target = e.target;
+        const goToStep1Btn = target.closest('#go-to-step1-btn');
+        
+        if (goToStep1Btn) {
           this.summaryShared.navigateToStep(1);
         }
       });
