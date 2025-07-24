@@ -18,14 +18,122 @@ import {
   explorePacksTestimonialsData,
   explorePacksFAQData
 } from '../content/explore-packs/_index.js';
+
+// Generate comprehensive meta information for the explore packs page
+const generateMetaInfo = () => {
+  const title = "Explore Development Packs - Startup, Ecommerce, SaaS & Mobile | NovaPod AI";
+  const description = "Explore our pre-configured development packs. Choose from startup accelerator, ecommerce, SaaS platform, and mobile app packs with fixed pricing. Starting at ₹45K.";
+  
+  // Generate keywords based on explore packs page content
+  const keywords = [
+    'development packs',
+    'startup accelerator pack',
+    'ecommerce development pack',
+    'SaaS platform pack',
+    'mobile app development pack',
+    'fixed scope development',
+    'pre-configured development',
+    'development services',
+    'startup development',
+    'enterprise development',
+    'NovaPod AI packs',
+    'development team packages'
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = 'Explore Development Packs - NovaPod AI';
+  
+  // Generate canonical URL
+  const canonicalUrl = 'https://novapod.ai/explore-packs';
+  
+  return {
+    title,
+    description,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo();
 ---
 
 <Layout 
-  description="Explore our pre-configured development packs. Choose from startup accelerator, ecommerce, SaaS platform, and mobile app packs with fixed pricing."
-  title="Explore Packs | NovaPod.ai"
+  title={metaInfo.title}
+  description={metaInfo.description}
+  image={metaInfo.image}
 >
-
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
   
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Explore Development Packs",
+    "description": metaInfo.description,
+    "url": metaInfo.canonicalUrl,
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Development Packs",
+      "description": "Pre-configured development packs with fixed pricing",
+      "itemListElement": [
+        {
+          "@type": "Service",
+          "name": "Startup Accelerator Pack",
+          "description": "Complete startup development package with go-to-market strategy"
+        },
+        {
+          "@type": "Service",
+          "name": "Ecommerce Development Pack",
+          "description": "Full ecommerce platform development with payment integration"
+        },
+        {
+          "@type": "Service",
+          "name": "SaaS Platform Pack",
+          "description": "Complete SaaS platform development with subscription management"
+        },
+        {
+          "@type": "Service",
+          "name": "Mobile App Development Pack",
+          "description": "Cross-platform mobile app development for iOS and Android"
+        }
+      ]
+    }
+  })} />
+
   <!-- Hero Section -->
   <ExplorePacksHeroSection data={explorePacksHeroData} />
    

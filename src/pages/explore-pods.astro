@@ -15,12 +15,122 @@ import {
   explorePodsWhyChooseData,
 } from '../content/explore-pods/_index.js';
 import ExploreCustomPodSection from '../components/explore-pods/ExploreCustomPodSection.astro';
+
+// Generate comprehensive meta information for the explore pods page
+const generateMetaInfo = () => {
+  const title = "Explore Development Pods - AI/ML, Ecommerce, Mobile & More | NovaPod AI";
+  const description = "Explore our specialized development pods. Find the perfect team for your project with our AI/ML, ecommerce, mobile, and product launch pods. Starting at ₹2.5L/month.";
+  
+  // Generate keywords based on explore pods page content
+  const keywords = [
+    'development pods',
+    'AI ML development pod',
+    'ecommerce development pod',
+    'mobile development pod',
+    'product launch pod',
+    'dedicated development team',
+    'custom development pods',
+    'startup development pods',
+    'enterprise development pods',
+    'NovaPod AI pods',
+    'development team services',
+    'specialized development pods'
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = 'Explore Development Pods - NovaPod AI';
+  
+  // Generate canonical URL
+  const canonicalUrl = 'https://novapod.ai/explore-pods';
+  
+  return {
+    title,
+    description,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo();
 ---
 
-<Layout
-  description="Explore our specialized development pods. Find the perfect team for your project with our AI/ML, ecommerce, mobile, and product launch pods."
-  title="Explore Pods | NovaPod.ai"
+<Layout 
+  title={metaInfo.title}
+  description={metaInfo.description}
+  image={metaInfo.image}
 >
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
+  
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Explore Development Pods",
+    "description": metaInfo.description,
+    "url": metaInfo.canonicalUrl,
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Development Pods",
+      "description": "Specialized development pods for different project types",
+      "itemListElement": [
+        {
+          "@type": "Service",
+          "name": "AI/ML Development Pod",
+          "description": "Dedicated team for AI and machine learning projects"
+        },
+        {
+          "@type": "Service",
+          "name": "Ecommerce Development Pod",
+          "description": "Specialized team for ecommerce platform development"
+        },
+        {
+          "@type": "Service",
+          "name": "Mobile Development Pod",
+          "description": "Dedicated team for mobile app development"
+        },
+        {
+          "@type": "Service",
+          "name": "Product Launch Pod",
+          "description": "Complete team for product launch and go-to-market"
+        }
+      ]
+    }
+  })} />
+
   <!-- Hero Section -->
   <ExplorePodsHeroSection data={explorePodsHeroData} />
 

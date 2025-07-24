@@ -9,14 +9,111 @@ import {
   caseStudiesHeroData,
   caseStudiesData
 } from '../content/case-studies/_index.js';
+
+// Generate comprehensive meta information for the case studies listing page
+const generateMetaInfo = () => {
+  const title = "Case Studies - Successful Development Projects | NovaPod AI";
+  const description = "Explore our portfolio of successful projects across industries, from ecommerce platforms to AI-powered tools and mobile applications. Real solutions, real results.";
+  
+  // Generate keywords based on case studies page content
+  const keywords = [
+    'case studies',
+    'development projects',
+    'successful projects',
+    'ecommerce development',
+    'AI development',
+    'mobile app development',
+    'software development portfolio',
+    'development success stories',
+    'project examples',
+    'development case studies',
+    'NovaPod AI projects',
+    'development portfolio'
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = 'Case Studies - NovaPod AI Development Projects';
+  
+  // Generate canonical URL
+  const canonicalUrl = 'https://novapod.ai/case-studies';
+  
+  return {
+    title,
+    description,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo();
 ---
 
 <Layout 
-  description="Explore our portfolio of successful projects across industries, from ecommerce platforms to AI-powered tools and mobile applications."
-  title="Case Studies | NovaPod.ai"
+  title={metaInfo.title}
+  description={metaInfo.description}
+  image={metaInfo.image}
 >
-
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
   
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Case Studies",
+    "description": metaInfo.description,
+    "url": metaInfo.canonicalUrl,
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Development Case Studies",
+      "description": "Portfolio of successful development projects",
+      "numberOfItems": caseStudiesData.caseStudies.length,
+      "itemListElement": caseStudiesData.caseStudies.map((study: any, index: number) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "Article",
+          "name": study.title,
+          "description": study.problemStatement,
+          "url": `https://novapod.ai/case-studies/${study.id}`
+        }
+      }))
+    }
+  })} />
+
   <!-- Hero Section -->
   <CaseStudiesHeroSection data={caseStudiesHeroData} />
   
