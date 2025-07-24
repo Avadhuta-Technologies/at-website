@@ -13,6 +13,7 @@ import CaseStudyCTASection from '../../components/case-studies/CaseStudyCTASecti
 
 // Import case studies content
 import { caseStudiesData } from '../../content/case-studies/_index.js';
+import { generateSlug } from '../../utils/slugUtils';
 
 // Get the case study from props (provided by getStaticPaths)
 const { caseStudy } = Astro.props;
