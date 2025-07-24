@@ -24,13 +24,127 @@ import {
   homeHowItWorksData
 } from '../content/home/_index.js';
 
+// Generate comprehensive meta information for the homepage
+const generateMetaInfo = () => {
+  const title = "NovaPod AI - Specialized Development Pods for Startups & Enterprises";
+  const description = "Get dedicated teams of developers, designers, and project managers to build your next digital product. Specialized development pods for startups and enterprises. Starting at ₹2.5L/month.";
+  
+  // Generate keywords based on homepage content
+  const keywords = [
+    'development pods',
+    'dedicated development team',
+    'software development',
+    'custom development',
+    'startup development',
+    'enterprise development',
+    'web development',
+    'mobile development',
+    'AI development',
+    'NovaPod AI',
+    'development services',
+    'tech teams'
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = 'NovaPod AI - Specialized Development Pods';
+  
+  // Generate canonical URL
+  const canonicalUrl = 'https://novapod.ai';
+  
+  return {
+    title,
+    description,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo();
 ---
 
 <Layout 
-  description="NovaPod.ai - Specialized development pods for startups and enterprises. Get dedicated teams of developers, designers, and project managers to build your next digital product."
-  title="NovaPod.ai - Specialized Development Pods"
+  title={metaInfo.title}
+  description={metaInfo.description}
+  image={metaInfo.image}
 >
-
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
+  
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "NovaPod AI",
+    "description": metaInfo.description,
+    "url": metaInfo.canonicalUrl,
+    "logo": metaInfo.image,
+    "image": metaInfo.image,
+    "sameAs": [
+      "https://twitter.com/novapod_ai",
+      "https://linkedin.com/company/novapod-ai"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "url": "https://novapod.ai/contact"
+    },
+    "serviceArea": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": 20.5937,
+        "longitude": 78.9629
+      },
+      "geoRadius": "10000"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Development Pods",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Development Pods",
+            "description": "Dedicated development teams for startups and enterprises"
+          }
+        }
+      ]
+    }
+  })} />
   
   <!-- Hero Section -->
   <HomeHeroSection data={homeHeroData} />

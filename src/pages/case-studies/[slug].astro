@@ -17,9 +17,44 @@ import { caseStudiesData } from '../../content/case-studies/_index.js';
 // Get the case study from props (provided by getStaticPaths)
 const { caseStudy } = Astro.props;
 
-// Page metadata
-const pageTitle = `${caseStudy.title} - Case Study - Avadhuta Tech`;
-const pageDescription = caseStudy.problemStatement;
+// Generate comprehensive meta information for the case study
+const generateMetaInfo = (caseStudy: any) => {
+  const title = `${caseStudy.title} - Case Study - NovaPod AI`;
+  const description = caseStudy.problemStatement || `Explore how NovaPod AI delivered ${caseStudy.title} - a successful project showcasing our expertise in ${caseStudy.industry} development.`;
+  
+  // Create a more detailed description for better SEO
+  const detailedDescription = `${caseStudy.problemStatement} ${caseStudy.ourApproach ? caseStudy.ourApproach.substring(0, 150) + '...' : ''} Duration: ${caseStudy.duration}. Industry: ${caseStudy.industry}.`;
+  
+  // Generate keywords based on case study content
+  const keywords = [
+    caseStudy.title,
+    'case study',
+    caseStudy.industry,
+    'software development',
+    'custom development',
+    'NovaPod AI',
+    'project success',
+    ...(caseStudy.techStack || [])
+  ].join(', ');
+  
+  // Use NovaPod AI logo for consistent branding
+  const image = '/assets/logo/novapod_ai_logo.svg';
+  const imageAlt = `${caseStudy.title} - NovaPod AI Case Study`;
+  
+  // Generate canonical URL
+  const canonicalUrl = `https://novapod.ai/case-studies/${generateSlug(caseStudy.title)}`;
+  
+  return {
+    title,
+    description: detailedDescription,
+    keywords,
+    image,
+    imageAlt,
+    canonicalUrl
+  };
+};
+
+const metaInfo = generateMetaInfo(caseStudy);
 
 // Generate static paths for all case studies
 export async function getStaticPaths() {
@@ -30,7 +65,78 @@ export async function getStaticPaths() {
 }
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout 
+  title={metaInfo.title} 
+  description={metaInfo.description}
+  image={metaInfo.image}
+>
+  <!-- Enhanced Meta Tags for SEO -->
+  <meta name="keywords" content={metaInfo.keywords} />
+  <meta name="author" content="NovaPod AI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={metaInfo.canonicalUrl} />
+  
+  <!-- Enhanced Open Graph Tags -->
+  <meta property="og:title" content={metaInfo.title} />
+  <meta property="og:description" content={metaInfo.description} />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content={metaInfo.canonicalUrl} />
+  <meta property="og:image" content={metaInfo.image} />
+  <meta property="og:image:alt" content={metaInfo.imageAlt} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="NovaPod AI" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:section" content={caseStudy.industry} />
+  <meta property="article:published_time" content={new Date().toISOString()} />
+  
+  <!-- Enhanced Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaInfo.title} />
+  <meta name="twitter:description" content={metaInfo.description} />
+  <meta name="twitter:image" content={metaInfo.image} />
+  <meta name="twitter:image:alt" content={metaInfo.imageAlt} />
+  <meta name="twitter:site" content="@novapod_ai" />
+  <meta name="twitter:creator" content="@novapod_ai" />
+  
+  <!-- Additional Meta Tags -->
+  <meta name="application-name" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-title" content="NovaPod AI" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  
+  <!-- Structured Data for Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": caseStudy.title,
+    "description": metaInfo.description,
+    "image": metaInfo.image,
+    "url": metaInfo.canonicalUrl,
+    "author": {
+      "@type": "Organization",
+      "name": "NovaPod AI",
+      "url": "https://novapod.ai"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "NovaPod AI",
+      "url": "https://novapod.ai",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/logo/novapod_ai_logo.svg"
+      }
+    },
+    "datePublished": new Date().toISOString(),
+    "dateModified": new Date().toISOString(),
+    "articleSection": caseStudy.industry,
+    "keywords": metaInfo.keywords,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": metaInfo.canonicalUrl
+    }
+  })} />
+  
   <!-- Hero Section -->
   <CaseStudyHeroSection caseStudy={caseStudy} />
 
