@@ -1,5 +1,6 @@
 // Shared utilities for summary components - Using catalog as single source of truth
 import { catalogUtils, podsCatalog, packsCatalog } from '../content/catalog/_index.js';
+import { generatePodSlug } from './slugUtils.js';
 
 export class SummaryShared {
   constructor() {
@@ -21,6 +22,40 @@ export class SummaryShared {
     } catch (error) {
       console.error('🔍 [getCart] Error reading localStorage:', error);
       return [];
+    }
+  }
+
+  // Force refresh cart state to ensure consistency
+  async refreshCartState() {
+    try {
+      // Clear any cached cart data and force a fresh read
+      const cartData = localStorage.getItem('novapod-cart');
+      if (cartData) {
+        const parsedCart = JSON.parse(cartData);
+        // Validate cart data and remove any invalid items
+        const validCart = parsedCart.filter(item => item && item.id && item.type);
+        if (validCart.length !== parsedCart.length) {
+          localStorage.setItem('novapod-cart', JSON.stringify(validCart));
+          console.log('🔍 [refreshCartState] Cleaned invalid cart items');
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing cart state:', error);
+    }
+  }
+
+  // Check if cart is truly empty (no valid items)
+  isCartEmpty() {
+    try {
+      const cartData = localStorage.getItem('novapod-cart');
+      if (!cartData) return true;
+      
+      const parsedCart = JSON.parse(cartData);
+      const validItems = parsedCart.filter(item => item && item.id && item.type);
+      return validItems.length === 0;
+    } catch (error) {
+      console.error('Error checking if cart is empty:', error);
+      return true; // Assume empty on error
     }
   }
 
@@ -152,20 +187,24 @@ export class SummaryShared {
   }
 
   async removePod() {
-    console.log('🔍 [removePod] Starting pod removal...');
+    console.log(`🔍 [${new Date().toISOString()}] [removePod] Starting pod removal...`);
+    
+    // Show global loader to prevent user interactions
+    this.showGlobalLoader('Removing pod...');
+    
     try {
       const cart = await this.getCart();
       const podItem = cart.find(item => item.type === 'pod');
-      console.log('🔍 [removePod] Found pod item:', podItem);
+      console.log(`🔍 [${new Date().toISOString()}] [removePod] Found pod item:`, podItem);
       
       if (podItem) {
         // Remove pod from localStorage
-        console.log('🔍 [removePod] Removing pod from localStorage...');
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] Removing pod from localStorage...`);
         await this.removeFromCart(podItem.id, 'pod');
         
         // Also remove all packs since they depend on the pod
         const packItems = cart.filter(item => item.type === 'pack');
-        console.log('🔍 [removePod] Removing packs:', packItems.length);
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] Removing packs: ${packItems.length}`);
         for (const pack of packItems) {
           await this.removeFromCart(pack.id, 'pack');
         }
@@ -180,23 +219,24 @@ export class SummaryShared {
             }
           }
           keysToRemove.forEach(key => localStorage.removeItem(key));
-          console.log('🔍 [removePod] Cleared additional cart-related storage');
+          console.log(`🔍 [${new Date().toISOString()}] [removePod] Cleared additional cart-related storage`);
         } catch (storageError) {
           console.error('🔍 [removePod] Error clearing additional storage:', storageError);
         }
         
+        this.hideGlobalLoader();
         this.showNotification('Pod and all packs removed from cart', 'success');
-        console.log('🔍 [removePod] Pod removal completed successfully');
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] Pod removal completed successfully`);
         
         // Verify that storage is completely cleared
         try {
           const verifyCart = await this.getCart();
-          console.log('🔍 [removePod] Verification - localStorage cart:', verifyCart);
+          console.log(`🔍 [${new Date().toISOString()}] [removePod] Verification - localStorage cart:`, verifyCart);
           
           if (verifyCart.length === 0) {
-            console.log('🔍 [removePod] ✅ Storage verification passed - localStorage cleared');
+            console.log(`🔍 [${new Date().toISOString()}] [removePod] ✅ Storage verification passed - localStorage cleared`);
           } else {
-            console.log('🔍 [removePod] ⚠️ Storage verification failed - data remains:', verifyCart);
+            console.log(`🔍 [${new Date().toISOString()}] [removePod] ⚠️ Storage verification failed - data remains:`, verifyCart);
           }
         } catch (verifyError) {
           console.error('🔍 [removePod] Error during verification:', verifyError);
@@ -204,10 +244,12 @@ export class SummaryShared {
         
         return true;
       } else {
-        console.log('🔍 [removePod] No pod found in cart');
+        console.log(`🔍 [${new Date().toISOString()}] [removePod] No pod found in cart`);
+        this.hideGlobalLoader();
       }
     } catch (error) {
       console.error('🔍 [removePod] Error removing pod:', error);
+      this.hideGlobalLoader();
       this.showNotification('Failed to remove pod', 'error');
     }
     return false;
@@ -249,10 +291,23 @@ export class SummaryShared {
 
   // Enhanced Pack operations - using catalog data with pod requirement check
   async addPack(packId) {
+    // Prevent double-clicks by checking if already processing
+    if (this.isProcessingPackOperation) {
+      console.log(`🔍 [${new Date().toISOString()}] [addPack] Already processing pack operation, ignoring duplicate call for packId: ${packId}`);
+      return null;
+    }
+    
+    this.isProcessingPackOperation = true;
+    
     try {
+      console.log(`🔍 [${new Date().toISOString()}] [addPack] Starting pack addition for: ${packId}`);
+      // Show global loader to prevent user interactions
+      this.showGlobalLoader('Processing pack...');
+      
       const pack = packsCatalog.getPackById(packId);
       
       if (!pack) {
+        this.hideGlobalLoader();
         this.showNotification('Pack not found', 'error');
         return null;
       }
@@ -264,6 +319,7 @@ export class SummaryShared {
       if (existingPack) {
         // Pack exists, remove it
         await this.removePack(packId);
+        this.hideGlobalLoader();
         this.showNotification('Pack removed from cart', 'success');
         return pack;
       }
@@ -272,6 +328,8 @@ export class SummaryShared {
       const hasPodInCart = cart.some(item => item.type === 'pod');
       
       if (!hasPodInCart) {
+        // Hide loader before showing modal
+        this.hideGlobalLoader();
         // Show modal to inform user they need a pod first
         if (typeof window !== 'undefined' && window.showPodRequiredModal) {
           window.showPodRequiredModal();
@@ -285,21 +343,48 @@ export class SummaryShared {
       const packForCart = packsCatalog.getPackForCart(packId);
       await this.addToCart(packForCart);
       
+      this.hideGlobalLoader();
       this.showNotification('Pack added to cart successfully!', 'success');
+      
+      // Add a small delay before resetting the flag to prevent rapid successive calls
+      setTimeout(() => {
+        console.log(`🔍 [${new Date().toISOString()}] [addPack] Processing complete, resetting flag (delayed)`);
+        this.isProcessingPackOperation = false;
+      }, 100);
+      
       return pack;
     } catch (error) {
       console.error('Error adding pack to cart:', error);
+      this.hideGlobalLoader();
       this.showNotification('Failed to add pack to cart', 'error');
+      
+      // Reset flag immediately on error
+      console.log(`🔍 [${new Date().toISOString()}] [addPack] Error occurred, resetting flag immediately`);
+      this.isProcessingPackOperation = false;
+      
       return null;
     }
   }
 
   // New method for handling pack cart operations with UI updates
   async handlePackCartOperation(packId, buttonElement) {
+    // Prevent double-clicks by checking if already processing
+    if (this.isProcessingPackCartOperation) {
+      console.log(`🔍 [${new Date().toISOString()}] [handlePackCartOperation] Already processing pack cart operation, ignoring duplicate call for packId: ${packId}`);
+      return null;
+    }
+    
+    this.isProcessingPackCartOperation = true;
+    
     try {
+      console.log(`🔍 [${new Date().toISOString()}] [handlePackCartOperation] Starting pack cart operation for: ${packId}`);
+      // Show global loader to prevent user interactions
+      this.showGlobalLoader('Processing pack...');
+      
       const pack = packsCatalog.getPackById(packId);
       
       if (!pack) {
+        this.hideGlobalLoader();
         this.showNotification('Pack not found', 'error');
         return null;
       }
@@ -311,11 +396,14 @@ export class SummaryShared {
         // Pack is in cart, remove it
         await this.removePack(packId);
         this.updatePackButton(buttonElement, pack, false);
+        this.hideGlobalLoader();
         this.showNotification('Pack removed from cart', 'success');
         return pack;
       } else {
         // Pack is not in cart, check if pod exists
         if (!cartStatus.hasPod) {
+          // Hide loader before showing modal
+          this.hideGlobalLoader();
           // Show modal to inform user they need a pod first
           if (typeof window !== 'undefined' && window.showPodRequiredModal) {
             window.showPodRequiredModal();
@@ -329,12 +417,21 @@ export class SummaryShared {
         const packForCart = packsCatalog.getPackForCart(packId);
         await this.addToCart(packForCart);
         this.updatePackButton(buttonElement, pack, true);
+        this.hideGlobalLoader();
         this.showNotification('Pack added to cart successfully!', 'success');
         return pack;
       }
     } catch (error) {
       console.error('Error handling pack cart operation:', error);
+      this.hideGlobalLoader();
       this.showNotification('Failed to update pack in cart', 'error');
+      
+      // Add a small delay before resetting the flag to prevent rapid successive calls
+      setTimeout(() => {
+        console.log(`🔍 [${new Date().toISOString()}] [handlePackCartOperation] Processing complete, resetting flag (delayed)`);
+        this.isProcessingPackCartOperation = false;
+      }, 100);
+      
       return null;
     }
   }
@@ -349,7 +446,7 @@ export class SummaryShared {
     if (isInCart) {
       // Pack is in cart - show remove state
       buttonElement.classList.remove('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
-      buttonElement.classList.add('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+              buttonElement.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
       
       if (buttonText) buttonText.textContent = 'Remove Pack';
       if (buttonIcon) {
@@ -357,7 +454,7 @@ export class SummaryShared {
       }
     } else {
       // Pack is not in cart - show add state
-      buttonElement.classList.remove('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+              buttonElement.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
       buttonElement.classList.add('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
       
       if (buttonText) buttonText.textContent = 'Add to Pod';
@@ -447,52 +544,152 @@ export class SummaryShared {
 
   // Enhanced Pod selection with replacement confirmation
   async selectPodWithConfirmation(podId) {
+    // Prevent double-clicks by checking if already processing
+    if (this.isProcessingPodSelection) {
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Already processing pod selection, ignoring duplicate call for podId: ${podId}`);
+      return null;
+    }
+    
+    this.isProcessingPodSelection = true;
+    
     try {
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Starting pod selection for: ${podId}`);
+      // Show global loader to prevent user interactions
+      this.showGlobalLoader('Processing pod selection...');
+      
       const pod = podsCatalog.getPodById(podId);
       
       if (!pod) {
+        this.hideGlobalLoader();
         this.showNotification('Pod not found', 'error');
         return null;
       }
 
+      // Force refresh cart state to ensure we have the latest data
+      await this.refreshCartState();
+      
+      // Get the most up-to-date cart state
       const cart = await this.getCart();
       const existingPod = cart.find(item => item.type === 'pod');
       
-      if (existingPod) {
-        console.log('🔍 [selectPodWithConfirmation] Existing pod found, showing replacement confirmation');
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Current cart state:`, cart);
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Existing pod found:`, existingPod);
+      
+      // Double-check: also verify in localStorage directly
+      let localStoragePod = null;
+      try {
+        const localStorageCart = localStorage.getItem('novapod-cart');
+        if (localStorageCart) {
+          const parsedCart = JSON.parse(localStorageCart);
+          localStoragePod = parsedCart.find(item => item.type === 'pod');
+        }
+      } catch (error) {
+        console.error('Error checking localStorage:', error);
+      }
+      
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] localStorage pod check:`, localStoragePod);
+      
+      // Get the current pod (either from cart or localStorage)
+      const currentPod = existingPod || localStoragePod;
+      
+      const isCartEmpty = this.isCartEmpty();
+      
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Current pod check:`, {
+        currentPod,
+        selectedPodId: podId,
+        currentPodId: currentPod?.id,
+        cartLength: cart.length,
+        isCartEmpty,
+        existingPod,
+        localStoragePod,
+        isSamePod: currentPod && currentPod.id === podId,
+        shouldShowAlreadySelected: currentPod && currentPod.id && currentPod.id === podId && !isCartEmpty
+      });
+      
+      // Check if the selected pod is the same as the current pod
+      // Only show "already selected" message if there's actually a valid pod in the cart
+      // if (currentPod && currentPod.id && currentPod.id === podId && !isCartEmpty) {
+      //   console.log('🔍 [selectPodWithConfirmation] Same pod selected, no action needed');
+      //   this.hideGlobalLoader();
+      //   this.showNotification(`Pod ${pod.name} is already selected`, 'info');
+      //   return pod;
+      // }
+      
+      // Only show confirmation if there's actually a different pod in the cart
+      if ((existingPod && existingPod.id) || (localStoragePod && localStoragePod.id)) {
+        console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Existing pod found, showing replacement confirmation`);
+        // Hide loader before showing modal
+        this.hideGlobalLoader();
+        
         // Pod exists, show replacement confirmation
         if (typeof window !== 'undefined' && window.showPodReplacementModal) {
           return new Promise((resolve) => {
             window.showPodReplacementModal(existingPod, pod, async (currentPod, newPod) => {
-              // User confirmed replacement
-              console.log('🔍 [selectPodWithConfirmation] User confirmed replacement');
+              // User confirmed replacement - show loader again
+              this.showGlobalLoader('Replacing pod...');
+              console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] User confirmed replacement`);
               await this.removePod(); // This removes the current pod and all packs
               const podForCart = podsCatalog.getPodForCart(podId);
               await this.addToCart(podForCart);
+              this.hideGlobalLoader();
               this.showNotification(`Pod replaced with ${newPod.title || newPod.name}`, 'success');
+              
+              // Add a small delay before resetting the flag to prevent rapid successive calls
+              setTimeout(() => {
+                console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Processing complete, resetting flag (delayed)`);
+                this.isProcessingPodSelection = false;
+              }, 100);
+              
               resolve(newPod);
+            }, () => {
+              // User cancelled - reset flag immediately
+              console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] User cancelled, resetting flag immediately`);
+              this.isProcessingPodSelection = false;
+              resolve(null);
             });
           });
         } else {
           // Fallback without modal
-          console.log('🔍 [selectPodWithConfirmation] Modal not available, using fallback');
+          console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Modal not available, using fallback`);
           await this.removePod();
           const podForCart = podsCatalog.getPodForCart(podId);
           await this.addToCart(podForCart);
+          this.hideGlobalLoader();
           this.showNotification(`Pod replaced with ${pod.name}`, 'success');
+          
+          // Add a small delay before resetting the flag to prevent rapid successive calls
+          setTimeout(() => {
+            console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Processing complete, resetting flag (delayed)`);
+            this.isProcessingPodSelection = false;
+          }, 100);
+          
           return pod;
         }
       } else {
-        console.log('🔍 [selectPodWithConfirmation] No existing pod, adding directly');
+        console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] No existing pod, adding directly`);
         // No existing pod, add directly
         const podForCart = podsCatalog.getPodForCart(podId);
         await this.addToCart(podForCart);
+        this.hideGlobalLoader();
         this.showNotification(`Pod ${pod.name} added to cart`, 'success');
+        
+        // Add a small delay before resetting the flag to prevent rapid successive calls
+        setTimeout(() => {
+          console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Processing complete, resetting flag (delayed)`);
+          this.isProcessingPodSelection = false;
+        }, 100);
+        
         return pod;
       }
     } catch (error) {
       console.error('Error selecting pod with confirmation:', error);
+      this.hideGlobalLoader();
       this.showNotification('Failed to select pod', 'error');
+      
+      // Reset flag immediately on error
+      console.log(`🔍 [${new Date().toISOString()}] [selectPodWithConfirmation] Error occurred, resetting flag immediately`);
+      this.isProcessingPodSelection = false;
+      
       return null;
     }
   }
@@ -670,7 +867,25 @@ export class SummaryShared {
     const priceEl = document.querySelector(priceSelector);
     const descEl = document.querySelector(descriptionSelector);
     
-    if (titleEl) titleEl.textContent = podItem.title || podItem.name;
+    if (titleEl) {
+      // Make all pod titles clickable links
+      const podTitle = podItem.title || podItem.name || 'Selected Pod';
+      
+      // Determine icon size based on the title selector
+      let iconSize = 'w-4 h-4';
+      if (titleSelector === '#summary-pod-title' || titleSelector === '#final-pod-title') {
+        iconSize = 'w-3 h-3'; // Smaller icon for Step 2 and Step 3
+      }
+      
+      titleEl.innerHTML = `
+        <a href="/pods/${generatePodSlug(podTitle)}" class="hover:text-mint-600 transition-colors cursor-pointer" title="View pod details">
+          ${podTitle}
+          <svg class="${iconSize} inline ml-1 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </a>
+      `;
+    }
     if (descEl) descEl.textContent = podItem.description || podItem.tagline;
     
     // Calculate price based on catalog data and reservation period
@@ -680,18 +895,18 @@ export class SummaryShared {
         const podDetails = await this.getPodDetails(podItem.id);
         if (podDetails) {
           // Get current reservation period - try multiple sources
-          let months = 3; // default
+          let months = 1; // default
           
-          // First, try to get from chip selection (Step 1)
-          const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+          // First, try to get from chip selection (Step 1 or Step 3)
+          const selectedChip = document.querySelector('.duration-chip.bg-mint-500, .step3-duration-chip.bg-mint-500');
           if (selectedChip) {
-            months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+            months = parseInt(selectedChip.getAttribute('data-duration') || '1');
           } else {
             // Fallback: check if any chip has the selected state
-            const allChips = document.querySelectorAll('.duration-chip');
+            const allChips = document.querySelectorAll('.duration-chip, .step3-duration-chip');
             for (const chip of allChips) {
               if (chip.classList.contains('bg-mint-500')) {
-                months = parseInt(chip.getAttribute('data-duration') || '3');
+                months = parseInt(chip.getAttribute('data-duration') || '1');
                 break;
               }
             }
@@ -702,13 +917,9 @@ export class SummaryShared {
             }
           }
           
-          const totalPriceINR = podDetails.basePriceINR * months;
-          const totalPriceUSD = podDetails.basePriceUSD * months;
-          
-          // Apply discount
-          const discountMultiplier = (100 - podDetails.discountPercentage) / 100;
-          const finalPriceINR = totalPriceINR * discountMultiplier;
-          const finalPriceUSD = totalPriceUSD * discountMultiplier;
+          // Use base price directly (no duration multiplication for estimation)
+          const finalPriceINR = podDetails.basePriceINR;
+          const finalPriceUSD = podDetails.basePriceUSD;
           
           // Format price based on user location
           let userCurrency = 'INR';
@@ -778,18 +989,18 @@ export class SummaryShared {
     if (priceEl) priceEl.textContent = podItem.price || 'Price not available';
     
     // Get current reservation period - try multiple sources
-    let months = 3; // default
+    let months = 1; // default
     
-    // First, try to get from chip selection (Step 1)
-    const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+    // First, try to get from chip selection (Step 1 or Step 3)
+    const selectedChip = document.querySelector('.duration-chip.bg-mint-500, .step3-duration-chip.bg-mint-500');
     if (selectedChip) {
-      months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      months = parseInt(selectedChip.getAttribute('data-duration') || '1');
     } else {
       // Fallback: check if any chip has the selected state
-      const allChips = document.querySelectorAll('.duration-chip');
+      const allChips = document.querySelectorAll('.duration-chip, .step3-duration-chip');
       for (const chip of allChips) {
         if (chip.classList.contains('bg-mint-500')) {
-          months = parseInt(chip.getAttribute('data-duration') || '3');
+          months = parseInt(chip.getAttribute('data-duration') || '1');
           break;
         }
       }
@@ -811,18 +1022,18 @@ export class SummaryShared {
     
     try {
       // Get current reservation period - try multiple sources
-      let months = 3; // default
+      let months = 1; // default
       
-      // First, try to get from chip selection (Step 1)
-      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      // First, try to get from chip selection (Step 1 or Step 3)
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500, .step3-duration-chip.bg-mint-500');
       if (selectedChip) {
-        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+        months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
         // Fallback: check if any chip has the selected state
-        const allChips = document.querySelectorAll('.duration-chip');
+        const allChips = document.querySelectorAll('.duration-chip, .step3-duration-chip');
         for (const chip of allChips) {
           if (chip.classList.contains('bg-mint-500')) {
-            months = parseInt(chip.getAttribute('data-duration') || '3');
+            months = parseInt(chip.getAttribute('data-duration') || '1');
             break;
           }
         }
@@ -837,13 +1048,9 @@ export class SummaryShared {
       if (podItem) {
         const podDetails = await this.getPodDetails(podItem.id);
         if (podDetails) {
-          const totalPriceINR = podDetails.basePriceINR * months;
-          const totalPriceUSD = podDetails.basePriceUSD * months;
-          
-          // Apply discount
-          const discountMultiplier = (100 - podDetails.discountPercentage) / 100;
-          totalINR += totalPriceINR * discountMultiplier;
-          totalUSD += totalPriceUSD * discountMultiplier;
+          // Use base price directly (no duration multiplication for estimation)
+          totalINR += podDetails.basePriceINR;
+          totalUSD += podDetails.basePriceUSD;
         }
       }
       
@@ -1077,6 +1284,104 @@ export class SummaryShared {
         document.body.removeChild(notification);
       }, 300);
     }, 3000);
+  }
+
+  // Global Loader Management
+  showGlobalLoader(message = 'Processing...') {
+    console.log('🔍 [showGlobalLoader] Starting to show global loader with message:', message);
+    
+    // Create loader overlay if it doesn't exist
+    let loader = document.getElementById('global-loader');
+    if (!loader) {
+      console.log('🔍 [showGlobalLoader] Creating new loader element');
+      loader = document.createElement('div');
+      loader.id = 'global-loader';
+      loader.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999]';
+      loader.innerHTML = `
+        <div class="bg-white rounded-lg p-6 flex flex-col items-center space-y-4 shadow-xl">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <p class="text-gray-700 font-medium">${message}</p>
+        </div>
+      `;
+      document.body.appendChild(loader);
+      console.log('🔍 [showGlobalLoader] Loader element created and appended to body');
+      
+      // Force a reflow to ensure the loader is visible
+      loader.offsetHeight;
+    } else {
+      console.log('🔍 [showGlobalLoader] Updating existing loader message');
+      // Update message if loader exists
+      const messageElement = loader.querySelector('p');
+      if (messageElement) {
+        messageElement.textContent = message;
+      }
+    }
+    
+    // Disable all interactive elements
+    this.disableUserInteractions();
+    
+    console.log('🔍 [showGlobalLoader] Global loader shown successfully');
+    
+    // Add a small delay to ensure the loader is visible
+    setTimeout(() => {
+      console.log('🔍 [showGlobalLoader] Loader should now be visible');
+    }, 100);
+  }
+
+  hideGlobalLoader() {
+    console.log('🔍 [hideGlobalLoader] Starting to hide global loader');
+    
+    const loader = document.getElementById('global-loader');
+    if (loader) {
+      console.log('🔍 [hideGlobalLoader] Found loader element, removing it');
+      loader.remove();
+    } else {
+      console.log('🔍 [hideGlobalLoader] No loader element found to hide');
+    }
+    
+    // Re-enable all interactive elements
+    this.enableUserInteractions();
+    
+    console.log('🔍 [hideGlobalLoader] Global loader hidden successfully');
+  }
+
+  // Add a method to show loader with minimum display time
+  async showGlobalLoaderWithDelay(message = 'Processing...', minDisplayTime = 500) {
+    this.showGlobalLoader(message);
+    
+    // Ensure loader is visible for at least the minimum time
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, minDisplayTime);
+    });
+  }
+
+  disableUserInteractions() {
+    // Add a class to body to disable interactions
+    document.body.classList.add('loading');
+    
+    // Disable all buttons, links, and form elements
+    const interactiveElements = document.querySelectorAll('button, a, input, select, textarea, [data-add-to-cart], .pod-cta-btn');
+    interactiveElements.forEach(element => {
+      element.setAttribute('data-original-disabled', element.disabled);
+      element.disabled = true;
+      element.style.pointerEvents = 'none';
+    });
+  }
+
+  enableUserInteractions() {
+    // Remove loading class from body
+    document.body.classList.remove('loading');
+    
+    // Re-enable all interactive elements
+    const interactiveElements = document.querySelectorAll('button, a, input, select, textarea, [data-add-to-cart], .pod-cta-btn');
+    interactiveElements.forEach(element => {
+      const originalDisabled = element.getAttribute('data-original-disabled');
+      element.disabled = originalDisabled === 'true';
+      element.style.pointerEvents = '';
+      element.removeAttribute('data-original-disabled');
+    });
   }
 
   // UI helpers

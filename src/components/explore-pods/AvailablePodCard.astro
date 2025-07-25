@@ -354,7 +354,7 @@ const podSlug = generatePodSlug(pod.name);
           
           if (button && ctaText) {
             button.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
-            button.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+            button.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
             button.setAttribute('data-action', 'remove');
             ctaText.textContent = 'Remove Pod';
             console.log('🔵 [AvailablePodCard] Initial button state set to "Remove Pod"');
@@ -404,13 +404,13 @@ const podSlug = generatePodSlug(pod.name);
             // This pod is selected - show "Remove Pod"
             console.log('🔵 [AvailablePodCard] Updating button to "Remove Pod" for:', podId);
             buttonElement.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
-            buttonElement.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+            buttonElement.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
             buttonElement.setAttribute('data-action', 'remove');
             if (ctaText) ctaText.textContent = 'Remove Pod';
           } else {
             // This pod is not selected - show "Reserve Pod"
             console.log('🔵 [AvailablePodCard] Updating button to "Reserve Pod" for:', podId);
-            buttonElement.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+            buttonElement.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
             buttonElement.classList.add('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
             buttonElement.setAttribute('data-action', 'add');
             if (ctaText) ctaText.textContent = 'Reserve Pod';

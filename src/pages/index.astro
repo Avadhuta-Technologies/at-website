@@ -204,13 +204,13 @@ const metaInfo = generateMetaInfo();
         if (selectedPod && selectedPod.id === itemId) {
           // This pod is selected - show "Remove Pod"
           buttonElement.classList.remove('bg-gradient-to-r', 'from-[#22c55e]', 'to-[#0ea5e9]', 'hover:from-[#16a34a]', 'hover:to-[#0284c7]');
-          buttonElement.classList.add('bg-red-500', 'hover:bg-red-600');
+          buttonElement.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
           if (buttonText.textContent) {
             buttonText.textContent = 'Remove Pod';
           }
         } else {
           // This pod is not selected - show "Reserve Pod"
-          buttonElement.classList.remove('bg-red-500', 'hover:bg-red-600');
+          buttonElement.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
           buttonElement.classList.add('bg-gradient-to-r', 'from-[#22c55e]', 'to-[#0ea5e9]', 'hover:from-[#16a34a]', 'hover:to-[#0284c7]');
           if (buttonText.textContent) {
             buttonText.textContent = 'Reserve Pod';
@@ -222,20 +222,22 @@ const metaInfo = generateMetaInfo();
     }
   }
 
-  // Global event handler for data-add-to-cart buttons on home page
+  // Global event handler for data-add-to-cart buttons on home page - using event delegation
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', async function(e) {
-      if (e.target && (e.target as HTMLElement).matches('[data-add-to-cart]')) {
+      const target = e.target as HTMLElement;
+      const button = target.closest('[data-add-to-cart]') as HTMLElement;
+      
+      if (button) {
         e.preventDefault();
         e.stopPropagation();
         
-        const button = e.target as HTMLElement;
         const itemId = button.getAttribute('data-item-id');
         const itemType = button.getAttribute('data-item-type');
         const itemTitle = button.getAttribute('data-item-title');
         const itemDescription = button.getAttribute('data-item-description');
         
-        console.log('🔍 [Home] Add to cart clicked:', { itemId, itemType, itemTitle });
+        console.log(`🔍 [${new Date().toISOString()}] [Home] Add to cart clicked:`, { itemId, itemType, itemTitle });
         
         if (itemId && itemType) {
           try {
@@ -274,7 +276,7 @@ const metaInfo = generateMetaInfo();
                   title: itemTitle || '',
                   description: itemDescription || '',
                   price: '',
-                  reservationMonths: itemType === 'pod' ? 3 : undefined
+                  reservationMonths: itemType === 'pod' ? 1 : undefined
                 };
                 
                 const success = await shared.addToCart(cartItem);
@@ -316,3 +318,23 @@ const metaInfo = generateMetaInfo();
   });
 
 </script>
+
+<style>
+  /* Ensure remove button text is visible on homepage */
+  [data-add-to-cart][data-item-type="pod"] {
+    color: #4b5563 !important; /* text-gray-600 */
+  }
+  
+  [data-add-to-cart][data-item-type="pod"]:hover {
+    color: #ef4444 !important; /* text-red-500 */
+  }
+  
+  /* Override any inherited white text */
+  [data-add-to-cart].text-gray-600 {
+    color: #4b5563 !important;
+  }
+  
+  [data-add-to-cart].text-gray-600:hover {
+    color: #ef4444 !important;
+  }
+</style>

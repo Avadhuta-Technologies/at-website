@@ -1,0 +1,73 @@
+---
+export interface Props {
+  siteKey: string;
+  theme?: 'light' | 'dark';
+  size?: 'normal' | 'compact' | 'invisible';
+  callback?: string;
+  'expired-callback'?: string;
+  'error-callback'?: string;
+  tabindex?: number;
+  class?: string;
+}
+
+const { 
+  siteKey, 
+  theme = 'light', 
+  size = 'normal', 
+  callback,
+  'expired-callback': expiredCallback,
+  'error-callback': errorCallback,
+  tabindex = 0,
+  class: className = ''
+} = Astro.props;
+---
+
+<div class={`simple-recaptcha-widget ${className}`}>
+  <div class="g-recaptcha" 
+       data-sitekey={siteKey}
+       data-theme={theme}
+       data-size={size}
+       data-callback={callback}
+       data-expired-callback={expiredCallback}
+       data-error-callback={errorCallback}
+       data-tabindex={tabindex}>
+  </div>
+</div>
+
+<script>
+  // Simple reCAPTCHA widget that ensures the script loads
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if reCAPTCHA script is already loaded
+    if (typeof window.grecaptcha === 'undefined') {
+      // Load reCAPTCHA script
+      const script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js';
+      script.async = true;
+      script.defer = true;
+      
+      script.onload = function() {
+        console.log('reCAPTCHA script loaded successfully');
+        // The widget should render automatically
+      };
+      
+      script.onerror = function() {
+        console.error('Failed to load reCAPTCHA script');
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      console.log('reCAPTCHA script already loaded');
+    }
+  });
+</script>
+
+<style>
+  .simple-recaptcha-widget {
+    margin: 1rem 0;
+    text-align: center;
+  }
+  
+  .simple-recaptcha-widget .g-recaptcha {
+    display: inline-block;
+  }
+</style> 

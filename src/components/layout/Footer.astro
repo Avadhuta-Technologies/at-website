@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { generateCaseStudiesUrl, getAvailableIndustries } from '../../utils/industryUtils.js';
 
 // Filter blog entries with 'draft: false' & date before current date
 const publishedBlogEntries = await getCollection('blog', ({ data }) => {
@@ -30,11 +31,6 @@ const footerLinks = [
         href: '/contact',
         isExternal: false,
       },
-      {
-        name: 'Privacy Policy',
-        href: '/assets/Privacy Policy.pdf',
-        target: '_blank'
-      },
     ],
   },
   {
@@ -64,21 +60,16 @@ const footerLinks = [
   },
   {
     header: 'Resources',
-    links: [
+    links: [     
       {
-        name: 'Blog',
-        href: '/blog',
-        isExternal: false,
+        name: 'Privacy Policy',
+        href: '/assets/Privacy Policy.pdf',
+        target: '_blank'
       },
       {
-        name: 'Documentation',
-        href: '/docs',
-        isExternal: false,
-      },
-      {
-        name: 'Support',
-        href: '/support',
-        isExternal: false,
+        name: 'Cookie Policy',
+        href: '/assets/Cookie Policy.pdf',
+        target: '_blank'
       },
       {
         name: 'Terms of Service',
@@ -91,25 +82,25 @@ const footerLinks = [
     header: 'Case Studies',
     links: [
       {
-        name: 'E-commerce Platform',
-        href: '/case-studies?industry=Ecommerce',
+        name: 'Ecommerce',
+        href: generateCaseStudiesUrl('Ecommerce'),
         isExternal: false,
       },
       {
-        name: 'Manufacturing',
-        href: '/case-studies?industry=Manufacturing',
+        name: 'Pharmacovigilance',
+        href: generateCaseStudiesUrl('Pharmacovigilance'),
         isExternal: false,
       },
       {
-        name: 'Mobile App Development',
-        href: '/case-studies?industry=Mobile Apps',
+        name: 'Mobile Apps / EdTech / Parenting',
+        href: generateCaseStudiesUrl('Mobile Apps / EdTech / Parenting'),
         isExternal: false,
       },
       {
         name: 'Interior Design',
-        href: '/case-studies?industry=Interior Design',
+        href: generateCaseStudiesUrl('Interior Design'),
         isExternal: false,
-      },
+      }
     ],
   },
 ];
@@ -117,7 +108,7 @@ const footerLinks = [
 
 <!-- ====== Footer Section Start -->
 <footer
-  class="wow fadeInUp relative z-10 bg-white pt-20  lg:pt-[100px] w-full"
+  class="wow fadeInUp relative z-10 pt-20  lg:pt-[100px] w-full"
   data-wow-delay=".15s"
 >
   <div class="container max-w-7xl mx-auto">
@@ -251,7 +242,7 @@ const footerLinks = [
             On-demand tech teams and project pods for modern businesses. Scale your development with
             expert teams.
           </p>
-          <div class="-mx-3 flex items-center">
+          <!-- <div class="-mx-3 flex items-center">
             <a
               href="javascript:void(0)"
               class="text-gray-7 px-3 hover:text-gray-900 "
@@ -326,7 +317,7 @@ const footerLinks = [
                 ></path>
               </svg>
             </a>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
@@ -440,7 +431,7 @@ const footerLinks = [
     </div>
   </div>
 
-  <div class="mt-12 max-w-7xl mx-auto border-t border-[#8890A4] border-opacity-40 py-4 lg:mt-[60px]">
+  <!-- <div class="mt-12 max-w-7xl mx-auto border-t border-[#8890A4] border-opacity-40 py-4 lg:mt-[60px]">
     <div class="container">
       <div class="-mx-4 flex flex-wrap">
         <div class="w-full px-4 md:w-2/3 lg:w-1/2">
@@ -487,6 +478,6 @@ const footerLinks = [
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </footer>
 <!-- ====== Footer Section End -->

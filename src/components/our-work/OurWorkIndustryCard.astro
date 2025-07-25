@@ -1,4 +1,6 @@
 ---
+import { generateIndustrySlug } from '../../utils/industryUtils.js';
+
 export interface Props {
   industry: {
     name: string;
@@ -6,6 +8,7 @@ export interface Props {
       title: string;
       description: string;
     }>;
+    
   };
   index: number;
 }
@@ -101,7 +104,7 @@ const getIndustryColorClasses = (industryName: string) => {
     <!-- Action Section - Always at bottom -->
     <div class="mt-auto pt-4 border-t border-gray-100/50">
       <a 
-        href={`/our-work#${industry.name.toLowerCase().replace(/\s+/g, '-')}`}
+        href={`/case-studies?industry=${generateIndustrySlug(industry.name)}`}
         class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] text-white font-semibold rounded-lg hover:from-[#16a34a] hover:to-[#0284c7] transition-all duration-300 group shadow-sm hover:shadow-md"
       >
         <span class="text-sm">View {industry.name} Projects</span>

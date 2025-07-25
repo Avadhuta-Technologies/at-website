@@ -1,4 +1,7 @@
 ---
+import RecaptchaWidget from '../shared/RecaptchaWidget.astro';
+import { getSiteKey, getFormConfig } from '../../config/recaptcha';
+
 export interface Props {
   data: {
     title: string;
@@ -21,6 +24,8 @@ export interface Props {
 }
 
 const { data } = Astro.props;
+const recaptchaSiteKey = getSiteKey('contact');
+const recaptchaConfig = getFormConfig('contact');
 ---
 
 <section class="py-16 bg-white">
@@ -82,9 +87,19 @@ const { data } = Astro.props;
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors resize-vertical"
               ></textarea>
             </div>
-          ))}
-
+                    ))}
           
+          <!-- reCAPTCHA Widget -->
+          <div class="flex justify-center">
+            <RecaptchaWidget 
+              siteKey={recaptchaSiteKey}
+              theme="light"
+              size="normal"
+              callback="onRecaptchaSuccess"
+              'expired-callback'="onRecaptchaExpired"
+              'error-callback'="onRecaptchaError"
+            />
+          </div>
           
           <div class="text-center">
             <button
@@ -110,6 +125,26 @@ const { data } = Astro.props;
 </section>
 
 <script>
+  // Global variables for reCAPTCHA
+  let recaptchaWidgetId: number | null = null;
+  let recaptchaResponse: string | null = null;
+
+  // reCAPTCHA callback functions
+  window.onRecaptchaSuccess = function(response: string) {
+    recaptchaResponse = response;
+    console.log('reCAPTCHA success:', response);
+  };
+
+  window.onRecaptchaExpired = function() {
+    recaptchaResponse = null;
+    console.log('reCAPTCHA expired');
+  };
+
+  window.onRecaptchaError = function() {
+    recaptchaResponse = null;
+    console.log('reCAPTCHA error');
+  };
+
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contact-form');
     const submitButton = form?.querySelector('button[type="submit"]');
@@ -121,6 +156,31 @@ const { data } = Astro.props;
     if (form) {
       form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        // Check if reCAPTCHA is completed
+        if (!recaptchaResponse) {
+          // Show themed notification instead of alert
+          const notification = document.createElement('div');
+          notification.className = 'fixed top-4 right-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded z-50';
+          notification.innerHTML = `
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Please complete the reCAPTCHA verification before submitting the form.</span>
+            </div>
+          `;
+          document.body.appendChild(notification);
+          
+          // Remove notification after 5 seconds
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.parentNode.removeChild(notification);
+            }
+          }, 5000);
+          
+          return;
+        }
         
         // Show loading state
         if (submitButton && submitText && loadingText) {
@@ -145,6 +205,9 @@ const { data } = Astro.props;
             }
           });
           
+          // Add reCAPTCHA response to form data
+          jsonData.recaptchaResponse = recaptchaResponse;
+          
           // Submit to API
           const response = await fetch('/api/contact', {
             method: 'POST',
@@ -164,6 +227,11 @@ const { data } = Astro.props;
               successMessage.classList.remove('hidden');
               (form as HTMLFormElement).reset();
             }
+            // Reset reCAPTCHA
+            if (window.recaptchaUtils && recaptchaWidgetId !== null) {
+              window.recaptchaUtils.reset(recaptchaWidgetId);
+            }
+            recaptchaResponse = null;
           } else {
             // Show error message
             if (errorMessage) {

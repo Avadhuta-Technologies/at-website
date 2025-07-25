@@ -209,26 +209,27 @@ const finalActionText = actionText || defaultActionText;
   // Import SummaryShared for cart operations
   import { SummaryShared } from '../../utils/summaryShared.js';
 
-  // Interactive functionality for pack cards
+  // Interactive functionality for pack cards - using event delegation
   document.addEventListener('DOMContentLoaded', async () => {
     const shared = new SummaryShared();
     
     // Initialize pack buttons with correct cart state
     await shared.initializePackButtons();
     
-    // Add event listeners for pack cart operations
-    const packButtons = document.querySelectorAll('[data-add-to-cart][data-item-type="pack"]');
-    
-    packButtons.forEach(button => {
-      button.addEventListener('click', async (e) => {
+    // Add event listeners for pack cart operations using event delegation
+    document.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+      const packButton = target.closest('[data-add-to-cart][data-item-type="pack"]') as HTMLElement;
+      
+      if (packButton) {
         e.preventDefault();
         e.stopPropagation();
         
-        const packId = button.getAttribute('data-item-id');
+        const packId = packButton.getAttribute('data-item-id');
         if (packId) {
-          await shared.handlePackCartOperation(packId, button);
+          await shared.handlePackCartOperation(packId, packButton);
         }
-      });
+      }
     });
     
     // Listen for cart updates to refresh button states
