@@ -7,7 +7,7 @@ export const caseStudiesData = {
   caseStudies: [ 
     {
       id: "reach-ecommerce-store",
-      title: "Reach Ecommerce Store",
+      title: "US based leading ecommerce store",
       industry: "Ecommerce",
       engagementType: "Full Product Build with Ongoing Support",
       duration: "12 months + ongoing support",
@@ -242,7 +242,7 @@ export const caseStudiesData = {
       duration: "5 months",
       teamComposition: "1 PM, 2 Backend Devs, 2 Frontend Devs, 1 UI/UX Designer, 1 QA Engineer",
       techStack: ["Angular", "Material Design", "Java (Play Framework)", "MySQL", "AWS EC2", "S3", "RDS"],
-      problemStatement: "Jamlist aimed to empower artisans by providing a digital marketplace where they could sell handmade and curated products. Existing ecommerce solutions lacked the custom workflows and community features Jamlist envisioned, such as artisan profiles, curation tools, and seller-specific dashboards. A custom platform was essential for their brand positioning.",
+      problemStatement: "A visionary marketplace platform aimed to empower artisans by providing a digital marketplace where they could sell handmade and curated products. Existing ecommerce solutions lacked the custom workflows and community features that were envisioned, such as artisan profiles, curation tools, and seller-specific dashboards. A custom platform was essential for their brand positioning.",
       ourApproach: "We built the platform from the ground up—designing a scalable architecture using Java Play Framework for backend and Angular with Material Design for a fast, responsive frontend. Our team focused on creating an intuitive seller experience and a rich browsing and purchasing journey for buyers. We also optimized the backend for artisan-specific workflows like product approval, customization, and batch inventory handling.",
       solutionHighlights: [
         "Custom-built marketplace with artisan onboarding",
@@ -275,7 +275,7 @@ export const caseStudiesData = {
       duration: "2 months",
       teamComposition: "1 PM, 1 WordPress/WooCommerce Dev, 1 UI Designer, 1 QA Engineer",
       techStack: ["WooCommerce (Custom Theme)", "MySQL", "AWS EC2", "S3", "RDS"],
-      problemStatement: "Bhava Ayurveda, a growing Ayurvedic brand, needed an online store to reach a wider customer base and simplify order management. Their offline business was thriving, but they lacked a digital storefront that aligned with their brand aesthetics and could scale with their growing product line. Off-the-shelf themes lacked the authenticity and trust needed for wellness products.",
+      problemStatement: "A growing Ayurvedic wellness brand, a growing Ayurvedic brand, needed an online store to reach a wider customer base and simplify order management. Their offline business was thriving, but they lacked a digital storefront that aligned with their brand aesthetics and could scale with their growing product line. Off-the-shelf themes lacked the authenticity and trust needed for wellness products.",
       ourApproach: "We designed and developed a fully customized WooCommerce store with a clean, Ayurvedic-inspired design. The theme was built from scratch to reflect the brand's natural and holistic identity, optimized for both speed and mobile devices. We also configured secure payment gateways, product categorization by wellness use-case, and intuitive navigation to enhance discoverability and conversions.",
       solutionHighlights: [
         "Custom WooCommerce theme designed to reflect Ayurvedic principles",
@@ -308,7 +308,7 @@ export const caseStudiesData = {
       duration: "4 months",
       teamComposition: "1 PM, 2 Backend Devs, 1 Frontend Dev, 1 QA Engineer",
       techStack: ["ReactJS", "Ant Design", "NodeJS", "FeathersJS", "Postgres", "AWS EC2", "RDS"],
-      problemStatement: "Manufacturing units face significant inefficiencies due to paper-based or semi-digital shop floor processes. Key tasks like Bill of Materials (BOM) management, gauge calibration, inspection (SPC), and maintenance were fragmented and error-prone. DigitalGemba aimed to centralize and automate these processes into one intuitive platform tailored for the shop floor.",
+      problemStatement: "Manufacturing units face significant inefficiencies due to paper-based or semi-digital shop floor processes. Key tasks like Bill of Materials (BOM) management, gauge calibration, inspection (SPC), and maintenance were fragmented and error-prone. This manufacturing technology company aimed to centralize and automate these processes into one intuitive platform tailored for the shop floor.",
       ourApproach: "We partnered with manufacturing domain experts to understand operational workflows and built an MVP that digitizes the most critical processes. Our team architected a modular backend using FeathersJS and a component-rich frontend using React + Ant Design, optimized for touch screens and low-latency shop floor usage.",
       solutionHighlights: [
         "BOM management module with versioning and real-time updates",
@@ -341,7 +341,7 @@ export const caseStudiesData = {
       duration: "3 months",
       teamComposition: "1 PM, 1 UI/UX Designer, 1 React Native Dev, 1 Backend Dev",
       techStack: ["React Native", "NodeJS", "ExpressJS", "MySQL"],
-      problemStatement: "StorytimeOwls aimed to provide children with a deeply personal storytelling experience—stories narrated in their own parent's or guardian's voice. However, the app's original design lacked intuitiveness, and feature limitations hindered usability and growth. VNurt Technologies partnered with Avadhuta to modernize the experience, enhance features, and prepare the product for release.",
+      problemStatement: "A children's entertainment platform aimed to provide children with a deeply personal storytelling experience—stories narrated in their own parent's or guardian's voice. However, the app's original design lacked intuitiveness, and feature limitations hindered usability and growth. A leading EdTech company partnered with Avadhuta to modernize the experience, enhance features, and prepare the product for release.",
       ourApproach: "We began with a UX audit of the existing app and then redesigned the experience to be child-friendly, emotionally resonant, and parent-guided. We introduced features such as voice recording, audio library management, bedtime scheduling, and offline playback. Our development ensured smooth performance across iOS and Android devices.",
       solutionHighlights: [
         "Revamped UX/UI with child-safe navigation and playful design",
@@ -374,7 +374,7 @@ export const caseStudiesData = {
       duration: "2.5 months",
       teamComposition: "1 PM, 1 Shopify App Developer, 1 Backend Dev, 1 QA Engineer",
       techStack: ["Shopify App (Liquid, JS, CSS)", "NodeJS", "ExpressJS", "MySQL", "AWS EC2"],
-      problemStatement: "PhyElements wanted to enhance product discovery on their Shopify store using an AI-based recommendation system they had built in-house. However, integrating the proprietary AI engine with Shopify's ecosystem required a custom app that could dynamically suggest products based on user behavior, product metadata, and purchase trends.",
+      problemStatement: "A leading e-commerce brand wanted to enhance product discovery on their Shopify store using an AI-based recommendation system they had built in-house. However, integrating the proprietary AI engine with Shopify's ecosystem required a custom app that could dynamically suggest products based on user behavior, product metadata, and purchase trends.",
       ourApproach: "We developed a lightweight, efficient Shopify app that communicates with PhyElements' AI engine via secure APIs. The app was designed to integrate seamlessly into Shopify themes and inject personalized product recommendations at various points—product pages, carts, and even post-checkout. We ensured minimal load impact and full theme compatibility.",
       solutionHighlights: [
         "Custom Shopify app embedded using Liquid and JavaScript",
@@ -407,8 +407,8 @@ export const caseStudiesData = {
       duration: "3.5 months",
       teamComposition: "1 PM, 2 React Native Developers, 1 Backend Dev, 1 QA Engineer",
       techStack: ["React Native", "NodeJS", "FeathersJS", "MySQL", "SQLite", "AWS EC2", "RDS", "S3"],
-      problemStatement: "Small and medium businesses across sectors often struggle with managing orders, deliveries, customer tracking, and payments—usually relying on spreadsheets or fragmented tools. Umbrella Labs envisioned OrderLikho as a simple yet powerful mobile solution that could streamline these processes in a user-friendly format accessible to non-tech-savvy users.",
-      ourApproach: "We built OrderLikho as a cross-platform mobile app using React Native with a clean, intuitive interface tailored for SMEs. The backend was designed to be scalable and secure, with MySQL for online use and SQLite for offline sync. Our team handled the full app development lifecycle, including play store and app store submissions.",
+      problemStatement: "Small and medium businesses across sectors often struggle with managing orders, deliveries, customer tracking, and payments—usually relying on spreadsheets or fragmented tools. A technology startup envisioned a simple yet powerful mobile solution that could streamline these processes in a user-friendly format accessible to non-tech-savvy users.",
+      ourApproach: "We built a cross-platform mobile app using React Native with a clean, intuitive interface tailored for SMEs. The backend was designed to be scalable and secure, with MySQL for online use and SQLite for offline sync. Our team handled the full app development lifecycle, including play store and app store submissions.",
       solutionHighlights: [
         "Cross-platform mobile app (Android & iOS) for order, customer, and payment tracking",
         "Offline-first capability using SQLite with seamless sync to MySQL",
@@ -441,7 +441,7 @@ export const caseStudiesData = {
       duration: "2 months",
       teamComposition: "1 PM, 1 Shopify App Developer, 1 Backend Dev, 1 QA Engineer",
       techStack: ["Shopify App (Liquid, JS, CSS)", "NodeJS", "ExpressJS", "MySQL", "AWS EC2"],
-      problemStatement: "Gourmet Garden, a brand under Ekam Ultra Farms, delivers fresh fruits and vegetables using their own logistics system. Standard Shopify shipping rules couldn't accommodate the granular control they needed—such as restricting delivery to specific pincodes, applying different rules for leafy greens vs. perishables, and showing availability dynamically on product and cart pages.",
+      problemStatement: "A premium farm fresh produce brand, delivers fresh fruits and vegetables using their own logistics system. Standard Shopify shipping rules couldn't accommodate the granular control they needed—such as restricting delivery to specific pincodes, applying different rules for leafy greens vs. perishables, and showing availability dynamically on product and cart pages.",
       ourApproach: "We built a custom Shopify app that allows the brand to configure delivery rules by pincode and product type. Our team ensured tight Shopify theme integration and minimal performance impact. The app provides dynamic deliverability checks at multiple customer touchpoints—product page, cart, and checkout—based on backend rules managed via a user-friendly admin panel.",
       solutionHighlights: [
         "Shopify app embedded using Liquid & JavaScript",
@@ -474,7 +474,7 @@ export const caseStudiesData = {
       duration: "2 months",
       teamComposition: "1 PM, 2 React Native Developers, 2 Backend Devs, 1 UI/UX Designer, 1 QA Engineer",
       techStack: ["React Native", "NodeJS", "FeathersJS", "StreamIO", "Firebase Auth", "MySQL", "SQLite", "AWS EC2", "RDS", "S3"],
-      problemStatement: "In the wake of TikTok's ban in India, SR HiTech Vision saw a timely opportunity to launch a short video-sharing platform tailored to Indian users. The goal was to recreate the TikTok experience—video feed, likes, comments, user following, and trending content—in record time, with scalability and native performance.",
+      problemStatement: "In the wake of TikTok's ban in India, A prominent media-tech company Vision saw a timely opportunity to launch a short video-sharing platform tailored to Indian users. The goal was to recreate the TikTok experience—video feed, likes, comments, user following, and trending content—in record time, with scalability and native performance.",
       ourApproach: "We executed the project on a rapid timeline, combining proven frameworks with custom logic. React Native enabled us to build for both Android and iOS simultaneously. We integrated StreamIO for real-time feeds, comments, and activity tracking, while using Firebase Auth for quick and secure user onboarding. The backend, built with FeathersJS, supported scalable video management, content moderation, and notifications.",
       solutionHighlights: [
         "Infinite scroll short-video feed with like/comment/share functionality",
@@ -493,7 +493,7 @@ export const caseStudiesData = {
         "Video engagement metrics rivalled larger platforms in targeted demographics"
       ],
       testimonial: {
-        quote: "Avadhuta helped us bring our idea to life faster than we imagined. The Relive app looks and feels like a top-tier product. Their team delivered with speed, precision, and a clear understanding of what a social-first mobile experience needs.",
+        quote: "Avadhuta helped us bring our idea to life faster than we imagined. The app looks and feels like a top-tier product. Their team delivered with speed, precision, and a clear understanding of what a social-first mobile experience needs.",
         author: "Client"
       },
       callToAction: "Looking to launch a fast-moving consumer app or enter the social media space? Let's get you there faster, without compromise.",
@@ -509,7 +509,7 @@ export const caseStudiesData = {
       duration: "4 months",
       teamComposition: "1 PM, 2 React Native Devs, 1 Django Backend Dev, 1 QA Engineer",
       techStack: ["React Native", "Python (Django)", "MySQL", "AWS EC2", "RDS", "S3"],
-      problemStatement: "Gas cylinder agencies often operate in silos, offering little transparency on pricing or availability—especially for commercial users. Sankhyaa wanted to create a unified platform where users could compare prices from multiple gas agencies and book cylinders with doorstep delivery and integrated payment options.",
+      problemStatement: "Gas cylinder agencies often operate in silos, offering little transparency on pricing or availability—especially for commercial users. A leading gas distribution company wanted to wanted to create a unified platform where users could compare prices from multiple gas agencies and book cylinders with doorstep delivery and integrated payment options.",
       ourApproach: "We built a scalable mobile-first platform using React Native for cross-platform delivery and Django for backend reliability and speed. The app connects users to nearby commercial gas providers, shows real-time pricing and availability, and enables end-to-end order management—including booking, tracking, delivery coordination, and payment.",
       solutionHighlights: [
         "Aggregated listings from multiple gas agencies with real-time quotes",
@@ -526,7 +526,7 @@ export const caseStudiesData = {
         "Delivered a reliable app experience for both Android and iOS with minimal training required"
       ],
       testimonial: {
-        quote: "VGas is solving a real-world problem, and Avadhuta brought it to life with incredible efficiency. Their technical expertise in mobile platforms and backend systems ensured we could scale confidently from day one.",
+        quote: "We were trying to solve a real-world problem, and Avadhuta brought it to life with incredible efficiency. Their technical expertise in mobile platforms and backend systems ensured we could scale confidently from day one.",
         author: "Client"
       },
       callToAction: "Want to disrupt a traditional industry with a seamless digital platform? Let's design the tech that powers it.",
@@ -542,7 +542,7 @@ export const caseStudiesData = {
       duration: "3.5 months",
       teamComposition: "1 PM, 2 Full Stack Developers, 1 QA Engineer",
       techStack: ["Angular", "MaterialJS", "NodeJS (Lambda Functions)", "MySQL", "AWS Lambda", "API Gateway", "S3", "SNS"],
-      problemStatement: "Shree Sai Canvassing, a key player in edible oil brokerage, faced challenges in tracking orders, calculating brokerage, and managing the flow of transactions between buyers and sellers. Existing tools were fragmented and lacked the automation needed for reminders, real-time trade volume insights, and transparent financial reporting. They also wanted to productize the solution for broader industry use.",
+      problemStatement: "A leading commodity brokerage firm, a key player in edible oil brokerage, faced challenges in tracking orders, calculating brokerage, and managing the flow of transactions between buyers and sellers. Existing tools were fragmented and lacked the automation needed for reminders, real-time trade volume insights, and transparent financial reporting. They also wanted to productize the solution for broader industry use.",
       ourApproach: "We developed Brokerage Manager, a SaaS platform tailored for brokerage firms in the commodities sector. Built using a serverless AWS architecture for scale and cost-efficiency, the app streamlines brokerage workflows—tracking buyers, sellers, trade volumes, delivery statuses, and commissions. The UI was crafted to be clean and fast for high-frequency, daily users.",
       solutionHighlights: [
         "End-to-end buyer, seller, and transaction management",
@@ -577,7 +577,7 @@ export const caseStudiesData = {
       duration: "2.5 months",
       teamComposition: "1 PM, 1 Shopify Theme Developer, 1 UI/UX Designer, 1 QA Engineer",
       techStack: ["Shopify Theme (Liquid)", "Shopify Apps", "Shopify APIs"],
-      problemStatement: "Timeless Beauty Secrets, a brand rooted in ancient beauty traditions, needed an online store that could reflect its heritage-driven narrative while enabling seamless ecommerce functionality. Standard Shopify themes couldn't capture their premium, culturally rich aesthetic or support their unique packaging system based on global civilizations. They also needed a custom fulfilment flow and loyalty program integration.",
+      problemStatement: "A heritage-inspired beauty brand rooted in ancient beauty traditions, needed an online store that could reflect its heritage-driven narrative while enabling seamless ecommerce functionality. Standard Shopify themes couldn't capture their premium, culturally rich aesthetic or support their unique packaging system based on global civilizations. They also needed a custom fulfilment flow and loyalty program integration.",
       ourApproach: "We designed and developed a fully custom Shopify storefront that brought the brand's identity to life. Inspired by historical beauty rituals, we introduced a civilization-based product packaging UI that educated and engaged users. Custom Shopify apps were integrated to handle non-standard fulfilment rules and loyalty workflows, while maintaining a clean and performant frontend.",
       solutionHighlights: [
         "Bespoke Shopify theme crafted to mirror the elegance of the brand",
@@ -611,8 +611,8 @@ export const caseStudiesData = {
       duration: "3 months",
       teamComposition: "1 PM, 1 UX Designer, 2 Full Stack Developers, 1 QA Engineer",
       techStack: ["ReactJS", "NodeJS", "ExpressJS", "MySQL", "AWS EC2", "S3", "RDS"],
-      problemStatement: "Modern offices, coworking spaces, and gated facilities often struggle with managing visitor entry, exit, and approval workflows securely and efficiently. Manual registers are outdated, and most digital tools lacked customization and real-time control. The client envisioned iVisit as a sleek, easy-to-use digital visitor management solution that could replace traditional gate logs and enhance security.",
-      ourApproach: "We designed and developed iVisit from the ground up with a mobile-friendly, tablet-first interface suitable for front desks and security kiosks. The system automates approvals, sends instant host notifications, and logs visitor details with photo and ID capture. It also provides real-time dashboards for admin teams to monitor all entries and exits across multiple locations.",
+      problemStatement: "Modern offices, coworking spaces, and gated facilities often struggle with managing visitor entry, exit, and approval workflows securely and efficiently. Manual registers are outdated, and most digital tools lacked customization and real-time control. The client envisioned a sleek, easy-to-use digital visitor management solution that could replace traditional gate logs and enhance security.",
+      ourApproach: "We designed and developed the app from the ground up with a mobile-friendly, tablet-first interface suitable for front desks and security kiosks. The system automates approvals, sends instant host notifications, and logs visitor details with photo and ID capture. It also provides real-time dashboards for admin teams to monitor all entries and exits across multiple locations.",
       solutionHighlights: [
         "Digital visitor check-in and check-out system",
         "Instant host notifications via email/SMS",
