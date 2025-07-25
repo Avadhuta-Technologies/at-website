@@ -400,13 +400,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 <h3 class="text-2xl font-bold text-graphite-900 mb-6">Order Summary</h3>
                 
                 <!-- Pod Summary -->
-                <div id="final-pod-summary" class="mb-6 p-4 bg-white rounded-lg">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h4 id="final-pod-title" class="font-semibold text-graphite-900">Selected Pod</h4>
-                      <p id="final-pod-duration" class="text-sm text-graphite-600">1 month</p>
+                <div class="mb-6">
+                  <h4 class="font-semibold text-graphite-900 mb-3">Selected Pod</h4>
+                  <div id="final-pod-summary" class="p-4 bg-white rounded-lg">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h5 id="final-pod-title" class="font-semibold text-graphite-900">Selected Pod</h5>
+                      </div>
+                      <p id="final-pod-price" class="font-bold text-mint-600">₹0/month</p>
                     </div>
-                    <p id="final-pod-price" class="font-bold text-mint-600">₹0/month</p>
                   </div>
                 </div>
 
@@ -418,11 +420,11 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                   </div>
                 </div>
 
-                <!-- Total -->
+                <!-- Duration Display -->
                 <div class="pt-4 border-t border-mint-200">
                   <div class="flex items-center justify-between">
                     <span class="text-lg font-semibold text-graphite-900">Duration</span>
-                    <span id="total-price" class="text-2xl font-bold text-mint-600">₹0</span>
+                    <span id="final-duration-display" class="text-lg text-graphite-600">1 month</span>
                   </div>
                 </div>
               </div>
@@ -492,7 +494,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                       12 Months
                     </button>
                   </div>
-                  <p class="text-sm text-graphite-500 mt-2">This helps us estimate project timeline and resource allocation</p>
+                  <p class="text-sm text-graphite-500 mt-2">Duration is for project estimation only - pricing remains monthly</p>
                 </div>
                 
                 <!-- reCAPTCHA Widget -->
@@ -1661,11 +1663,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       await this.summaryShared.updatePodSummary(podItem, {
         titleSelector: '#final-pod-title',
         priceSelector: '#final-pod-price',
-        descriptionSelector: '#final-pod-duration',
       });
 
       // Update the duration display with current reservation period
-      const durationElement = document.getElementById('final-pod-duration');
+      const durationElement = document.getElementById('final-duration-display');
       if (durationElement) {
         const months = podItem.reservationMonths || 1;
         durationElement.textContent = `${months} month${months > 1 ? 's' : ''}`;
@@ -1693,11 +1694,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             const packDetails = await this.summaryShared.getPackDetails(pack.id);
             if (!packDetails) return '';
 
-            // Calculate monthly pack price with discount, then multiply by months
+            // Show monthly pack price with discount (no duration multiplication)
             const monthlyPrice =
               (packDetails.basePriceINR * (100 - packDetails.discountPercentage)) / 100;
-            const totalPrice = monthlyPrice * (podItem.reservationMonths || 1);
-            const formattedPrice = formatPrice(totalPrice);
+            const formattedPrice = formatPrice(monthlyPrice);
 
             return `
               <div class="flex items-center justify-between p-3 bg-white rounded-lg">
@@ -1716,7 +1716,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                   </a>
                 </span>
               </div>
-              <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
+              <span class="font-semibold text-cerulean-600">${formattedPrice}/month</span>
             </div>
           `;
           });
@@ -1726,7 +1726,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         }
       }
 
-      await this.summaryShared.updateTotalPrice(podItem, packItems);
+      // No need to update total price since duration is for estimation only
     }
 
     async initializeStep3DurationChips() {
@@ -1787,7 +1787,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     }
 
     async updatePricingForReservationPeriod(months) {
-      console.log('🔍 [updatePricingForReservationPeriod] Updating pricing for', months, 'months');
+      console.log('🔍 [updatePricingForReservationPeriod] Duration changed to', months, 'months (for estimation only)');
 
       try {
         // Get current cart
@@ -1795,28 +1795,26 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const selectedPod = cart.find((item) => item.type === 'pod');
 
         if (selectedPod) {
-          // Update pod pricing in Step 1
+          // Update pod summary in Step 1 (no pricing changes)
           if (this.currentStep === 1) {
             await this.updatePodSummary(selectedPod);
           }
 
-          // Update pod pricing in Step 2
+          // Update pod summary in Step 2 (no pricing changes)
           if (this.currentStep === 2) {
             await this.updatePodSummary(selectedPod);
           }
 
-          // Update total pricing in Step 3
+          // Update final summary in Step 3 (no pricing changes)
           if (this.currentStep === 3) {
             const selectedPacks = cart.filter((item) => item.type === 'pack');
             await this.updateFinalSummary(selectedPod, selectedPacks);
-            await this.summaryShared.updateTotalPrice(selectedPod, selectedPacks);
           }
 
-          // Update all DiscountedPriceDisplay components on the page
-          this.updateAllPriceDisplays(months);
+          // No need to update price displays since duration doesn't affect pricing
         }
       } catch (error) {
-        console.error('🔍 [updatePricingForReservationPeriod] Error updating pricing:', error);
+        console.error('🔍 [updatePricingForReservationPeriod] Error updating summary:', error);
       }
     }
 
@@ -2160,6 +2158,13 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [Step3] Calling updateHirePeriod...');
           await this.summaryShared.updateHirePeriod(months);
           console.log('🔍 [Step3] updateHirePeriod completed');
+
+          // Update duration display
+          const durationDisplay = document.getElementById('final-duration-display');
+          if (durationDisplay) {
+            durationDisplay.textContent = `${months} month${months > 1 ? 's' : ''}`;
+            console.log('🔍 [Step3] Updated duration display to:', months, 'month(s)');
+          }
 
           // Update pricing dynamically based on new reservation period
           await this.updatePricingForReservationPeriod(months);
