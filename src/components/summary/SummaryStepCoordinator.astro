@@ -1,4 +1,7 @@
 ---
+import SimpleRecaptchaWidget from '../shared/SimpleRecaptchaWidget.astro';
+import { getSiteKey, getFormConfig } from '../../config/recaptcha';
+
 // Step Coordinator Component - Using catalog as single source of truth
 ---
 
@@ -421,6 +424,20 @@
                 <div>
                   <label for="message" class="block text-sm font-medium text-graphite-700 mb-2">Additional Requirements</label>
                   <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-colors" placeholder="Tell us about your project requirements, timeline, or any specific needs..."></textarea>
+                </div>
+                
+                <!-- reCAPTCHA Widget -->
+                <div class="flex justify-center">
+                  <div id="recaptcha-container" class="recaptcha-widget">
+                    <div class="g-recaptcha" 
+                         data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                         data-theme="light"
+                         data-size="normal"
+                         data-callback="onReservationRecaptchaSuccess"
+                         data-expired-callback="onReservationRecaptchaExpired"
+                         data-error-callback="onReservationRecaptchaError">
+                    </div>
+                  </div>
                 </div>
                 
                 <button type="submit" class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
@@ -1724,12 +1741,43 @@
     addStep3EventListeners() {
       console.log('🔍 Adding Step 3 event listeners...');
       
+      // Global variables for reCAPTCHA
+      let reservationRecaptchaResponse: string | null = null;
+
+      // reCAPTCHA callback functions for reservation
+      window.onReservationRecaptchaSuccess = function(response: string) {
+        reservationRecaptchaResponse = response;
+        console.log('Reservation reCAPTCHA success:', response);
+      };
+
+      window.onReservationRecaptchaExpired = function() {
+        reservationRecaptchaResponse = null;
+        console.log('Reservation reCAPTCHA expired');
+      };
+
+      window.onReservationRecaptchaError = function() {
+        reservationRecaptchaResponse = null;
+        console.log('Reservation reCAPTCHA error');
+      };
+
+      // Initialize reCAPTCHA for dynamically created form
+      this.initializeRecaptcha();
+      
       // Form submission
       const form = document.getElementById('reservation-form');
       if (form) {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           console.log('🔍 [Step3] Form submission started');
+          
+          // Check if reCAPTCHA is completed
+          if (!reservationRecaptchaResponse) {
+            this.summaryShared.showNotification(
+              'Please complete the reCAPTCHA verification before submitting the form.',
+              'warning'
+            );
+            return;
+          }
           
           // Get the submit button and show loading state
           const submitButton = form.querySelector('button[type="submit"]');
@@ -1782,7 +1830,8 @@
               ...formValues,
               selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
               selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
-              source: 'NovaPod Reservation Form'
+              source: 'NovaPod Reservation Form',
+              recaptchaResponse: reservationRecaptchaResponse
             };
             
             console.log('🔍 [Step3] Submitting to HubSpot:', hubspotData);
@@ -2055,6 +2104,70 @@
         console.error('🔍 [updateHeaderCartCount] Error updating header cart count:', error);
       }
     }
+
+    // Initialize reCAPTCHA for dynamically created forms
+    initializeRecaptcha() {
+      console.log('🔍 [initializeRecaptcha] Starting reCAPTCHA initialization...');
+      
+      // Load reCAPTCHA script if not already loaded
+      if (typeof window.grecaptcha === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          console.log('🔍 [initializeRecaptcha] reCAPTCHA script loaded, rendering widget...');
+          this.renderRecaptchaWidget();
+        };
+        script.onerror = () => {
+          console.error('🔍 [initializeRecaptcha] Failed to load reCAPTCHA script');
+          this.summaryShared.showNotification(
+            'Failed to load reCAPTCHA. Please refresh the page and try again.',
+            'error'
+          );
+        };
+        document.head.appendChild(script);
+      } else {
+        console.log('🔍 [initializeRecaptcha] reCAPTCHA script already loaded, rendering widget...');
+        this.renderRecaptchaWidget();
+      }
+    }
+
+    // Render the reCAPTCHA widget
+    renderRecaptchaWidget() {
+      const recaptchaContainer = document.getElementById('recaptcha-container');
+      if (recaptchaContainer) {
+        console.log('🔍 [renderRecaptchaWidget] Found reCAPTCHA container, rendering...');
+        // The widget should render automatically when the script loads
+        // Check if it rendered after a short delay
+        setTimeout(() => {
+          const widget = recaptchaContainer.querySelector('.g-recaptcha');
+          if (widget && widget.children.length > 0) {
+            console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget rendered successfully');
+          } else {
+            console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget not rendered, trying manual render...');
+            // Try manual render if needed
+            if (typeof window.grecaptcha !== 'undefined' && window.grecaptcha.render) {
+              try {
+                window.grecaptcha.render(recaptchaContainer, {
+                  sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+                  theme: 'light',
+                  size: 'normal',
+                  callback: 'onReservationRecaptchaSuccess',
+                  'expired-callback': 'onReservationRecaptchaExpired',
+                  'error-callback': 'onReservationRecaptchaError'
+                });
+                console.log('🔍 [renderRecaptchaWidget] Manual reCAPTCHA render successful');
+              } catch (error) {
+                console.error('🔍 [renderRecaptchaWidget] Manual render failed:', error);
+              }
+            }
+          }
+        }, 1000);
+      } else {
+        console.log('🔍 [renderRecaptchaWidget] reCAPTCHA container not found');
+      }
+    }
   }
 
   // Initialize the coordinator
@@ -2192,5 +2305,26 @@
   .remove-pack-btn:hover,
   [data-action="remove"]:hover {
     color: #ef4444 !important; /* text-red-500 */
+  }
+
+  /* reCAPTCHA widget styling */
+  .recaptcha-widget {
+    margin: 1rem 0;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .recaptcha-widget .g-recaptcha {
+    display: inline-block;
+  }
+  
+  /* Loading state for reCAPTCHA */
+  .recaptcha-widget:empty::before {
+    content: "Loading reCAPTCHA...";
+    color: #6b7280;
+    font-size: 0.875rem;
   }
 </style>

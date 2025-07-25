@@ -3,6 +3,7 @@ import type { APIRoute } from 'astro';
 import { HubSpotService, type ContactFormData } from '../../services/HubSpotService';
 import { mapFormDataToHubSpot, validateContactData, sanitizeFormData } from '../../utils/hubspotMapper';
 import { config, validateConfig } from '../../config/environment';
+import { getSecretKey } from '../../config/recaptcha';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -25,6 +26,36 @@ export const POST: APIRoute = async ({ request }) => {
     } else {
       // Handle form data
       formData = await request.formData();
+    }
+    
+    // Extract reCAPTCHA response
+    const recaptchaResponse = formData.get('recaptchaResponse') as string;
+    
+    // Verify reCAPTCHA if response is provided
+    if (recaptchaResponse) {
+      const secretKey = getSecretKey('contact');
+      const verificationResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          secret: secretKey,
+          response: recaptchaResponse,
+        }),
+      });
+      
+      const verificationResult = await verificationResponse.json();
+      
+      if (!verificationResult.success) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: 'reCAPTCHA verification failed'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
     }
     
     // Map and validate form data
