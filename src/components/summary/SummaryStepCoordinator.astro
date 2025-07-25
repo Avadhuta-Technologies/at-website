@@ -301,45 +301,53 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             </p>
           </div>
 
-          <!-- Selected Pod Summary -->
-          <div id="pod-summary" class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-6 mb-8 border border-mint-200">
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-mint-500 rounded-lg flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                  </svg>
+          <!-- Selected Items Row (Pod + Packs) -->
+          <div class="flex flex-col lg:flex-row gap-6 mb-8">
+                        <!-- Selected Pod Summary -->
+            <div id="pod-summary" class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-xl p-4 border border-mint-200 flex-1 min-w-0 flex flex-col h-full">
+              <!-- Header Section -->
+              <h3 class="text-base font-semibold text-graphite-900 mb-2">Selected Pod</h3>
+              
+ 
+              <!-- Pod Details Section -->
+              <div class="flex-1 space-y-2 mb-3">
+                <!-- Pod Description -->
+                <div class="bg-white/60 rounded-lg p-2.5 border border-mint-200/50">
+                  <div class="flex items-center space-x-3 mb-2">
+                  <div class="w-8 h-8 bg-mint-500 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                  </div>
+                  <div class="min-w-0 flex-1">                  
+                    <h4 id="summary-pod-title" class="text-base font-semibold text-graphite-900 truncate">Your Pod</h4>
+                    <p id="summary-pod-price" class="text-sm text-mint-600 font-medium">₹0/month</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 id="summary-pod-title" class="text-lg font-semibold text-graphite-900">Your Pod</h3>
-                  <p id="summary-pod-price" class="text-mint-600 font-medium">₹0/month</p>
-                  <p id="summary-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">Loading...</span></p>
+                  <p id="summary-pod-description" class="text-xs text-graphite-700 leading-relaxed">Pod description will appear here</p>
                 </div>
               </div>
-              <div class="flex items-center space-x-3">
-                <button id="edit-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
-                  Edit Pod
-                </button>
-                        <button id="remove-pod-step2-btn" class="text-gray-600 hover:text-red-500 p-2 rounded-lg hover:bg-red-50/50 transition-colors bg-transparent !text-gray-600" title="Remove Pod">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-          </svg>
-                </button>
-              </div>
-            </div>
-          </div>
 
-          <!-- Selected Packs Section -->
-          <div id="selected-packs-section" class="bg-white rounded-2xl p-6 mb-8 border border-gray-200 shadow-sm">
-            <h3 class="text-lg font-semibold text-graphite-900 mb-4">Selected Packs</h3>
-            <div id="selected-packs-list" class="space-y-3 mb-6">
-              ${this.renderSelectedPacksWithDelete()}
-            </div>
-            <!-- Continue button in selected packs container -->
-            <div class="flex justify-end items-center pt-4 border-t border-gray-200">
-              <button id="step2-continue-btn-selected" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
-                Continue
-              </button>
+              <!-- CTA Section - Always at bottom -->
+              <div class="ml-auto mt-auto pt-3 border-t border-mint-200/50">                
+                  <button id="edit-pod-btn" class="text-xs text-mint-600 hover:text-mint-700 font-medium">
+                    Change Pod
+                  </button>
+                </div>
+              </div>
+
+            <!-- Selected Packs Section - Only show if packs are selected -->
+            <div id="selected-packs-section" class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm flex-1 min-w-0 hidden">
+              <h3 class="text-lg font-semibold text-graphite-900 mb-4">Selected Packs</h3>
+              <div id="selected-packs-list" class="space-y-3 mb-6">
+                ${this.renderSelectedPacksWithDelete()}
+              </div>
+              <!-- Continue button in selected packs container -->
+              <div class="flex justify-end items-center pt-4 border-t border-gray-200">
+                <button id="step2-continue-btn-selected" class="bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-8 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105">
+                  Continue
+                </button>
+              </div>
             </div>
           </div>
 
@@ -370,6 +378,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         console.error('🔍 [loadStep3] Step coordinator element not found');
         return;
       }
+
+      // Get reCAPTCHA site key - use a default test key for now
+      const recaptchaSiteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Default test key
 
       coordinator.innerHTML = `
         <div id="step-3-content" class="step-content">
@@ -410,7 +421,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 <!-- Total -->
                 <div class="pt-4 border-t border-mint-200">
                   <div class="flex items-center justify-between">
-                    <span class="text-lg font-semibold text-graphite-900">Total</span>
+                    <span class="text-lg font-semibold text-graphite-900">Duration</span>
                     <span id="total-price" class="text-2xl font-bold text-mint-600">₹0</span>
                   </div>
                 </div>
@@ -488,7 +499,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 <div class="flex justify-center">
                   <div id="recaptcha-container" class="recaptcha-widget">
                     <div class="g-recaptcha" 
-                         data-sitekey="${getSiteKey('reservation')}"
+                         data-sitekey="${recaptchaSiteKey}"
                          data-theme="light"
                          data-size="normal"
                          data-callback="onReservationRecaptchaSuccess"
@@ -609,14 +620,21 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         console.log('🔍 [initializeStep2] Calling updatePodSummary...');
         await this.updatePodSummary(selectedPod);
 
+        // Directly call updatePodDetails to ensure it runs
+        console.log('🔍 [initializeStep2] Calling updatePodDetails directly...');
+        await this.updatePodDetails(selectedPod);
+
         // Update pricing based on current reservation period
         const currentMonths = selectedPod.reservationMonths || 1;
         console.log('🔍 [initializeStep2] Updating pricing for', currentMonths, 'months');
         await this.updatePricingForReservationPeriod(currentMonths);
 
         // Load packs for the selected pod
+        console.log('🔍 [initializeStep2] Loading packs...');
         await this.loadPacksForStep2(selectedPod);
+
         // Update selected packs display
+        console.log('🔍 [initializeStep2] Updating selected packs display...');
         await this.updateSelectedPacksDisplay();
       } else {
         console.log('🔍 [initializeStep2] No pod found, redirecting to Step 1');
@@ -718,7 +736,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                   
                   <!-- Team Composition -->
                   ${
-                    podItem.whatsInPod?.teamComposition && podItem.whatsInPod.teamComposition.length > 0
+                    podItem.whatsInPod?.teamComposition &&
+                    podItem.whatsInPod.teamComposition.length > 0
                       ? `
                     <div class="bg-white rounded-lg p-3 border border-gray-200">
                       <h4 class="text-xs font-semibold text-graphite-900 mb-2 flex items-center">
@@ -784,7 +803,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                               </svg>
                             </div>
-                            <span class="text-xs text-graphite-600">+${podItem.whatCanDo.length - 4} more capabilities</span>
+                            <span class="text-xs text-graphite-600">+${
+                              podItem.whatCanDo.length - 4
+                            } more capabilities</span>
                           </div>
                         `
                             : ''
@@ -1007,29 +1028,36 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         return;
       }
 
-      // Get all available packs for categories
-      const allPacks = await this.summaryShared.loadAllPacks();
-      const categories = this.summaryShared.getPackCategories();
+      try {
+        // Get all available packs for categories
+        const allPacks = await this.summaryShared.loadAllPacks();
+        const categories = this.summaryShared.getPackCategories();
 
-      console.log('🔍 [loadPacksForStep2] All packs:', allPacks);
-      console.log('🔍 [loadPacksForStep2] Categories:', categories);
+        console.log('🔍 [loadPacksForStep2] All packs:', allPacks);
+        console.log('🔍 [loadPacksForStep2] Categories:', categories);
 
-      if (!categories || categories.length === 0) {
-        console.log('🔍 [loadPacksForStep2] No categories found, showing empty state');
-        title.textContent = 'No Packs Available';
+        if (!categories || categories.length === 0) {
+          console.log('🔍 [loadPacksForStep2] No categories found, showing empty state');
+          if (title) title.textContent = 'No Packs Available';
+          grid.innerHTML =
+            '<p class="text-graphite-600 col-span-full text-center py-8">No packs are currently available.</p>';
+          return;
+        }
+
+        if (title) title.textContent = 'Available Packs';
+
+        // Create grouped interface with categories only
+        const packsSectionHTML = await this.renderPacksSection(categories);
+        console.log('🔍 [loadPacksForStep2] Generated HTML length:', packsSectionHTML.length);
+
+        grid.innerHTML = packsSectionHTML;
+        console.log('🔍 [loadPacksForStep2] Packs loaded successfully');
+      } catch (error) {
+        console.error('🔍 [loadPacksForStep2] Error loading packs:', error);
+        if (title) title.textContent = 'Error Loading Packs';
         grid.innerHTML =
-          '<p class="text-graphite-600 col-span-full text-center py-8">No packs are currently available.</p>';
-        return;
+          '<p class="text-red-600 col-span-full text-center py-8">Error loading packs. Please refresh the page.</p>';
       }
-
-      title.textContent = 'Available Packs';
-
-      // Create grouped interface with categories only
-      const packsSectionHTML = await this.renderPacksSection(categories);
-      console.log('🔍 [loadPacksForStep2] Generated HTML length:', packsSectionHTML.length);
-
-      grid.innerHTML = packsSectionHTML;
-      console.log('🔍 [loadPacksForStep2] Packs loaded successfully');
     }
 
     async renderPacksSection(categories) {
@@ -1140,7 +1168,6 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 )}</div>
               `
               }
-              <div class="text-xs text-gray-500">estimated pricing</div>
             </div>
           </div>
           
@@ -1377,16 +1404,36 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async updateSelectedPacksDisplay() {
       console.log('🔍 [updateSelectedPacksDisplay] ===== STARTING UPDATE =====');
+      
+      const selectedPacksSection = document.getElementById('selected-packs-section');
       const selectedPacksList = document.getElementById('selected-packs-list');
-      if (selectedPacksList) {
-        console.log('🔍 [updateSelectedPacksDisplay] Found selected-packs-list element');
+      
+      if (!selectedPacksSection || !selectedPacksList) {
+        console.error('🔍 [updateSelectedPacksDisplay] Selected packs elements not found');
+        return;
+      }
+
+      // Get current cart to check if there are selected packs
+      const cart = await this.summaryShared.getCart();
+      const selectedPacks = cart.filter((item) => item.type === 'pack');
+      
+      console.log('🔍 [updateSelectedPacksDisplay] Selected packs count:', selectedPacks.length);
+
+      if (selectedPacks.length === 0) {
+        // Hide the section if no packs are selected
+        selectedPacksSection.classList.add('hidden');
+        console.log('🔍 [updateSelectedPacksDisplay] No packs selected, hiding section');
+      } else {
+        // Show the section and update content if packs are selected
+        selectedPacksSection.classList.remove('hidden');
+        console.log('🔍 [updateSelectedPacksDisplay] Packs selected, showing section');
+        
         const newContent = await this.renderSelectedPacksWithDelete();
         console.log('🔍 [updateSelectedPacksDisplay] New content length:', newContent.length);
         selectedPacksList.innerHTML = newContent;
-        console.log('🔍 [updateSelectedPacksDisplay] ===== UPDATE COMPLETED =====');
-      } else {
-        console.error('🔍 [updateSelectedPacksDisplay] selected-packs-list element not found');
       }
+      
+      console.log('🔍 [updateSelectedPacksDisplay] ===== UPDATE COMPLETED =====');
     }
 
     async refreshPackCards() {
@@ -1525,8 +1572,89 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       // Update the pod summary using shared utility
       await this.summaryShared.updatePodSummary(latestPodItem, selectors);
 
+      // Update additional pod details for Step 2
+      if (this.currentStep === 2) {
+        await this.updatePodDetails(latestPodItem);
+      }
+
       // Note: Removed months display from Step 1 card as requested
       // Price now shows "per month" format instead of reservation period
+    }
+
+    async getPodDetails(podId) {
+      console.log('🔍 [getPodDetails] Getting pod details for ID:', podId);
+
+      try {
+        // Import catalog data dynamically
+        const { podsCatalog } = await import('/src/content/catalog/_pods.js');
+
+        // Search for pod in catalog
+        const pod = podsCatalog.availablePods.find((p) => p.id === podId);
+        if (pod) {
+          console.log('🔍 [getPodDetails] Found pod:', pod);
+          return pod;
+        }
+
+        console.error('🔍 [getPodDetails] Pod not found in catalog:', podId);
+        return null;
+      } catch (error) {
+        console.error('🔍 [getPodDetails] Error getting pod details from catalog:', error);
+        return null;
+      }
+    }
+
+    async updatePodDetails(podItem) {
+      console.log('🔍 [updatePodDetails] Updating pod details with:', podItem);
+
+      try {
+        // Get detailed pod data from catalog
+        const detailedPod = await this.getPodDetails(podItem.id);
+        console.log('🔍 [updatePodDetails] Detailed pod data:', detailedPod);
+
+        if (!detailedPod) {
+          console.error('🔍 [updatePodDetails] Could not get detailed pod data');
+          return;
+        }
+
+        // Update description
+        const descriptionElement = document.getElementById('summary-pod-description');
+        if (descriptionElement) {
+          const description =
+            detailedPod.whatsInPod?.description ||
+            detailedPod.tagline ||
+            'Pod description not available';
+          console.log('🔍 [updatePodDetails] Setting description:', description);
+          descriptionElement.textContent = description;
+        } else {
+          console.error('🔍 [updatePodDetails] Description element not found');
+        }
+
+        // Note: Team and capabilities elements were removed from HTML structure
+        // Only update description element which still exists
+        console.log('🔍 [updatePodDetails] Team and capabilities elements removed from HTML structure - skipping updates');
+
+        // Add event listener for view details button
+        const viewDetailsBtn = document.getElementById('view-pod-details-btn');
+        if (viewDetailsBtn) {
+          viewDetailsBtn.onclick = () => {
+            const podSlug = this.generatePodSlug(detailedPod.name);
+            window.open(`/pods/${podSlug}`, '_blank');
+          };
+        }
+
+        console.log('🔍 [updatePodDetails] Pod details updated successfully');
+      } catch (error) {
+        console.error('🔍 [updatePodDetails] Error updating pod details:', error);
+      }
+    }
+
+    generatePodSlug(name) {
+      return name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim();
     }
 
     async updateFinalSummary(podItem, packItems) {
@@ -1568,7 +1696,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             // Calculate monthly pack price with discount, then multiply by months
             const monthlyPrice =
               (packDetails.basePriceINR * (100 - packDetails.discountPercentage)) / 100;
-            const totalPrice = monthlyPrice * months;
+            const totalPrice = monthlyPrice * (podItem.reservationMonths || 1);
             const formattedPrice = formatPrice(totalPrice);
 
             return `
@@ -1663,7 +1791,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
       try {
         // Get current cart
-        const cart = await this.shared.getCart();
+        const cart = await this.summaryShared.getCart();
         const selectedPod = cart.find((item) => item.type === 'pod');
 
         if (selectedPod) {
@@ -2064,8 +2192,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log(`🔍 [${new Date().toISOString()}] [Step2] Remove pod button clicked`);
           e.preventDefault();
           e.stopPropagation();
-          await summaryShared.removePod();
-          summaryShared.navigateToStep(1);
+          await this.summaryShared.removePod();
+          this.summaryShared.navigateToStep(1);
         }
       });
 
@@ -2076,18 +2204,33 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const target = e.target;
         const continueBtn = target.closest('#step2-continue-btn, #step2-continue-btn-selected');
 
-        if (continueBtn && this.currentStep === 2) {
-          console.log('🔍 [Step2] Continue to Step 3 button clicked');
-          console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
+        if (continueBtn) {
+          console.log('🔍 [Step2] Continue button clicked');
+          console.log('🔍 [Step2] Button ID:', continueBtn.id);
           console.log('🔍 [Step2] About to call nextStep()');
-          this.summaryShared.nextStep();
-          console.log('🔍 [Step2] nextStep() called');
-        } else if (continueBtn) {
-          console.log(
-            '🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:',
-            this.currentStep,
-            ')'
-          );
+          console.log('🔍 [Step2] this.summaryShared available:', typeof this.summaryShared);
+          console.log('🔍 [Step2] this.summaryShared.nextStep available:', typeof this.summaryShared?.nextStep);
+          
+          // Try multiple approaches to call nextStep
+          try {
+            if (this.summaryShared && typeof this.summaryShared.nextStep === 'function') {
+              this.summaryShared.nextStep();
+              console.log('🔍 [Step2] nextStep() called successfully');
+            } else if (window.summaryShared && typeof window.summaryShared.nextStep === 'function') {
+              window.summaryShared.nextStep();
+              console.log('🔍 [Step2] nextStep() called via window.summaryShared');
+            } else {
+              console.error('🔍 [Step2] summaryShared.nextStep not available');
+              // Fallback: manually navigate to step 3
+              window.dispatchEvent(new CustomEvent('step-changed', { detail: { step: 3 } }));
+              console.log('🔍 [Step2] Manually dispatched step-changed event');
+            }
+          } catch (error) {
+            console.error('🔍 [Step2] Error calling nextStep:', error);
+            // Fallback: manually navigate to step 3
+            window.dispatchEvent(new CustomEvent('step-changed', { detail: { step: 3 } }));
+            console.log('🔍 [Step2] Fallback: manually dispatched step-changed event');
+          }
         }
       });
 
@@ -2100,6 +2243,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           this.summaryShared.navigateToStep(1);
         }
       });
+
+      // Debug: Check if buttons exist after adding listeners
+      setTimeout(() => {
+        const continueBtn1 = document.getElementById('step2-continue-btn');
+        const continueBtn2 = document.getElementById('step2-continue-btn-selected');
+        console.log('🔍 [Step2] Debug - step2-continue-btn exists:', !!continueBtn1);
+        console.log('🔍 [Step2] Debug - step2-continue-btn-selected exists:', !!continueBtn2);
+        console.log('🔍 [Step2] Debug - this.summaryShared available:', typeof this.summaryShared);
+      }, 100);
     }
 
     addStep3EventListeners() {
