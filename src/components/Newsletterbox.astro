@@ -345,7 +345,8 @@
         try {
           // Execute invisible reCAPTCHA
           if (window.recaptchaUtils) {
-            const siteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Use your actual site key
+            // Get site key from environment or use test key as fallback
+            const siteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // This should be dynamic based on environment
             const recaptchaResponse = await window.recaptchaUtils.execute(siteKey, 'newsletter_signup');
             
             // Submit form data with reCAPTCHA response

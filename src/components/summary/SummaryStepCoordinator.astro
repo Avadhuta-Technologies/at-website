@@ -430,7 +430,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 <div class="flex justify-center">
                   <div id="recaptcha-container" class="recaptcha-widget">
                     <div class="g-recaptcha" 
-                         data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                         data-sitekey="${getSiteKey('reservation')}"
                          data-theme="light"
                          data-size="normal"
                          data-callback="onReservationRecaptchaSuccess"
@@ -673,35 +673,37 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               <!-- Pod Details -->
               <div class="mb-6 pt-6 border-t border-mint-200">
                 <h4 class="text-sm font-semibold text-graphite-800 mb-3">What's Included</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                <div id="pod-details-content" class="space-y-4">
+                  <!-- Dynamic content will be loaded here -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                      <span class="text-sm text-graphite-700">Dedicated Team</span>
                     </div>
-                    <span class="text-sm text-graphite-700">Dedicated Team</span>
-                  </div>
-                  <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                      <span class="text-sm text-graphite-700">Full-time Availability</span>
                     </div>
-                    <span class="text-sm text-graphite-700">Full-time Availability</span>
-                  </div>
-                  <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                      <span class="text-sm text-graphite-700">Project Management</span>
                     </div>
-                    <span class="text-sm text-graphite-700">Project Management</span>
-                  </div>
-                  <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    <div class="flex items-center space-x-3">
+                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                     </div>
                     <span class="text-sm text-graphite-700">Quality Assurance</span>
@@ -784,9 +786,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     async loadAvailablePods() {
       console.log('🔍 [loadAvailablePods] Starting to load available pods...');
       
-              try {
-          const pods = await this.summaryShared.loadPods();
-          console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
+      try {
+        const pods = await this.summaryShared.loadPods();
+        console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
         
         const grid = document.getElementById('available-pods-grid');
         console.log('🔍 [loadAvailablePods] Grid element found:', !!grid);
@@ -828,6 +830,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 ${pod.idealFor ? pod.idealFor.slice(0, 2).map(item => `<li>• ${item}</li>`).join('') : ''}
               </ul>
             </div>
+            
+            <!-- Team Composition Preview -->
+            ${pod.teamComposition && pod.teamComposition.length > 0 ? `
+              <div class="space-y-2 mb-4">
+                <h4 class="text-sm font-medium text-graphite-700">Team:</h4>
+                <ul class="text-sm text-graphite-600 space-y-1">
+                  ${pod.teamComposition.slice(0, 2).map(member => `<li>• ${member.split('–')[0].trim()}</li>`).join('')}
+                  ${pod.teamComposition.length > 2 ? `<li class="text-mint-600">+${pod.teamComposition.length - 2} more</li>` : ''}
+                </ul>
+              </div>
+            ` : ''}
             
             <!-- Pricing - positioned above button -->
             <div class="mb-4">
@@ -1825,14 +1838,16 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
           
           try {
-            // Prepare data for HubSpot submission
-            const hubspotData = {
-              ...formValues,
-              selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
-              selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
-              source: 'NovaPod Reservation Form',
-              recaptchaResponse: reservationRecaptchaResponse
-            };
+                      // Prepare data for HubSpot submission
+          const hubspotData = {
+            ...formValues,
+            selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
+            selected_pod_slug: selectedPod ? selectedPod.slug || '' : '',
+            selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
+            source: 'NovaPod Reservation Form',
+            recaptchaResponse: reservationRecaptchaResponse,
+            recaptchaAction: selectedPod && selectedPod.slug ? `pod_reservation_${selectedPod.slug}` : 'pod_reservation'
+          };
             
             console.log('🔍 [Step3] Submitting to HubSpot:', hubspotData);
             
@@ -2105,6 +2120,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       }
     }
 
+
+
     // Initialize reCAPTCHA for dynamically created forms
     initializeRecaptcha() {
       console.log('🔍 [initializeRecaptcha] Starting reCAPTCHA initialization...');
@@ -2134,10 +2151,24 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     }
 
     // Render the reCAPTCHA widget
-    renderRecaptchaWidget() {
+    async renderRecaptchaWidget() {
       const recaptchaContainer = document.getElementById('recaptcha-container');
       if (recaptchaContainer) {
         console.log('🔍 [renderRecaptchaWidget] Found reCAPTCHA container, rendering...');
+        
+        // Get current pod for dynamic configuration
+        let currentPodSlug = null;
+        try {
+          const cart = await this.summaryShared.getCart();
+          const selectedPod = cart.find(item => item.type === 'pod');
+          if (selectedPod && selectedPod.slug) {
+            currentPodSlug = selectedPod.slug;
+            console.log('🔍 [renderRecaptchaWidget] Current pod slug:', currentPodSlug);
+          }
+        } catch (error) {
+          console.log('🔍 [renderRecaptchaWidget] Could not get current pod, using default config');
+        }
+        
         // The widget should render automatically when the script loads
         // Check if it rendered after a short delay
         setTimeout(() => {
@@ -2149,15 +2180,22 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             // Try manual render if needed
             if (typeof window.grecaptcha !== 'undefined' && window.grecaptcha.render) {
               try {
+                // Get the site key from the data attribute
+                const siteKeyElement = recaptchaContainer.querySelector('.g-recaptcha');
+                const siteKey = siteKeyElement?.getAttribute('data-sitekey') || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+                
+                // Create dynamic action based on pod
+                const action = currentPodSlug ? `pod_reservation_${currentPodSlug}` : 'pod_reservation';
+                
                 window.grecaptcha.render(recaptchaContainer, {
-                  sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+                  sitekey: siteKey,
                   theme: 'light',
                   size: 'normal',
                   callback: 'onReservationRecaptchaSuccess',
                   'expired-callback': 'onReservationRecaptchaExpired',
                   'error-callback': 'onReservationRecaptchaError'
                 });
-                console.log('🔍 [renderRecaptchaWidget] Manual reCAPTCHA render successful');
+                console.log('🔍 [renderRecaptchaWidget] Manual reCAPTCHA render successful with action:', action);
               } catch (error) {
                 console.error('🔍 [renderRecaptchaWidget] Manual render failed:', error);
               }

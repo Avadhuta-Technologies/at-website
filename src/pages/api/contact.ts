@@ -28,12 +28,25 @@ export const POST: APIRoute = async ({ request }) => {
       formData = await request.formData();
     }
     
-    // Extract reCAPTCHA response
+    // Extract reCAPTCHA response and action
     const recaptchaResponse = formData.get('recaptchaResponse') as string;
+    const recaptchaAction = formData.get('recaptchaAction') as string;
+    const selectedPodSlug = formData.get('selected_pod_slug') as string;
     
     // Verify reCAPTCHA if response is provided
     if (recaptchaResponse) {
-      const secretKey = getSecretKey('contact');
+      // Determine which secret key to use based on the form type
+      let secretKey: string;
+      if (recaptchaAction && recaptchaAction.startsWith('pod_reservation')) {
+        // Use pod-specific secret key for reservation forms
+        secretKey = getSecretKey('reservation');
+        console.log('Using reservation form reCAPTCHA verification for pod:', selectedPodSlug);
+      } else {
+        // Use contact form secret key for regular contact forms
+        secretKey = getSecretKey('contact');
+        console.log('Using contact form reCAPTCHA verification');
+      }
+      
       const verificationResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
         method: 'POST',
         headers: {
@@ -56,6 +69,8 @@ export const POST: APIRoute = async ({ request }) => {
           headers: { 'Content-Type': 'application/json' }
         });
       }
+      
+      console.log('reCAPTCHA verification successful for action:', recaptchaAction);
     }
     
     // Map and validate form data
