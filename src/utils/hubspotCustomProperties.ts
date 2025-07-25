@@ -75,6 +75,13 @@ export const requiredCustomProperties: HubSpotCustomProperty[] = [
     type: 'string',
     groupName: 'contactinformation',
     description: 'Comma-separated list of pack names that the user wants to buy'
+  },
+  {
+    name: 'reservation_period',
+    label: 'Reservation Period',
+    type: 'string',
+    groupName: 'contactinformation',
+    description: 'Estimated project duration selected by the user'
   }
 ];
 

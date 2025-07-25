@@ -3,6 +3,7 @@ import type { APIRoute } from 'astro';
 import { HubSpotService, type ContactFormData } from '../../services/HubSpotService';
 import { mapFormDataToHubSpot, validateContactData, sanitizeFormData } from '../../utils/hubspotMapper';
 import { config, validateConfig } from '../../config/environment';
+import { getSecretKey } from '../../config/recaptcha';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -25,6 +26,51 @@ export const POST: APIRoute = async ({ request }) => {
     } else {
       // Handle form data
       formData = await request.formData();
+    }
+    
+    // Extract reCAPTCHA response and action
+    const recaptchaResponse = formData.get('recaptchaResponse') as string;
+    const recaptchaAction = formData.get('recaptchaAction') as string;
+    const selectedPodSlug = formData.get('selected_pod_slug') as string;
+    
+    // Verify reCAPTCHA if response is provided
+    if (recaptchaResponse) {
+      // Determine which secret key to use based on the form type
+      let secretKey: string;
+      if (recaptchaAction && recaptchaAction.startsWith('pod_reservation')) {
+        // Use pod-specific secret key for reservation forms
+        secretKey = getSecretKey('reservation');
+        console.log('Using reservation form reCAPTCHA verification for pod:', selectedPodSlug);
+      } else {
+        // Use contact form secret key for regular contact forms
+        secretKey = getSecretKey('contact');
+        console.log('Using contact form reCAPTCHA verification');
+      }
+      
+      const verificationResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          secret: secretKey,
+          response: recaptchaResponse,
+        }),
+      });
+      
+      const verificationResult = await verificationResponse.json();
+      
+      if (!verificationResult.success) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: 'reCAPTCHA verification failed'
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
+      console.log('reCAPTCHA verification successful for action:', recaptchaAction);
     }
     
     // Map and validate form data

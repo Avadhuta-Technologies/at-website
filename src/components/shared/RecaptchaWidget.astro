@@ -1,0 +1,167 @@
+---
+export interface Props {
+  siteKey: string;
+  theme?: 'light' | 'dark';
+  size?: 'normal' | 'compact' | 'invisible';
+  callback?: string;
+  'expired-callback'?: string;
+  'error-callback'?: string;
+  tabindex?: number;
+  class?: string;
+}
+
+const { 
+  siteKey, 
+  theme = 'light', 
+  size = 'normal', 
+  callback,
+  'expired-callback': expiredCallback,
+  'error-callback': errorCallback,
+  tabindex = 0,
+  class: className = ''
+} = Astro.props;
+---
+
+<div 
+  id="recaptcha-container" 
+  class={`recaptcha-widget ${className}`}
+  data-site-key={siteKey}
+  data-theme={theme}
+  data-size={size}
+  data-callback={callback}
+  data-expired-callback={expiredCallback}
+  data-error-callback={errorCallback}
+  data-tabindex={tabindex}
+>
+  <div class="g-recaptcha" 
+       data-sitekey={siteKey}
+       data-theme={theme}
+       data-size={size}
+       data-callback={callback}
+       data-expired-callback={expiredCallback}
+       data-error-callback={errorCallback}
+       data-tabindex={tabindex}>
+  </div>
+  <div id="recaptcha-loading" class="text-center text-gray-500 text-sm mt-2">
+    Loading reCAPTCHA...
+  </div>
+</div>
+
+<script>
+  // Type declarations for reCAPTCHA
+  declare global {
+    interface Window {
+      grecaptcha: {
+        getResponse: (widgetId: number) => string;
+        reset: (widgetId: number) => void;
+        execute: (siteKey: string, options: { action: string }) => Promise<string>;
+        ready: (callback: () => void) => void;
+        render: (element: string | HTMLElement, options: any) => number;
+      };
+      recaptchaUtils: {
+        getResponse: (widgetId: number) => string | null;
+        reset: (widgetId: number) => void;
+        execute: (siteKey: string, action: string) => Promise<string>;
+        verify: (response: string, secretKey: string) => Promise<{ success: boolean; error?: string }>;
+      };
+    }
+  }
+
+  // Load reCAPTCHA script if not already loaded
+  function loadRecaptchaScript() {
+    if (typeof window.grecaptcha === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = function() {
+        console.log('reCAPTCHA script loaded successfully');
+        // Hide loading message
+        const loadingElement = document.getElementById('recaptcha-loading');
+        if (loadingElement) {
+          loadingElement.style.display = 'none';
+        }
+        // Trigger a custom event when reCAPTCHA is ready
+        window.dispatchEvent(new CustomEvent('recaptcha-loaded'));
+      };
+      script.onerror = function() {
+        console.error('Failed to load reCAPTCHA script');
+        const loadingElement = document.getElementById('recaptcha-loading');
+        if (loadingElement) {
+          loadingElement.textContent = 'Failed to load reCAPTCHA';
+          loadingElement.className = 'text-center text-red-500 text-sm mt-2';
+        }
+      };
+      document.head.appendChild(script);
+    } else {
+      // reCAPTCHA already loaded, hide loading message
+      const loadingElement = document.getElementById('recaptcha-loading');
+      if (loadingElement) {
+        loadingElement.style.display = 'none';
+      }
+    }
+  }
+
+  // Initialize reCAPTCHA when DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    loadRecaptchaScript();
+  });
+
+  // Export utility functions for form validation
+  window.recaptchaUtils = {
+    // Get reCAPTCHA response
+    getResponse: function(widgetId: number): string | null {
+      if (typeof window.grecaptcha !== 'undefined') {
+        return window.grecaptcha.getResponse(widgetId);
+      }
+      return null;
+    },
+
+    // Reset reCAPTCHA
+    reset: function(widgetId: number): void {
+      if (typeof window.grecaptcha !== 'undefined') {
+        window.grecaptcha.reset(widgetId);
+      }
+    },
+
+    // Execute invisible reCAPTCHA
+    execute: function(siteKey: string, action: string): Promise<string> {
+      if (typeof window.grecaptcha !== 'undefined') {
+        return window.grecaptcha.execute(siteKey, { action: action });
+      }
+      return Promise.reject('reCAPTCHA not loaded');
+    },
+
+    // Verify reCAPTCHA response on server side
+    verify: async function(response: string, secretKey: string): Promise<{ success: boolean; error?: string }> {
+      try {
+        const result = await fetch('/api/verify-recaptcha', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ response, secretKey })
+        });
+        return await result.json();
+      } catch (error) {
+        console.error('reCAPTCHA verification error:', error);
+        return { success: false, error: 'Verification failed' };
+      }
+    }
+  };
+</script>
+
+<style>
+  .recaptcha-widget {
+    margin: 1rem 0;
+  }
+  
+  .recaptcha-widget .g-recaptcha {
+    display: inline-block;
+  }
+  
+  /* Dark theme adjustments */
+  .recaptcha-widget[data-theme="dark"] {
+    filter: invert(1) hue-rotate(180deg);
+  }
+</style> 

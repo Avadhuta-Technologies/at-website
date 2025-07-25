@@ -895,18 +895,18 @@ export class SummaryShared {
         const podDetails = await this.getPodDetails(podItem.id);
         if (podDetails) {
           // Get current reservation period - try multiple sources
-          let months = 3; // default
+          let months = 1; // default
           
-          // First, try to get from chip selection (Step 1)
-          const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+          // First, try to get from chip selection (Step 1 or Step 3)
+          const selectedChip = document.querySelector('.duration-chip.bg-mint-500, .step3-duration-chip.bg-mint-500');
           if (selectedChip) {
-            months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+            months = parseInt(selectedChip.getAttribute('data-duration') || '1');
           } else {
             // Fallback: check if any chip has the selected state
-            const allChips = document.querySelectorAll('.duration-chip');
+            const allChips = document.querySelectorAll('.duration-chip, .step3-duration-chip');
             for (const chip of allChips) {
               if (chip.classList.contains('bg-mint-500')) {
-                months = parseInt(chip.getAttribute('data-duration') || '3');
+                months = parseInt(chip.getAttribute('data-duration') || '1');
                 break;
               }
             }
@@ -917,13 +917,9 @@ export class SummaryShared {
             }
           }
           
-          const totalPriceINR = podDetails.basePriceINR * months;
-          const totalPriceUSD = podDetails.basePriceUSD * months;
-          
-          // Apply discount
-          const discountMultiplier = (100 - podDetails.discountPercentage) / 100;
-          const finalPriceINR = totalPriceINR * discountMultiplier;
-          const finalPriceUSD = totalPriceUSD * discountMultiplier;
+          // Use base price directly (no duration multiplication for estimation)
+          const finalPriceINR = podDetails.basePriceINR;
+          const finalPriceUSD = podDetails.basePriceUSD;
           
           // Format price based on user location
           let userCurrency = 'INR';
@@ -993,18 +989,18 @@ export class SummaryShared {
     if (priceEl) priceEl.textContent = podItem.price || 'Price not available';
     
     // Get current reservation period - try multiple sources
-    let months = 3; // default
+    let months = 1; // default
     
-    // First, try to get from chip selection (Step 1)
-    const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+    // First, try to get from chip selection (Step 1 or Step 3)
+    const selectedChip = document.querySelector('.duration-chip.bg-mint-500, .step3-duration-chip.bg-mint-500');
     if (selectedChip) {
-      months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+      months = parseInt(selectedChip.getAttribute('data-duration') || '1');
     } else {
       // Fallback: check if any chip has the selected state
-      const allChips = document.querySelectorAll('.duration-chip');
+      const allChips = document.querySelectorAll('.duration-chip, .step3-duration-chip');
       for (const chip of allChips) {
         if (chip.classList.contains('bg-mint-500')) {
-          months = parseInt(chip.getAttribute('data-duration') || '3');
+          months = parseInt(chip.getAttribute('data-duration') || '1');
           break;
         }
       }
@@ -1026,18 +1022,18 @@ export class SummaryShared {
     
     try {
       // Get current reservation period - try multiple sources
-      let months = 3; // default
+      let months = 1; // default
       
-      // First, try to get from chip selection (Step 1)
-      const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
+      // First, try to get from chip selection (Step 1 or Step 3)
+      const selectedChip = document.querySelector('.duration-chip.bg-mint-500, .step3-duration-chip.bg-mint-500');
       if (selectedChip) {
-        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+        months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
         // Fallback: check if any chip has the selected state
-        const allChips = document.querySelectorAll('.duration-chip');
+        const allChips = document.querySelectorAll('.duration-chip, .step3-duration-chip');
         for (const chip of allChips) {
           if (chip.classList.contains('bg-mint-500')) {
-            months = parseInt(chip.getAttribute('data-duration') || '3');
+            months = parseInt(chip.getAttribute('data-duration') || '1');
             break;
           }
         }
@@ -1052,13 +1048,9 @@ export class SummaryShared {
       if (podItem) {
         const podDetails = await this.getPodDetails(podItem.id);
         if (podDetails) {
-          const totalPriceINR = podDetails.basePriceINR * months;
-          const totalPriceUSD = podDetails.basePriceUSD * months;
-          
-          // Apply discount
-          const discountMultiplier = (100 - podDetails.discountPercentage) / 100;
-          totalINR += totalPriceINR * discountMultiplier;
-          totalUSD += totalPriceUSD * discountMultiplier;
+          // Use base price directly (no duration multiplication for estimation)
+          totalINR += podDetails.basePriceINR;
+          totalUSD += podDetails.basePriceUSD;
         }
       }
       

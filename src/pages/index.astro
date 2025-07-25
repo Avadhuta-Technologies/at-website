@@ -276,7 +276,7 @@ const metaInfo = generateMetaInfo();
                   title: itemTitle || '',
                   description: itemDescription || '',
                   price: '',
-                  reservationMonths: itemType === 'pod' ? 3 : undefined
+                  reservationMonths: itemType === 'pod' ? 1 : undefined
                 };
                 
                 const success = await shared.addToCart(cartItem);
