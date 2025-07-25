@@ -37,6 +37,21 @@ export const recaptchaConfig = {
       threshold: 0.3, // Lower threshold for newsletter
     },
   },
+
+  // Pod-specific reCAPTCHA settings (can be extended based on pod type)
+  podSettings: {
+    default: {
+      version: 'v2' as 'v2' | 'v3',
+      action: 'pod_reservation',
+      threshold: 0.5,
+    },
+    // You can add specific pod types here if needed
+    // 'ai-ml-integration-pod': {
+    //   version: 'v2',
+    //   action: 'ai_ml_pod_reservation',
+    //   threshold: 0.6,
+    // },
+  },
   
   // Environment check
   isProduction: import.meta.env.PROD,
@@ -58,4 +73,24 @@ export function getSecretKey(formName: keyof typeof recaptchaConfig.forms): stri
 // Helper function to get form configuration
 export function getFormConfig(formName: keyof typeof recaptchaConfig.forms) {
   return recaptchaConfig.forms[formName];
+}
+
+// Helper function to get pod-specific reCAPTCHA configuration
+export function getPodRecaptchaConfig(podSlug?: string) {
+  if (podSlug && recaptchaConfig.podSettings[podSlug as keyof typeof recaptchaConfig.podSettings]) {
+    return recaptchaConfig.podSettings[podSlug as keyof typeof recaptchaConfig.podSettings];
+  }
+  return recaptchaConfig.podSettings.default;
+}
+
+// Helper function to get pod-specific site key
+export function getPodSiteKey(podSlug?: string): string {
+  const podConfig = getPodRecaptchaConfig(podSlug);
+  return recaptchaConfig.siteKeys[podConfig.version];
+}
+
+// Helper function to get pod-specific secret key
+export function getPodSecretKey(podSlug?: string): string {
+  const podConfig = getPodRecaptchaConfig(podSlug);
+  return recaptchaConfig.secretKeys[podConfig.version];
 } 
