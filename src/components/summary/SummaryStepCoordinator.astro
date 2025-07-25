@@ -27,10 +27,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async init() {
       console.log('🔍 [SummaryStepCoordinator] Initializing...');
-      
+
       // Initialize shared utilities
       await this.summaryShared.init();
-      
+
       this.setupEventListeners();
       this.loadStep(this.currentStep);
       console.log('🔍 [SummaryStepCoordinator] Initialization complete');
@@ -42,44 +42,44 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const newStep = e.detail.step;
         console.log('🔍 [StepCoordinator] Step coordinator received step change:', newStep);
         console.log('🔍 [StepCoordinator] Current step before change:', this.currentStep);
-        
+
         if (newStep >= 1 && newStep <= 3) {
           this.currentStep = newStep;
-          
+
           // Store current step in DOM element for shared utility to access
           const stepCoordinator = document.getElementById('step-coordinator');
           if (stepCoordinator) {
             stepCoordinator._currentStep = newStep;
           }
-          
+
           console.log('🔍 [StepCoordinator] Loading step:', newStep);
           this.loadStep(newStep);
         } else {
           console.log('🔍 [StepCoordinator] Invalid step number:', newStep);
         }
       });
-      
+
       // Listen for cart updates to refresh UI
       window.addEventListener('cart-updated', async (e) => {
         console.log('🔍 [CartUpdated] Event received, current step:', this.currentStep);
-        
+
         if (this.currentStep === 1) {
           // Check if we still have a pod after the update
           const cart = await this.summaryShared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
-          
+          const selectedPod = cart.find((item) => item.type === 'pod');
+
           // Also check localStorage as fallback
           let localStoragePod = null;
           try {
             const localStorageCart = localStorage.getItem('novapod-cart');
             if (localStorageCart) {
               const parsedCart = JSON.parse(localStorageCart);
-              localStoragePod = parsedCart.find(item => item.type === 'pod');
+              localStoragePod = parsedCart.find((item) => item.type === 'pod');
             }
           } catch (error) {
             // Ignore localStorage errors
           }
-          
+
           if (selectedPod || localStoragePod) {
             // Still have a pod, show selected pod
             const podToShow = selectedPod || localStoragePod;
@@ -93,33 +93,36 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         } else if (this.currentStep === 2) {
           // Update Step 2 pod summary if cart was updated
           const cart = await this.summaryShared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
-          
+          const selectedPod = cart.find((item) => item.type === 'pod');
+
           if (selectedPod) {
             console.log('🔍 [CartUpdated] Step 2 - Updating pod summary with:', selectedPod);
             this.updatePodSummary(selectedPod);
           }
-          
+
           // Update selected packs display
           await this.updateSelectedPacksDisplay();
         }
       });
-      
+
       // Global pack action handler - only added once
       document.addEventListener('click', async (e) => {
         const target = e.target;
-        
+
         console.log(`🔍 [${new Date().toISOString()}] [Global] Click detected on:`, target);
-        console.log(`🔍 [${new Date().toISOString()}] [Global] Target matches button[data-pack-id]:`, target && target.matches('button[data-pack-id]'));
-        
+        console.log(
+          `🔍 [${new Date().toISOString()}] [Global] Target matches button[data-pack-id]:`,
+          target && target.matches('button[data-pack-id]')
+        );
+
         // Handle pack add/remove buttons
         if (target && target.matches('button[data-pack-id]')) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           const packId = target.getAttribute('data-pack-id');
           const currentAction = target.getAttribute('data-action');
-          
+
           // Determine the correct action based on button text and current state
           let action;
           if (target.textContent.trim() === 'Add Pack' || currentAction === 'add') {
@@ -127,26 +130,39 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           } else if (target.textContent.trim() === 'Remove Pack' || currentAction === 'remove') {
             action = 'remove';
           } else {
-            console.error('🔍 [Global] Unknown button state:', target.textContent, 'data-action:', currentAction);
+            console.error(
+              '🔍 [Global] Unknown button state:',
+              target.textContent,
+              'data-action:',
+              currentAction
+            );
             return;
           }
-          
+
           console.log(`🔍 [${new Date().toISOString()}] [Global] ===== PACK ACTION START =====`);
-          console.log(`🔍 [${new Date().toISOString()}] [Global] Button text:`, target.textContent.trim());
+          console.log(
+            `🔍 [${new Date().toISOString()}] [Global] Button text:`,
+            target.textContent.trim()
+          );
           console.log(`🔍 [${new Date().toISOString()}] [Global] Data action:`, currentAction);
-          console.log(`🔍 [${new Date().toISOString()}] [Global] Determined action: ${action} for pack: ${packId}`);
+          console.log(
+            `🔍 [${new Date().toISOString()}] [Global] Determined action: ${action} for pack: ${packId}`
+          );
           console.log(`🔍 [${new Date().toISOString()}] [Global] Current step:`, this.currentStep);
-          console.log(`🔍 [${new Date().toISOString()}] [Global] Button disabled state:`, target.disabled);
-          
+          console.log(
+            `🔍 [${new Date().toISOString()}] [Global] Button disabled state:`,
+            target.disabled
+          );
+
           // Add a small delay to prevent rapid clicks
           if (target.disabled) {
             console.log('🔍 [Global] Button already processing, ignoring click');
             return;
           }
-          
+
           target.disabled = true;
           console.log('🔍 [Global] Button disabled for processing');
-          
+
           try {
             if (action === 'add') {
               console.log('🔍 [Global] ===== ADDING PACK =====');
@@ -154,7 +170,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               const hasPod = await this.summaryShared.hasPod();
               console.log('🔍 [Global] Has pod:', hasPod);
               if (!hasPod) {
-                this.summaryShared.showNotification('Please select a NovaPod first to add packs', 'warning');
+                this.summaryShared.showNotification(
+                  'Please select a NovaPod first to add packs',
+                  'warning'
+                );
                 return;
               }
               await this.summaryShared.addPack(packId);
@@ -164,7 +183,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               await this.summaryShared.removePack(packId);
               console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
             }
-            
+
             // Refresh pack cards display immediately for better UX
             if (this.currentStep === 2) {
               console.log('🔍 [Global] ===== REFRESHING UI =====');
@@ -182,18 +201,18 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             }, 500);
           }
         }
-        
+
         // Handle delete pack buttons in selected packs container
         const deleteBtn = target.closest('#selected-packs-list button[data-action="remove"]');
         if (deleteBtn && deleteBtn.getAttribute('data-pack-id')) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           const packId = deleteBtn.getAttribute('data-pack-id');
           if (packId) {
             console.log('🔍 [Global] Deleting pack from selected packs:', packId);
             await this.summaryShared.removePack(packId);
-            
+
             // Refresh the packs display if we're on Step 2
             if (this.currentStep === 2) {
               await this.refreshPackCards();
@@ -251,7 +270,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       console.log('🔍 [cleanupEventListeners] Cleaning up event listeners');
       // Store references to event listeners so we can remove them
       if (this.currentEventListeners) {
-        this.currentEventListeners.forEach(listener => {
+        this.currentEventListeners.forEach((listener) => {
           document.removeEventListener('click', listener);
         });
       }
@@ -351,7 +370,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         console.error('🔍 [loadStep3] Step coordinator element not found');
         return;
       }
-      
+
       coordinator.innerHTML = `
         <div id="step-3-content" class="step-content">
           <div class="text-center mb-12">
@@ -523,38 +542,41 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async initializeStep1() {
       console.log('🔍 [initializeStep1] Starting initialization...');
-      
+
       // Get cart data from localStorage (single source of truth)
       let cart = [];
       let selectedPod = null;
-      
+
       try {
         // Try this.summaryShared.getCart() first
         cart = await this.summaryShared.getCart();
         console.log('🔍 [initializeStep1] Cart from this.summaryShared.getCart():', cart);
-        selectedPod = cart.find(item => item.type === 'pod');
-        console.log('🔍 [initializeStep1] Selected pod from this.summaryShared.getCart():', selectedPod);
+        selectedPod = cart.find((item) => item.type === 'pod');
+        console.log(
+          '🔍 [initializeStep1] Selected pod from this.summaryShared.getCart():',
+          selectedPod
+        );
       } catch (error) {
         console.error('🔍 [initializeStep1] Error with this.summaryShared.getCart():', error);
       }
-      
+
       // Fallback: Direct localStorage check
       if (!selectedPod) {
         try {
           const localStorageCart = localStorage.getItem('novapod-cart');
           console.log('🔍 [initializeStep1] Direct localStorage value:', localStorageCart);
-          
+
           if (localStorageCart) {
             const parsedCart = JSON.parse(localStorageCart);
             console.log('🔍 [initializeStep1] Parsed localStorage cart:', parsedCart);
-            selectedPod = parsedCart.find(item => item.type === 'pod');
+            selectedPod = parsedCart.find((item) => item.type === 'pod');
             console.log('🔍 [initializeStep1] Selected pod from direct localStorage:', selectedPod);
           }
         } catch (error) {
           console.error('🔍 [initializeStep1] Error reading direct localStorage:', error);
         }
       }
-      
+
       if (selectedPod) {
         // Show selected pod
         console.log('🔍 [initializeStep1] Showing selected pod:', selectedPod);
@@ -564,31 +586,34 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         console.log('🔍 [initializeStep1] No pod found, showing available pods');
         await this.showAvailablePods();
       }
-      
+
       this.addStep1EventListeners();
       console.log('🔍 [initializeStep1] Initialization complete');
     }
 
     async initializeStep2() {
       console.log('🔍 [initializeStep2] Starting initialization...');
-      
+
       // Get cart data from localStorage (single source of truth)
       const cart = await this.summaryShared.getCart();
-      const selectedPod = cart.find(item => item.type === 'pod');
+      const selectedPod = cart.find((item) => item.type === 'pod');
       console.log('🔍 [initializeStep2] Cart from localStorage:', cart);
       console.log('🔍 [initializeStep2] Selected pod:', selectedPod);
-      console.log('🔍 [initializeStep2] Selected pod reservationMonths:', selectedPod?.reservationMonths);
-      
+      console.log(
+        '🔍 [initializeStep2] Selected pod reservationMonths:',
+        selectedPod?.reservationMonths
+      );
+
       if (selectedPod) {
         // Update the pod summary display
         console.log('🔍 [initializeStep2] Calling updatePodSummary...');
         await this.updatePodSummary(selectedPod);
-        
+
         // Update pricing based on current reservation period
         const currentMonths = selectedPod.reservationMonths || 1;
         console.log('🔍 [initializeStep2] Updating pricing for', currentMonths, 'months');
         await this.updatePricingForReservationPeriod(currentMonths);
-        
+
         // Load packs for the selected pod
         await this.loadPacksForStep2(selectedPod);
         // Update selected packs display
@@ -600,7 +625,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         this.summaryShared.navigateToStep(1);
         return;
       }
-      
+
       this.addStep2EventListeners();
       console.log('🔍 [initializeStep2] Initialization complete');
     }
@@ -608,12 +633,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     async initializeStep3() {
       console.log('🔍 Initializing Step 3...');
       const cart = await this.summaryShared.getCart();
-      const selectedPod = cart.find(item => item.type === 'pod');
-      const selectedPacks = cart.filter(item => item.type === 'pack');
-      
+      const selectedPod = cart.find((item) => item.type === 'pod');
+      const selectedPacks = cart.filter((item) => item.type === 'pack');
+
       console.log('🔍 Step 3 - Selected pod:', selectedPod);
       console.log('🔍 Step 3 - Selected packs:', selectedPacks);
-      
+
       if (selectedPod) {
         await this.updateFinalSummary(selectedPod, selectedPacks);
       } else {
@@ -623,14 +648,14 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         this.summaryShared.navigateToStep(1);
         return;
       }
-      
+
       this.addStep3EventListeners();
       console.log('🔍 Step 3 initialization complete');
     }
 
     async showSelectedPod(podItem) {
       const step1Content = document.getElementById('step-1-content');
-      
+
       if (step1Content) {
         // Replace the entire step 1 content with selected pod display
         step1Content.innerHTML = `
@@ -644,114 +669,164 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           </div>
 
           <!-- Selected Pod Display -->
-          <div class="max-w-2xl mx-auto mb-8">
-            <div class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-2xl p-8 border border-mint-200">
-              <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-mint-500 rounded-xl flex items-center justify-center">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 id="selected-pod-title" class="text-xl font-semibold text-graphite-900">
-                      <a href="/pods/${generatePodSlug(podItem.title || podItem.name)}" class="hover:text-mint-600 transition-colors cursor-pointer" title="View pod details">
-                        ${podItem.title || podItem.name || 'Selected Pod'}
-                        <svg class="w-4 h-4 inline ml-1 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                        </svg>
-                      </a>
-                    </h3>
-                    <p id="selected-pod-description" class="text-graphite-600">${podItem.description || podItem.tagline || 'Pod description'}</p>
-                    <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 1} Month${(podItem.reservationMonths || 1) > 1 ? 's' : ''}</span></p>
-                  </div>
+          <div class="max-w-xl mx-auto mb-6">
+            <div class="bg-gradient-to-br from-mint-50 to-cerulean-50 rounded-xl p-6 border border-mint-200">
+              <!-- Header Section -->
+              <div class="flex items-start space-x-3 mb-4">
+                <div class="w-10 h-10 bg-mint-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                  </svg>
                 </div>
-                <div class="text-right">
-                  <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">Calculating...</p>
-                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium">
-                    Change Pod
-                  </button>
+                <div class="flex-1 min-w-0">
+                  <h3 id="selected-pod-title" class="text-lg font-bold text-graphite-900 mb-1 truncate">
+                    <a href="/pods/${generatePodSlug(
+                      podItem.title || podItem.name
+                    )}" class="hover:text-mint-600 transition-colors cursor-pointer" title="View pod details">
+                      ${podItem.title || podItem.name || 'Selected Pod'}
+                      <svg class="w-3 h-3 inline ml-1 text-mint-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                      </svg>
+                    </a>
+                  </h3>
+                  <p id="selected-pod-description" class="text-xs text-graphite-600 mb-2 line-clamp-2">${
+                    podItem.description || podItem.tagline || 'Pod description'
+                  }</p>
                 </div>
               </div>
               
-              <!-- Pod Details -->
 
-              <!-- Pod Details -->
-              <div class="mb-6 pt-6 border-t border-mint-200">
-                <h4 class="text-sm font-semibold text-graphite-800 mb-3">What's Included</h4>
-                <div id="pod-details-content" class="space-y-4">
-                  <!-- Dynamic content will be loaded here -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="flex items-center space-x-3">
-                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      </div>
-                      <span class="text-sm text-graphite-700">Dedicated Team</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      </div>
-                      <span class="text-sm text-graphite-700">Full-time Availability</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      </div>
-                      <span class="text-sm text-graphite-700">Project Management</span>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <span class="text-sm text-graphite-700">Quality Assurance</span>
+              
+              
+              <!-- Pricing and Actions Section -->
+              <div class="bg-white rounded-lg p-4 border border-mint-200 mb-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-baseline space-x-2">
+                    <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">Calculating...</p>
+                    <p class="text-sm text-graphite-500">per month</p>
                   </div>
+                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium underline">
+                    Change Pod
+                  </button>
                 </div>
+                
+                
+              
+                <!-- Compact Details Grid -->
+                <div class="space-y-3">
+                  
+                  
+                  <!-- Team Composition -->
+                  ${
+                    podItem.whatsInPod?.teamComposition && podItem.whatsInPod.teamComposition.length > 0
+                      ? `
+                    <div class="bg-white rounded-lg p-3 border border-gray-200">
+                      <h4 class="text-xs font-semibold text-graphite-900 mb-2 flex items-center">
+                        <svg class="w-3 h-3 text-mint-500 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        Team Composition
+                      </h4>
+                      <div class="space-y-1.5">
+                        ${podItem.whatsInPod.teamComposition
+                          .map(
+                            (member) => `
+                          <div class="flex items-center space-x-1.5">
+                            <div class="w-4 h-4 bg-mint-100 rounded-sm flex items-center justify-center">
+                              <svg class="w-2.5 h-2.5 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                              </svg>
+                            </div>
+                            <span class="text-xs text-graphite-700">${member}</span>
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                    </div>
+                  `
+                      : ''
+                  }
+                  
+                  <!-- What Can Do (Deliverables) -->
+                  ${
+                    podItem.whatCanDo && podItem.whatCanDo.length > 0
+                      ? `
+                    <div class="bg-white rounded-lg p-3 border border-gray-200">
+                      <h4 class="text-xs font-semibold text-graphite-900 mb-2 flex items-center">
+                        <svg class="w-3 h-3 text-mint-500 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        What You Get
+                      </h4>
+                      <div class="space-y-1.5">
+                        ${podItem.whatCanDo
+                          .slice(0, 4)
+                          .map(
+                            (capability) => `
+                          <div class="flex items-center space-x-1.5">
+                            <div class="w-4 h-4 bg-cerulean-100 rounded-sm flex items-center justify-center">
+                              <svg class="w-2.5 h-2.5 text-cerulean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                              </svg>
+                            </div>
+                            <span class="text-xs text-graphite-700">${capability}</span>
+                          </div>
+                        `
+                          )
+                          .join('')}
+                        ${
+                          podItem.whatCanDo.length > 4
+                            ? `
+                          <div class="flex items-center space-x-1.5">
+                            <div class="w-4 h-4 bg-gray-100 rounded-sm flex items-center justify-center">
+                              <svg class="w-2.5 h-2.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                              </svg>
+                            </div>
+                            <span class="text-xs text-graphite-600">+${podItem.whatCanDo.length - 4} more capabilities</span>
+                          </div>
+                        `
+                            : ''
+                        }
+                      </div>
+                    </div>
+                  `
+                      : ''
+                  }                  
+                </div>
+                
               </div>
-
-
-
               <!-- Action Buttons -->
-              <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex gap-2">
+                  <button id="remove-pod-btn" class="flex-1 px-3 py-2 text-xs text-gray-600 hover:text-red-500 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-1.5 bg-gray-50 hover:bg-red-50 border border-gray-200 hover:border-red-200">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    <span>Remove</span>
+                  </button>
+                  
+                  <button id="view-pod-details-btn" class="flex-1 px-3 py-2 text-xs border border-gray-300 text-gray-700 rounded-lg font-medium hover:border-mint-400 hover:text-mint-600 hover:bg-mint-50 transition-all duration-300 flex items-center justify-center space-x-1.5">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    <span>View Details</span>
+                  </button>
+                  
+                  <button id="step1-continue-btn" class="flex-1 px-3 py-2 text-xs bg-gradient-to-r from-mint-500 to-cerulean-500 text-white rounded-lg font-medium hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 flex items-center justify-center space-x-1.5 shadow-sm">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                    <span>Continue</span>
+                  </button>
+                </div>
 
-                <!-- Tertiary CTA: Remove Pod (minimal focus) -->
-                        <button id="remove-pod-btn" class="px-4 py-3 text-gray-600 hover:text-red-500 rounded-lg font-medium transition-all duration-300 flex items-center justify-center space-x-2 bg-transparent hover:bg-red-50/50 !text-gray-600">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-          </svg>
-                  <span class="hidden sm:inline">Remove</span>
-                </button>
-
-                 <!-- Secondary CTA: View Details -->
-                <button id="view-pod-details-btn" class="flex-1 border-2 border-gray-300 text-gray-700 py-4 px-6 rounded-xl font-semibold text-lg hover:border-mint-400 hover:text-mint-600 hover:bg-mint-50 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                  </svg>
-                  <span>View Details</span>
-                </button>
-                
-                <!-- Primary CTA: Continue to Step 2 -->
-                <button id="step1-continue-btn" class="flex-1 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-4 px-8 rounded-xl font-semibold text-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                  Continue to Step 2
-                </button>
-                
-               
-                
-                
-              </div>
+              
             </div>
           </div>
         `;
-        
+
         // Update the pod summary with correct pricing after HTML is rendered
         await this.updatePodSummary(podItem);
       }
@@ -759,10 +834,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async showAvailablePods() {
       console.log('🔍 [showAvailablePods] Starting to show available pods...');
-      
+
       const step1Content = document.getElementById('step-1-content');
       console.log('🔍 [showAvailablePods] Step 1 content element found:', !!step1Content);
-      
+
       if (step1Content) {
         // Show the original "Choose Your NovaPod" section
         step1Content.innerHTML = `
@@ -780,7 +855,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             <!-- Pods will be dynamically loaded here -->
           </div>
         `;
-        
+
         console.log('🔍 [showAvailablePods] HTML set, now loading available pods...');
         await this.loadAvailablePods();
         console.log('🔍 [showAvailablePods] Available pods loaded');
@@ -791,28 +866,31 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async loadAvailablePods() {
       console.log('🔍 [loadAvailablePods] Starting to load available pods...');
-      
+
       try {
         const pods = await this.summaryShared.loadPods();
         console.log('🔍 [loadAvailablePods] Pods loaded:', pods);
-        
+
         const grid = document.getElementById('available-pods-grid');
         console.log('🔍 [loadAvailablePods] Grid element found:', !!grid);
-        
+
         if (!grid) {
           console.error('🔍 [loadAvailablePods] Grid element not found!');
           return;
         }
-        
+
         if (!pods || pods.length === 0) {
           console.log('🔍 [loadAvailablePods] No pods found, showing empty state');
-          grid.innerHTML = '<p class="text-graphite-600 col-span-full text-center py-8">No pods are currently available.</p>';
+          grid.innerHTML =
+            '<p class="text-graphite-600 col-span-full text-center py-8">No pods are currently available.</p>';
           return;
         }
-        
+
         console.log('🔍 [loadAvailablePods] Rendering', pods.length, 'pods');
-        
-        grid.innerHTML = pods.map(pod => `
+
+        grid.innerHTML = pods
+          .map(
+            (pod) => `
           <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-mint-300 transition-all duration-300 hover:shadow-lg flex flex-col h-full">
             <!-- Header with icon and title -->
             <div class="flex items-center space-x-4 mb-4">
@@ -833,115 +911,159 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             <div class="space-y-2 mb-4">
               <h4 class="text-sm font-medium text-graphite-700">Ideal for:</h4>
               <ul class="text-sm text-graphite-600 space-y-1">
-                ${pod.idealFor ? pod.idealFor.slice(0, 2).map(item => `<li>• ${item}</li>`).join('') : ''}
+                ${
+                  pod.idealFor
+                    ? pod.idealFor
+                        .slice(0, 2)
+                        .map((item) => `<li>• ${item}</li>`)
+                        .join('')
+                    : ''
+                }
               </ul>
             </div>
             
             <!-- Team Composition Preview -->
-            ${pod.teamComposition && pod.teamComposition.length > 0 ? `
+            ${
+              pod.teamComposition && pod.teamComposition.length > 0
+                ? `
               <div class="space-y-2 mb-4">
                 <h4 class="text-sm font-medium text-graphite-700">Team:</h4>
                 <ul class="text-sm text-graphite-600 space-y-1">
-                  ${pod.teamComposition.slice(0, 2).map(member => `<li>• ${member.split('–')[0].trim()}</li>`).join('')}
-                  ${pod.teamComposition.length > 2 ? `<li class="text-mint-600">+${pod.teamComposition.length - 2} more</li>` : ''}
+                  ${pod.teamComposition
+                    .slice(0, 2)
+                    .map((member) => `<li>• ${member.split('–')[0].trim()}</li>`)
+                    .join('')}
+                  ${
+                    pod.teamComposition.length > 2
+                      ? `<li class="text-mint-600">+${pod.teamComposition.length - 2} more</li>`
+                      : ''
+                  }
                 </ul>
               </div>
-            ` : ''}
+            `
+                : ''
+            }
             
             <!-- Pricing - positioned above button -->
             <div class="mb-4">
-              ${pod.discountPercentage > 0 ? `
+              ${
+                pod.discountPercentage > 0
+                  ? `
                 <div class="space-y-1">
-                  <div class="text-sm text-gray-500 line-through">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</div>
-                  <div class="text-lg font-bold text-mint-600">₹${((pod.basePriceINR * (100 - pod.discountPercentage) / 100) / 100000).toFixed(1)}L/month</div>
-                  <div class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">${pod.discountPercentage}% OFF</div>
+                  <div class="text-sm text-gray-500 line-through">₹${(
+                    pod.basePriceINR / 100000
+                  ).toFixed(1)}L/month</div>
+                  <div class="text-lg font-bold text-mint-600">₹${(
+                    (pod.basePriceINR * (100 - pod.discountPercentage)) /
+                    100 /
+                    100000
+                  ).toFixed(1)}L/month</div>
+                  <div class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">${
+                    pod.discountPercentage
+                  }% OFF</div>
                 </div>
-              ` : `
-                <span class="text-lg font-bold text-mint-600">₹${(pod.basePriceINR / 100000).toFixed(1)}L/month</span>
-              `}
+              `
+                  : `
+                <span class="text-lg font-bold text-mint-600">₹${(
+                  pod.basePriceINR / 100000
+                ).toFixed(1)}L/month</span>
+              `
+              }
             </div>
             
             <!-- CTA Button - always at bottom -->
-            <button class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 mt-auto" data-pod-id="${pod.id}">
+            <button class="w-full bg-gradient-to-r from-mint-500 to-cerulean-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 transform hover:scale-105 mt-auto" data-pod-id="${
+              pod.id
+            }">
               Reserve Pod
             </button>
           </div>
-        `).join('');
-        
+        `
+          )
+          .join('');
+
         console.log('🔍 [loadAvailablePods] Pods rendered successfully');
       } catch (error) {
         console.error('🔍 [loadAvailablePods] Error loading pods:', error);
         const grid = document.getElementById('available-pods-grid');
         if (grid) {
-          grid.innerHTML = '<p class="text-red-600 col-span-full text-center py-8">Error loading pods. Please refresh the page.</p>';
+          grid.innerHTML =
+            '<p class="text-red-600 col-span-full text-center py-8">Error loading pods. Please refresh the page.</p>';
         }
       }
     }
 
     async loadPacksForStep2(podItem) {
       console.log('🔍 [loadPacksForStep2] Starting with podItem:', podItem);
-      
+
       const grid = document.getElementById('packs-grid');
       const title = document.getElementById('packs-section-title');
-      
+
       console.log('🔍 [loadPacksForStep2] Grid element:', grid);
       console.log('🔍 [loadPacksForStep2] Title element:', title);
-      
+
       if (!grid) {
         console.error('🔍 [loadPacksForStep2] packs-grid element not found!');
         return;
       }
-      
+
       // Get all available packs for categories
       const allPacks = await this.summaryShared.loadAllPacks();
       const categories = this.summaryShared.getPackCategories();
-      
+
       console.log('🔍 [loadPacksForStep2] All packs:', allPacks);
       console.log('🔍 [loadPacksForStep2] Categories:', categories);
-      
+
       if (!categories || categories.length === 0) {
         console.log('🔍 [loadPacksForStep2] No categories found, showing empty state');
         title.textContent = 'No Packs Available';
-        grid.innerHTML = '<p class="text-graphite-600 col-span-full text-center py-8">No packs are currently available.</p>';
+        grid.innerHTML =
+          '<p class="text-graphite-600 col-span-full text-center py-8">No packs are currently available.</p>';
         return;
       }
-      
+
       title.textContent = 'Available Packs';
-      
+
       // Create grouped interface with categories only
       const packsSectionHTML = await this.renderPacksSection(categories);
       console.log('🔍 [loadPacksForStep2] Generated HTML length:', packsSectionHTML.length);
-      
+
       grid.innerHTML = packsSectionHTML;
       console.log('🔍 [loadPacksForStep2] Packs loaded successfully');
     }
 
     async renderPacksSection(categories) {
       console.log('🔍 [renderPacksSection] Starting with categories:', categories);
-      
+
       // Get current cart to check which packs are selected
       const cart = this.getCurrentCart();
-      const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
-      
+      const selectedPackIds = cart.filter((item) => item.type === 'pack').map((item) => item.id);
+
       console.log('🔍 [renderPacksSection] Selected pack IDs:', selectedPackIds);
-      
+
       // Render category packs only
-      const categoryPacksHTML = categories.map(category => `
+      const categoryPacksHTML = categories
+        .map(
+          (category) => `
         <div class="mb-8">
           <h4 class="text-lg font-semibold text-graphite-900 mb-4">${category.title}</h4>
           <div class="flex overflow-x-auto pb-4">
-            ${category.packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
+            ${category.packs
+              .map((pack) => this.renderPackCard(pack, selectedPackIds.includes(pack.id)))
+              .join('')}
           </div>
         </div>
-      `).join('');
-      
+      `
+        )
+        .join('');
+
       console.log('🔍 [renderPacksSection] Category packs HTML length:', categoryPacksHTML.length);
-      
+
       const finalHTML = `
         <!-- Category Packs Sections -->
         ${categoryPacksHTML}
       `;
-      
+
       console.log('🔍 [renderPacksSection] Final HTML length:', finalHTML.length);
       return finalHTML;
     }
@@ -949,7 +1071,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     renderPackCard(pack, isAdded = false) {
       console.log('🔍 [renderPackCard] Rendering pack:', pack);
       console.log('🔍 [renderPackCard] isAdded:', isAdded);
-      
+
       // Get current reservation period for pack pricing
       let months = 1; // default
       const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
@@ -958,15 +1080,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       } else {
         // Try to get from cart
         const cart = this.getCurrentCart();
-        const selectedPod = cart.find(item => item.type === 'pod');
+        const selectedPod = cart.find((item) => item.type === 'pod');
         if (selectedPod && selectedPod.reservationMonths) {
           months = selectedPod.reservationMonths;
         }
       }
-      
+
       // Use base price directly (no duration multiplication for estimation)
-      const discountedPriceINR = pack.basePriceINR * (100 - pack.discountPercentage) / 100;
-      
+      const discountedPriceINR = (pack.basePriceINR * (100 - pack.discountPercentage)) / 100;
+
       // Standardize price display - always use L for consistency
       const formatPrice = (price) => {
         if (price >= 100000) {
@@ -977,31 +1099,55 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           return `₹${price}`;
         }
       };
-      
+
       console.log('🔍 [renderPackCard] Generated HTML for pack:', pack.title);
       return `
-        <div class="pack-card bg-white rounded-xl min-w-[300px] p-6 mx-4 border border-gray-200 cursor-pointer ${isAdded ? 'border-mint-500' : ''}" data-pack-id="${pack.id}">
+        <div class="pack-card bg-white rounded-xl min-w-[300px] p-6 mx-4 border border-gray-200 cursor-pointer ${
+          isAdded ? 'border-mint-500' : ''
+        }" data-pack-id="${pack.id}">
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 bg-cerulean-500 rounded-lg flex items-center justify-center">
                 <span class="text-white text-lg">${pack.icon || '📦'}</span>
               </div>
-              ${pack.badge ? `<span class="px-2 py-1 text-xs font-medium rounded-full ${pack.badgeColor === 'green' ? 'bg-green-100 text-green-800' : pack.badgeColor === 'blue' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}">${pack.badge}</span>` : ''}
+              ${
+                pack.badge
+                  ? `<span class="px-2 py-1 text-xs font-medium rounded-full ${
+                      pack.badgeColor === 'green'
+                        ? 'bg-green-100 text-green-800'
+                        : pack.badgeColor === 'blue'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-purple-100 text-purple-800'
+                    }">${pack.badge}</span>`
+                  : ''
+              }
             </div>
             <div class="text-right">
-              ${pack.discountPercentage > 0 ? `
-                <div class="text-sm text-gray-500 line-through">${formatPrice(pack.basePriceINR)}</div>
-                <div class="text-sm font-medium text-cerulean-600">${formatPrice(discountedPriceINR)}</div>
+              ${
+                pack.discountPercentage > 0
+                  ? `
+                <div class="text-sm text-gray-500 line-through">${formatPrice(
+                  pack.basePriceINR
+                )}</div>
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(
+                  discountedPriceINR
+                )}</div>
                 <div class="text-xs text-green-600">${pack.discountPercentage}% OFF</div>
-              ` : `
-                <div class="text-sm font-medium text-cerulean-600">${formatPrice(pack.basePriceINR)}</div>
-              `}
+              `
+                  : `
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(
+                  pack.basePriceINR
+                )}</div>
+              `
+              }
               <div class="text-xs text-gray-500">estimated pricing</div>
             </div>
           </div>
           
           <h3 class="text-lg font-semibold text-graphite-900 mb-2">
-            <a href="/packs/${generatePackSlug(pack.title)}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+            <a href="/packs/${generatePackSlug(
+              pack.title
+            )}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
               ${pack.title}
               <svg class="w-4 h-4 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -1012,7 +1158,11 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           
           <div class="flex items-center justify-between">
             <span class="text-sm text-graphite-500">${pack.duration}</span>
-            <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${isAdded ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-cerulean-500 text-white hover:bg-cerulean-600'}" data-pack-id="${pack.id}" data-action="${isAdded ? 'remove' : 'add'}">
+            <button class="px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+              isAdded
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-cerulean-500 text-white hover:bg-cerulean-600'
+            }" data-pack-id="${pack.id}" data-action="${isAdded ? 'remove' : 'add'}">
               ${isAdded ? 'Remove Pack' : 'Add Pack'}
             </button>
           </div>
@@ -1034,21 +1184,21 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       try {
         // Import catalog data dynamically
         const { packsCatalog } = await import('/src/content/catalog/_packs.js');
-        
+
         // Search through all categories to find the pack
         for (const category of packsCatalog.packCategories) {
-          const pack = category.packs.find(p => p.id === packId);
+          const pack = category.packs.find((p) => p.id === packId);
           if (pack) {
             return pack;
           }
         }
-        
+
         // If not found in categories, search in availablePacks
-        const pack = packsCatalog.availablePacks.find(p => p.id === packId);
+        const pack = packsCatalog.availablePacks.find((p) => p.id === packId);
         if (pack) {
           return pack;
         }
-        
+
         console.error('Pack not found in catalog:', packId);
         return null;
       } catch (error) {
@@ -1059,8 +1209,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async renderSelectedPacks() {
       const cart = this.getCurrentCart();
-      const selectedPacks = cart.filter(item => item.type === 'pack');
-      
+      const selectedPacks = cart.filter((item) => item.type === 'pack');
+
       if (selectedPacks.length === 0) {
         return `
           <div class="text-center py-4">
@@ -1069,19 +1219,19 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           </div>
         `;
       }
-      
+
       // Get current reservation period for pack pricing
       let months = 1; // default
       const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
       if (selectedChip) {
         months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
-        const selectedPod = cart.find(item => item.type === 'pod');
+        const selectedPod = cart.find((item) => item.type === 'pod');
         if (selectedPod && selectedPod.reservationMonths) {
           months = selectedPod.reservationMonths;
         }
       }
-      
+
       // Standardize price display function
       const formatPrice = (price) => {
         if (price >= 100000) {
@@ -1092,16 +1242,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           return `₹${price}`;
         }
       };
-      
+
       const packPromises = selectedPacks.map(async (pack) => {
         // Get pack details from catalog
         const packDetails = await this.getPackDetails(pack.id);
         if (!packDetails) return '';
-        
+
         // Use base price directly (no duration multiplication for estimation)
-        const totalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const totalPrice =
+          (packDetails.basePriceINR * (100 - packDetails.discountPercentage)) / 100;
         const formattedPrice = formatPrice(totalPrice);
-        
+
         return `
           <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
             <div class="flex items-center space-x-3">
@@ -1110,29 +1261,33 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               </div>
               <div>
                 <span class="font-medium text-graphite-900 text-sm">
-                  <a href="/packs/${generatePackSlug(packDetails.title || 'Pack')}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+                  <a href="/packs/${generatePackSlug(
+                    packDetails.title || 'Pack'
+                  )}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
                     ${packDetails.title || 'Pack'}
                     <svg class="w-3 h-3 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                     </svg>
                   </a>
                 </span>
-                <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
+                <p class="text-xs text-graphite-500">${
+                  packDetails.description || 'Pack description'
+                }</p>
               </div>
             </div>
             <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
           </div>
         `;
       });
-      
+
       const packResults = await Promise.all(packPromises);
       return packResults.join('');
     }
 
     async renderSelectedPacksWithDelete() {
       const cart = this.getCurrentCart();
-      const selectedPacks = cart.filter(item => item.type === 'pack');
-      
+      const selectedPacks = cart.filter((item) => item.type === 'pack');
+
       if (selectedPacks.length === 0) {
         return `
           <div class="text-center py-6">
@@ -1146,19 +1301,19 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           </div>
         `;
       }
-      
+
       // Get current reservation period for pack pricing
       let months = 1; // default
       const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
       if (selectedChip) {
         months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
-        const selectedPod = cart.find(item => item.type === 'pod');
+        const selectedPod = cart.find((item) => item.type === 'pod');
         if (selectedPod && selectedPod.reservationMonths) {
           months = selectedPod.reservationMonths;
         }
       }
-      
+
       // Standardize price display function
       const formatPrice = (price) => {
         if (price >= 100000) {
@@ -1169,16 +1324,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           return `₹${price}`;
         }
       };
-      
+
       const packPromises = selectedPacks.map(async (pack) => {
         // Get pack details from catalog
         const packDetails = await this.getPackDetails(pack.id);
         if (!packDetails) return '';
-        
+
         // Use base price directly (no duration multiplication for estimation)
-        const totalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+        const totalPrice =
+          (packDetails.basePriceINR * (100 - packDetails.discountPercentage)) / 100;
         const formattedPrice = formatPrice(totalPrice);
-        
+
         return `
           <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
             <div class="flex items-center space-x-3">
@@ -1187,19 +1343,25 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               </div>
               <div>
                 <span class="font-medium text-graphite-900 text-sm">
-                  <a href="/packs/${generatePackSlug(packDetails.title || 'Pack')}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+                  <a href="/packs/${generatePackSlug(
+                    packDetails.title || 'Pack'
+                  )}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
                     ${packDetails.title || 'Pack'}
                     <svg class="w-3 h-3 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                     </svg>
                   </a>
                 </span>
-                <p class="text-xs text-graphite-500">${packDetails.description || 'Pack description'}</p>
+                <p class="text-xs text-graphite-500">${
+                  packDetails.description || 'Pack description'
+                }</p>
               </div>
             </div>
             <div class="flex items-center space-x-3">
               <span class="font-semibold text-cerulean-600 text-sm">${formattedPrice}</span>
-                      <button class="text-gray-600 hover:text-red-500 p-1 rounded hover:bg-red-50/50 transition-colors bg-transparent !text-gray-600" data-pack-id="${pack.id}" data-action="remove" title="Remove Pack">
+                      <button class="text-gray-600 hover:text-red-500 p-1 rounded hover:bg-red-50/50 transition-colors bg-transparent !text-gray-600" data-pack-id="${
+                        pack.id
+                      }" data-action="remove" title="Remove Pack">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
           </svg>
@@ -1208,7 +1370,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           </div>
         `;
       });
-      
+
       const packResults = await Promise.all(packPromises);
       return packResults.join('');
     }
@@ -1231,21 +1393,28 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       console.log('🔍 [refreshPackCards] ===== STARTING PACK CARDS REFRESH =====');
       try {
         const cart = this.getCurrentCart();
-        const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
-        
+        const selectedPackIds = cart.filter((item) => item.type === 'pack').map((item) => item.id);
+
         console.log('🔍 [refreshPackCards] Selected pack IDs:', selectedPackIds);
-        
+
         const packCards = document.querySelectorAll('.pack-card');
         console.log('🔍 [refreshPackCards] Found pack cards:', packCards.length);
-        
-        packCards.forEach(card => {
+
+        packCards.forEach((card) => {
           const packId = card.getAttribute('data-pack-id');
           const button = card.querySelector('button[data-action]');
-          
+
           if (packId && button) {
             const isSelected = selectedPackIds.includes(packId);
-            console.log('🔍 [refreshPackCards] Processing pack:', packId, 'isSelected:', isSelected, 'current action:', button.getAttribute('data-action'));
-            
+            console.log(
+              '🔍 [refreshPackCards] Processing pack:',
+              packId,
+              'isSelected:',
+              isSelected,
+              'current action:',
+              button.getAttribute('data-action')
+            );
+
             // Update card styling
             if (isSelected) {
               card.classList.add('ring-2', 'ring-mint-500', 'bg-mint-50');
@@ -1254,31 +1423,46 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               card.classList.remove('ring-2', 'ring-mint-500', 'bg-mint-50');
               card.classList.add('bg-white');
             }
-            
+
             // Update button
             if (isSelected) {
               button.textContent = 'Remove Pack';
               button.setAttribute('data-action', 'remove');
               // Completely replace the class attribute to avoid conflicts
-              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-600 hover:text-red-500 bg-transparent hover:bg-red-50/50 !text-gray-600';
+              button.className =
+                'px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-600 hover:text-red-500 bg-transparent hover:bg-red-50/50 !text-gray-600';
               button.disabled = false; // Ensure button is enabled
-              console.log('🔍 [refreshPackCards] Button classes after update (selected):', button.className);
+              console.log(
+                '🔍 [refreshPackCards] Button classes after update (selected):',
+                button.className
+              );
             } else {
               button.textContent = 'Add Pack';
               button.setAttribute('data-action', 'add');
               // Completely replace the class attribute to avoid conflicts
-              button.className = 'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-cerulean-500 text-white hover:bg-cerulean-600';
+              button.className =
+                'px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-cerulean-500 text-white hover:bg-cerulean-600';
               button.disabled = false; // Ensure button is enabled
-              console.log('🔍 [refreshPackCards] Button classes after update (not selected):', button.className);
+              console.log(
+                '🔍 [refreshPackCards] Button classes after update (not selected):',
+                button.className
+              );
             }
-            
-            console.log('🔍 [refreshPackCards] Updated button for pack:', packId, 'new action:', button.getAttribute('data-action'), 'disabled:', button.disabled);
+
+            console.log(
+              '🔍 [refreshPackCards] Updated button for pack:',
+              packId,
+              'new action:',
+              button.getAttribute('data-action'),
+              'disabled:',
+              button.disabled
+            );
           }
         });
-        
+
         // Update the selected packs display in the DOM
         await this.updateSelectedPacksDisplay();
-        
+
         console.log('🔍 [refreshPackCards] ===== PACK CARDS REFRESH COMPLETED =====');
       } catch (error) {
         console.error('🔍 [refreshPackCards] Error refreshing pack cards:', error);
@@ -1288,7 +1472,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     showNoPodWarning() {
       const grid = document.getElementById('packs-grid');
       const title = document.getElementById('packs-section-title');
-      
+
       if (title) title.textContent = 'No Pod Selected';
       if (grid) {
         grid.innerHTML = `
@@ -1310,56 +1494,48 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async updatePodSummary(podItem) {
       console.log('🔍 [updatePodSummary] Updating pod summary with:', podItem);
-      
+
       // Get the latest pod data from localStorage
       const cart = await this.summaryShared.getCart();
-      const latestPodItem = cart.find(item => item.type === 'pod');
-      
+      const latestPodItem = cart.find((item) => item.type === 'pod');
+
       if (!latestPodItem) {
         console.error('🔍 [updatePodSummary] No pod found in cart');
         return;
       }
-      
+
       console.log('🔍 [updatePodSummary] Latest pod item:', latestPodItem);
-      
+
       // Determine which step we're in and use appropriate selectors
       let selectors;
       if (this.currentStep === 1) {
         // Step 1 uses selected-pod-* selectors
         selectors = {
           titleSelector: '#selected-pod-title',
-          priceSelector: '#selected-pod-price'
+          priceSelector: '#selected-pod-price',
         };
       } else {
         // Step 2 uses summary-pod-* selectors
         selectors = {
           titleSelector: '#summary-pod-title',
-          priceSelector: '#summary-pod-price'
+          priceSelector: '#summary-pod-price',
         };
       }
-      
+
       // Update the pod summary using shared utility
       await this.summaryShared.updatePodSummary(latestPodItem, selectors);
-      
-      // Update the months display
-      const monthsElement = document.getElementById('selected-pod-months') || document.getElementById('summary-pod-months');
-      console.log('🔍 [updatePodSummary] monthsElement found:', !!monthsElement);
-      
-      if (monthsElement) {
-        const months = latestPodItem.reservationMonths || 1;
-        console.log('🔍 [updatePodSummary] Using months:', months, 'from latestPodItem.reservationMonths:', latestPodItem.reservationMonths);
-        monthsElement.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
-        console.log('🔍 [updatePodSummary] Updated months display');
-      }
+
+      // Note: Removed months display from Step 1 card as requested
+      // Price now shows "per month" format instead of reservation period
     }
 
     async updateFinalSummary(podItem, packItems) {
       await this.summaryShared.updatePodSummary(podItem, {
         titleSelector: '#final-pod-title',
         priceSelector: '#final-pod-price',
-        descriptionSelector: '#final-pod-duration'
+        descriptionSelector: '#final-pod-duration',
       });
-      
+
       // Update the duration display with current reservation period
       const durationElement = document.getElementById('final-pod-duration');
       if (durationElement) {
@@ -1373,7 +1549,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
         } else {
           // Note: Duration is now for estimation only, not for pricing
-          
+
           // Standardize price display function
           const formatPrice = (price) => {
             if (price >= 100000) {
@@ -1384,16 +1560,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               return `₹${price}`;
             }
           };
-          
+
           const packPromises = packItems.map(async (pack) => {
             const packDetails = await this.summaryShared.getPackDetails(pack.id);
             if (!packDetails) return '';
-            
+
             // Calculate monthly pack price with discount, then multiply by months
-            const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
+            const monthlyPrice =
+              (packDetails.basePriceINR * (100 - packDetails.discountPercentage)) / 100;
             const totalPrice = monthlyPrice * months;
             const formattedPrice = formatPrice(totalPrice);
-            
+
             return `
               <div class="flex items-center justify-between p-3 bg-white rounded-lg">
                 <div class="flex items-center space-x-3">
@@ -1401,7 +1578,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                   <span class="text-white text-sm">${packDetails.icon || '📦'}</span>
                 </div>
                 <span class="font-medium text-graphite-900">
-                  <a href="/packs/${generatePackSlug(packDetails.title)}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
+                  <a href="/packs/${generatePackSlug(
+                    packDetails.title
+                  )}" class="hover:text-cerulean-600 transition-colors cursor-pointer" title="View pack details">
                     ${packDetails.title}
                     <svg class="w-3 h-3 inline ml-1 text-cerulean-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
@@ -1412,81 +1591,99 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               <span class="font-semibold text-cerulean-600">${formattedPrice}</span>
             </div>
           `;
-        });
-        
-        const packResults = await Promise.all(packPromises);
-        packsList.innerHTML = packResults.join('');
-      }
-    }
+          });
 
-    await this.summaryShared.updateTotalPrice(podItem, packItems);
+          const packResults = await Promise.all(packPromises);
+          packsList.innerHTML = packResults.join('');
+        }
+      }
+
+      await this.summaryShared.updateTotalPrice(podItem, packItems);
     }
 
     async initializeStep3DurationChips() {
       console.log('🔍 [initializeStep3DurationChips] Initializing step 3 duration chips...');
-      
+
       try {
         const cart = await this.summaryShared.getCart();
-        const selectedPod = cart.find(item => item.type === 'pod');
+        const selectedPod = cart.find((item) => item.type === 'pod');
         const currentMonths = selectedPod?.reservationMonths || 1;
-        
+
         console.log('🔍 [initializeStep3DurationChips] Current months from cart:', currentMonths);
-        
+
         // Update all step 3 chips to show the current selection
         const allStep3Chips = document.querySelectorAll('.step3-duration-chip');
-        allStep3Chips.forEach(chip => {
+        allStep3Chips.forEach((chip) => {
           const chipDuration = parseInt(chip.getAttribute('data-duration') || '1');
-          
+
           if (chipDuration === currentMonths) {
             // Selected chip
-            chip.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+            chip.classList.remove(
+              'bg-white',
+              'border-gray-300',
+              'text-gray-700',
+              'hover:border-mint-400',
+              'hover:text-mint-600'
+            );
             chip.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
           } else {
             // Unselected chips
             chip.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
-            chip.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+            chip.classList.add(
+              'bg-white',
+              'border-gray-300',
+              'text-gray-700',
+              'hover:border-mint-400',
+              'hover:text-mint-600'
+            );
           }
         });
-        
+
         // Update hidden input field
         const hiddenInput = document.getElementById('reservation-period');
         if (hiddenInput) {
           hiddenInput.value = currentMonths.toString();
-          console.log('🔍 [initializeStep3DurationChips] Set hidden input value to:', currentMonths);
+          console.log(
+            '🔍 [initializeStep3DurationChips] Set hidden input value to:',
+            currentMonths
+          );
         }
-        
+
         console.log('🔍 [initializeStep3DurationChips] Step 3 duration chips initialized');
       } catch (error) {
-        console.error('🔍 [initializeStep3DurationChips] Error initializing step 3 duration chips:', error);
+        console.error(
+          '🔍 [initializeStep3DurationChips] Error initializing step 3 duration chips:',
+          error
+        );
       }
     }
 
     async updatePricingForReservationPeriod(months) {
       console.log('🔍 [updatePricingForReservationPeriod] Updating pricing for', months, 'months');
-      
+
       try {
         // Get current cart
         const cart = await this.shared.getCart();
-        const selectedPod = cart.find(item => item.type === 'pod');
-        
+        const selectedPod = cart.find((item) => item.type === 'pod');
+
         if (selectedPod) {
           // Update pod pricing in Step 1
           if (this.currentStep === 1) {
             await this.updatePodSummary(selectedPod);
           }
-          
+
           // Update pod pricing in Step 2
           if (this.currentStep === 2) {
             await this.updatePodSummary(selectedPod);
           }
-          
-                  // Update total pricing in Step 3
-        if (this.currentStep === 3) {
-          const selectedPacks = cart.filter(item => item.type === 'pack');
-          await this.updateFinalSummary(selectedPod, selectedPacks);
-          await this.summaryShared.updateTotalPrice(selectedPod, selectedPacks);
-        }
-          
+
+          // Update total pricing in Step 3
+          if (this.currentStep === 3) {
+            const selectedPacks = cart.filter((item) => item.type === 'pack');
+            await this.updateFinalSummary(selectedPod, selectedPacks);
+            await this.summaryShared.updateTotalPrice(selectedPod, selectedPacks);
+          }
+
           // Update all DiscountedPriceDisplay components on the page
           this.updateAllPriceDisplays(months);
         }
@@ -1498,17 +1695,19 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     updateAllPriceDisplays(months) {
       // Update all DiscountedPriceDisplay components on the page
       const priceDisplays = document.querySelectorAll('.discounted-price-display');
-      priceDisplays.forEach(display => {
+      priceDisplays.forEach((display) => {
         const basePriceINR = parseInt(display.getAttribute('data-base-price-inr') || '0');
         const basePriceUSD = parseInt(display.getAttribute('data-base-price-usd') || '0');
-        const discountPercentage = parseInt(display.getAttribute('data-discount-percentage') || '0');
+        const discountPercentage = parseInt(
+          display.getAttribute('data-discount-percentage') || '0'
+        );
         const isPack = display.getAttribute('data-item-type') === 'pack';
-        
+
         if (basePriceINR > 0) {
           // Use base price directly (no duration multiplication for estimation)
           const finalPriceINR = basePriceINR;
           const finalPriceUSD = basePriceUSD;
-          
+
           // Update the final price display (new minimal design)
           const finalPriceElement = display.querySelector('.final-price');
           if (finalPriceElement) {
@@ -1517,14 +1716,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             if (typeof window !== 'undefined' && window.userLocation) {
               userCurrency = window.userLocation.currency;
             }
-            
-            const formattedPrice = userCurrency === 'INR' 
-              ? `₹${(finalPriceINR / 100000).toFixed(1)}L`
-              : `$${(finalPriceUSD / 1000).toFixed(1)}K`;
-            
+
+            const formattedPrice =
+              userCurrency === 'INR'
+                ? `₹${(finalPriceINR / 100000).toFixed(1)}L`
+                : `$${(finalPriceUSD / 1000).toFixed(1)}K`;
+
             finalPriceElement.textContent = formattedPrice;
           }
-          
+
           // Update original price if it exists (new minimal design)
           const originalPriceElement = display.querySelector('.original-price');
           if (originalPriceElement) {
@@ -1532,20 +1732,21 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             if (typeof window !== 'undefined' && window.userLocation) {
               userCurrency = window.userLocation.currency;
             }
-            
-            const originalFormattedPrice = userCurrency === 'INR' 
-              ? `₹${(totalPriceINR / 100000).toFixed(1)}L`
-              : `$${(totalPriceUSD / 1000).toFixed(1)}K`;
-            
+
+            const originalFormattedPrice =
+              userCurrency === 'INR'
+                ? `₹${(totalPriceINR / 100000).toFixed(1)}L`
+                : `$${(totalPriceUSD / 1000).toFixed(1)}K`;
+
             originalPriceElement.textContent = originalFormattedPrice;
           }
-          
+
           // Update discount badge if it exists
           const discountBadgeElement = display.querySelector('.discount-badge-minimal');
           if (discountBadgeElement && discountPercentage > 0) {
             discountBadgeElement.textContent = `${discountPercentage}% OFF`;
           }
-          
+
           // Update savings text if it exists
           const savingsElement = display.querySelector('.savings-text');
           if (savingsElement && discountPercentage > 0) {
@@ -1553,14 +1754,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             if (typeof window !== 'undefined' && window.userLocation) {
               userCurrency = window.userLocation.currency;
             }
-            
+
             const savingsINR = totalPriceINR - finalPriceINR;
             const savingsUSD = totalPriceUSD - finalPriceUSD;
-            
-            const savingsFormatted = userCurrency === 'INR' 
-              ? `₹${(savingsINR / 100000).toFixed(1)}L`
-              : `$${(savingsUSD / 1000).toFixed(1)}K`;
-            
+
+            const savingsFormatted =
+              userCurrency === 'INR'
+                ? `₹${(savingsINR / 100000).toFixed(1)}L`
+                : `$${(savingsUSD / 1000).toFixed(1)}K`;
+
             savingsElement.textContent = `Save ${savingsFormatted}`;
           }
         }
@@ -1569,14 +1771,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     addStep1EventListeners() {
       console.log('🔍 [Step1] Adding event listeners...');
-      
+
       // Pod selection with replacement confirmation - using event delegation
       document.addEventListener('click', async (e) => {
         const target = e.target;
         const podButton = target.closest('[data-pod-id]');
-        
+
         if (podButton) {
-          console.log(`🔍 [${new Date().toISOString()}] [Step1] Pod button clicked:`, podButton.getAttribute('data-pod-id'));
+          console.log(
+            `🔍 [${new Date().toISOString()}] [Step1] Pod button clicked:`,
+            podButton.getAttribute('data-pod-id')
+          );
           const podId = podButton.getAttribute('data-pod-id');
           const selectedPod = await this.summaryShared.selectPodWithConfirmation(podId);
           if (selectedPod) {
@@ -1589,34 +1794,43 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', async (e) => {
         const target = e.target;
         const continueBtn = target.closest('#step1-continue-btn');
-        
+
         if (continueBtn && this.currentStep === 1) {
           // Prevent double-clicks
           if (continueBtn.disabled) {
-            console.log(`🔍 [${new Date().toISOString()}] [Step1] Continue button already processing, ignoring duplicate click`);
+            console.log(
+              `🔍 [${new Date().toISOString()}] [Step1] Continue button already processing, ignoring duplicate click`
+            );
             return;
           }
-          
+
           console.log(`🔍 [${new Date().toISOString()}] [Step1] Continue to Step 2 button clicked`);
           console.log('🔍 [Step1] Current step before nextStep():', this.currentStep);
           console.log('🔍 [Step1] About to call nextStep()');
-          
+
           // Disable button to prevent double-clicks
           continueBtn.disabled = true;
           const originalText = continueBtn.textContent;
           continueBtn.textContent = 'Loading...';
-          
+
           try {
             this.summaryShared.nextStep();
             console.log('🔍 [Step1] nextStep() called');
           } catch (error) {
-            console.error(`🔍 [${new Date().toISOString()}] [Step1] Error navigating to Step 2:`, error);
+            console.error(
+              `🔍 [${new Date().toISOString()}] [Step1] Error navigating to Step 2:`,
+              error
+            );
             // Re-enable button on error
             continueBtn.disabled = false;
             continueBtn.textContent = originalText;
           }
         } else if (continueBtn) {
-          console.log('🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:', this.currentStep, ')');
+          console.log(
+            '🔍 [Step1] Continue button clicked but ignored - not in Step 1 (current step:',
+            this.currentStep,
+            ')'
+          );
         }
       });
 
@@ -1632,7 +1846,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', async (e) => {
         const target = e.target;
         const removeBtn = target.closest('#remove-pod-btn');
-        
+
         if (removeBtn) {
           console.log(`🔍 [${new Date().toISOString()}] [Step1] Remove pod button clicked`);
           e.preventDefault();
@@ -1646,18 +1860,20 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', async (e) => {
         const target = e.target;
         const viewDetailsBtn = target.closest('#view-pod-details-btn');
-        
+
         if (viewDetailsBtn) {
           // Prevent double-clicks
           if (viewDetailsBtn.disabled) {
-            console.log(`🔍 [${new Date().toISOString()}] [Step1] View details button already processing, ignoring duplicate click`);
+            console.log(
+              `🔍 [${new Date().toISOString()}] [Step1] View details button already processing, ignoring duplicate click`
+            );
             return;
           }
-          
+
           console.log(`🔍 [${new Date().toISOString()}] [Step1] View pod details button clicked`);
           e.preventDefault();
           e.stopPropagation();
-          
+
           // Disable button to prevent double-clicks
           viewDetailsBtn.disabled = true;
           const originalText = viewDetailsBtn.innerHTML;
@@ -1667,16 +1883,18 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             </svg>
             <span>Loading...</span>
           `;
-          
+
           try {
             // Get the current pod from cart
             const cart = await this.summaryShared.getCart();
-            const podItem = cart.find(item => item.type === 'pod');
-            
+            const podItem = cart.find((item) => item.type === 'pod');
+
             if (podItem && podItem.id) {
               // Navigate to the pod details page
               const podSlug = generatePodSlug(podItem.title || podItem.name);
-              console.log(`🔍 [${new Date().toISOString()}] [Step1] Navigating to pod details: /pods/${podSlug}`);
+              console.log(
+                `🔍 [${new Date().toISOString()}] [Step1] Navigating to pod details: /pods/${podSlug}`
+              );
               window.location.href = `/pods/${podSlug}`;
             } else {
               this.summaryShared.showNotification('No pod selected to view details', 'warning');
@@ -1685,7 +1903,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               viewDetailsBtn.innerHTML = originalText;
             }
           } catch (error) {
-            console.error(`🔍 [${new Date().toISOString()}] [Step1] Error navigating to pod details:`, error);
+            console.error(
+              `🔍 [${new Date().toISOString()}] [Step1] Error navigating to pod details:`,
+              error
+            );
             this.summaryShared.showNotification('Failed to navigate to pod details', 'error');
             // Re-enable button on error
             viewDetailsBtn.disabled = false;
@@ -1697,95 +1918,121 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       // Custom duration chip functionality using event delegation
       document.addEventListener('click', async (e) => {
         const target = e.target;
-        
+
         // Handle duration chip selection (Step 1)
         if (target.matches('.duration-chip')) {
           e.preventDefault();
           const chip = target;
           const months = parseInt(chip.getAttribute('data-duration') || '1');
           console.log('🔍 [Step1] Duration chip selected:', months);
-          
+
           // Update all chips to show selected state
           const allChips = document.querySelectorAll('.duration-chip');
-          allChips.forEach(chipElement => {
+          allChips.forEach((chipElement) => {
             const chipEl = chipElement;
             const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '1');
-            
+
             if (chipDuration === months) {
               // Selected chip
-              chipEl.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.remove(
+                'bg-white',
+                'border-gray-300',
+                'text-gray-700',
+                'hover:border-mint-400',
+                'hover:text-mint-600'
+              );
               chipEl.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
             } else {
               // Unselected chips
               chipEl.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
-              chipEl.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.add(
+                'bg-white',
+                'border-gray-300',
+                'text-gray-700',
+                'hover:border-mint-400',
+                'hover:text-mint-600'
+              );
             }
           });
-          
+
           // Update storage
           console.log('🔍 [Step1] Calling updateHirePeriod...');
           await this.summaryShared.updateHirePeriod(months);
           console.log('🔍 [Step1] updateHirePeriod completed');
-          
+
           // Update the months display in Step 1
           const monthsDisplay = document.getElementById('selected-pod-months');
           if (monthsDisplay) {
-            monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
+            monthsDisplay.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${
+              months > 1 ? 's' : ''
+            }</span>`;
             console.log('🔍 [Step1] Updated months display in Step 1');
           }
-          
+
           // Update pricing dynamically based on new reservation period
           await this.updatePricingForReservationPeriod(months);
-          
+
           // Also verify the storage was updated
           try {
             const localStorageCart = localStorage.getItem('novapod-cart');
             if (localStorageCart) {
               const parsedCart = JSON.parse(localStorageCart);
-              const pod = parsedCart.find(item => item.type === 'pod');
+              const pod = parsedCart.find((item) => item.type === 'pod');
               console.log('🔍 [Step1] Pod in localStorage after update:', pod);
             }
           } catch (error) {
             console.error('🔍 [Step1] Error checking localStorage:', error);
           }
         }
-        
+
         // Handle step 3 duration chip selection
         if (target.matches('.step3-duration-chip')) {
           e.preventDefault();
           const chip = target;
           const months = parseInt(chip.getAttribute('data-duration') || '1');
           console.log('🔍 [Step3] Duration chip selected:', months);
-          
+
           // Update all step 3 chips to show selected state
           const allStep3Chips = document.querySelectorAll('.step3-duration-chip');
-          allStep3Chips.forEach(chipElement => {
+          allStep3Chips.forEach((chipElement) => {
             const chipEl = chipElement;
             const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '1');
-            
+
             if (chipDuration === months) {
               // Selected chip
-              chipEl.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.remove(
+                'bg-white',
+                'border-gray-300',
+                'text-gray-700',
+                'hover:border-mint-400',
+                'hover:text-mint-600'
+              );
               chipEl.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
             } else {
               // Unselected chips
               chipEl.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
-              chipEl.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.add(
+                'bg-white',
+                'border-gray-300',
+                'text-gray-700',
+                'hover:border-mint-400',
+                'hover:text-mint-600'
+              );
             }
           });
-          
+
           // Update hidden input field
           const hiddenInput = document.getElementById('reservation-period');
           if (hiddenInput) {
             hiddenInput.value = months.toString();
             console.log('🔍 [Step3] Updated hidden input value to:', months);
           }
-          
+
           // Update storage
           console.log('🔍 [Step3] Calling updateHirePeriod...');
           await this.summaryShared.updateHirePeriod(months);
           console.log('🔍 [Step3] updateHirePeriod completed');
-          
+
           // Update pricing dynamically based on new reservation period
           await this.updatePricingForReservationPeriod(months);
         }
@@ -1794,7 +2041,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     addStep2EventListeners() {
       console.log('🔍 [Step2] Adding event listeners...');
-      
+
       // Pack event listeners are now handled globally in setupEventListeners()
       // Only add Step 2 specific listeners here
 
@@ -1802,7 +2049,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', (e) => {
         const target = e.target;
         const editBtn = target.closest('#edit-pod-btn');
-        
+
         if (editBtn) {
           this.summaryShared.navigateToStep(1);
         }
@@ -1812,7 +2059,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', async (e) => {
         const target = e.target;
         const removeBtn = target.closest('#remove-pod-step2-btn');
-        
+
         if (removeBtn) {
           console.log(`🔍 [${new Date().toISOString()}] [Step2] Remove pod button clicked`);
           e.preventDefault();
@@ -1828,7 +2075,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', (e) => {
         const target = e.target;
         const continueBtn = target.closest('#step2-continue-btn, #step2-continue-btn-selected');
-        
+
         if (continueBtn && this.currentStep === 2) {
           console.log('🔍 [Step2] Continue to Step 3 button clicked');
           console.log('🔍 [Step2] Current step before nextStep():', this.currentStep);
@@ -1836,7 +2083,11 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           this.summaryShared.nextStep();
           console.log('🔍 [Step2] nextStep() called');
         } else if (continueBtn) {
-          console.log('🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:', this.currentStep, ')');
+          console.log(
+            '🔍 [Step2] Continue button clicked but ignored - not in Step 2 (current step:',
+            this.currentStep,
+            ')'
+          );
         }
       });
 
@@ -1844,7 +2095,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', (e) => {
         const target = e.target;
         const goToStep1Btn = target.closest('#go-to-step1-btn');
-        
+
         if (goToStep1Btn) {
           this.summaryShared.navigateToStep(1);
         }
@@ -1853,39 +2104,39 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     addStep3EventListeners() {
       console.log('🔍 Adding Step 3 event listeners...');
-      
+
       // Initialize step 3 duration chips with current cart value
       this.initializeStep3DurationChips();
-      
+
       // Global variables for reCAPTCHA
       let reservationRecaptchaResponse: string | null = null;
 
       // reCAPTCHA callback functions for reservation
-      window.onReservationRecaptchaSuccess = function(response: string) {
+      window.onReservationRecaptchaSuccess = function (response: string) {
         reservationRecaptchaResponse = response;
         console.log('Reservation reCAPTCHA success:', response);
       };
 
-      window.onReservationRecaptchaExpired = function() {
+      window.onReservationRecaptchaExpired = function () {
         reservationRecaptchaResponse = null;
         console.log('Reservation reCAPTCHA expired');
       };
 
-      window.onReservationRecaptchaError = function() {
+      window.onReservationRecaptchaError = function () {
         reservationRecaptchaResponse = null;
         console.log('Reservation reCAPTCHA error');
       };
 
       // Initialize reCAPTCHA for dynamically created form
       this.initializeRecaptcha();
-      
+
       // Form submission
       const form = document.getElementById('reservation-form');
       if (form) {
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
           console.log('🔍 [Step3] Form submission started');
-          
+
           // Check if reCAPTCHA is completed
           if (!reservationRecaptchaResponse) {
             this.summaryShared.showNotification(
@@ -1894,16 +2145,16 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             );
             return;
           }
-          
+
           // Get the submit button and show loading state
           const submitButton = form.querySelector('button[type="submit"]');
           const originalButtonText = submitButton?.textContent || 'Reserve My NovaPod';
-          
+
           if (submitButton) {
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
           }
-          
+
           // Get form data
           const formData = new FormData(form);
           const formValues = {
@@ -1912,27 +2163,27 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             phone: formData.get('phone'),
             company: formData.get('company'),
             message: formData.get('message'),
-            reservationPeriod: formData.get('reservation-period')
+            reservationPeriod: formData.get('reservation-period'),
           };
-          
+
           // Get cart data
           const cart = await this.summaryShared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
-          const selectedPacks = cart.filter(item => item.type === 'pack');
-          
+          const selectedPod = cart.find((item) => item.type === 'pod');
+          const selectedPacks = cart.filter((item) => item.type === 'pack');
+
           // Create submission data
           const submissionData = {
             timestamp: new Date().toISOString(),
             formData: formValues,
             cartItems: {
               pod: selectedPod,
-              packs: selectedPacks
+              packs: selectedPacks,
             },
             totalItems: cart.length,
             step: this.currentStep,
-            reservationPeriod: formValues.reservationPeriod
+            reservationPeriod: formValues.reservationPeriod,
           };
-          
+
           // Log everything to console
           console.log('🔍 [Step3] ===== FORM SUBMISSION DATA =====');
           console.log('🔍 [Step3] Form Values:', formValues);
@@ -1941,36 +2192,44 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [Step3] Selected Packs:', selectedPacks);
           console.log('🔍 [Step3] Complete Submission Data:', submissionData);
           console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
-          
+
           try {
-                      // Get reservation period from hidden input
-          const reservationPeriod = formData.get('reservation-period') || '1';
-          
-          // Prepare data for HubSpot submission
-          const hubspotData = {
-            ...formValues,
-            selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
-            selected_pod_slug: selectedPod ? selectedPod.slug || '' : '',
-            selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
-            reservation_period: `${reservationPeriod} month${parseInt(reservationPeriod) > 1 ? 's' : ''}`,
-            source: 'NovaPod Reservation Form',
-            recaptchaResponse: reservationRecaptchaResponse,
-            recaptchaAction: selectedPod && selectedPod.slug ? `pod_reservation_${selectedPod.slug}` : 'pod_reservation'
-          };
-            
+            // Get reservation period from hidden input
+            const reservationPeriod = formData.get('reservation-period') || '1';
+
+            // Prepare data for HubSpot submission
+            const hubspotData = {
+              ...formValues,
+              selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
+              selected_pod_slug: selectedPod ? selectedPod.slug || '' : '',
+              selected_packs:
+                selectedPacks.length > 0
+                  ? selectedPacks.map((pack) => pack.title || pack.name).join(', ')
+                  : '',
+              reservation_period: `${reservationPeriod} month${
+                parseInt(reservationPeriod) > 1 ? 's' : ''
+              }`,
+              source: 'NovaPod Reservation Form',
+              recaptchaResponse: reservationRecaptchaResponse,
+              recaptchaAction:
+                selectedPod && selectedPod.slug
+                  ? `pod_reservation_${selectedPod.slug}`
+                  : 'pod_reservation',
+            };
+
             console.log('🔍 [Step3] Submitting to HubSpot:', hubspotData);
-            
+
             // Submit to HubSpot via API
             const response = await fetch('/api/contact', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(hubspotData)
+              body: JSON.stringify(hubspotData),
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
               console.log('🔍 [Step3] HubSpot submission successful:', result);
               // Clear form and cart after successful submission
@@ -2005,41 +2264,41 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           }
         });
       }
-      
+
       // Modal close button
       document.addEventListener('click', (e) => {
         if (e.target && e.target.matches('#close-modal-btn')) {
           this.hideThankYouModal();
         }
       });
-      
+
       console.log('🔍 Step 3 event listeners added');
     }
-    
+
     showThankYouModal(submissionData) {
       console.log('🔍 [showThankYouModal] Showing thank you modal');
-      
+
       const modal = document.getElementById('thank-you-modal');
       const detailsContainer = document.getElementById('modal-reservation-details');
-      
+
       if (modal && detailsContainer) {
         // Populate modal with submission details
         const detailsHTML = this.generateModalDetailsHTML(submissionData);
         detailsContainer.innerHTML = detailsHTML;
-        
+
         // Show modal
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        
+
         console.log('🔍 [showThankYouModal] Modal displayed successfully');
       } else {
         console.error('🔍 [showThankYouModal] Modal elements not found');
       }
     }
-    
+
     hideThankYouModal() {
       console.log('🔍 [hideThankYouModal] Hiding thank you modal');
-      
+
       const modal = document.getElementById('thank-you-modal');
       if (modal) {
         modal.classList.add('hidden');
@@ -2047,10 +2306,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         console.log('🔍 [hideThankYouModal] Modal hidden successfully');
       }
     }
-    
+
     generateModalDetailsHTML(submissionData) {
       const { formData, cartItems, reservationPeriod } = submissionData;
-      
+
       let html = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -2067,13 +2326,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             <h5 class="font-medium text-graphite-900 mb-2">Selected Items</h5>
             <div class="space-y-1 text-graphite-600">
               <p><strong>Pod:</strong> ${cartItems.pod ? cartItems.pod.title : 'None selected'}</p>
-              <p><strong>Estimated Duration:</strong> ${reservationPeriod || '1'} month${parseInt(reservationPeriod || '1') > 1 ? 's' : ''}</p>
+              <p><strong>Estimated Duration:</strong> ${reservationPeriod || '1'} month${
+                parseInt(reservationPeriod || '1') > 1 ? 's' : ''
+              }</p>
               <p><strong>Packs:</strong> ${cartItems.packs.length} selected</p>
             </div>
           </div>
         </div>
       `;
-      
+
       if (formData.message) {
         html += `
           <div class="mt-4">
@@ -2082,18 +2343,18 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           </div>
         `;
       }
-      
+
       if (cartItems.packs.length > 0) {
         html += `
           <div class="mt-4">
             <h5 class="font-medium text-graphite-900 mb-2">Selected Packs</h5>
             <ul class="list-disc list-inside space-y-1 text-graphite-600">
-              ${cartItems.packs.map(pack => `<li>${pack.title}</li>`).join('')}
+              ${cartItems.packs.map((pack) => `<li>${pack.title}</li>`).join('')}
             </ul>
           </div>
         `;
       }
-      
+
       html += `
         <div class="mt-4 pt-4 border-t border-gray-200">
           <p class="text-xs text-graphite-500">
@@ -2101,13 +2362,13 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           </p>
         </div>
       `;
-      
+
       return html;
     }
-    
+
     async clearFormAndCart() {
       console.log('🔍 [clearFormAndCart] ===== STARTING CLEAR OPERATION =====');
-      
+
       try {
         // Clear the form
         const form = document.getElementById('reservation-form');
@@ -2117,69 +2378,71 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         } else {
           console.error('🔍 [clearFormAndCart] Form element not found');
         }
-        
+
         // Clear cart from localStorage
         localStorage.removeItem('novapod-cart');
         console.log('🔍 [clearFormAndCart] Cart removed from localStorage');
-        
+
         // Clear cart from shared utility if available
         if (this.summaryShared && typeof this.summaryShared.clearCart === 'function') {
           await this.summaryShared.clearCart();
           console.log('🔍 [clearFormAndCart] Cart cleared via shared utility');
         }
-        
+
         // Update the order summary display to show empty state
         this.updateOrderSummaryForEmptyCart();
-        
+
         // Clear header cart count
         this.updateHeaderCartCount(0);
-        
+
         console.log('🔍 [clearFormAndCart] ===== CLEAR OPERATION COMPLETED =====');
       } catch (error) {
         console.error('🔍 [clearFormAndCart] Error clearing form and cart:', error);
       }
     }
-    
+
     updateOrderSummaryForEmptyCart() {
       console.log('🔍 [updateOrderSummaryForEmptyCart] Updating order summary for empty cart');
-      
+
       // Update pod summary
       const podTitle = document.getElementById('final-pod-title');
       const podDuration = document.getElementById('final-pod-duration');
       const podPrice = document.getElementById('final-pod-price');
-      
+
       if (podTitle) podTitle.textContent = 'No Pod Selected';
       if (podDuration) podDuration.textContent = 'Not set';
       if (podPrice) podPrice.textContent = '₹0/month';
-      
+
       // Update packs summary
       const packsList = document.getElementById('final-packs-list');
       if (packsList) {
         packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
       }
-      
+
       // Update total
       const totalPrice = document.getElementById('total-price');
       if (totalPrice) {
         totalPrice.textContent = '₹0';
       }
-      
+
       console.log('🔍 [updateOrderSummaryForEmptyCart] Order summary updated for empty cart');
     }
-    
+
     updateHeaderCartCount(count) {
       console.log('🔍 [updateHeaderCartCount] Updating header cart count to:', count);
-      
+
       try {
         // Find all cart count elements in the header
         const cartCountElements = document.querySelectorAll('[data-cart-count]');
-        const cartBadges = document.querySelectorAll('.cart-badge, .cart-count, [class*="cart-count"]');
-        
+        const cartBadges = document.querySelectorAll(
+          '.cart-badge, .cart-count, [class*="cart-count"]'
+        );
+
         // Update elements with data-cart-count attribute
-        cartCountElements.forEach(element => {
+        cartCountElements.forEach((element) => {
           element.textContent = count.toString();
           element.setAttribute('data-cart-count', count.toString());
-          
+
           // Hide element if count is 0
           if (count === 0) {
             element.style.display = 'none';
@@ -2187,11 +2450,11 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             element.style.display = 'inline';
           }
         });
-        
+
         // Update cart badge elements
-        cartBadges.forEach(element => {
+        cartBadges.forEach((element) => {
           element.textContent = count.toString();
-          
+
           // Hide element if count is 0
           if (count === 0) {
             element.style.display = 'none';
@@ -2199,22 +2462,22 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             element.style.display = 'inline';
           }
         });
-        
+
         // Also try to find elements by common cart count selectors
         const commonSelectors = [
           '.header .cart-count',
-          '.navbar .cart-count', 
+          '.navbar .cart-count',
           '.nav .cart-count',
           '.cart-icon .count',
           '.cart-badge .count',
-          '[class*="cart"] [class*="count"]'
+          '[class*="cart"] [class*="count"]',
         ];
-        
-        commonSelectors.forEach(selector => {
+
+        commonSelectors.forEach((selector) => {
           const elements = document.querySelectorAll(selector);
-          elements.forEach(element => {
+          elements.forEach((element) => {
             element.textContent = count.toString();
-            
+
             if (count === 0) {
               element.style.display = 'none';
             } else {
@@ -2222,19 +2485,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             }
           });
         });
-        
+
         console.log('🔍 [updateHeaderCartCount] Header cart count updated successfully');
       } catch (error) {
         console.error('🔍 [updateHeaderCartCount] Error updating header cart count:', error);
       }
     }
 
-
-
     // Initialize reCAPTCHA for dynamically created forms
     initializeRecaptcha() {
       console.log('🔍 [initializeRecaptcha] Starting reCAPTCHA initialization...');
-      
+
       // Load reCAPTCHA script if not already loaded
       if (typeof window.grecaptcha === 'undefined') {
         const script = document.createElement('script');
@@ -2254,7 +2515,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         };
         document.head.appendChild(script);
       } else {
-        console.log('🔍 [initializeRecaptcha] reCAPTCHA script already loaded, rendering widget...');
+        console.log(
+          '🔍 [initializeRecaptcha] reCAPTCHA script already loaded, rendering widget...'
+        );
         this.renderRecaptchaWidget();
       }
     }
@@ -2264,12 +2527,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       const recaptchaContainer = document.getElementById('recaptcha-container');
       if (recaptchaContainer) {
         console.log('🔍 [renderRecaptchaWidget] Found reCAPTCHA container, rendering...');
-        
+
         // Get current pod for dynamic configuration
         let currentPodSlug = null;
         try {
           const cart = await this.summaryShared.getCart();
-          const selectedPod = cart.find(item => item.type === 'pod');
+          const selectedPod = cart.find((item) => item.type === 'pod');
           if (selectedPod && selectedPod.slug) {
             currentPodSlug = selectedPod.slug;
             console.log('🔍 [renderRecaptchaWidget] Current pod slug:', currentPodSlug);
@@ -2277,7 +2540,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         } catch (error) {
           console.log('🔍 [renderRecaptchaWidget] Could not get current pod, using default config');
         }
-        
+
         // The widget should render automatically when the script loads
         // Check if it rendered after a short delay
         setTimeout(() => {
@@ -2285,26 +2548,35 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           if (widget && widget.children.length > 0) {
             console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget rendered successfully');
           } else {
-            console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget not rendered, trying manual render...');
+            console.log(
+              '🔍 [renderRecaptchaWidget] reCAPTCHA widget not rendered, trying manual render...'
+            );
             // Try manual render if needed
             if (typeof window.grecaptcha !== 'undefined' && window.grecaptcha.render) {
               try {
                 // Get the site key from the data attribute
                 const siteKeyElement = recaptchaContainer.querySelector('.g-recaptcha');
-                const siteKey = siteKeyElement?.getAttribute('data-sitekey') || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
-                
+                const siteKey =
+                  siteKeyElement?.getAttribute('data-sitekey') ||
+                  '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
                 // Create dynamic action based on pod
-                const action = currentPodSlug ? `pod_reservation_${currentPodSlug}` : 'pod_reservation';
-                
+                const action = currentPodSlug
+                  ? `pod_reservation_${currentPodSlug}`
+                  : 'pod_reservation';
+
                 window.grecaptcha.render(recaptchaContainer, {
                   sitekey: siteKey,
                   theme: 'light',
                   size: 'normal',
                   callback: 'onReservationRecaptchaSuccess',
                   'expired-callback': 'onReservationRecaptchaExpired',
-                  'error-callback': 'onReservationRecaptchaError'
+                  'error-callback': 'onReservationRecaptchaError',
                 });
-                console.log('🔍 [renderRecaptchaWidget] Manual reCAPTCHA render successful with action:', action);
+                console.log(
+                  '🔍 [renderRecaptchaWidget] Manual reCAPTCHA render successful with action:',
+                  action
+                );
               } catch (error) {
                 console.error('🔍 [renderRecaptchaWidget] Manual render failed:', error);
               }
@@ -2342,16 +2614,16 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     user-select: none;
     transition: all 0.2s ease-in-out;
   }
-  
+
   .duration-chip:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-  
+
   .duration-chip:active {
     transform: translateY(0);
   }
-  
+
   .duration-chip.bg-mint-500 {
     box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
   }
@@ -2364,7 +2636,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     height: 100%;
     min-height: 200px;
     margin-right: 2rem; /* 32px margin for better spacing */
-    margin-bottom: 1rem;  /* 16px bottom margin */
+    margin-bottom: 1rem; /* 16px bottom margin */
     transition: all 0.3s ease;
     border: 2px solid #e5e7eb; /* Default border */
   }
@@ -2436,21 +2708,21 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
   .overflow-x-auto::-webkit-scrollbar-thumb:hover {
     background: #a0aec0;
   }
-  
+
   /* Ensure remove button text is visible */
   #remove-pod-btn,
   #remove-pod-step2-btn,
   .remove-pod-btn,
   .remove-pack-btn,
-  [data-action="remove"] {
+  [data-action='remove'] {
     color: #4b5563 !important; /* text-gray-600 */
   }
-  
+
   #remove-pod-btn:hover,
   #remove-pod-step2-btn:hover,
   .remove-pod-btn:hover,
   .remove-pack-btn:hover,
-  [data-action="remove"]:hover {
+  [data-action='remove']:hover {
     color: #ef4444 !important; /* text-red-500 */
   }
 
@@ -2463,14 +2735,14 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     align-items: center;
     justify-content: center;
   }
-  
+
   .recaptcha-widget .g-recaptcha {
     display: inline-block;
   }
-  
+
   /* Loading state for reCAPTCHA */
   .recaptcha-widget:empty::before {
-    content: "Loading reCAPTCHA...";
+    content: 'Loading reCAPTCHA...';
     color: #6b7280;
     font-size: 0.875rem;
   }
