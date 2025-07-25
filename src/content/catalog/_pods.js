@@ -434,7 +434,7 @@ export const podsCatalog = {
       badge: "Popular",
       badgeColor: "green",
       duration: "Monthly subscription",
-      reservationMonths: 3
+      reservationMonths: 1
     };
   }
 };

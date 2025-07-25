@@ -359,7 +359,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               Reserve Your NovaPod
             </h2>
             <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
-              Complete your reservation by providing your contact information. We'll get back to you within 24 hours.
+              Complete your reservation by providing your contact information and estimated project duration. We'll get back to you within 24 hours.
             </p>
           </div>
 
@@ -374,7 +374,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                   <div class="flex items-center justify-between">
                     <div>
                       <h4 id="final-pod-title" class="font-semibold text-graphite-900">Selected Pod</h4>
-                      <p id="final-pod-duration" class="text-sm text-graphite-600">3 months</p>
+                      <p id="final-pod-duration" class="text-sm text-graphite-600">1 month</p>
                     </div>
                     <p id="final-pod-price" class="font-bold text-mint-600">₹0/month</p>
                   </div>
@@ -424,6 +424,45 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 <div>
                   <label for="message" class="block text-sm font-medium text-graphite-700 mb-2">Additional Requirements</label>
                   <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 transition-colors" placeholder="Tell us about your project requirements, timeline, or any specific needs..."></textarea>
+                </div>
+                
+                <!-- Hidden input for reservation period -->
+                <input type="hidden" id="reservation-period" name="reservation-period" value="1">
+                
+                <!-- Reservation Period Selection -->
+                <div>
+                  <label class="block text-sm font-medium text-graphite-700 mb-3">Estimated Project Duration</label>
+                  <div class="flex flex-wrap gap-3">
+                    <button 
+                      type="button"
+                      class="step3-duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm bg-mint-500 border-mint-500 text-white"
+                      data-duration="1"
+                    >
+                      1 Month
+                    </button>
+                    <button 
+                      type="button"
+                      class="step3-duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600"
+                      data-duration="3"
+                    >
+                      3 Months
+                    </button>
+                    <button 
+                      type="button"
+                      class="step3-duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600"
+                      data-duration="6"
+                    >
+                      6 Months
+                    </button>
+                    <button 
+                      type="button"
+                      class="step3-duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600"
+                      data-duration="12"
+                    >
+                      12 Months
+                    </button>
+                  </div>
+                  <p class="text-sm text-graphite-500 mt-2">This helps us estimate project timeline and resource allocation</p>
                 </div>
                 
                 <!-- reCAPTCHA Widget -->
@@ -546,7 +585,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         await this.updatePodSummary(selectedPod);
         
         // Update pricing based on current reservation period
-        const currentMonths = selectedPod.reservationMonths || 3;
+        const currentMonths = selectedPod.reservationMonths || 1;
         console.log('🔍 [initializeStep2] Updating pricing for', currentMonths, 'months');
         await this.updatePricingForReservationPeriod(currentMonths);
         
@@ -600,7 +639,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               Your Selected NovaPod
             </h2>
             <p class="text-lg text-graphite-700 max-w-2xl mx-auto">
-              Review your selected pod and customize your reservation period.
+              Review your selected pod. You can customize the project duration in Step 3.
             </p>
           </div>
 
@@ -624,7 +663,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                       </a>
                     </h3>
                     <p id="selected-pod-description" class="text-graphite-600">${podItem.description || podItem.tagline || 'Pod description'}</p>
-                    <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 3} Month${(podItem.reservationMonths || 3) > 1 ? 's' : ''}</span></p>
+                    <p id="selected-pod-months" class="text-sm text-graphite-600">Reservation Period: <span class="font-medium">${podItem.reservationMonths || 1} Month${(podItem.reservationMonths || 1) > 1 ? 's' : ''}</span></p>
                   </div>
                 </div>
                 <div class="text-right">
@@ -635,40 +674,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                 </div>
               </div>
               
-              <!-- Hire Period Selection -->
-              <div class="mb-6 pt-6 border-t border-mint-200">
-                <label class="block text-sm font-medium text-graphite-700 mb-3">Reservation Period</label>
-                
-                <!-- Duration Chips -->
-                <div class="flex flex-wrap gap-3">
-                  <button 
-                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 1 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
-                    data-duration="1"
-                  >
-                    1 Month
-                  </button>
-                  <button 
-                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 3 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
-                    data-duration="3"
-                  >
-                    3 Months
-                  </button>
-                  <button 
-                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 6 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
-                    data-duration="6"
-                  >
-                    6 Months
-                  </button>
-                  <button 
-                    class="duration-chip px-4 py-2 rounded-lg border-2 transition-all duration-200 font-medium text-sm ${(podItem.reservationMonths || 3) === 12 ? 'bg-mint-500 border-mint-500 text-white' : 'bg-white border-gray-300 text-gray-700 hover:border-mint-400 hover:text-mint-600'}"
-                    data-duration="12"
-                  >
-                    12 Months
-                  </button>
-                </div>
-                
-                <p class="text-sm text-graphite-500 mt-2">Select how long you'd like to reserve this pod</p>
-              </div>
+              <!-- Pod Details -->
 
               <!-- Pod Details -->
               <div class="mb-6 pt-6 border-t border-mint-200">
@@ -873,15 +879,16 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     }
 
     async loadPacksForStep2(podItem) {
-      const packs = await this.summaryShared.loadRecommendedPacks(podItem);
+      console.log('🔍 [loadPacksForStep2] Starting with podItem:', podItem);
+      
       const grid = document.getElementById('packs-grid');
       const title = document.getElementById('packs-section-title');
       
-      if (!grid) return;
+      console.log('🔍 [loadPacksForStep2] Grid element:', grid);
+      console.log('🔍 [loadPacksForStep2] Title element:', title);
       
-      if (packs.length === 0) {
-        title.textContent = 'No Packs Available';
-        grid.innerHTML = '<p class="text-graphite-600 col-span-full text-center py-8">No packs are currently available for this pod.</p>';
+      if (!grid) {
+        console.error('🔍 [loadPacksForStep2] packs-grid element not found!');
         return;
       }
       
@@ -889,44 +896,65 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       const allPacks = await this.summaryShared.loadAllPacks();
       const categories = this.summaryShared.getPackCategories();
       
+      console.log('🔍 [loadPacksForStep2] All packs:', allPacks);
+      console.log('🔍 [loadPacksForStep2] Categories:', categories);
+      
+      if (!categories || categories.length === 0) {
+        console.log('🔍 [loadPacksForStep2] No categories found, showing empty state');
+        title.textContent = 'No Packs Available';
+        grid.innerHTML = '<p class="text-graphite-600 col-span-full text-center py-8">No packs are currently available.</p>';
+        return;
+      }
+      
       title.textContent = 'Available Packs';
       
-      // Create grouped interface
-      grid.innerHTML = await this.renderPacksSection(packs, categories);
+      // Create grouped interface with categories only
+      const packsSectionHTML = await this.renderPacksSection(categories);
+      console.log('🔍 [loadPacksForStep2] Generated HTML length:', packsSectionHTML.length);
+      
+      grid.innerHTML = packsSectionHTML;
+      console.log('🔍 [loadPacksForStep2] Packs loaded successfully');
     }
 
-    async renderPacksSection(packs, categories) {
+    async renderPacksSection(categories) {
+      console.log('🔍 [renderPacksSection] Starting with categories:', categories);
+      
       // Get current cart to check which packs are selected
       const cart = this.getCurrentCart();
       const selectedPackIds = cart.filter(item => item.type === 'pack').map(item => item.id);
       
-      return `
-        <!-- Recommended Packs Section -->
+      console.log('🔍 [renderPacksSection] Selected pack IDs:', selectedPackIds);
+      
+      // Render category packs only
+      const categoryPacksHTML = categories.map(category => `
         <div class="mb-8">
-          <h4 class="text-lg font-semibold text-graphite-900 mb-4">Recommended Packs</h4>
+          <h4 class="text-lg font-semibold text-graphite-900 mb-4">${category.title}</h4>
           <div class="flex overflow-x-auto pb-4">
-            ${packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
+            ${category.packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
           </div>
         </div>
-        
+      `).join('');
+      
+      console.log('🔍 [renderPacksSection] Category packs HTML length:', categoryPacksHTML.length);
+      
+      const finalHTML = `
         <!-- Category Packs Sections -->
-        ${categories.map(category => `
-          <div class="mb-8">
-            <h4 class="text-lg font-semibold text-graphite-900 mb-4">${category.title}</h4>
-            <div class="flex overflow-x-auto pb-4">
-              ${category.packs.map(pack => this.renderPackCard(pack, selectedPackIds.includes(pack.id))).join('')}
-            </div>
-          </div>
-        `).join('')}
+        ${categoryPacksHTML}
       `;
+      
+      console.log('🔍 [renderPacksSection] Final HTML length:', finalHTML.length);
+      return finalHTML;
     }
 
     renderPackCard(pack, isAdded = false) {
+      console.log('🔍 [renderPackCard] Rendering pack:', pack);
+      console.log('🔍 [renderPackCard] isAdded:', isAdded);
+      
       // Get current reservation period for pack pricing
-      let months = 3; // default
+      let months = 1; // default
       const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
       if (selectedChip) {
-        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+        months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
         // Try to get from cart
         const cart = this.getCurrentCart();
@@ -936,9 +964,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         }
       }
       
-      // Calculate total price for the duration
-      const totalPriceINR = pack.basePriceINR * months;
-      const discountedPriceINR = totalPriceINR * (100 - pack.discountPercentage) / 100;
+      // Use base price directly (no duration multiplication for estimation)
+      const discountedPriceINR = pack.basePriceINR * (100 - pack.discountPercentage) / 100;
       
       // Standardize price display - always use L for consistency
       const formatPrice = (price) => {
@@ -951,6 +978,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         }
       };
       
+      console.log('🔍 [renderPackCard] Generated HTML for pack:', pack.title);
       return `
         <div class="pack-card bg-white rounded-xl min-w-[300px] p-6 mx-4 border border-gray-200 cursor-pointer ${isAdded ? 'border-mint-500' : ''}" data-pack-id="${pack.id}">
           <div class="flex items-center justify-between mb-4">
@@ -962,13 +990,13 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             </div>
             <div class="text-right">
               ${pack.discountPercentage > 0 ? `
-                <div class="text-sm text-gray-500 line-through">${formatPrice(totalPriceINR)}</div>
+                <div class="text-sm text-gray-500 line-through">${formatPrice(pack.basePriceINR)}</div>
                 <div class="text-sm font-medium text-cerulean-600">${formatPrice(discountedPriceINR)}</div>
                 <div class="text-xs text-green-600">${pack.discountPercentage}% OFF</div>
               ` : `
-                <div class="text-sm font-medium text-cerulean-600">${formatPrice(totalPriceINR)}</div>
+                <div class="text-sm font-medium text-cerulean-600">${formatPrice(pack.basePriceINR)}</div>
               `}
-              <div class="text-xs text-gray-500">for ${months} months</div>
+              <div class="text-xs text-gray-500">estimated pricing</div>
             </div>
           </div>
           
@@ -1043,10 +1071,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       }
       
       // Get current reservation period for pack pricing
-      let months = 3; // default
+      let months = 1; // default
       const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
       if (selectedChip) {
-        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+        months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
         const selectedPod = cart.find(item => item.type === 'pod');
         if (selectedPod && selectedPod.reservationMonths) {
@@ -1070,9 +1098,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const packDetails = await this.getPackDetails(pack.id);
         if (!packDetails) return '';
         
-        // Calculate monthly pack price with discount, then multiply by months
-        const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
-        const totalPrice = monthlyPrice * months;
+        // Use base price directly (no duration multiplication for estimation)
+        const totalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
         const formattedPrice = formatPrice(totalPrice);
         
         return `
@@ -1121,10 +1148,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       }
       
       // Get current reservation period for pack pricing
-      let months = 3; // default
+      let months = 1; // default
       const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
       if (selectedChip) {
-        months = parseInt(selectedChip.getAttribute('data-duration') || '3');
+        months = parseInt(selectedChip.getAttribute('data-duration') || '1');
       } else {
         const selectedPod = cart.find(item => item.type === 'pod');
         if (selectedPod && selectedPod.reservationMonths) {
@@ -1148,9 +1175,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const packDetails = await this.getPackDetails(pack.id);
         if (!packDetails) return '';
         
-        // Calculate monthly pack price with discount, then multiply by months
-        const monthlyPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
-        const totalPrice = monthlyPrice * months;
+        // Use base price directly (no duration multiplication for estimation)
+        const totalPrice = packDetails.basePriceINR * (100 - packDetails.discountPercentage) / 100;
         const formattedPrice = formatPrice(totalPrice);
         
         return `
@@ -1320,7 +1346,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       console.log('🔍 [updatePodSummary] monthsElement found:', !!monthsElement);
       
       if (monthsElement) {
-        const months = latestPodItem.reservationMonths || 3;
+        const months = latestPodItem.reservationMonths || 1;
         console.log('🔍 [updatePodSummary] Using months:', months, 'from latestPodItem.reservationMonths:', latestPodItem.reservationMonths);
         monthsElement.innerHTML = `Reservation Period: <span class="font-medium">${months} Month${months > 1 ? 's' : ''}</span>`;
         console.log('🔍 [updatePodSummary] Updated months display');
@@ -1333,20 +1359,20 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         priceSelector: '#final-pod-price',
         descriptionSelector: '#final-pod-duration'
       });
+      
+      // Update the duration display with current reservation period
+      const durationElement = document.getElementById('final-pod-duration');
+      if (durationElement) {
+        const months = podItem.reservationMonths || 1;
+        durationElement.textContent = `${months} month${months > 1 ? 's' : ''}`;
+      }
 
       const packsList = document.getElementById('final-packs-list');
       if (packsList) {
         if (packItems.length === 0) {
           packsList.innerHTML = '<p class="text-graphite-500 text-sm">No packs selected</p>';
         } else {
-          // Get current reservation period for pack pricing
-          let months = 3; // default
-          const selectedChip = document.querySelector('.duration-chip.bg-mint-500');
-          if (selectedChip) {
-            months = parseInt(selectedChip.getAttribute('data-duration') || '3');
-          } else if (podItem.reservationMonths) {
-            months = podItem.reservationMonths;
-          }
+          // Note: Duration is now for estimation only, not for pricing
           
           // Standardize price display function
           const formatPrice = (price) => {
@@ -1396,6 +1422,45 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     await this.summaryShared.updateTotalPrice(podItem, packItems);
     }
 
+    async initializeStep3DurationChips() {
+      console.log('🔍 [initializeStep3DurationChips] Initializing step 3 duration chips...');
+      
+      try {
+        const cart = await this.summaryShared.getCart();
+        const selectedPod = cart.find(item => item.type === 'pod');
+        const currentMonths = selectedPod?.reservationMonths || 1;
+        
+        console.log('🔍 [initializeStep3DurationChips] Current months from cart:', currentMonths);
+        
+        // Update all step 3 chips to show the current selection
+        const allStep3Chips = document.querySelectorAll('.step3-duration-chip');
+        allStep3Chips.forEach(chip => {
+          const chipDuration = parseInt(chip.getAttribute('data-duration') || '1');
+          
+          if (chipDuration === currentMonths) {
+            // Selected chip
+            chip.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+            chip.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
+          } else {
+            // Unselected chips
+            chip.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
+            chip.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+          }
+        });
+        
+        // Update hidden input field
+        const hiddenInput = document.getElementById('reservation-period');
+        if (hiddenInput) {
+          hiddenInput.value = currentMonths.toString();
+          console.log('🔍 [initializeStep3DurationChips] Set hidden input value to:', currentMonths);
+        }
+        
+        console.log('🔍 [initializeStep3DurationChips] Step 3 duration chips initialized');
+      } catch (error) {
+        console.error('🔍 [initializeStep3DurationChips] Error initializing step 3 duration chips:', error);
+      }
+    }
+
     async updatePricingForReservationPeriod(months) {
       console.log('🔍 [updatePricingForReservationPeriod] Updating pricing for', months, 'months');
       
@@ -1440,14 +1505,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const isPack = display.getAttribute('data-item-type') === 'pack';
         
         if (basePriceINR > 0) {
-          // Calculate total price - apply reservation period to both pods and packs (monthly pricing)
-          const totalPriceINR = basePriceINR * months;
-          const totalPriceUSD = basePriceUSD * months;
-          
-          // Apply discount
-          const discountMultiplier = (100 - discountPercentage) / 100;
-          const finalPriceINR = totalPriceINR * discountMultiplier;
-          const finalPriceUSD = totalPriceUSD * discountMultiplier;
+          // Use base price directly (no duration multiplication for estimation)
+          const finalPriceINR = basePriceINR;
+          const finalPriceUSD = basePriceUSD;
           
           // Update the final price display (new minimal design)
           const finalPriceElement = display.querySelector('.final-price');
@@ -1638,18 +1698,18 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       document.addEventListener('click', async (e) => {
         const target = e.target;
         
-        // Handle duration chip selection
+        // Handle duration chip selection (Step 1)
         if (target.matches('.duration-chip')) {
           e.preventDefault();
           const chip = target;
-          const months = parseInt(chip.getAttribute('data-duration') || '3');
+          const months = parseInt(chip.getAttribute('data-duration') || '1');
           console.log('🔍 [Step1] Duration chip selected:', months);
           
           // Update all chips to show selected state
           const allChips = document.querySelectorAll('.duration-chip');
           allChips.forEach(chipElement => {
             const chipEl = chipElement;
-            const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '3');
+            const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '1');
             
             if (chipDuration === months) {
               // Selected chip
@@ -1688,6 +1748,46 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           } catch (error) {
             console.error('🔍 [Step1] Error checking localStorage:', error);
           }
+        }
+        
+        // Handle step 3 duration chip selection
+        if (target.matches('.step3-duration-chip')) {
+          e.preventDefault();
+          const chip = target;
+          const months = parseInt(chip.getAttribute('data-duration') || '1');
+          console.log('🔍 [Step3] Duration chip selected:', months);
+          
+          // Update all step 3 chips to show selected state
+          const allStep3Chips = document.querySelectorAll('.step3-duration-chip');
+          allStep3Chips.forEach(chipElement => {
+            const chipEl = chipElement;
+            const chipDuration = parseInt(chipEl.getAttribute('data-duration') || '1');
+            
+            if (chipDuration === months) {
+              // Selected chip
+              chipEl.classList.remove('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+              chipEl.classList.add('bg-mint-500', 'border-mint-500', 'text-white');
+            } else {
+              // Unselected chips
+              chipEl.classList.remove('bg-mint-500', 'border-mint-500', 'text-white');
+              chipEl.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-mint-400', 'hover:text-mint-600');
+            }
+          });
+          
+          // Update hidden input field
+          const hiddenInput = document.getElementById('reservation-period');
+          if (hiddenInput) {
+            hiddenInput.value = months.toString();
+            console.log('🔍 [Step3] Updated hidden input value to:', months);
+          }
+          
+          // Update storage
+          console.log('🔍 [Step3] Calling updateHirePeriod...');
+          await this.summaryShared.updateHirePeriod(months);
+          console.log('🔍 [Step3] updateHirePeriod completed');
+          
+          // Update pricing dynamically based on new reservation period
+          await this.updatePricingForReservationPeriod(months);
         }
       });
     }
@@ -1754,6 +1854,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     addStep3EventListeners() {
       console.log('🔍 Adding Step 3 event listeners...');
       
+      // Initialize step 3 duration chips with current cart value
+      this.initializeStep3DurationChips();
+      
       // Global variables for reCAPTCHA
       let reservationRecaptchaResponse: string | null = null;
 
@@ -1808,7 +1911,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             email: formData.get('email'),
             phone: formData.get('phone'),
             company: formData.get('company'),
-            message: formData.get('message')
+            message: formData.get('message'),
+            reservationPeriod: formData.get('reservation-period')
           };
           
           // Get cart data
@@ -1825,7 +1929,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               packs: selectedPacks
             },
             totalItems: cart.length,
-            step: this.currentStep
+            step: this.currentStep,
+            reservationPeriod: formValues.reservationPeriod
           };
           
           // Log everything to console
@@ -1838,12 +1943,16 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [Step3] ===== END FORM SUBMISSION DATA =====');
           
           try {
-                      // Prepare data for HubSpot submission
+                      // Get reservation period from hidden input
+          const reservationPeriod = formData.get('reservation-period') || '1';
+          
+          // Prepare data for HubSpot submission
           const hubspotData = {
             ...formValues,
             selected_pod: selectedPod ? selectedPod.title || selectedPod.name : '',
             selected_pod_slug: selectedPod ? selectedPod.slug || '' : '',
             selected_packs: selectedPacks.length > 0 ? selectedPacks.map(pack => pack.title || pack.name).join(', ') : '',
+            reservation_period: `${reservationPeriod} month${parseInt(reservationPeriod) > 1 ? 's' : ''}`,
             source: 'NovaPod Reservation Form',
             recaptchaResponse: reservationRecaptchaResponse,
             recaptchaAction: selectedPod && selectedPod.slug ? `pod_reservation_${selectedPod.slug}` : 'pod_reservation'
@@ -1940,7 +2049,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     }
     
     generateModalDetailsHTML(submissionData) {
-      const { formData, cartItems } = submissionData;
+      const { formData, cartItems, reservationPeriod } = submissionData;
       
       let html = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1958,7 +2067,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             <h5 class="font-medium text-graphite-900 mb-2">Selected Items</h5>
             <div class="space-y-1 text-graphite-600">
               <p><strong>Pod:</strong> ${cartItems.pod ? cartItems.pod.title : 'None selected'}</p>
-              <p><strong>Duration:</strong> ${cartItems.pod ? cartItems.pod.reservationMonths + ' months' : 'Not set'}</p>
+              <p><strong>Estimated Duration:</strong> ${reservationPeriod || '1'} month${parseInt(reservationPeriod || '1') > 1 ? 's' : ''}</p>
               <p><strong>Packs:</strong> ${cartItems.packs.length} selected</p>
             </div>
           </div>
