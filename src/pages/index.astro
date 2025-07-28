@@ -222,11 +222,11 @@ const metaInfo = generateMetaInfo();
     }
   }
 
-  // Global event handler for data-add-to-cart buttons on home page - using event delegation
+  // Global event handler for pod data-add-to-cart buttons on home page - using event delegation
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', async function(e) {
       const target = e.target as HTMLElement;
-      const button = target.closest('[data-add-to-cart]') as HTMLElement;
+      const button = target.closest('[data-add-to-cart][data-item-type="pod"]') as HTMLElement;
       
       if (button) {
         e.preventDefault();
@@ -237,9 +237,9 @@ const metaInfo = generateMetaInfo();
         const itemTitle = button.getAttribute('data-item-title');
         const itemDescription = button.getAttribute('data-item-description');
         
-        console.log(`🔍 [${new Date().toISOString()}] [Home] Add to cart clicked:`, { itemId, itemType, itemTitle });
+        console.log(`🔍 [${new Date().toISOString()}] [Home] Pod add to cart clicked:`, { itemId, itemType, itemTitle });
         
-        if (itemId && itemType) {
+        if (itemId && itemType === 'pod') {
           try {
             // Import the shared utility
             const { SummaryShared } = await import('../utils/summaryShared.js');
@@ -261,41 +261,20 @@ const metaInfo = generateMetaInfo();
               }
             } else {
               // Pod is not in cart - add it with confirmation if replacing
-              if (itemType === 'pod') {
-                const selectedPod = await shared.selectPodWithConfirmation(itemId);
-                if (selectedPod) {
-                  shared.showNotification(`${itemTitle || 'Pod'} added to cart!`);
-                  // Navigate to summary page
-                  window.location.href = '/summary?step=1';
-                }
-              } else {
-                // For non-pod items, use regular addToCart
-                const cartItem = {
-                  id: itemId,
-                  type: itemType,
-                  title: itemTitle || '',
-                  description: itemDescription || '',
-                  price: '',
-                  reservationMonths: itemType === 'pod' ? 1 : undefined
-                };
-                
-                const success = await shared.addToCart(cartItem);
-                
-                if (success) {
-                  shared.showNotification(`${itemTitle || 'Item'} added to cart!`);
-                  window.location.href = '/summary?step=1';
-                } else {
-                  shared.showNotification('Failed to add item to cart', 'error');
-                }
+              const selectedPod = await shared.selectPodWithConfirmation(itemId);
+              if (selectedPod) {
+                shared.showNotification(`${itemTitle || 'Pod'} added to cart!`);
+                // Navigate to summary page
+                window.location.href = '/summary?step=1';
               }
             }
           } catch (error) {
-            console.error('🔍 [Home] Error adding to cart:', error);
+            console.error('🔍 [Home] Error adding pod to cart:', error);
             
             // Fallback notification
             const notification = document.createElement('div');
             notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-            notification.textContent = 'Error adding to cart';
+            notification.textContent = 'Error adding pod to cart';
             document.body.appendChild(notification);
             
             setTimeout(() => {
