@@ -1,6 +1,7 @@
 ---
 export interface Props {
   pack: {
+    id: string;
     title: string;
     description: string;
     badge: string;
@@ -46,6 +47,7 @@ const { pack } = Astro.props;
       <div class="mb-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
         <button
           data-add-to-cart
+          data-item-id={pack.id}
           data-item-type="pack"
           data-item-title={pack.title}
           data-item-description={pack.description}
