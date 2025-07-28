@@ -334,8 +334,8 @@ const footerLinks = [
                       <a
                         href={link.href}
                         class="text-gray-7 hover:text-primary mb-3 inline-block text-base"
-                        target={link.isExternal ? '_blank' : undefined}
-                        rel={link.isExternal ? 'noopener' : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {link.name}
                       </a>
@@ -361,8 +361,8 @@ const footerLinks = [
                       <a
                         href={link.href}
                         class="text-gray-7 hover:text-primary mb-3 inline-block text-base"
-                        target={link.isExternal ? '_blank' : undefined}
-                        rel={link.isExternal ? 'noopener' : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {link.name}
                       </a>
@@ -388,8 +388,8 @@ const footerLinks = [
                       <a
                         href={link.href}
                         class="text-gray-7 hover:text-primary mb-3 inline-block text-base"
-                        target={link.isExternal ? '_blank' : undefined}
-                        rel={link.isExternal ? 'noopener' : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {link.name}
                       </a>
@@ -404,7 +404,7 @@ const footerLinks = [
       <div class="w-full px-4 md:w-2/3 lg:w-6/12 xl:w-3/12">
         <div class="mb-10 w-full">
           <h4 class="mb-9 text-lg font-semibold text-gray-900 ">
-            {footerLinks[3].header}
+            {footerLinks[3].header} 
           </h4>
           <ul>
             {
