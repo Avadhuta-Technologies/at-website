@@ -278,37 +278,30 @@ const getPackIcon = (pack: any) => {
     </div>
     
     <!-- Action Bar -->
-    <div class="flex flex-col space-y-3 pt-4 border-t border-gray-100/50 mt-auto">
-      <!-- Expand/Details Row -->
-      <div class="flex items-center justify-between">
-        <span class="text-sm text-gray-500 font-medium pack-action-text">View Details</span>
-        <div class="flex items-center space-x-2">
-          <button class="expand-btn w-6 h-6 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-3 h-3 text-white expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-          <a 
-            href={`/packs/${generatePackSlug(pack.title)}`} 
-            class="w-6 h-6 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-          >
-            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </a>
-        </div>
-      </div>
+    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100/50 mt-auto">
+      <!-- View Details Button -->
+      <a 
+        href={`/packs/${generatePackSlug(pack.title)}`} 
+        class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-white text-primary-600 font-semibold rounded-lg border-2 border-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md group text-sm"
+      >
+        <svg class="w-3 h-3 mr-1.5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        </svg>
+        <span>View Details</span>
+      </a>
       
-      <!-- Prominent Add Pack Button -->
+      <!-- Add Pack Button -->
       <button 
         data-add-to-cart
         data-item-id={pack.id}
         data-item-type="pack"
         data-item-title={pack.title}
         data-item-description={pack.description}
-        data-item-price={pack.priceINR}
-        class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 group-hover:shadow-lg">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        data-item-price={pack.basePriceINR}
+        class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md group text-sm"
+      >
+        <svg class="w-3 h-3 mr-1.5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
         <span>Add Pack</span>
