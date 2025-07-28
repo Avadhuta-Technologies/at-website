@@ -10,7 +10,7 @@ export interface Props {
 const { data } = Astro.props;
 ---
 
-<section class="relative bg-white overflow-hidden">
+<section class="relative overflow-hidden">
 
   <div class="relative z-10 container mx-auto px-4 py-20 md:py-32">
     <div class="max-w-4xl mx-auto text-center">
@@ -56,9 +56,8 @@ const { data } = Astro.props;
         </a>
         
         <a 
-          href="#why-choose" 
+          href="/contact" 
           class="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors duration-200 group"
-          onclick="scrollToSection(event, 'why-choose')"
         >
           <span>Talk To A Specialist</span>
           <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
