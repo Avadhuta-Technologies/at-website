@@ -386,6 +386,8 @@ export class SummaryShared {
       if (!pack) {
         this.hideGlobalLoader();
         this.showNotification('Pack not found', 'error');
+        // Reset processing flag
+        this.isProcessingPackCartOperation = false;
         return null;
       }
 
@@ -398,12 +400,16 @@ export class SummaryShared {
         this.updatePackButton(buttonElement, pack, false);
         this.hideGlobalLoader();
         this.showNotification('Pack removed from cart', 'success');
+        // Reset processing flag
+        this.isProcessingPackCartOperation = false;
         return pack;
       } else {
         // Pack is not in cart, check if pod exists
         if (!cartStatus.hasPod) {
           // Hide loader before showing modal
           this.hideGlobalLoader();
+          // Reset processing flag since we're showing modal
+          this.isProcessingPackCartOperation = false;
           // Show modal to inform user they need a pod first
           if (typeof window !== 'undefined' && window.showPodRequiredModal) {
             window.showPodRequiredModal();
@@ -419,6 +425,8 @@ export class SummaryShared {
         this.updatePackButton(buttonElement, pack, true);
         this.hideGlobalLoader();
         this.showNotification('Pack added to cart successfully!', 'success');
+        // Reset processing flag
+        this.isProcessingPackCartOperation = false;
         return pack;
       }
     } catch (error) {
