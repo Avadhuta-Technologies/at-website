@@ -2389,10 +2389,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
             if (result.success) {
               console.log('🔍 [Step3] HubSpot submission successful:', result);
-              // Clear form and cart after successful submission
-              await this.clearFormAndCart();
-              // Show thank you modal with details
+              // Show thank you modal with details first
               this.showThankYouModal(submissionData);
+              // Clear form and cart after successful submission (this will also navigate to step 1)
+              setTimeout(async () => {
+                await this.clearFormAndCart();
+              }, 2000); // Show modal for 2 seconds before clearing and navigating
             } else {
               console.error('🔍 [Step3] HubSpot submission failed:', result.error);
               // Show error notification and preserve form data
@@ -2552,7 +2554,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         // Clear header cart count
         this.updateHeaderCartCount(0);
 
+        // Clear any other storage references
+        this.clearAllStorageReferences();
+
         console.log('🔍 [clearFormAndCart] ===== CLEAR OPERATION COMPLETED =====');
+        
+        // Navigate back to step 1 after successful clearing
+        console.log('🔍 [clearFormAndCart] Navigating back to step 1...');
+        setTimeout(() => {
+          this.summaryShared.navigateToStep(1);
+        }, 500); // Small delay to ensure clearing is complete
+        
       } catch (error) {
         console.error('🔍 [clearFormAndCart] Error clearing form and cart:', error);
       }
@@ -2649,6 +2661,59 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       }
     }
 
+    // Clear all storage references related to cart, pods, and packs
+    clearAllStorageReferences() {
+      console.log('🔍 [clearAllStorageReferences] Clearing all storage references...');
+      
+      try {
+        // Clear any remaining localStorage items that might be related
+        const localStorageKeys = Object.keys(localStorage);
+        const keysToRemove = localStorageKeys.filter(key => 
+          key.includes('cart') || 
+          key.includes('pod') || 
+          key.includes('pack') || 
+          key.includes('reservation') ||
+          key.includes('summary') ||
+          key.includes('step')
+        );
+        
+        keysToRemove.forEach(key => {
+          localStorage.removeItem(key);
+          console.log('🔍 [clearAllStorageReferences] Removed localStorage key:', key);
+        });
+        
+        // Clear any sessionStorage items
+        const sessionStorageKeys = Object.keys(sessionStorage);
+        const sessionKeysToRemove = sessionStorageKeys.filter(key => 
+          key.includes('cart') || 
+          key.includes('pod') || 
+          key.includes('pack') || 
+          key.includes('reservation') ||
+          key.includes('summary') ||
+          key.includes('step')
+        );
+        
+        sessionKeysToRemove.forEach(key => {
+          sessionStorage.removeItem(key);
+          console.log('🔍 [clearAllStorageReferences] Removed sessionStorage key:', key);
+        });
+        
+        // Clear any cookies that might be related
+        const cookies = document.cookie.split(';');
+        cookies.forEach(cookie => {
+          const [name] = cookie.split('=');
+          if (name && (name.includes('cart') || name.includes('pod') || name.includes('pack'))) {
+            document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            console.log('🔍 [clearAllStorageReferences] Removed cookie:', name.trim());
+          }
+        });
+        
+        console.log('🔍 [clearAllStorageReferences] All storage references cleared successfully');
+      } catch (error) {
+        console.error('🔍 [clearAllStorageReferences] Error clearing storage references:', error);
+      }
+    }
+
     // Initialize reCAPTCHA for dynamically created forms
     initializeRecaptcha() {
       console.log('🔍 [initializeRecaptcha] Starting reCAPTCHA initialization...');
@@ -2660,8 +2725,20 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         script.async = true;
         script.defer = true;
         script.onload = () => {
-          console.log('🔍 [initializeRecaptcha] reCAPTCHA script loaded, rendering widget...');
-          this.renderRecaptchaWidget();
+          console.log('🔍 [initializeRecaptcha] reCAPTCHA script loaded, waiting for ready...');
+          // Wait for grecaptcha to be fully ready
+          if (window.grecaptcha && window.grecaptcha.ready) {
+            window.grecaptcha.ready(() => {
+              console.log('🔍 [initializeRecaptcha] reCAPTCHA is ready, rendering widget...');
+              this.renderRecaptchaWidget();
+            });
+          } else {
+            // Fallback: wait a bit more for grecaptcha to be available
+            setTimeout(() => {
+              console.log('🔍 [initializeRecaptcha] Fallback: rendering widget...');
+              this.renderRecaptchaWidget();
+            }, 1000);
+          }
         };
         script.onerror = () => {
           console.error('🔍 [initializeRecaptcha] Failed to load reCAPTCHA script');
@@ -2672,10 +2749,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         };
         document.head.appendChild(script);
       } else {
-        console.log(
-          '🔍 [initializeRecaptcha] reCAPTCHA script already loaded, rendering widget...'
-        );
-        this.renderRecaptchaWidget();
+        console.log('🔍 [initializeRecaptcha] reCAPTCHA script already loaded, checking if ready...');
+        // Check if grecaptcha is ready
+        if (window.grecaptcha && window.grecaptcha.ready) {
+          window.grecaptcha.ready(() => {
+            console.log('🔍 [initializeRecaptcha] reCAPTCHA is ready, rendering widget...');
+            this.renderRecaptchaWidget();
+          });
+        } else {
+          console.log('🔍 [initializeRecaptcha] Fallback: rendering widget...');
+          this.renderRecaptchaWidget();
+        }
       }
     }
 
@@ -2698,48 +2782,58 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [renderRecaptchaWidget] Could not get current pod, using default config');
         }
 
-        // The widget should render automatically when the script loads
-        // Check if it rendered after a short delay
-        setTimeout(() => {
-          const widget = recaptchaContainer.querySelector('.g-recaptcha');
-          if (widget && widget.children.length > 0) {
-            console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget rendered successfully');
-          } else {
-            console.log(
-              '🔍 [renderRecaptchaWidget] reCAPTCHA widget not rendered, trying manual render...'
-            );
-            // Try manual render if needed
-            if (typeof window.grecaptcha !== 'undefined' && window.grecaptcha.render) {
-              try {
-                // Get the site key from the data attribute
-                const siteKeyElement = recaptchaContainer.querySelector('.g-recaptcha');
-                const siteKey =
-                  siteKeyElement?.getAttribute('data-sitekey') ||
-                  '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+        // Ensure grecaptcha is available and ready
+        if (typeof window.grecaptcha === 'undefined') {
+          console.log('🔍 [renderRecaptchaWidget] grecaptcha not available, waiting...');
+          setTimeout(() => this.renderRecaptchaWidget(), 500);
+          return;
+        }
 
-                // Create dynamic action based on pod
-                const action = currentPodSlug
-                  ? `pod_reservation_${currentPodSlug}`
-                  : 'pod_reservation';
+        // Check if widget already exists and has content
+        const existingWidget = recaptchaContainer.querySelector('.g-recaptcha');
+        if (existingWidget && existingWidget.children.length > 0) {
+          console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget already rendered');
+          return;
+        }
 
-                window.grecaptcha.render(recaptchaContainer, {
-                  sitekey: siteKey,
-                  theme: 'light',
-                  size: 'normal',
-                  callback: 'onReservationRecaptchaSuccess',
-                  'expired-callback': 'onReservationRecaptchaExpired',
-                  'error-callback': 'onReservationRecaptchaError',
-                });
-                console.log(
-                  '🔍 [renderRecaptchaWidget] Manual reCAPTCHA render successful with action:',
-                  action
-                );
-              } catch (error) {
-                console.error('🔍 [renderRecaptchaWidget] Manual render failed:', error);
-              }
-            }
-          }
-        }, 1000);
+        // Clear any existing content
+        recaptchaContainer.innerHTML = '';
+
+        // Create new widget container
+        const widgetContainer = document.createElement('div');
+        widgetContainer.className = 'g-recaptcha';
+        widgetContainer.setAttribute('data-sitekey', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'); // Default test key
+        widgetContainer.setAttribute('data-theme', 'light');
+        widgetContainer.setAttribute('data-size', 'normal');
+        widgetContainer.setAttribute('data-callback', 'onReservationRecaptchaSuccess');
+        widgetContainer.setAttribute('data-expired-callback', 'onReservationRecaptchaExpired');
+        widgetContainer.setAttribute('data-error-callback', 'onReservationRecaptchaError');
+        
+        recaptchaContainer.appendChild(widgetContainer);
+
+        // Render the widget
+        try {
+          const widgetId = window.grecaptcha.render(widgetContainer, {
+            sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Default test key
+            theme: 'light',
+            size: 'normal',
+            callback: 'onReservationRecaptchaSuccess',
+            'expired-callback': 'onReservationRecaptchaExpired',
+            'error-callback': 'onReservationRecaptchaError',
+          });
+          
+          console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget rendered successfully with ID:', widgetId);
+          
+          // Store widget ID for future reference
+          recaptchaContainer.setAttribute('data-widget-id', widgetId.toString());
+          
+        } catch (error) {
+          console.error('🔍 [renderRecaptchaWidget] Failed to render reCAPTCHA widget:', error);
+          this.summaryShared.showNotification(
+            'Failed to load reCAPTCHA. Please refresh the page and try again.',
+            'error'
+          );
+        }
       } else {
         console.log('🔍 [renderRecaptchaWidget] reCAPTCHA container not found');
       }
