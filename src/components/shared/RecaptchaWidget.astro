@@ -76,13 +76,28 @@ const {
       script.defer = true;
       script.onload = function() {
         console.log('reCAPTCHA script loaded successfully');
-        // Hide loading message
-        const loadingElement = document.getElementById('recaptcha-loading');
-        if (loadingElement) {
-          loadingElement.style.display = 'none';
+        // Wait for grecaptcha to be fully ready
+        if (window.grecaptcha && window.grecaptcha.ready) {
+          window.grecaptcha.ready(function() {
+            console.log('reCAPTCHA is ready');
+            // Hide loading message
+            const loadingElement = document.getElementById('recaptcha-loading');
+            if (loadingElement) {
+              loadingElement.style.display = 'none';
+            }
+            // Trigger a custom event when reCAPTCHA is ready
+            window.dispatchEvent(new CustomEvent('recaptcha-ready'));
+          });
+        } else {
+          // Fallback: wait a bit more for grecaptcha to be available
+          setTimeout(function() {
+            const loadingElement = document.getElementById('recaptcha-loading');
+            if (loadingElement) {
+              loadingElement.style.display = 'none';
+            }
+            window.dispatchEvent(new CustomEvent('recaptcha-ready'));
+          }, 1000);
         }
-        // Trigger a custom event when reCAPTCHA is ready
-        window.dispatchEvent(new CustomEvent('recaptcha-loaded'));
       };
       script.onerror = function() {
         console.error('Failed to load reCAPTCHA script');
@@ -94,10 +109,22 @@ const {
       };
       document.head.appendChild(script);
     } else {
-      // reCAPTCHA already loaded, hide loading message
-      const loadingElement = document.getElementById('recaptcha-loading');
-      if (loadingElement) {
-        loadingElement.style.display = 'none';
+      // reCAPTCHA already loaded, check if it's ready
+      if (window.grecaptcha && window.grecaptcha.ready) {
+        window.grecaptcha.ready(function() {
+          const loadingElement = document.getElementById('recaptcha-loading');
+          if (loadingElement) {
+            loadingElement.style.display = 'none';
+          }
+          window.dispatchEvent(new CustomEvent('recaptcha-ready'));
+        });
+      } else {
+        // Fallback: hide loading message
+        const loadingElement = document.getElementById('recaptcha-loading');
+        if (loadingElement) {
+          loadingElement.style.display = 'none';
+        }
+        window.dispatchEvent(new CustomEvent('recaptcha-ready'));
       }
     }
   }
@@ -105,6 +132,40 @@ const {
   // Initialize reCAPTCHA when DOM is loaded
   document.addEventListener('DOMContentLoaded', function() {
     loadRecaptchaScript();
+  });
+
+  // Also listen for the recaptcha-ready event to ensure widget renders
+  document.addEventListener('recaptcha-ready', function() {
+    console.log('reCAPTCHA ready event received, ensuring widget renders');
+    // Force a small delay to ensure the widget container is ready
+    setTimeout(function() {
+      const container = document.getElementById('recaptcha-container');
+      if (container) {
+        const widget = container.querySelector('.g-recaptcha');
+        if (widget && !widget.children.length && window.grecaptcha && window.grecaptcha.render) {
+          console.log('Manually rendering reCAPTCHA widget');
+          const siteKey = widget.getAttribute('data-sitekey');
+          const theme = widget.getAttribute('data-theme') || 'light';
+          const size = widget.getAttribute('data-size') || 'normal';
+          const callback = widget.getAttribute('data-callback');
+          const expiredCallback = widget.getAttribute('data-expired-callback');
+          const errorCallback = widget.getAttribute('data-error-callback');
+          
+          try {
+            window.grecaptcha.render(widget, {
+              sitekey: siteKey,
+              theme: theme,
+              size: size,
+              callback: callback,
+              'expired-callback': expiredCallback,
+              'error-callback': errorCallback
+            });
+          } catch (error) {
+            console.error('Failed to manually render reCAPTCHA:', error);
+          }
+        }
+      }
+    }, 500);
   });
 
   // Export utility functions for form validation
