@@ -2389,10 +2389,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
             if (result.success) {
               console.log('🔍 [Step3] HubSpot submission successful:', result);
-              // Clear form and cart after successful submission
-              await this.clearFormAndCart();
-              // Show thank you modal with details
+              // Show thank you modal with details first
               this.showThankYouModal(submissionData);
+              // Clear form and cart after successful submission (this will also navigate to step 1)
+              setTimeout(async () => {
+                await this.clearFormAndCart();
+              }, 2000); // Show modal for 2 seconds before clearing and navigating
             } else {
               console.error('🔍 [Step3] HubSpot submission failed:', result.error);
               // Show error notification and preserve form data
@@ -2552,7 +2554,17 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         // Clear header cart count
         this.updateHeaderCartCount(0);
 
+        // Clear any other storage references
+        this.clearAllStorageReferences();
+
         console.log('🔍 [clearFormAndCart] ===== CLEAR OPERATION COMPLETED =====');
+        
+        // Navigate back to step 1 after successful clearing
+        console.log('🔍 [clearFormAndCart] Navigating back to step 1...');
+        setTimeout(() => {
+          this.summaryShared.navigateToStep(1);
+        }, 500); // Small delay to ensure clearing is complete
+        
       } catch (error) {
         console.error('🔍 [clearFormAndCart] Error clearing form and cart:', error);
       }
@@ -2646,6 +2658,59 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         console.log('🔍 [updateHeaderCartCount] Header cart count updated successfully');
       } catch (error) {
         console.error('🔍 [updateHeaderCartCount] Error updating header cart count:', error);
+      }
+    }
+
+    // Clear all storage references related to cart, pods, and packs
+    clearAllStorageReferences() {
+      console.log('🔍 [clearAllStorageReferences] Clearing all storage references...');
+      
+      try {
+        // Clear any remaining localStorage items that might be related
+        const localStorageKeys = Object.keys(localStorage);
+        const keysToRemove = localStorageKeys.filter(key => 
+          key.includes('cart') || 
+          key.includes('pod') || 
+          key.includes('pack') || 
+          key.includes('reservation') ||
+          key.includes('summary') ||
+          key.includes('step')
+        );
+        
+        keysToRemove.forEach(key => {
+          localStorage.removeItem(key);
+          console.log('🔍 [clearAllStorageReferences] Removed localStorage key:', key);
+        });
+        
+        // Clear any sessionStorage items
+        const sessionStorageKeys = Object.keys(sessionStorage);
+        const sessionKeysToRemove = sessionStorageKeys.filter(key => 
+          key.includes('cart') || 
+          key.includes('pod') || 
+          key.includes('pack') || 
+          key.includes('reservation') ||
+          key.includes('summary') ||
+          key.includes('step')
+        );
+        
+        sessionKeysToRemove.forEach(key => {
+          sessionStorage.removeItem(key);
+          console.log('🔍 [clearAllStorageReferences] Removed sessionStorage key:', key);
+        });
+        
+        // Clear any cookies that might be related
+        const cookies = document.cookie.split(';');
+        cookies.forEach(cookie => {
+          const [name] = cookie.split('=');
+          if (name && (name.includes('cart') || name.includes('pod') || name.includes('pack'))) {
+            document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            console.log('🔍 [clearAllStorageReferences] Removed cookie:', name.trim());
+          }
+        });
+        
+        console.log('🔍 [clearAllStorageReferences] All storage references cleared successfully');
+      } catch (error) {
+        console.error('🔍 [clearAllStorageReferences] Error clearing storage references:', error);
       }
     }
 

@@ -1408,6 +1408,57 @@ export class SummaryShared {
     // This method is kept for compatibility but no longer needed
     console.log('🔍 [updateCartCountDisplay] Method called but no longer needed');
   }
+
+  // Clear all cart data and storage references
+  async clearCart() {
+    console.log('🔍 [clearCart] Starting complete cart clearance...');
+    
+    try {
+      // Clear localStorage cart
+      localStorage.removeItem('novapod-cart');
+      console.log('🔍 [clearCart] localStorage cart cleared');
+      
+      // Clear any other cart-related localStorage items
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.includes('cart') || key.includes('pod') || key.includes('pack'))) {
+          keysToRemove.push(key);
+        }
+      }
+      
+      keysToRemove.forEach(key => {
+        localStorage.removeItem(key);
+        console.log('🔍 [clearCart] Removed localStorage key:', key);
+      });
+      
+      // Clear sessionStorage cart-related items
+      const sessionKeysToRemove = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key && (key.includes('cart') || key.includes('pod') || key.includes('pack'))) {
+          sessionKeysToRemove.push(key);
+        }
+      }
+      
+      sessionKeysToRemove.forEach(key => {
+        sessionStorage.removeItem(key);
+        console.log('🔍 [clearCart] Removed sessionStorage key:', key);
+      });
+      
+      // Dispatch cart cleared event
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('cart-cleared'));
+        console.log('🔍 [clearCart] Dispatched cart-cleared event');
+      }
+      
+      console.log('🔍 [clearCart] Complete cart clearance finished');
+      return true;
+    } catch (error) {
+      console.error('🔍 [clearCart] Error clearing cart:', error);
+      return false;
+    }
+  }
 }
 
 // Create and export singleton instance
