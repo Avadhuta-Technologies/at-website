@@ -4,7 +4,8 @@ import { generatePodSlug } from './slugUtils.js';
 
 export class SummaryShared {
   constructor() {
-    this.init();
+    // Don't call init() in constructor since it's async
+    // init() will be called explicitly when needed
   }
 
   async init() {
@@ -1124,6 +1125,7 @@ export class SummaryShared {
 
   navigateToStep(step) {
     console.log('🔍 [navigateToStep] Dispatching step-changed event for step:', step);
+    console.log('🔍 [navigateToStep] Called from:', new Error().stack?.split('\n')[2] || 'unknown');
     window.dispatchEvent(new CustomEvent('step-changed', { detail: { step } }));
   }
 

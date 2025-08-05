@@ -1,0 +1,59 @@
+# AT Website Project Rules for Cursor AI
+
+## CRITICAL STYLING RULES
+- NEVER use gradient backgrounds - only solid colors
+- Match home page styling patterns exactly
+- Use Tailwind CSS for most styling, SCSS only for complex components
+- Follow established color palette: primary (#2563eb), secondary (#64748b), accent (#f59e0b)
+
+## COMPONENT STRUCTURE (MANDATORY)
+All Astro components must follow this exact order:
+1. Imports (Astro, React, Vue, etc.)
+2. Props interface/type definitions  
+3. Data fetching (getStaticPaths, etc.)
+4. Component logic
+5. HTML structure
+6. Tailwind classes
+7. Event handlers
+8. Accessibility attributes
+9. SCSS styles (if needed)
+
+## FILE NAMING CONVENTIONS
+- Components: PascalCase.astro (HeroSection.astro)
+- Content: _sectionName.js for data, .md for markdown
+- Pages: kebab-case.astro (explore-pods.astro)
+- Utilities: camelCase.ts (podUtils.ts)
+
+## CONTENT MANAGEMENT
+- Home page: Use /content/pod.js for general content
+- Pod details: Use /content/pods/{pod_file}.md for detailed information
+- Keep content structure consistent across all sections
+
+## TECHNOLOGY STACK
+- Framework: Astro 5.12.0
+- Styling: Tailwind CSS 3.3.3 + SCSS
+- Deployment: Vercel
+- Language: TypeScript preferred
+
+## FORBIDDEN PRACTICES
+- No gradient backgrounds
+- No inline styles
+- No components without following mandatory structure
+- No skipping TypeScript types
+- No ignoring accessibility requirements
+
+## QUALITY REQUIREMENTS
+- Responsive design implementation
+- Accessibility attributes (aria-labels, alt text, etc.)
+- Error handling
+- Performance optimization
+- TypeScript types for all functions and components
+
+## REFERENCE DOCUMENTATION
+- PROJECT_DOCUMENTATION.md - Complete project overview
+- DEVELOPMENT_RULES.md - Detailed development rules  
+- STYLE_GUIDE.md - Visual design system
+- COMPONENT_LIBRARY.md - Component catalog
+- QUICK_REFERENCE.md - Daily development guide
+
+Always maintain consistency with existing code patterns and refer to the full documentation files for complete guidelines. 

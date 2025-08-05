@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SimpleRecaptchaWidget from '../components/shared/SimpleRecaptchaWidget.astro';
+import { getSiteKey } from '../config/recaptcha';
 ---
 
 <Layout title="reCAPTCHA Test" description="Testing reCAPTCHA integration">
@@ -20,7 +21,7 @@ import SimpleRecaptchaWidget from '../components/shared/SimpleRecaptchaWidget.as
           <!-- reCAPTCHA Widget -->
           <div class="flex justify-center">
             <SimpleRecaptchaWidget 
-              siteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+              siteKey={getSiteKey('contact')}
               theme="light"
               size="normal"
               callback="onTestRecaptchaSuccess"
