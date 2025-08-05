@@ -1417,10 +1417,10 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
     async updateSelectedPacksDisplay() {
       console.log('🔍 [updateSelectedPacksDisplay] ===== STARTING UPDATE =====');
-      
+
       const selectedPacksSection = document.getElementById('selected-packs-section');
       const selectedPacksList = document.getElementById('selected-packs-list');
-      
+
       if (!selectedPacksSection || !selectedPacksList) {
         console.error('🔍 [updateSelectedPacksDisplay] Selected packs elements not found');
         return;
@@ -1429,7 +1429,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       // Get current cart to check if there are selected packs
       const cart = await this.summaryShared.getCart();
       const selectedPacks = cart.filter((item) => item.type === 'pack');
-      
+
       console.log('🔍 [updateSelectedPacksDisplay] Selected packs count:', selectedPacks.length);
 
       if (selectedPacks.length === 0) {
@@ -1440,12 +1440,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         // Show the section and update content if packs are selected
         selectedPacksSection.classList.remove('hidden');
         console.log('🔍 [updateSelectedPacksDisplay] Packs selected, showing section');
-        
+
         const newContent = await this.renderSelectedPacksWithDelete();
         console.log('🔍 [updateSelectedPacksDisplay] New content length:', newContent.length);
         selectedPacksList.innerHTML = newContent;
       }
-      
+
       console.log('🔍 [updateSelectedPacksDisplay] ===== UPDATE COMPLETED =====');
     }
 
@@ -1644,7 +1644,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
         // Note: Team and capabilities elements were removed from HTML structure
         // Only update description element which still exists
-        console.log('🔍 [updatePodDetails] Team and capabilities elements removed from HTML structure - skipping updates');
+        console.log(
+          '🔍 [updatePodDetails] Team and capabilities elements removed from HTML structure - skipping updates'
+        );
 
         // Add event listener for view details button
         const viewDetailsBtn = document.getElementById('view-pod-details-btn');
@@ -1798,7 +1800,11 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     }
 
     async updatePricingForReservationPeriod(months) {
-      console.log('🔍 [updatePricingForReservationPeriod] Duration changed to', months, 'months (for estimation only)');
+      console.log(
+        '🔍 [updatePricingForReservationPeriod] Duration changed to',
+        months,
+        'months (for estimation only)'
+      );
 
       try {
         // Get current cart
@@ -2225,20 +2231,26 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [Step2] Button ID:', continueBtn.id);
           console.log('🔍 [Step2] About to call nextStep()');
           console.log('🔍 [Step2] this.summaryShared available:', typeof this.summaryShared);
-          console.log('🔍 [Step2] this.summaryShared.nextStep available:', typeof this.summaryShared?.nextStep);
-          
+          console.log(
+            '🔍 [Step2] this.summaryShared.nextStep available:',
+            typeof this.summaryShared?.nextStep
+          );
+
           // Debug: Check cart state before navigation
           const cart = await this.summaryShared.getCart();
           const selectedPod = cart.find((item) => item.type === 'pod');
           console.log('🔍 [Step2] Cart state before navigation:', cart);
           console.log('🔍 [Step2] Selected pod before navigation:', selectedPod);
-          
+
           // Try multiple approaches to call nextStep
           try {
             if (this.summaryShared && typeof this.summaryShared.nextStep === 'function') {
               this.summaryShared.nextStep();
               console.log('🔍 [Step2] nextStep() called successfully');
-            } else if (window.summaryShared && typeof window.summaryShared.nextStep === 'function') {
+            } else if (
+              window.summaryShared &&
+              typeof window.summaryShared.nextStep === 'function'
+            ) {
               window.summaryShared.nextStep();
               console.log('🔍 [Step2] nextStep() called via window.summaryShared');
             } else {
@@ -2577,13 +2589,16 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         this.clearAllStorageReferences();
 
         console.log('🔍 [clearFormAndCart] ===== CLEAR OPERATION COMPLETED =====');
-        
+
         // Navigate back to step 1 after successful clearing
-        console.log('🔍 [clearFormAndCart] Navigating back to step 1...');
+        // console.log('🔍 [clearFormAndCart] Navigating back to step 1...');
         setTimeout(() => {
-          this.summaryShared.navigateToStep(1);
+          //   this.summaryShared.navigateToStep(1);
+          // Navigate to the home page after clearing
+          if (typeof window !== 'undefined') {
+            window.location.href = '/';
+          }
         }, 500); // Small delay to ensure clearing is complete
-        
       } catch (error) {
         console.error('🔍 [clearFormAndCart] Error clearing form and cart:', error);
       }
@@ -2683,50 +2698,52 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     // Clear all storage references related to cart, pods, and packs
     clearAllStorageReferences() {
       console.log('🔍 [clearAllStorageReferences] Clearing all storage references...');
-      
+
       try {
         // Clear any remaining localStorage items that might be related
         const localStorageKeys = Object.keys(localStorage);
-        const keysToRemove = localStorageKeys.filter(key => 
-          key.includes('cart') || 
-          key.includes('pod') || 
-          key.includes('pack') || 
-          key.includes('reservation') ||
-          key.includes('summary') ||
-          key.includes('step')
+        const keysToRemove = localStorageKeys.filter(
+          (key) =>
+            key.includes('cart') ||
+            key.includes('pod') ||
+            key.includes('pack') ||
+            key.includes('reservation') ||
+            key.includes('summary') ||
+            key.includes('step')
         );
-        
-        keysToRemove.forEach(key => {
+
+        keysToRemove.forEach((key) => {
           localStorage.removeItem(key);
           console.log('🔍 [clearAllStorageReferences] Removed localStorage key:', key);
         });
-        
+
         // Clear any sessionStorage items
         const sessionStorageKeys = Object.keys(sessionStorage);
-        const sessionKeysToRemove = sessionStorageKeys.filter(key => 
-          key.includes('cart') || 
-          key.includes('pod') || 
-          key.includes('pack') || 
-          key.includes('reservation') ||
-          key.includes('summary') ||
-          key.includes('step')
+        const sessionKeysToRemove = sessionStorageKeys.filter(
+          (key) =>
+            key.includes('cart') ||
+            key.includes('pod') ||
+            key.includes('pack') ||
+            key.includes('reservation') ||
+            key.includes('summary') ||
+            key.includes('step')
         );
-        
-        sessionKeysToRemove.forEach(key => {
+
+        sessionKeysToRemove.forEach((key) => {
           sessionStorage.removeItem(key);
           console.log('🔍 [clearAllStorageReferences] Removed sessionStorage key:', key);
         });
-        
+
         // Clear any cookies that might be related
         const cookies = document.cookie.split(';');
-        cookies.forEach(cookie => {
+        cookies.forEach((cookie) => {
           const [name] = cookie.split('=');
           if (name && (name.includes('cart') || name.includes('pod') || name.includes('pack'))) {
             document.cookie = `${name.trim()}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
             console.log('🔍 [clearAllStorageReferences] Removed cookie:', name.trim());
           }
         });
-        
+
         console.log('🔍 [clearAllStorageReferences] All storage references cleared successfully');
       } catch (error) {
         console.error('🔍 [clearAllStorageReferences] Error clearing storage references:', error);
@@ -2768,7 +2785,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         };
         document.head.appendChild(script);
       } else {
-        console.log('🔍 [initializeRecaptcha] reCAPTCHA script already loaded, checking if ready...');
+        console.log(
+          '🔍 [initializeRecaptcha] reCAPTCHA script already loaded, checking if ready...'
+        );
         // Check if grecaptcha is ready
         if (window.grecaptcha && window.grecaptcha.ready) {
           window.grecaptcha.ready(() => {
@@ -2821,7 +2840,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         // Create new widget container
         const widgetContainer = document.createElement('div');
         widgetContainer.className = 'g-recaptcha';
-        
+
         // Get the appropriate site key based on current pod or use default reservation config
         let siteKey;
         if (currentPodSlug) {
@@ -2833,14 +2852,14 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           const { getSiteKey } = await import('../../config/recaptcha');
           siteKey = getSiteKey('reservation');
         }
-        
+
         widgetContainer.setAttribute('data-sitekey', siteKey);
         widgetContainer.setAttribute('data-theme', 'light');
         widgetContainer.setAttribute('data-size', 'normal');
         widgetContainer.setAttribute('data-callback', 'onReservationRecaptchaSuccess');
         widgetContainer.setAttribute('data-expired-callback', 'onReservationRecaptchaExpired');
         widgetContainer.setAttribute('data-error-callback', 'onReservationRecaptchaError');
-        
+
         recaptchaContainer.appendChild(widgetContainer);
 
         // Render the widget
@@ -2853,12 +2872,14 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             'expired-callback': 'onReservationRecaptchaExpired',
             'error-callback': 'onReservationRecaptchaError',
           });
-          
-          console.log('🔍 [renderRecaptchaWidget] reCAPTCHA widget rendered successfully with ID:', widgetId);
-          
+
+          console.log(
+            '🔍 [renderRecaptchaWidget] reCAPTCHA widget rendered successfully with ID:',
+            widgetId
+          );
+
           // Store widget ID for future reference
           recaptchaContainer.setAttribute('data-widget-id', widgetId.toString());
-          
         } catch (error) {
           console.error('🔍 [renderRecaptchaWidget] Failed to render reCAPTCHA widget:', error);
           this.summaryShared.showNotification(
