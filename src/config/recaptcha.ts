@@ -2,13 +2,13 @@
 export const recaptchaConfig = {
   // Site keys (public keys for client-side)
   siteKeys: {
-    v2: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY_V2 || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Default test key
+    v2: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY_V2 || '6LecGJsrAAAAAASV4hD536n5vaOdjrpnFqv_5Rp1', // Default test key
     v3: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY_V3 || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Default test key
   },
   
   // Secret keys (private keys for server-side verification)
   secretKeys: {
-    v2: import.meta.env.RECAPTCHA_SECRET_KEY_V2 || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe', // Default test key
+    v2: import.meta.env.RECAPTCHA_SECRET_KEY_V2 || '6LecGJsrAAAAAEHyMR4AieCQVGSCcxKALwWGOMgj', // Default test key
     v3: import.meta.env.RECAPTCHA_SECRET_KEY_V3 || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe', // Default test key
   },
   
