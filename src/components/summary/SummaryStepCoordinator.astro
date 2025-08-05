@@ -42,6 +42,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         const newStep = e.detail.step;
         console.log('🔍 [StepCoordinator] Step coordinator received step change:', newStep);
         console.log('🔍 [StepCoordinator] Current step before change:', this.currentStep);
+        console.log('🔍 [StepCoordinator] Event detail:', e.detail);
 
         if (newStep >= 1 && newStep <= 3) {
           this.currentStep = newStep;
@@ -379,8 +380,15 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         return;
       }
 
-      // Get reCAPTCHA site key - use a default test key for now
-      const recaptchaSiteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Default test key
+      // Debug: Check cart state before loading step 3
+      const cart = await this.summaryShared.getCart();
+      const selectedPod = cart.find((item) => item.type === 'pod');
+      console.log('🔍 [loadStep3] Cart state:', cart);
+      console.log('🔍 [loadStep3] Selected pod:', selectedPod);
+
+      // Get reCAPTCHA site key from configuration
+      const { getSiteKey } = await import('../../config/recaptcha');
+      const recaptchaSiteKey = getSiteKey('reservation');
 
       coordinator.innerHTML = `
         <div id="step-3-content" class="step-content">
@@ -651,16 +659,19 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
     }
 
     async initializeStep3() {
-      console.log('🔍 Initializing Step 3...');
+      console.log('🔍 [initializeStep3] Starting Step 3 initialization...');
       const cart = await this.summaryShared.getCart();
       const selectedPod = cart.find((item) => item.type === 'pod');
       const selectedPacks = cart.filter((item) => item.type === 'pack');
 
-      console.log('🔍 Step 3 - Selected pod:', selectedPod);
-      console.log('🔍 Step 3 - Selected packs:', selectedPacks);
+      console.log('🔍 [initializeStep3] Cart state:', cart);
+      console.log('🔍 [initializeStep3] Selected pod:', selectedPod);
+      console.log('🔍 [initializeStep3] Selected packs:', selectedPacks);
 
       if (selectedPod) {
+        console.log('🔍 [initializeStep3] Pod found, updating final summary...');
         await this.updateFinalSummary(selectedPod, selectedPacks);
+        console.log('🔍 [initializeStep3] Final summary updated successfully');
       } else {
         console.log('🔍 [initializeStep3] No pod found, redirecting to Step 1');
         this.summaryShared.showNotification('Please select a NovaPod first to proceed', 'warning');
@@ -2205,7 +2216,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       // Back button removed from Step 2
 
       // Continue button (Step 2 only) - using event delegation
-      document.addEventListener('click', (e) => {
+      document.addEventListener('click', async (e) => {
         const target = e.target;
         const continueBtn = target.closest('#step2-continue-btn, #step2-continue-btn-selected');
 
@@ -2215,6 +2226,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           console.log('🔍 [Step2] About to call nextStep()');
           console.log('🔍 [Step2] this.summaryShared available:', typeof this.summaryShared);
           console.log('🔍 [Step2] this.summaryShared.nextStep available:', typeof this.summaryShared?.nextStep);
+          
+          // Debug: Check cart state before navigation
+          const cart = await this.summaryShared.getCart();
+          const selectedPod = cart.find((item) => item.type === 'pod');
+          console.log('🔍 [Step2] Cart state before navigation:', cart);
+          console.log('🔍 [Step2] Selected pod before navigation:', selectedPod);
           
           // Try multiple approaches to call nextStep
           try {
@@ -2227,12 +2244,14 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             } else {
               console.error('🔍 [Step2] summaryShared.nextStep not available');
               // Fallback: manually navigate to step 3
+              console.log('🔍 [Step2] About to dispatch step-changed event manually');
               window.dispatchEvent(new CustomEvent('step-changed', { detail: { step: 3 } }));
               console.log('🔍 [Step2] Manually dispatched step-changed event');
             }
           } catch (error) {
             console.error('🔍 [Step2] Error calling nextStep:', error);
             // Fallback: manually navigate to step 3
+            console.log('🔍 [Step2] About to dispatch step-changed event in catch block');
             window.dispatchEvent(new CustomEvent('step-changed', { detail: { step: 3 } }));
             console.log('🔍 [Step2] Fallback: manually dispatched step-changed event');
           }
@@ -2609,26 +2628,26 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
         // Update elements with data-cart-count attribute
         cartCountElements.forEach((element) => {
-          element.textContent = count.toString();
+          (element as HTMLElement).textContent = count.toString();
           element.setAttribute('data-cart-count', count.toString());
 
           // Hide element if count is 0
           if (count === 0) {
-            element.style.display = 'none';
+            (element as HTMLElement).style.display = 'none';
           } else {
-            element.style.display = 'inline';
+            (element as HTMLElement).style.display = 'inline';
           }
         });
 
         // Update cart badge elements
         cartBadges.forEach((element) => {
-          element.textContent = count.toString();
+          (element as HTMLElement).textContent = count.toString();
 
           // Hide element if count is 0
           if (count === 0) {
-            element.style.display = 'none';
+            (element as HTMLElement).style.display = 'none';
           } else {
-            element.style.display = 'inline';
+            (element as HTMLElement).style.display = 'inline';
           }
         });
 
@@ -2645,12 +2664,12 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         commonSelectors.forEach((selector) => {
           const elements = document.querySelectorAll(selector);
           elements.forEach((element) => {
-            element.textContent = count.toString();
+            (element as HTMLElement).textContent = count.toString();
 
             if (count === 0) {
-              element.style.display = 'none';
+              (element as HTMLElement).style.display = 'none';
             } else {
-              element.style.display = 'inline';
+              (element as HTMLElement).style.display = 'inline';
             }
           });
         });
@@ -2802,7 +2821,20 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
         // Create new widget container
         const widgetContainer = document.createElement('div');
         widgetContainer.className = 'g-recaptcha';
-        widgetContainer.setAttribute('data-sitekey', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'); // Default test key
+        
+        // Get the appropriate site key based on current pod or use default reservation config
+        let siteKey;
+        if (currentPodSlug) {
+          // Import the function dynamically since we're in a client-side context
+          const { getPodSiteKey } = await import('../../config/recaptcha');
+          siteKey = getPodSiteKey(currentPodSlug);
+        } else {
+          // Import the function dynamically since we're in a client-side context
+          const { getSiteKey } = await import('../../config/recaptcha');
+          siteKey = getSiteKey('reservation');
+        }
+        
+        widgetContainer.setAttribute('data-sitekey', siteKey);
         widgetContainer.setAttribute('data-theme', 'light');
         widgetContainer.setAttribute('data-size', 'normal');
         widgetContainer.setAttribute('data-callback', 'onReservationRecaptchaSuccess');
@@ -2813,8 +2845,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
         // Render the widget
         try {
-          const widgetId = window.grecaptcha.render(widgetContainer, {
-            sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Default test key
+          const widgetId = (window as any).grecaptcha.render(widgetContainer, {
+            sitekey: siteKey,
             theme: 'light',
             size: 'normal',
             callback: 'onReservationRecaptchaSuccess',

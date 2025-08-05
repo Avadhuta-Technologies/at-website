@@ -1,3 +1,7 @@
+---
+import { getSiteKey } from '../config/recaptcha';
+---
+
 <div
   class="wow fadeInUp relative mb-12 overflow-hidden rounded-[5px] bg-primary py-[60px] px-11 text-center lg:px-8"
   data-wow-delay=".1s"
@@ -345,8 +349,9 @@
         try {
           // Execute invisible reCAPTCHA
           if (window.recaptchaUtils) {
-            // Get site key from environment or use test key as fallback
-            const siteKey = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // This should be dynamic based on environment
+            // Get site key from configuration
+            const { getSiteKey } = await import('../config/recaptcha');
+            const siteKey = getSiteKey('newsletter');
             const recaptchaResponse = await window.recaptchaUtils.execute(siteKey, 'newsletter_signup');
             
             // Submit form data with reCAPTCHA response
