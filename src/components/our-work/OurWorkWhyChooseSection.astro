@@ -14,41 +14,39 @@ const { data } = Astro.props;
 ---
 
 <!-- Why Choose Section -->
-<section class="py-20 ">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">{data.title}</h2>
+<section class="py-20 md:py-32 relative overflow-hidden">
+  <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4">{data.title}</h2>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
       {data.features.map((feature, index) => (
         <div class="text-center group">
-          <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+          <div class="w-16 h-16 bg-mint-100 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 border border-mint-200 shadow-sm">
             {index === 0 && (
-              <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-8 h-8 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
             )}
             {index === 1 && (
-              <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-8 h-8 text-cerulean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
               </svg>
             )}
             {index === 2 && (
-              <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-8 h-8 text-graphite-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
               </svg>
             )}
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-          <p class="text-gray-600">{feature.description}</p>
+          <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-4">{feature.title}</h3>
+          <p class="text-graphite-600 font-inter leading-relaxed">{feature.description}</p>
         </div>
       ))}
     </div>
   </div>
 </section>
-
-
 
 <script>
   // Component-specific animations

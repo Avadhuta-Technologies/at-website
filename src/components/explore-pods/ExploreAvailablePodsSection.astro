@@ -30,8 +30,12 @@ const validPods = pods.filter(pod =>
   'name' in pod && 
   'tagline' in pod && 
   'idealFor' in pod && 
-  'whatsInPod' in pod
+  'whatsInPod' in pod &&
+  'basePriceINR' in pod &&
+  'basePriceUSD' in pod &&
+  'discountPercentage' in pod
 ) as Array<{
+  id?: string;
   name: string;
   tagline: string;
   idealFor: string[];
@@ -45,17 +49,20 @@ const validPods = pods.filter(pod =>
   whyTrust: string[];
   pastUseCases: string[];
   pricing: string[];
+  basePriceINR: number;
+  basePriceUSD: number;
+  discountPercentage: number;
 }>;
 ---
 
-<section id="pods-section" class="py-20 ">
-  <div class="container mx-auto px-4">
+<section id="pods-section" class="py-20 relative overflow-hidden">
+  <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
     <!-- Section Header -->
     <div class="max-w-3xl mx-auto text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 gradient-title">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4">
         {data.title}
       </h2>
-      <p class="text-lg text-gray-600 leading-relaxed">
+      <p class="text-lg font-inter text-graphite-600 leading-relaxed">
         {data.subtitle}
       </p>
     </div>

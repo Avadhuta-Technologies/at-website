@@ -6,15 +6,28 @@ export interface Props {
 const { idealFor } = Astro.props;
 ---
 
-<section class="py-16">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 gradient-title">Who It's For</h2>
-      <p class="text-lg text-gray-600">Is this pack the right fit for you?</p>
+<section class="py-20 relative overflow-hidden">
+  <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold mb-4 text-graphite-900">Who It's For</h2>
+      <p class="text-lg font-inter text-graphite-600">Is this pack the right fit for you?</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
       {idealFor.map((item) => (
-        <div class="bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-2xl p-8 border border-[#22c55e]/200 text-center font-semibold text-[#22c55e]/900 shadow-sm">{item}</div>
+        <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Card Background -->
+          <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+          
+          <!-- Card Content -->
+          <div class="relative p-6 text-center">
+            <div class="w-12 h-12 bg-gradient-to-r from-mint-500 to-cerulean-500 rounded-lg flex items-center justify-center mx-auto mb-4 shadow-md group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </div>
+            <p class="font-inter font-semibold text-graphite-900">{item}</p>
+          </div>
+        </div>
       ))}
     </div>
   </div>

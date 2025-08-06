@@ -11,18 +11,25 @@ const { testimonials } = Astro.props;
 ---
 
 {testimonials && testimonials.length > 0 && (
-  <section class="py-16">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 gradient-title">Testimonials</h2>
-        <p class="text-lg text-gray-600">What our customers say</p>
+  <section class="py-20 relative overflow-hidden">
+    <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-inter font-bold mb-4 text-graphite-900">Testimonials</h2>
+        <p class="text-lg font-inter text-graphite-600">What our customers say</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {testimonials.map((t) => (
-          <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8 border border-green-200 shadow-md">
-            <p class="text-lg text-gray-800 italic mb-4">"{t.quote}"</p>
-            <div class="font-bold text-blue-900">{t.author}</div>
-            <div class="text-sm text-gray-500">{t.role}</div>
+          <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+            <!-- Card Background -->
+            <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+            
+            <!-- Card Content -->
+            <div class="relative p-6">
+              <div class="text-4xl text-mint-100 mb-4 font-inter">"</div>
+              <p class="text-lg font-inter text-graphite-800 italic mb-4 leading-relaxed">"{t.quote}"</p>
+              <div class="font-inter font-bold text-cerulean-900">{t.author}</div>
+              <div class="text-sm font-inter text-graphite-500">{t.role}</div>
+            </div>
           </div>
         ))}
       </div>

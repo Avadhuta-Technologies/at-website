@@ -6,27 +6,40 @@ export interface Props {
 const { solutionHighlights } = Astro.props;
 ---
 
-<section class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <div class="max-w-4xl mx-auto">
-      <!-- Section Header -->
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Solution Highlights
-        </h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-primary-600 to-primary-700 mx-auto rounded-full"></div>
-      </div>
-      
-      <!-- Solution Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<section class="py-20 relative overflow-hidden">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4 gradient-title">Solution Highlights</h2>
+      <p class="text-lg font-inter text-graphite-600 leading-relaxed">Key features and solutions delivered</p>
+    </div>
+    
+    <div class="max-w-6xl mx-auto">
+      <div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
         {solutionHighlights.map((highlight, index) => (
-          <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
-            <div class="flex items-start">
-              <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                <span class="text-white font-semibold text-sm">{index + 1}</span>
+          <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+            <!-- Card Background - Solid color instead of gradient -->
+            <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+            
+            <!-- Card Content -->
+            <div class="relative p-6 flex flex-col h-full">
+              <!-- Step Header with Icon and Number -->
+              <div class="flex items-start justify-between mb-5">
+                <div class="w-14 h-14 bg-mint-100 border-mint-200 text-mint-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
+                  <span class="text-2xl">✨</span>
+                </div>
+                
+                <!-- Step Number Badge -->
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
+                  Step {index + 1}
+                </span>
               </div>
-              <div>
-                <p class="text-gray-700 leading-relaxed">
+              
+              <!-- Title and Description -->
+              <div class="mb-5">
+                <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-3 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
+                  Solution #{index + 1}
+                </h3>
+                <p class="text-graphite-600 leading-relaxed font-inter line-clamp-3">
                   {highlight}
                 </p>
               </div>

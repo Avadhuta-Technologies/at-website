@@ -87,14 +87,14 @@ industries.forEach((industry, index) => {
 });
 ---
 
-<section id="case-studies-grid" class="pb-20">
-  <div class="container mx-auto">
+<section id="case-studies-grid" class="py-20 relative overflow-hidden">
+  <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
 
     <!-- Tabs Navigation -->
-    <div class="flex flex-wrap justify-center mb-12">
+    <div class="flex flex-wrap justify-center mb-16">
       <div class="flex flex-wrap gap-1 md:gap-2 justify-center">
         <button 
-          class={`tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 ${initialTab === 'all' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+          class={`tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-inter font-medium rounded-lg transition-all duration-300 ${initialTab === 'all' ? 'bg-gradient-to-r from-mint-500 to-cerulean-500 text-white shadow-sm' : 'glass border-graphite-300/50 text-graphite-700 hover:bg-graphite-50/50 hover:border-graphite-400/70'}`}
           data-tab="all"
         >
           All 
@@ -110,7 +110,7 @@ industries.forEach((industry, index) => {
           
           return (
             <button 
-              class={`tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium rounded-md transition-all duration-200 ${isActive ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+              class={`tab-button px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-inter font-medium rounded-lg transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-mint-500 to-cerulean-500 text-white shadow-sm' : 'glass border-graphite-300/50 text-graphite-700 hover:bg-graphite-50/50 hover:border-graphite-400/70'}`}
               data-tab={industryTab}
             >
               {industry}
@@ -129,9 +129,9 @@ industries.forEach((industry, index) => {
           ))
         ) : (
           <div class="col-span-full text-center py-12">
-            <p class="text-gray-500">No case studies found.</p>
-            <p class="text-gray-400 text-sm mt-2">Debug: studies length = {studies?.length}</p>
-            <p class="text-gray-400 text-sm">Debug: caseStudiesData exists = {caseStudiesData ? 'Yes' : 'No'}</p>
+            <p class="text-graphite-500 font-inter">No case studies found.</p>
+            <p class="text-graphite-400 text-sm mt-2 font-inter">Debug: studies length = {studies?.length}</p>
+            <p class="text-graphite-400 text-sm font-inter">Debug: caseStudiesData exists = {caseStudiesData ? 'Yes' : 'No'}</p>
           </div>
         )}
       </div>
@@ -262,11 +262,11 @@ industries.forEach((industry, index) => {
           
           // Update button states
           tabButtons.forEach(btn => {
-            btn.classList.remove('active', 'bg-primary-600', 'text-white');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
+            btn.classList.remove('active', 'bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'shadow-sm');
+            btn.classList.add('glass', 'border-graphite-300/50', 'text-graphite-700');
           });
-          targetButton.classList.add('active', 'bg-primary-600', 'text-white');
-          targetButton.classList.remove('bg-gray-100', 'text-gray-700');
+          targetButton.classList.add('active', 'bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'shadow-sm');
+          targetButton.classList.remove('glass', 'border-graphite-300/50', 'text-graphite-700');
           
           // Show/hide tab content
           tabContents.forEach(content => {
@@ -308,18 +308,19 @@ industries.forEach((industry, index) => {
     });
 
     // Function to update URL without page reload
-    function updateURL(tabName) {
-      const url = new URL(window.location);
+    function updateURL(tabName: string) {
+      const url = new URL(window.location.href);
       if (tabName === 'all') {
         url.searchParams.delete('industry');
       } else {
         // Find the industry name that corresponds to this tab slug
         const availableIndustries = Array.from(document.querySelectorAll('.tab-button'))
-          .map(btn => btn.textContent.trim())
-          .filter(text => text !== 'All');
+          .map(btn => btn.textContent?.trim())
+          .filter(text => text && text !== 'All');
         
         // Find the industry that matches this tab slug
-        const matchingIndustry = availableIndustries.find(industry => {
+        const matchingIndustry = availableIndustries.find((industry: string | undefined) => {
+          if (!industry) return false;
           const industrySlug = industry.toLowerCase()
             .replace(/\s*\/\s*/g, '-') // Replace "/" with "-"
             .replace(/\s*\(\s*/g, '-') // Replace "(" with "-"
@@ -345,11 +346,11 @@ industries.forEach((industry, index) => {
         
         // Update button states
         tabButtons.forEach(btn => {
-          btn.classList.remove('active', 'bg-primary-600', 'text-white');
-          btn.classList.add('bg-gray-100', 'text-gray-700');
+          btn.classList.remove('active', 'bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'shadow-sm');
+          btn.classList.add('glass', 'border-graphite-300/50', 'text-graphite-700');
         });
-        button.classList.add('active', 'bg-primary-600', 'text-white');
-        button.classList.remove('bg-gray-100', 'text-gray-700');
+        button.classList.add('active', 'bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'shadow-sm');
+        button.classList.remove('glass', 'border-graphite-300/50', 'text-graphite-700');
         
         // Show/hide tab content
         tabContents.forEach(content => {
@@ -366,7 +367,9 @@ industries.forEach((industry, index) => {
         });
 
         // Update URL
-        updateURL(targetTab);
+        if (targetTab) {
+          updateURL(targetTab);
+        }
       });
     });
 
@@ -377,7 +380,7 @@ industries.forEach((industry, index) => {
       
       if (!industry) {
         // No industry parameter, show "All" tab
-        const allButton = document.querySelector('[data-tab="all"]');
+        const allButton = document.querySelector('[data-tab="all"]') as HTMLElement;
         if (allButton) {
           allButton.click();
         }
@@ -390,28 +393,28 @@ industries.forEach((industry, index) => {
       // Get available industries from the page
       const availableIndustries = Array.from(document.querySelectorAll('.tab-button'))
         .map(btn => btn.textContent?.trim())
-        .filter(text => text && text !== 'All');
+        .filter((text): text is string => text !== null && text !== undefined && text !== 'All');
       
       // Simple fuzzy matching for client-side
-      function findMatchingIndustry(industryParam, availableIndustries) {
+      function findMatchingIndustry(industryParam: string, availableIndustries: string[]): string | null {
         if (!industryParam) return null;
         
         const normalizedParam = industryParam.toLowerCase().trim();
         
         // First try exact match
-        const exactMatch = availableIndustries.find(industry => 
+        const exactMatch = availableIndustries.find((industry: string) => 
           industry.toLowerCase() === normalizedParam
         );
         if (exactMatch) return exactMatch;
         
         // Then try partial match
-        const partialMatch = availableIndustries.find(industry => {
+        const partialMatch = availableIndustries.find((industry: string) => {
           const normalizedIndustry = industry.toLowerCase();
           return normalizedIndustry.includes(normalizedParam) || 
                  normalizedParam.includes(normalizedIndustry);
         });
         
-        return partialMatch;
+        return partialMatch || null;
       }
       
       const matchedIndustry = findMatchingIndustry(decodedParam, availableIndustries);
@@ -427,13 +430,13 @@ industries.forEach((industry, index) => {
           .replace(/^-|-$/g, ''); // Remove leading/trailing dashes
         
         // Find and click the appropriate tab button
-        const targetButton = document.querySelector(`[data-tab="${targetTab}"]`);
+        const targetButton = document.querySelector(`[data-tab="${targetTab}"]`) as HTMLElement;
         if (targetButton) {
           targetButton.click();
         }
       } else {
         // No match found, show "All" tab
-        const allButton = document.querySelector('[data-tab="all"]');
+        const allButton = document.querySelector('[data-tab="all"]') as HTMLElement;
         if (allButton) {
           allButton.click();
         }

@@ -7,15 +7,15 @@ const { addOns } = Astro.props;
 ---
 
 {addOns && addOns.length > 0 && (
-  <section class="py-16">
-    <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 gradient-title">Add-Ons You Can Include</h2>
-        <p class="text-lg text-gray-600">Customize your pack for even more value</p>
+  <section class="py-20 relative overflow-hidden">
+    <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-inter font-bold mb-4 text-graphite-900">Add-Ons You Can Include</h2>
+        <p class="text-lg font-inter text-graphite-600">Customize your pack for even more value</p>
       </div>
-      <div class="flex flex-wrap justify-center gap-4">
+      <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
         {addOns.map((addon) => (
-          <span class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-semibold text-sm shadow-sm">{addon}</span>
+          <span class="inline-block bg-cerulean-100 text-cerulean-700 px-4 py-2 rounded-full font-inter font-semibold text-sm shadow-sm border border-cerulean-200 hover:bg-cerulean-200 hover:text-cerulean-800 transition-all duration-300">{addon}</span>
         ))}
       </div>
     </div>

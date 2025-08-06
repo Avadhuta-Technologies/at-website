@@ -14,22 +14,22 @@ interface Props {
 const { pod } = Astro.props;
 ---
 
-<section class="py-20 bg-gray-900">
-  <div class="container mx-auto px-4">
+<section class="py-12 bg-graphite-900">
+  <div class="container mx-auto max-w-screen-2xl px-4">
     <div class="max-w-4xl mx-auto text-center">
       
       <!-- Main Headline -->
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-inter font-bold text-white mb-4 leading-tight">
         Ready to Launch with This Pod?
       </h2>
       
       <!-- Subtitle -->
-      <p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-lg md:text-xl font-inter text-graphite-300 mb-6 leading-relaxed max-w-3xl mx-auto">
         Start your project today and get your dedicated team of experts
       </p>
       
       <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
         <button 
           id={`pod-ready-cta-${pod.id}`}
           data-add-to-cart
@@ -39,38 +39,39 @@ const { pod } = Astro.props;
           data-item-description={pod.tagline}
           data-item-price-inr={pod.basePriceINR}
           data-item-price-usd={pod.basePriceUSD}
-          class="pod-ready-cta-btn inline-flex items-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors duration-200 group"
+          class="pod-ready-cta-btn inline-flex items-center px-6 py-3 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 group shadow-md hover:shadow-lg hover:scale-105"
           data-action="add"
         >
           <span class="cta-text">Reserve Pod</span>
-          <svg class="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
           </svg>
         </button>
         
         <a 
           href="/contact"
-          class="inline-flex items-center px-8 py-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-colors duration-200 group"
+          class="inline-flex items-center px-6 py-3 glass border-white/30 text-white font-inter font-semibold rounded-lg hover:bg-white/10 hover:border-white/50 transition-all duration-300 group hover:scale-105"
         >
           <span>Book Discovery Call</span>
-          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
           </svg>
         </a>
       </div>
       
       <!-- Contact Information -->
-      <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 max-w-md mx-auto">
-        <div class="text-gray-300 mb-3 flex items-center justify-center">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 max-w-md mx-auto">
+        <div class="text-graphite-300 mb-2 flex items-center justify-center text-sm font-inter">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
           </svg>
           Or reach us directly at:
         </div>
-        <div class="space-y-2">
+        <div class="space-y-1">
           <a 
             href="mailto:support@novapod.ai"
-            class="block text-blue-300 hover:text-blue-200 font-medium transition-colors duration-300"
+            onclick="handleEmailClick(event, 'support@novapod.ai')"
+            class="block text-cerulean-300 hover:text-cerulean-200 font-inter font-medium transition-colors duration-300 text-sm cursor-pointer"
           >
             📩 support@novapod.ai
           </a>
@@ -81,6 +82,44 @@ const { pod } = Astro.props;
 </section>
 
 <script>
+  // Handle email click with fallback to browser
+  function handleEmailClick(event: Event, email: string) {
+    // Try to open default mail client
+    const mailtoLink = `mailto:${email}`;
+
+    // Create a temporary link to test if mailto works
+    const testLink = document.createElement('a');
+    testLink.href = mailtoLink;
+
+    // Check if the browser supports mailto protocol
+    if (testLink.protocol === 'mailto:') {
+      // Try to open the mail client
+      try {
+        window.location.href = mailtoLink;
+
+        // Set a timeout to check if mail client opened
+        setTimeout(() => {
+          // If we're still on the same page after 2 seconds,
+          // it likely means no mail client is configured
+          // Open Gmail in browser as fallback
+          const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+          window.open(gmailUrl, '_blank');
+        }, 2000);
+      } catch (error) {
+        // If mailto fails, open Gmail in browser
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+        window.open(gmailUrl, '_blank');
+      }
+    } else {
+      // If mailto protocol is not supported, open Gmail in browser
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+      window.open(gmailUrl, '_blank');
+    }
+
+    // Prevent default behavior
+    event.preventDefault();
+  }
+
   // Get the current pod ID from the button's data attribute
   let currentPodId = '';
   
@@ -133,6 +172,11 @@ const { pod } = Astro.props;
     }, 100);
   });
 
+  // Update CTA button when cart changes
+  window.addEventListener('cart-updated', function() {
+    updatePodReadyCTA();
+  });
+
   // Function to update pod ready CTA button based on cart state
   async function updatePodReadyCTA() {
     try {
@@ -178,8 +222,8 @@ const { pod } = Astro.props;
           console.log('🔵 [PodReadyToLaunchSection] Pod is in cart - updating to "Remove Pod"');
           
           // Update classes
-          button.classList.remove('bg-primary-600', 'hover:bg-primary-700');
-          button.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
+          button.classList.remove('bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'hover:from-mint-600', 'hover:to-cerulean-600', 'hover:scale-105', 'hover:shadow-lg', 'shadow-md');
+          button.classList.add('text-white', 'hover:text-red-300', 'bg-transparent', 'hover:bg-red-500/20', '!text-white');
           console.log('🔵 [PodReadyToLaunchSection] Updated button classes:', button.className);
           
           // Update action
@@ -190,19 +234,13 @@ const { pod } = Astro.props;
           ctaText.textContent = 'Remove Pod';
           console.log('🔵 [PodReadyToLaunchSection] Updated button text to: Remove Pod');
           
-          // Update icon to trash/remove icon
-          const icon = button.querySelector('svg');
-          if (icon) {
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>';
-            console.log('🔵 [PodReadyToLaunchSection] Updated icon to trash icon');
-          }
         } else {
           // This pod is not in cart - show "Reserve Pod"
           console.log('🔵 [PodReadyToLaunchSection] Pod is not in cart - updating to "Reserve Pod"');
           
           // Update classes
-          button.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
-          button.classList.add('bg-primary-600', 'hover:bg-primary-700');
+          button.classList.remove('text-white', 'hover:text-red-300', 'bg-transparent', 'hover:bg-red-500/20', '!text-white');
+          button.classList.add('bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'hover:from-mint-600', 'hover:to-cerulean-600', 'hover:scale-105', 'hover:shadow-lg', 'shadow-md');
           console.log('🔵 [PodReadyToLaunchSection] Updated button classes:', button.className);
           
           // Update action
@@ -212,80 +250,12 @@ const { pod } = Astro.props;
           // Update text
           ctaText.textContent = 'Reserve Pod';
           console.log('🔵 [PodReadyToLaunchSection] Updated button text to: Reserve Pod');
-          
-          // Update icon back to arrow icon
-          const icon = button.querySelector('svg');
-          if (icon) {
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>';
-            console.log('🔵 [PodReadyToLaunchSection] Updated icon to arrow icon');
-          }
         }
-        
-        console.log('🔵 [PodReadyToLaunchSection] Final button text:', ctaText.textContent);
-        console.log('🔵 [PodReadyToLaunchSection] Final button classes:', button.className);
       } else {
-        console.log('🔵 [PodReadyToLaunchSection] Button or ctaText not found!');
-        console.log('🔵 [PodReadyToLaunchSection] Button:', button);
-        console.log('🔵 [PodReadyToLaunchSection] ctaText:', ctaText);
+        console.log('🔵 [PodReadyToLaunchSection] Button or ctaText not found');
       }
     } catch (error) {
-      console.error('🔵 [PodReadyToLaunchSection] Error updating CTA button:', error);
+      console.error('🔵 [PodReadyToLaunchSection] Error updating pod ready CTA:', error);
     }
   }
-
-  // Handle CTA button clicks
-  document.addEventListener('click', async function(e) {
-    console.log('🔵 [PodReadyToLaunchSection] Click event detected on:', e.target);
-    
-    if (e.target && (e.target as Element).closest('.pod-ready-cta-btn')) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const button = (e.target as Element).closest('.pod-ready-cta-btn') as HTMLElement;
-      if (button) {
-        const action = button.getAttribute('data-action') || 'add';
-        const podId = button.getAttribute('data-item-id');
-        const buttonText = button.querySelector('.cta-text')?.textContent;
-        
-        console.log('🔵 [PodReadyToLaunchSection] CTA button clicked:', { 
-          action, 
-          podId, 
-          buttonText,
-          buttonClasses: button.className 
-        });
-        
-        try {
-          const { SummaryShared } = await import('../../utils/summaryShared.js');
-          const shared = new SummaryShared();
-          
-          if (action === 'add') {
-            // Add pod to cart
-            console.log('🔵 [PodReadyToLaunchSection] Attempting to add pod to cart...');
-            const selectedPod = await shared.selectPodWithConfirmation(podId);
-            const success = !!selectedPod;
-            if (success) {
-              console.log('🔵 [PodReadyToLaunchSection] Pod added to cart successfully');
-              // Navigate to summary page
-              window.location.href = '/summary?step=1';
-            } else {
-              console.log('🔵 [PodReadyToLaunchSection] Failed to add pod to cart');
-            }
-          } else if (action === 'remove') {
-            // Remove pod from cart
-            console.log('🔵 [PodReadyToLaunchSection] Attempting to remove pod from cart...');
-            const success = await shared.removePod();
-            if (success) {
-              console.log('🔵 [PodReadyToLaunchSection] Pod removed from cart successfully');
-              // Update button appearance
-              updatePodReadyCTA();
-            } else {
-              console.log('🔵 [PodReadyToLaunchSection] Failed to remove pod from cart');
-            }
-          }
-        } catch (error) {
-          console.error('🔵 [PodReadyToLaunchSection] Error handling CTA button:', error);
-        }
-      }
-    }
-  });
 </script> 

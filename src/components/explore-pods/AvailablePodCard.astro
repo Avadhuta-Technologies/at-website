@@ -35,50 +35,50 @@ interface ColorClasses {
   iconBg: string;
 }
 
-// Color mapping for different pod types
+// Color mapping for different pod types - using brand colors only
 const getColorClasses = (index: number): ColorClasses => {
   const colors: ColorClasses[] = [
     { 
-      bg: 'bg-blue-50/80', 
-      border: 'border-blue-200/50', 
-      text: 'text-blue-700', 
-      badge: 'bg-blue-100/90 text-blue-800 backdrop-blur-sm',
-      iconBg: 'bg-blue-100/80'
+      bg: 'bg-cerulean-50/80', 
+      border: 'border-cerulean-200/50', 
+      text: 'text-cerulean-700', 
+      badge: 'bg-cerulean-100/90 text-cerulean-800 backdrop-blur-sm',
+      iconBg: 'bg-cerulean-100/80'
     },
     { 
-      bg: 'bg-purple-50/80', 
-      border: 'border-purple-200/50', 
-      text: 'text-purple-700', 
-      badge: 'bg-purple-100/90 text-purple-800 backdrop-blur-sm',
-      iconBg: 'bg-purple-100/80'
+      bg: 'bg-mint-50/80', 
+      border: 'border-mint-200/50', 
+      text: 'text-mint-700', 
+      badge: 'bg-mint-100/90 text-mint-800 backdrop-blur-sm',
+      iconBg: 'bg-mint-100/80'
     },
     { 
-      bg: 'bg-green-50/80', 
-      border: 'border-green-200/50', 
-      text: 'text-green-700', 
-      badge: 'bg-green-100/90 text-green-800 backdrop-blur-sm',
-      iconBg: 'bg-green-100/80'
+      bg: 'bg-graphite-50/80', 
+      border: 'border-graphite-200/50', 
+      text: 'text-graphite-700', 
+      badge: 'bg-graphite-100/90 text-graphite-800 backdrop-blur-sm',
+      iconBg: 'bg-graphite-100/80'
     },
     { 
-      bg: 'bg-pink-50/80', 
-      border: 'border-pink-200/50', 
-      text: 'text-pink-700', 
-      badge: 'bg-pink-100/90 text-pink-800 backdrop-blur-sm',
-      iconBg: 'bg-pink-100/80'
+      bg: 'bg-mint-50/80', 
+      border: 'border-mint-200/50', 
+      text: 'text-mint-700', 
+      badge: 'bg-mint-100/90 text-mint-800 backdrop-blur-sm',
+      iconBg: 'bg-mint-100/80'
     },
     { 
-      bg: 'bg-orange-50/80', 
-      border: 'border-orange-200/50', 
-      text: 'text-orange-700', 
-      badge: 'bg-orange-100/90 text-orange-800 backdrop-blur-sm',
-      iconBg: 'bg-orange-100/80'
+      bg: 'bg-cerulean-50/80', 
+      border: 'border-cerulean-200/50', 
+      text: 'text-cerulean-700', 
+      badge: 'bg-cerulean-100/90 text-cerulean-800 backdrop-blur-sm',
+      iconBg: 'bg-cerulean-100/80'
     },
     { 
-      bg: 'bg-teal-50/80', 
-      border: 'border-teal-200/50', 
-      text: 'text-teal-700', 
-      badge: 'bg-teal-100/90 text-teal-800 backdrop-blur-sm',
-      iconBg: 'bg-teal-100/80'
+      bg: 'bg-graphite-50/80', 
+      border: 'border-graphite-200/50', 
+      text: 'text-graphite-700', 
+      badge: 'bg-graphite-100/90 text-graphite-800 backdrop-blur-sm',
+      iconBg: 'bg-graphite-100/80'
     }
   ];
   return colors[index % colors.length];
@@ -151,14 +151,10 @@ const podId = pod.id || pod.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replac
 const podSlug = generatePodSlug(pod.name);
 ---
 
-<div class="pod-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer" data-pod-id={podId} data-pod-slug={podSlug}>
+<div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer" data-pod-id={podId} data-pod-slug={podSlug}>
   <!-- Card Background with Glass Morphism -->
-  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+  <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
-  <!-- Decorative Background Elements -->
-  <!-- <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
-  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
-   -->
   <!-- Card Content -->
   <div class="relative p-6 flex flex-col h-full">
     <!-- Card Header -->
@@ -166,17 +162,17 @@ const podSlug = generatePodSlug(pod.name);
       <div class={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}>
         <span class="text-2xl">{getPodIcon(pod)}</span>
       </div>
-      <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${colors.badge} border border-current/20`}>
+      <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-semibold ${colors.badge} border border-current/20`}>
         Pod
       </span>
     </div>
     
     <!-- Title and Tagline -->
-    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">
+    <h3 class="text-xl font-inter font-bold text-graphite-900 mb-2 group-hover:text-graphite-800 transition-colors duration-200">
       {pod.name}
     </h3>
     
-    <p class="text-sm text-gray-600 mb-4">
+    <p class="text-sm font-inter text-graphite-600 mb-4">
       {pod.tagline}
     </p>
     
@@ -192,12 +188,12 @@ const podSlug = generatePodSlug(pod.name);
         size="lg"
         variant="conversion"
       />
-      <p class="text-sm text-gray-500 mt-1">per month</p>
+      <p class="text-sm font-inter text-graphite-500 mt-1">per month</p>
     </div>
     
     <!-- Description -->
     <div class="flex-1 mb-6">
-      <p class="text-gray-600 leading-relaxed text-sm pod-description">
+      <p class="text-graphite-600 font-inter leading-relaxed text-sm pod-description">
         {pod.whatsInPod.description}
       </p>
     </div>
@@ -206,20 +202,18 @@ const podSlug = generatePodSlug(pod.name);
     <div class="space-y-3 mb-6">
       {pod.idealFor.slice(0, 3).map((feature: string) => (
         <div class="flex items-center">
-          <div class="w-8 h-8 bg-green-100/80 rounded-lg flex items-center justify-center mr-3">
-            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-8 h-8 bg-mint-100/80 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-4 h-4 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
-          <span class="text-sm text-gray-600 font-medium">{feature}</span>
+          <span class="text-sm font-inter text-graphite-600 font-medium">{feature}</span>
         </div>
       ))}
     </div>
     
-
-    
     <!-- Action Bar -->
-    <div class="flex items-center justify-between pt-4 border-t border-gray-100/50 mt-auto">
+    <div class="flex items-center justify-between pt-4 border-t border-graphite-100/50 mt-auto">
       
       <!-- Dynamic CTA Button -->
       <button 
@@ -232,7 +226,7 @@ const podSlug = generatePodSlug(pod.name);
         data-item-price-inr={pod.basePriceINR}
         data-item-price-usd={pod.basePriceUSD}
         data-add-to-cart
-        class="pod-cta-btn w-1/2 inline-flex items-center justify-center px-4 py-3 font-semibold rounded-xl transition-all duration-200 group-hover:shadow-lg mr-1"
+        class="pod-cta-btn w-1/2 inline-flex items-center justify-center px-4 py-3 font-inter font-semibold rounded-lg transition-all duration-300 group-hover:shadow-lg mr-1"
         onclick="console.log('🔵 [AvailablePodCard] Pod CTA button clicked for:', '{{pod.name}}', 'with ID:', '{{podId}}');">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
@@ -243,10 +237,10 @@ const podSlug = generatePodSlug(pod.name);
       <!-- Details Button -->
         <button 
           data-pod-slug={podSlug}
-          class="view-details-btn inline-flex items-center justify-center w-1/2 mt-0 px-4 py-3 text-sm ml-1 text-gray-600 hover:text-gray-700 font-semibold border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 group-hover:shadow-sm"
+          class="view-details-btn inline-flex items-center justify-center w-1/2 mt-0 px-4 py-3 text-sm ml-1 font-inter text-graphite-600 hover:text-graphite-700 font-semibold border border-graphite-300 rounded-lg hover:bg-graphite-50 transition-all duration-300 group-hover:shadow-sm"
         >
           View Details
-          <svg class="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
         </button>
@@ -353,8 +347,8 @@ const podSlug = generatePodSlug(pod.name);
           const ctaText = button?.querySelector('.cta-text');
           
           if (button && ctaText) {
-            button.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
-            button.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
+            button.classList.remove('bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'hover:from-mint-600', 'hover:to-cerulean-600');
+            button.classList.add('text-graphite-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
             button.setAttribute('data-action', 'remove');
             ctaText.textContent = 'Remove Pod';
             console.log('🔵 [AvailablePodCard] Initial button state set to "Remove Pod"');
@@ -403,15 +397,15 @@ const podSlug = generatePodSlug(pod.name);
           if (selectedPod && selectedPod.id === podId) {
             // This pod is selected - show "Remove Pod"
             console.log('🔵 [AvailablePodCard] Updating button to "Remove Pod" for:', podId);
-            buttonElement.classList.remove('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
-            buttonElement.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
+            buttonElement.classList.remove('bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'hover:from-mint-600', 'hover:to-cerulean-600');
+            buttonElement.classList.add('text-graphite-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
             buttonElement.setAttribute('data-action', 'remove');
             if (ctaText) ctaText.textContent = 'Remove Pod';
           } else {
             // This pod is not selected - show "Reserve Pod"
             console.log('🔵 [AvailablePodCard] Updating button to "Reserve Pod" for:', podId);
-            buttonElement.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
-            buttonElement.classList.add('bg-gradient-to-r', 'from-primary-600', 'to-primary-700', 'text-white', 'hover:from-primary-700', 'hover:to-primary-800');
+            buttonElement.classList.remove('text-graphite-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50');
+            buttonElement.classList.add('bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 'text-white', 'hover:from-mint-600', 'hover:to-cerulean-600');
             buttonElement.setAttribute('data-action', 'add');
             if (ctaText) ctaText.textContent = 'Reserve Pod';
           }
@@ -436,8 +430,6 @@ const podSlug = generatePodSlug(pod.name);
     opacity: 1;
     transform: translateY(0);
   }
-
-
 
   /* Hover Effects */
   .pod-card:hover {

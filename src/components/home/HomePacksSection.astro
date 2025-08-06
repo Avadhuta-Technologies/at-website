@@ -10,18 +10,18 @@ const packs = packsCatalog.availablePacks.slice(0, 4);
 <section class="py-16 lg:py-20 relative overflow-hidden">
   <div class="container mx-auto px-4 relative z-10">
     <div class="text-center mb-12 lg:mb-16">
-      <h2 class="text-3xl lg:text-4xl font-bold gradient-title mb-4">
+      <h2 class="text-3xl lg:text-4xl font-inter font-bold gradient-title mb-4">
         Add Power with
         <span class="gradient-text"> Packs</span>
       </h2>
-      <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+      <p class="text-lg font-inter text-graphite-600 max-w-3xl mx-auto">
         Enhance your pod with specialized add-on packs for specific needs
       </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-      {packs.map((pack: any) => (
-        <HomePackCard pack={pack} />
+      {packs.map((pack: any, index: number) => (
+        <HomePackCard pack={pack} index={index} />
       ))}
     </div>
   </div>

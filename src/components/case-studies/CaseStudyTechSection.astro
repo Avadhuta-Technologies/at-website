@@ -6,30 +6,34 @@ export interface Props {
 const { techStack } = Astro.props;
 ---
 
-<section class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <div class="max-w-4xl mx-auto">
-      <!-- Section Header -->
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Technologies Used
-        </h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-primary-600 to-primary-700 mx-auto rounded-full"></div>
-      </div>
-      
-      <!-- Tech Stack Grid -->
-      <div class="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-gray-100">
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {techStack.map((tech) => (
-            <div class="bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-xl p-4 text-center border border-[#22c55e]/100 hover:shadow-md transition-shadow duration-300">
-              <div class="w-12 h-12 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                </svg>
-              </div>
-              <span class="text-sm font-semibold text-gray-700">{tech}</span>
+<section class="py-20 relative overflow-hidden">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4 gradient-title">Technologies Used</h2>
+      <p class="text-lg font-inter text-graphite-600 leading-relaxed">Modern tech stack and tools</p>
+    </div>
+    
+    <div class="max-w-6xl mx-auto">
+      <div class="max-w-screen-2xl mx-auto">
+        <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Card Background - Solid color instead of gradient -->
+          <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+          
+          <!-- Card Content -->
+          <div class="relative p-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {techStack.map((tech) => (
+                <div class="bg-graphite-50/80 rounded-xl p-4 text-center border border-graphite-100/50 hover:shadow-md transition-all duration-300 hover:scale-105">
+                  <div class="w-12 h-12 bg-gradient-to-r from-mint-500 to-cerulean-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm font-inter font-medium text-graphite-700">{tech}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
