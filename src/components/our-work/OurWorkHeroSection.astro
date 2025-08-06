@@ -10,14 +10,13 @@ export interface Props {
 const { data } = Astro.props;
 ---
 
-<section class="relativee overflow-hidden">
-  <div class="container relative z-10 mx-auto px-4 py-20 md:py-32">
-    <div class="mx-auto max-w-4xl text-center">
-      <!-- Badge -->
-      <div
-        class="mb-8 inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-700"
-      >
-        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="relative z-10 container mx-auto max-w-screen-2xl px-4 pt-20 md:pt-32">
+    <div class="max-w-6xl mx-auto text-center">
+      
+      <!-- Glass Badge -->
+      <div class="inline-flex items-center px-4 py-2 glass border-mint-200/30 text-mint-700 text-sm font-semibold rounded-full mb-8 hover:glass-strong transition-all duration-300">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -25,49 +24,68 @@ const { data } = Astro.props;
             d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
           ></path>
         </svg>
-         Our Work
+        Our Work
       </div>
 
       <!-- Main Headline -->
-      <h1 class="mb-6 text-4xl font-bold leading-tight gradient-title md:text-5xl lg:text-6xl">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold gradient-title mb-6 leading-tight">
         Our
         <span class="gradient-text"> Work</span>
       </h1>
 
       <!-- Subtitle -->
-      <h2 class="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-gray-600 md:text-2xl">
+      <h2 class="text-xl md:text-2xl font-inter text-graphite-700 mb-8 leading-relaxed max-w-3xl mx-auto">
         {data.subtitle}
       </h2>
 
       <!-- Description (if provided) -->
       {
         data.description && (
-          <p class="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-gray-500">
+          <p class="text-lg font-inter text-graphite-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             {data.description}
           </p>
         )
       }
+      
     </div>
   </div>
 </section>
 
 <style>
-  .animation-delay-2000 {
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite;
     animation-delay: 2s;
   }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 0.7;
-    }
-    50% {
-      opacity: 0.4;
-    }
+  
+  /* Glass button enhancements */
+  .glass.bg-mint-500\/20 {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
   }
-
-  .animate-pulse {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  .glass.bg-mint-500\/20:hover {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%);
+  }
+  
+  .glass.border-graphite-300\/50 {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  }
+  
+  .glass.border-graphite-300\/50:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
   }
 </style>
 

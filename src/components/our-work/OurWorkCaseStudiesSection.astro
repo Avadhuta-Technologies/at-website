@@ -8,7 +8,7 @@ const featuredCaseStudies = caseStudiesData.caseStudies.slice(0, 4);
 ---
 
 <!-- Case Studies Section -->
-<section class="py-20 bg-gradient-to-br from-mint-50 via-white to-cerulean-50">
+<section class="py-20 md:py-32">
   <div class="container mx-auto px-4">
     <div class="max-w-6xl mx-auto">
       <!-- Section Header -->
@@ -23,7 +23,7 @@ const featuredCaseStudies = caseStudiesData.caseStudies.slice(0, 4);
       </div>
 
       <!-- Case Studies Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         {featuredCaseStudies.map((caseStudy, index) => (
           <CaseStudyCard caseStudy={caseStudy} index={index} />
         ))}

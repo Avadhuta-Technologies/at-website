@@ -17,7 +17,7 @@ export const homeSuccessStoriesData = {
       testimonial: {
         quote: "It's like having a product team on demand — we've shipped more in 3 months than we did in the last year.",
         author: "CEO",
-        role: "CEO"
+        role: "Designation"
       },
       readMoreLink: "/case-studies/security-patrol-app"
     },
@@ -36,7 +36,7 @@ export const homeSuccessStoriesData = {
       testimonial: {
         quote: "Their pack-based approach gave us clarity and speed — no back and forth, just delivery.",
         author: "Tech Lead",
-        role: "Tech Lead"
+        role: "Designation"
       },
       readMoreLink: "/case-studies/ecommerce-feature-expansion"
     }

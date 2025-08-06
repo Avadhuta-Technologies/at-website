@@ -54,64 +54,89 @@ const getPackIcon = (pack: any) => {
   return '📦';
 };
 
-// Helper function to get badge color classes
+// Helper function to get pack color classes - using brand colors only (matching HomePodCard pattern)
+const getPackColorClasses = (pack: any) => {
+  const title = pack.title.toLowerCase();
+  
+  if (title.includes('startup') || title.includes('accelerator')) return 'bg-mint-100 border-mint-200 text-mint-700';
+  if (title.includes('mvp') || title.includes('prototype')) return 'bg-cerulean-100 border-cerulean-200 text-cerulean-700';
+  if (title.includes('design') || title.includes('ui')) return 'bg-graphite-100 border-graphite-200 text-graphite-700';
+  if (title.includes('development') || title.includes('build')) return 'bg-mint-50 border-mint-100 text-mint-600';
+  if (title.includes('testing') || title.includes('qa')) return 'bg-cerulean-50 border-cerulean-100 text-cerulean-600';
+  if (title.includes('deployment') || title.includes('launch')) return 'bg-graphite-50 border-graphite-100 text-graphite-600';
+  
+  return 'bg-mint-100 border-mint-200 text-mint-700';
+};
+
+// Get icon color based on pack type - using brand colors only (matching HomePodCard pattern)
+const getIconColor = (pack: any) => {
+  const title = pack.title.toLowerCase();
+  
+  if (title.includes('startup') || title.includes('accelerator')) return 'text-mint-600';
+  if (title.includes('mvp') || title.includes('prototype')) return 'text-cerulean-600';
+  if (title.includes('design') || title.includes('ui')) return 'text-graphite-600';
+  if (title.includes('development') || title.includes('build')) return 'text-mint-500';
+  if (title.includes('testing') || title.includes('qa')) return 'text-cerulean-500';
+  if (title.includes('deployment') || title.includes('launch')) return 'text-graphite-500';
+  
+  return 'text-mint-600';
+};
+
+// Helper function to get badge color classes - using brand colors only
 const getBadgeColorClasses = (color: string) => {
   const colorMap: Record<string, string> = {
-    'blue': 'bg-blue-100/90 text-blue-800 border-blue-200/50',
-    'green': 'bg-green-100/90 text-green-800 border-green-200/50',
-    'purple': 'bg-purple-100/90 text-purple-800 border-purple-200/50',
-    'orange': 'bg-orange-100/90 text-orange-800 border-orange-200/50',
-    'red': 'bg-red-100/90 text-red-800 border-red-200/50',
-    'teal': 'bg-teal-100/90 text-teal-800 border-teal-200/50',
-    'indigo': 'bg-indigo-100/90 text-indigo-800 border-indigo-200/50',
-    'pink': 'bg-pink-100/90 text-pink-800 border-pink-200/50'
+    'blue': 'bg-cerulean-100/90 text-cerulean-800 border-cerulean-200/50',
+    'green': 'bg-mint-100/90 text-mint-800 border-mint-200/50',
+    'purple': 'bg-graphite-100/90 text-graphite-800 border-graphite-200/50',
+    'orange': 'bg-mint-50/90 text-mint-700 border-mint-100/50',
+    'red': 'bg-graphite-50/90 text-graphite-700 border-graphite-100/50',
+    'teal': 'bg-cerulean-50/90 text-cerulean-700 border-cerulean-100/50',
+    'indigo': 'bg-graphite-100/90 text-graphite-800 border-graphite-200/50',
+    'pink': 'bg-mint-50/90 text-mint-700 border-mint-100/50'
   };
   
   return colorMap[color] || colorMap['blue'];
 };
 ---
 
-<div class={`pack-card group relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 cursor-pointer ${className}`} data-pack-id={pack.id} data-pack-slug={generatePackSlug(pack.title)}>
-  <!-- Card Background with Glass Morphism -->
-  <div class="absolute inset-0 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"></div>
+<div class={`pack-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer ${className}`} data-pack-id={pack.id} data-pack-slug={generatePackSlug(pack.title)}>
+  <!-- Card Background - Matching HomePodCard styling -->
+  <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
-  <!-- Decorative Background Elements -->
-  <!-- <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
-  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-[#0ea5e9]/50 to-[#22c55e]/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
-   -->
   <!-- Card Content -->
   <div class="relative p-6 flex flex-col h-full">
     <!-- Segment Name -->
     {pack.segmentName && (
       <div class="mb-4">
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100/80 text-gray-600 border border-gray-200/50 backdrop-blur-sm">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-graphite-100/80 text-graphite-600 border border-graphite-200/50 backdrop-blur-sm">
           {pack.segmentName}
         </span>
       </div>
     )}
     
-    <!-- Icon and Badge Row -->
+    <!-- Icon and Badge Row - Matching HomePodCard pattern -->
     <div class="flex items-start justify-between mb-5">
-      <div class="w-14 h-14 bg-gradient-to-br from-[#22c55e]/10 to-[#0ea5e9]/10 rounded-xl flex items-center justify-center border border-[#22c55e]/30 group-hover:scale-110 transition-transform duration-300">
+      <div class={`w-14 h-14 ${getPackColorClasses(pack)} rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300`}>
         <span class="text-2xl">{getPackIcon(pack)}</span>
       </div>
       {pack.badge && (
-        <span class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${getBadgeColorClasses(pack.badgeColor || 'blue')}`}>
+        <span class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-inter font-medium border ${getBadgeColorClasses(pack.badgeColor || 'blue')}`}>
           {pack.badge}
         </span>
       )}
     </div>
     
     <!-- Title -->
-    <h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors duration-300 leading-tight">
+    <h3 class="text-xl font-inter font-bold text-graphite-900 mb-4 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
       {pack.title}
     </h3>
-    
+
     <!-- Description -->
     <div class="flex-1 mb-4">
-      <p class="text-gray-600 leading-relaxed text-sm">
+      <p class="text-graphite-600 leading-relaxed font-inter text-sm">
         {pack.description}
       </p>
+      <p class="text-xs font-inter text-graphite-500 mt-3">{pack.duration} delivery</p>
     </div>
 
     <!-- Updated Price Display -->
@@ -125,38 +150,39 @@ const getBadgeColorClasses = (color: string) => {
         showOriginalPrice={true}
         size="md"
         variant="conversion"
+        itemType="pack"
       />
-      <p class="text-xs text-gray-500 mt-1">{pack.duration} delivery</p>
     </div>
     
-    <!-- Action Buttons -->
-    <div class="flex flex-col space-y-3 pt-4 border-t border-gray-100/50">
-      <div class="flex gap-2">
-        <button 
-          data-add-to-cart
-          data-item-id={pack.id}
-          data-item-type="pack"
-          data-item-title={pack.title}
-          data-item-description={pack.description}
-          class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-sm font-semibold rounded-lg hover:from-primary-700 hover:to-primary-800 transition-all duration-300 group-hover:scale-105">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          <span>Add to Pod</span>
-        </button>
-        <a href={`/packs/${generatePackSlug(pack.title)}`} class="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 transition-all duration-300">
-          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-          <span>Details</span>
-        </a>
-      </div>
+    <!-- Action Buttons - Matching HomePodCard layout -->
+    <div class="mt-auto flex items-center gap-3 pt-4 border-t border-graphite-100/50">
+      <!-- Add to Pod Button -->
+      <button 
+        data-add-to-cart
+        data-item-id={pack.id}
+        data-item-type="pack"
+        data-item-title={pack.title}
+        data-item-description={pack.description}
+        class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm">
+        <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        <span class="cta-text">Add to Pod</span>
+      </button>
+      
+      <!-- Details Link -->
+      <a href={`/packs/${generatePackSlug(pack.title)}`} class="inline-flex items-center justify-center px-4 py-2.5 text-graphite-600 hover:text-graphite-700 font-inter font-semibold transition-colors border border-graphite-200 rounded-lg hover:bg-graphite-50 text-sm">
+        Details
+        <svg class="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
     </div>
   </div>
 </div>
 
 <style>
-  /* Pack Card Animations */
+  /* Pack Card Animations - Matching HomePodCard */
   .pack-card {
     opacity: 0;
     transform: translateY(30px);
@@ -168,7 +194,7 @@ const getBadgeColorClasses = (color: string) => {
     transform: translateY(0);
   }
 
-  /* Hover Effects */
+  /* Hover Effects - Matching HomePodCard */
   .pack-card:hover {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }

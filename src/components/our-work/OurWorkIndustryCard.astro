@@ -35,52 +35,48 @@ const getIndustryIcon = (industryName: string) => {
   return '🏢';
 };
 
-// Get color scheme based on industry
+// Get color scheme based on industry - using brand colors only
 const getIndustryColorClasses = (industryName: string) => {
   const name = industryName.toLowerCase();
   
-  if (name.includes('fintech') || name.includes('finance')) return 'from-green-500/10 to-emerald-500/10 border-green-200/30';
-  if (name.includes('health') || name.includes('medical')) return 'from-red-500/10 to-pink-500/10 border-red-200/30';
-  if (name.includes('education') || name.includes('learning')) return 'from-blue-500/10 to-cyan-500/10 border-blue-200/30';
-  if (name.includes('ecommerce') || name.includes('retail')) return 'from-orange-500/10 to-yellow-500/10 border-orange-200/30';
-  if (name.includes('real estate') || name.includes('property')) return 'from-purple-500/10 to-indigo-500/10 border-purple-200/30';
-  if (name.includes('travel') || name.includes('tourism')) return 'from-cyan-500/10 to-blue-500/10 border-cyan-200/30';
-  if (name.includes('food') || name.includes('restaurant')) return 'from-amber-500/10 to-orange-500/10 border-amber-200/30';
-  if (name.includes('automotive') || name.includes('car')) return 'from-gray-500/10 to-slate-500/10 border-gray-200/30';
-  if (name.includes('entertainment') || name.includes('media')) return 'from-pink-500/10 to-purple-500/10 border-pink-200/30';
-  if (name.includes('technology') || name.includes('tech')) return 'from-indigo-500/10 to-purple-500/10 border-indigo-200/30';
-  if (name.includes('consulting') || name.includes('services')) return 'from-slate-500/10 to-gray-500/10 border-slate-200/30';
-  if (name.includes('non-profit') || name.includes('charity')) return 'from-teal-500/10 to-green-500/10 border-teal-200/30';
+  if (name.includes('fintech') || name.includes('finance')) return 'bg-mint-100 border-mint-200 text-mint-700';
+  if (name.includes('health') || name.includes('medical')) return 'bg-cerulean-100 border-cerulean-200 text-cerulean-700';
+  if (name.includes('education') || name.includes('learning')) return 'bg-graphite-100 border-graphite-200 text-graphite-700';
+  if (name.includes('ecommerce') || name.includes('retail')) return 'bg-mint-50 border-mint-100 text-mint-600';
+  if (name.includes('real estate') || name.includes('property')) return 'bg-cerulean-50 border-cerulean-100 text-cerulean-600';
+  if (name.includes('travel') || name.includes('tourism')) return 'bg-graphite-50 border-graphite-100 text-graphite-600';
+  if (name.includes('food') || name.includes('restaurant')) return 'bg-mint-100 border-mint-200 text-mint-700';
+  if (name.includes('automotive') || name.includes('car')) return 'bg-cerulean-100 border-cerulean-200 text-cerulean-700';
+  if (name.includes('entertainment') || name.includes('media')) return 'bg-graphite-100 border-graphite-200 text-graphite-700';
+  if (name.includes('technology') || name.includes('tech')) return 'bg-mint-50 border-mint-100 text-mint-600';
+  if (name.includes('consulting') || name.includes('services')) return 'bg-cerulean-50 border-cerulean-100 text-cerulean-600';
+  if (name.includes('non-profit') || name.includes('charity')) return 'bg-graphite-50 border-graphite-100 text-graphite-600';
   
-  return 'from-[#22c55e]/10 to-[#0ea5e9]/10 border-[#22c55e]/30';
+  return 'bg-mint-100 border-mint-200 text-mint-700';
 };
 ---
 
 <div class="industry-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 flex flex-col h-full">
-  <!-- Card Background with Gradient -->
-  <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+  <!-- Card Background - Solid color instead of gradient (matching brand guidelines) -->
+  <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
-  <!-- Decorative Background Elements -->
-  <!-- <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
-  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-green-100/50 to-blue-100/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
-   -->
   <!-- Card Content -->
   <div class="relative p-6 flex flex-col h-full">
     <!-- Industry Header -->
     <div class="mb-6">
       <div class="flex items-start justify-between mb-4">
-        <div class={`w-14 h-14 bg-gradient-to-br ${getIndustryColorClasses(industry.name)} rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300`}>
+        <div class={`w-14 h-14 ${getIndustryColorClasses(industry.name)} rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300`}>
           <span class="text-2xl">{getIndustryIcon(industry.name)}</span>
         </div>
         
         <!-- Industry Badge -->
-        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
           Industry
         </span>
       </div>
       
       <!-- Industry Title -->
-      <h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-800 transition-colors duration-300 leading-tight">
+      <h3 class="text-xl font-inter font-bold text-graphite-900 mb-4 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
         {industry.name}
       </h3>
     </div>
@@ -89,11 +85,11 @@ const getIndustryColorClasses = (industryName: string) => {
     <div class="flex-1 mb-6">
       <div class="space-y-3">
         {industry.projects.map((project, projectIndex) => (
-          <div class="project-item bg-gradient-to-r from-gray-50/80 to-white/60 rounded-lg p-4 border border-gray-100/50 backdrop-blur-sm hover:scale-[1.02] transition-all duration-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+          <div class="project-item bg-graphite-50/80 rounded-lg p-4 border border-graphite-100/50 backdrop-blur-sm hover:scale-[1.02] transition-all duration-200">
+            <h4 class="text-sm font-inter font-semibold text-graphite-900 mb-2 leading-tight">
               {project.title}
             </h4>
-            <p class="text-xs text-gray-600 leading-relaxed">
+            <p class="text-xs font-inter text-graphite-600 leading-relaxed">
               {project.description}
             </p>
           </div>
@@ -102,10 +98,10 @@ const getIndustryColorClasses = (industryName: string) => {
     </div>
     
     <!-- Action Section - Always at bottom -->
-    <div class="mt-auto pt-4 border-t border-gray-100/50">
+    <div class="mt-auto pt-4 border-t border-graphite-100/50">
       <a 
         href={`/case-studies?industry=${generateIndustrySlug(industry.name)}`}
-        class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] text-white font-semibold rounded-lg hover:from-[#16a34a] hover:to-[#0284c7] transition-all duration-300 group shadow-sm hover:shadow-md"
+        class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 group shadow-sm hover:shadow-md"
       >
         <span class="text-sm">View {industry.name} Projects</span>
         <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
