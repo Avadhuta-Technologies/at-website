@@ -8,108 +8,110 @@ export interface Props {
 const { engagementType, duration, teamComposition } = Astro.props;
 ---
 
-<section class="py-16">
-  <div class="container mx-auto max-w-screen-2xl px-4">
-    <div class="max-w-4xl mx-auto">
-      <!-- Section Header -->
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4">Project Details</h2>
-        <p class="text-lg text-graphite-600 font-inter leading-relaxed">Project specifications and team composition</p>
-      </div>
-      
-      <!-- Project Details Grid -->
-      <div class="max-w-6xl mx-auto">
-        <div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Engagement Type -->
-          <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-            <!-- Card Background - Solid color instead of gradient -->
-            <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
-            
-            <!-- Card Content -->
-            <div class="relative p-6 flex flex-col h-full">
-              <!-- Step Header with Icon and Number -->
-              <div class="flex items-start justify-between mb-5">
-                <div class="w-14 h-14 bg-mint-100 border-mint-200 text-mint-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-6 h-6 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                  </svg>
-                </div>
-                
-                <!-- Step Number Badge -->
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
-                  Type
-                </span>
+<section class="py-20 relative overflow-hidden">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4 gradient-title">Project Details</h2>
+      <p class="text-lg font-inter text-graphite-600 leading-relaxed">Project specifications and team composition</p>
+    </div>
+    
+    <div class="max-w-6xl mx-auto">
+      <div class="max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Engagement Type -->
+        <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Card Background - Solid color instead of gradient -->
+          <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+          
+          <!-- Card Content -->
+          <div class="relative p-6 flex flex-col h-full">
+            <!-- Step Header with Icon and Number -->
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-14 h-14 bg-mint-100 border-mint-200 text-mint-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-mint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
               </div>
               
-              <!-- Content -->
-              <div class="flex-1">
-                <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-4">Engagement Type</h3>
-                <p class="text-graphite-600 font-inter leading-relaxed">
-                  {engagementType}
-                </p>
-              </div>
+              <!-- Step Number Badge -->
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
+                Type
+              </span>
+            </div>
+            
+            <!-- Title and Description -->
+            <div class="mb-5">
+              <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-3 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
+                Engagement Type
+              </h3>
+              <p class="text-graphite-600 leading-relaxed font-inter line-clamp-3">
+                {engagementType}
+              </p>
             </div>
           </div>
+        </div>
+        
+        <!-- Duration -->
+        <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Card Background - Solid color instead of gradient -->
+          <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
           
-          <!-- Duration -->
-          <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-            <!-- Card Background - Solid color instead of gradient -->
-            <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
-            
-            <!-- Card Content -->
-            <div class="relative p-6 flex flex-col h-full">
-              <!-- Step Header with Icon and Number -->
-              <div class="flex items-start justify-between mb-5">
-                <div class="w-14 h-14 bg-cerulean-100 border-cerulean-200 text-cerulean-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-6 h-6 text-cerulean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                
-                <!-- Step Number Badge -->
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-cerulean-100 text-cerulean-700 border border-cerulean-200">
-                  Time
-                </span>
+          <!-- Card Content -->
+          <div class="relative p-6 flex flex-col h-full">
+            <!-- Step Header with Icon and Number -->
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-14 h-14 bg-cerulean-100 border-cerulean-200 text-cerulean-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-cerulean-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
               </div>
               
-              <!-- Content -->
-              <div class="flex-1">
-                <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-4">Duration</h3>
-                <p class="text-graphite-600 font-inter leading-relaxed">
-                  {duration}
-                </p>
-              </div>
+              <!-- Step Number Badge -->
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-cerulean-100 text-cerulean-700 border border-cerulean-200">
+                Time
+              </span>
+            </div>
+            
+            <!-- Title and Description -->
+            <div class="mb-5">
+              <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-3 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
+                Duration
+              </h3>
+              <p class="text-graphite-600 leading-relaxed font-inter line-clamp-3">
+                {duration}
+              </p>
             </div>
           </div>
+        </div>
+        
+        <!-- Team Composition -->
+        <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Card Background - Solid color instead of gradient -->
+          <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
           
-          <!-- Team Composition -->
-          <div class="step-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-            <!-- Card Background - Solid color instead of gradient -->
-            <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
-            
-            <!-- Card Content -->
-            <div class="relative p-6 flex flex-col h-full">
-              <!-- Step Header with Icon and Number -->
-              <div class="flex items-start justify-between mb-5">
-                <div class="w-14 h-14 bg-graphite-100 border-graphite-200 text-graphite-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-6 h-6 text-graphite-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                  </svg>
-                </div>
-                
-                <!-- Step Number Badge -->
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-graphite-100 text-graphite-700 border border-graphite-200">
-                  Team
-                </span>
+          <!-- Card Content -->
+          <div class="relative p-6 flex flex-col h-full">
+            <!-- Step Header with Icon and Number -->
+            <div class="flex items-start justify-between mb-5">
+              <div class="w-14 h-14 bg-graphite-100 border-graphite-200 text-graphite-700 rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-graphite-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
               </div>
               
-              <!-- Content -->
-              <div class="flex-1">
-                <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-4">Team</h3>
-                <p class="text-graphite-600 font-inter leading-relaxed">
-                  {teamComposition}
-                </p>
-              </div>
+              <!-- Step Number Badge -->
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-inter font-medium bg-graphite-100 text-graphite-700 border border-graphite-200">
+                Team
+              </span>
+            </div>
+            
+            <!-- Title and Description -->
+            <div class="mb-5">
+              <h3 class="text-xl font-inter font-semibold text-graphite-900 mb-3 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
+                Team
+              </h3>
+              <p class="text-graphite-600 leading-relaxed font-inter line-clamp-3">
+                {teamComposition}
+              </p>
             </div>
           </div>
         </div>

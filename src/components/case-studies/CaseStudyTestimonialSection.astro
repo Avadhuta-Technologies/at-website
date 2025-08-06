@@ -9,19 +9,17 @@ export interface Props {
 const { testimonial } = Astro.props;
 ---
 
-<section class="py-16">
-  <div class="container mx-auto max-w-screen-2xl px-4">
-    <div class="max-w-4xl mx-auto">
-      <!-- Section Header -->
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4">Client Testimonial</h2>
-        <p class="text-lg text-graphite-600 font-inter leading-relaxed">What our client says about the project</p>
-      </div>
-      
-      <!-- Testimonial Card -->
-      <div class="max-w-4xl mx-auto bg-glass-strong">
-        <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
-          <!-- Card Background - Solid color instead of gradient (matching brand guidelines) -->
+<section class="py-20 relative overflow-hidden">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-3xl mx-auto text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4 gradient-title">Client Testimonial</h2>
+      <p class="text-lg font-inter text-graphite-600 leading-relaxed">What our client says about the project</p>
+    </div>
+    
+    <div class="max-w-6xl mx-auto">
+      <div class="max-w-screen-2xl mx-auto">
+        <div class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+          <!-- Card Background - Solid color instead of gradient -->
           <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
           
           <!-- Card Content -->

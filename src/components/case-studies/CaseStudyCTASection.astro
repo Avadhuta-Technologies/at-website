@@ -104,16 +104,39 @@ const { callToAction } = Astro.props;
 <script>
   // Handle email click with fallback to browser
   function handleEmailClick(event: Event, email: string) {
-    event.preventDefault();
-    
     // Try to open default mail client
     const mailtoLink = `mailto:${email}`;
-    window.location.href = mailtoLink;
     
-    // Fallback: Open Gmail in browser after a short delay
-    setTimeout(() => {
+    // Create a temporary link to test if mailto works
+    const testLink = document.createElement('a');
+    testLink.href = mailtoLink;
+    
+    // Check if the browser supports mailto protocol
+    if (testLink.protocol === 'mailto:') {
+      // Try to open the mail client
+      try {
+        window.location.href = mailtoLink;
+        
+        // Set a timeout to check if mail client opened
+        setTimeout(() => {
+          // If we're still on the same page after 2 seconds, 
+          // it likely means no mail client is configured
+          // Open Gmail in browser as fallback
+          const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+          window.open(gmailUrl, '_blank');
+        }, 2000);
+      } catch (error) {
+        // If mailto fails, open Gmail in browser
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
+        window.open(gmailUrl, '_blank');
+      }
+    } else {
+      // If mailto protocol is not supported, open Gmail in browser
       const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}`;
       window.open(gmailUrl, '_blank');
-    }, 1000);
+    }
+    
+    // Prevent default behavior
+    event.preventDefault();
   }
 </script> 
