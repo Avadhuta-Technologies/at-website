@@ -54,57 +54,67 @@ const getPodIcon = (pod: any) => {
   return '🚀';
 };
 
-// Color mapping for different pod types
+// Color mapping for different pod types - using brand colors only
 const getPodColorClasses = (pod: any) => {
   const name = pod.name.toLowerCase();
   
-  if (name.includes('ai') || name.includes('ml')) return 'from-purple-500/10 to-pink-500/10 border-purple-200/30';
-  if (name.includes('product')) return 'from-blue-500/10 to-cyan-500/10 border-blue-200/30';
-  if (name.includes('automation')) return 'from-indigo-500/10 to-purple-500/10 border-indigo-200/30';
-  if (name.includes('full stack') || name.includes('web')) return 'from-green-500/10 to-blue-500/10 border-green-200/30';
-  if (name.includes('mobile')) return 'from-orange-500/10 to-red-500/10 border-orange-200/30';
-  if (name.includes('data')) return 'from-teal-500/10 to-cyan-500/10 border-teal-200/30';
+  if (name.includes('ai') || name.includes('ml')) return 'bg-mint-100 border-mint-200 text-mint-700';
+  if (name.includes('product')) return 'bg-cerulean-100 border-cerulean-200 text-cerulean-700';
+  if (name.includes('automation')) return 'bg-graphite-100 border-graphite-200 text-graphite-700';
+  if (name.includes('full stack') || name.includes('web')) return 'bg-mint-50 border-mint-100 text-mint-600';
+  if (name.includes('mobile')) return 'bg-cerulean-50 border-cerulean-100 text-cerulean-600';
+  if (name.includes('data')) return 'bg-graphite-50 border-graphite-100 text-graphite-600';
   
-  return 'from-[#22c55e]/10 to-[#0ea5e9]/10 border-[#22c55e]/30';
+  return 'bg-mint-100 border-mint-200 text-mint-700';
+};
+
+// Get icon color based on pod type - using brand colors only
+const getIconColor = (pod: any) => {
+  const name = pod.name.toLowerCase();
+  
+  if (name.includes('ai') || name.includes('ml')) return 'text-mint-600';
+  if (name.includes('product')) return 'text-cerulean-600';
+  if (name.includes('automation')) return 'text-graphite-600';
+  if (name.includes('full stack') || name.includes('web')) return 'text-mint-500';
+  if (name.includes('mobile')) return 'text-cerulean-500';
+  if (name.includes('data')) return 'text-graphite-500';
+  
+  return 'text-mint-600';
 };
 ---
 
 <div class="pod-card group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 cursor-pointer" data-pod-slug={generatePodSlug(pod.name)}>
-  <!-- Card Background with Gradient -->
-  <div class="absolute inset-0 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+  <!-- Card Background - Solid color instead of gradient -->
+  <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
   
-  <!-- Decorative Background Elements -->
-  <!-- <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#22c55e]/50 to-[#0ea5e9]/50 rounded-full -translate-y-10 translate-x-10 group-hover:scale-110 transition-transform duration-300"></div>
-  <div class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-[#0ea5e9]/50 to-[#22c55e]/50 rounded-full translate-y-8 -translate-x-8 group-hover:scale-110 transition-transform duration-300"></div>
-   -->
   <!-- Card Content -->
   <div class="relative p-6 flex flex-col h-full">
     <!-- Icon and Title Row -->
     <div class="flex items-start justify-between mb-5">
-      <div class={`w-14 h-14 bg-gradient-to-br ${getPodColorClasses(pod)} rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300`}>
+      <div class={`w-14 h-14 ${getPodColorClasses(pod)} rounded-xl flex items-center justify-center border group-hover:scale-110 transition-transform duration-300`}>
         <span class="text-2xl">{getPodIcon(pod)}</span>
       </div>
       
       <!-- Pod Type Badge -->
-      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
+      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
         Pod
       </span>
     </div>
     
     <!-- Title and Tagline -->
     <div class="mb-5">
-      <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-300 leading-tight">
+      <h3 class="text-xl font-inter font-bold text-graphite-900 mb-3 group-hover:text-graphite-800 transition-colors duration-300 leading-tight">
         {pod.name}
       </h3>
-      <p class="text-gray-600 leading-relaxed text-sm line-clamp-2">
+      <p class="text-graphite-600 leading-relaxed font-inter text-sm line-clamp-4">
         {pod.tagline}
       </p>
     </div>
     
     <!-- Quick Overview -->
     <div class="mb-5">
-      <div class="bg-gradient-to-r from-gray-50/80 to-white/60 rounded-lg p-3 border border-gray-100/50 backdrop-blur-sm">
-        <p class="text-gray-700 text-sm leading-relaxed line-clamp-2">
+      <div class="bg-graphite-50/80 rounded-lg p-3 border border-graphite-100/50 backdrop-blur-sm">
+        <p class="text-graphite-700 font-inter text-sm leading-relaxed line-clamp-4">
           {pod.whatsInPod.description}
         </p>
       </div>
@@ -129,7 +139,7 @@ const getPodColorClasses = (pod: any) => {
       <!-- Ideal For -->
       <div class="highlight-item-vertical">
         <div class="highlight-icon-row">
-          <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class={`w-4 h-4 ${getIconColor(pod)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
         </div>
@@ -144,7 +154,7 @@ const getPodColorClasses = (pod: any) => {
       <!-- Team Size -->
       <div class="highlight-item-vertical">
         <div class="highlight-icon-row">
-          <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class={`w-4 h-4 ${getIconColor(pod)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
           </svg>
         </div>
@@ -159,7 +169,7 @@ const getPodColorClasses = (pod: any) => {
       <!-- Timeline -->
       <div class="highlight-item-vertical">
         <div class="highlight-icon-row">
-          <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class={`w-4 h-4 ${getIconColor(pod)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
@@ -173,7 +183,7 @@ const getPodColorClasses = (pod: any) => {
     </div>
 
     <!-- Action Buttons -->
-    <div class="mt-auto flex items-center gap-3 pt-4 border-t border-gray-100/50">
+    <div class="mt-auto flex items-center gap-3 pt-4 border-t border-graphite-100/50">
       <!-- Reserve Pod Button -->
       <button 
         data-add-to-cart
@@ -181,7 +191,7 @@ const getPodColorClasses = (pod: any) => {
         data-item-type="pod"
         data-item-title={pod.name}
         data-item-description={pod.tagline}
-        class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-[#22c55e] to-[#0ea5e9] text-white font-semibold rounded-lg hover:from-[#16a34a] hover:to-[#0284c7] transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm">
+        class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg text-sm">
         <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
@@ -189,7 +199,7 @@ const getPodColorClasses = (pod: any) => {
       </button>
       
       <!-- Details Link -->
-      <a href={`/pods/${generatePodSlug(pod.name)}`} class="inline-flex items-center justify-center px-4 py-2.5 text-gray-600 hover:text-gray-700 font-semibold transition-colors border border-gray-200 rounded-lg hover:bg-gray-50 text-sm">
+      <a href={`/pods/${generatePodSlug(pod.name)}`} class="inline-flex items-center justify-center px-4 py-2.5 text-graphite-600 hover:text-graphite-700 font-inter font-semibold transition-colors border border-graphite-200 rounded-lg hover:bg-graphite-50 text-sm">
         Details
         <svg class="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -264,12 +274,14 @@ const getPodColorClasses = (pod: any) => {
     margin-bottom: 0.125rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-family: 'Inter', sans-serif;
   }
 
   .highlight-text {
     font-size: 0.75rem;
     color: #6b7280;
     line-height: 1.2;
+    font-family: 'Inter', sans-serif;
   }
 
   /* Text Clamping */
@@ -322,10 +334,11 @@ const getPodColorClasses = (pod: any) => {
   document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
       // Check if the clicked element is a pod card
-      const podCard = e.target.closest('.pod-card');
+      const target = e.target as HTMLElement;
+      const podCard = target?.closest('.pod-card');
       if (podCard) {
         // Check if the click was on a button or link (CTA elements)
-        const isCTAElement = e.target.closest('button, a, [data-add-to-cart]');
+        const isCTAElement = target?.closest('button, a, [data-add-to-cart]');
         
         if (!isCTAElement) {
           // Get the pod slug from the data attribute

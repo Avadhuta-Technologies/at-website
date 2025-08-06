@@ -56,13 +56,13 @@ const hasDiscount = discountPercentage > 0;
   <!-- Enhanced Card-Style Design -->
   <div class="price-display-card">
     {showOriginalPrice && hasDiscount && (
-      <div class="original-price-card text-gray-500 text-lg line-through">
+      <div class="original-price-card text-graphite-500 font-inter text-lg line-through">
         {priceDisplay.originalPrice}
       </div>
     )}
     
     {showBadge && hasDiscount && (
-      <div class="discount-badge-card inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
+      <div class="discount-badge-card inline-flex items-center px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm font-inter font-semibold border border-mint-200">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
@@ -70,12 +70,12 @@ const hasDiscount = discountPercentage > 0;
       </div>
     )}
     
-    <div class="final-price-card text-4xl font-bold text-gray-900">
+    <div class="final-price-card text-4xl font-inter font-bold text-graphite-900">
       {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
     </div>
     
     {showSavings && hasDiscount && (
-      <div class="savings-text-card text-green-600 font-semibold text-sm">
+      <div class="savings-text-card text-mint-600 font-inter font-semibold text-sm">
         Save {priceDisplay.savings}
       </div>
     )}
@@ -153,7 +153,7 @@ const hasDiscount = discountPercentage > 0;
         const badgeElement = display.querySelector('.discount-badge-card');
         if (badgeElement && showBadge && discountPercentage > 0) {
           badgeElement.textContent = `${discountPercentage}% OFF`;
-          badgeElement.className = `discount-badge-card inline-flex items-center px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold`;
+          badgeElement.className = `discount-badge-card inline-flex items-center px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm font-inter font-semibold border border-mint-200`;
         }
         
         // Update original price
@@ -219,21 +219,25 @@ const hasDiscount = discountPercentage > 0;
   .original-price-card {
     color: #6b7280;
     text-decoration: line-through;
+    font-family: 'Inter', sans-serif;
   }
   
   .discount-badge-card {
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    font-family: 'Inter', sans-serif;
   }
   
   .final-price-card {
     font-weight: 700;
-    color: #111827;
+    color: #202124;
+    font-family: 'Inter', sans-serif;
   }
   
   .savings-text-card {
-    color: #059669;
+    color: #16a34a;
     font-weight: 600;
+    font-family: 'Inter', sans-serif;
   }
 </style> 
