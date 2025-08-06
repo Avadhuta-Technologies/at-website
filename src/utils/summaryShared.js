@@ -453,18 +453,38 @@ export class SummaryShared {
     const buttonIcon = buttonElement.querySelector('svg');
     
     if (isInCart) {
-      // Pack is in cart - show remove state
-      buttonElement.classList.remove('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
-              buttonElement.classList.add('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
+      // Pack is in cart - show remove state (outlined button with white background)
+      // Remove gradient classes
+      buttonElement.classList.remove(
+        'bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 
+        'hover:from-mint-600', 'hover:to-cerulean-600', 'text-white'
+      );
+      
+      // Add outlined button classes with brand colors
+      buttonElement.classList.add(
+        'bg-white', 'border-2', 'border-graphite-300', 
+        'text-graphite-700', 'hover:bg-graphite-50', 
+        'hover:border-graphite-400', 'hover:text-graphite-800'
+      );
       
       if (buttonText) buttonText.textContent = 'Remove Pack';
       if (buttonIcon) {
         buttonIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>';
       }
     } else {
-      // Pack is not in cart - show add state
-              buttonElement.classList.remove('text-gray-600', 'hover:text-red-500', 'bg-transparent', 'hover:bg-red-50/50', '!text-gray-600');
-      buttonElement.classList.add('from-primary-600', 'to-primary-700', 'hover:from-primary-700', 'hover:to-primary-800');
+      // Pack is not in cart - show add state (primary gradient button)
+      // Remove outlined button classes
+      buttonElement.classList.remove(
+        'bg-white', 'border-2', 'border-graphite-300', 
+        'text-graphite-700', 'hover:bg-graphite-50', 
+        'hover:border-graphite-400', 'hover:text-graphite-800'
+      );
+      
+      // Add gradient button classes with brand colors
+      buttonElement.classList.add(
+        'bg-gradient-to-r', 'from-mint-500', 'to-cerulean-500', 
+        'hover:from-mint-600', 'hover:to-cerulean-600', 'text-white'
+      );
       
       if (buttonText) buttonText.textContent = 'Add to Pod';
       if (buttonIcon) {
