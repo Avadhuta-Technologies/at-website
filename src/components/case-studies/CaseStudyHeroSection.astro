@@ -11,73 +11,96 @@ export interface Props {
 
 const { caseStudy } = Astro.props;
 
-// Helper function to get badge color class
+// Helper function to get badge color class - using brand colors
 function getBadgeColorClass(color: string): string {
   const colorMap: Record<string, string> = {
-    'blue': 'bg-blue-100 text-blue-800',
-    'purple': 'bg-purple-100 text-purple-800',
-    'orange': 'bg-orange-100 text-orange-800',
-    'teal': 'bg-teal-100 text-teal-800',
-    'green': 'bg-green-100 text-green-800',
-    'indigo': 'bg-indigo-100 text-indigo-800',
-    'cyan': 'bg-cyan-100 text-cyan-800',
-    'pink': 'bg-pink-100 text-pink-800',
-    'gray': 'bg-gray-100 text-gray-800'
+    'blue': 'bg-cerulean-100 text-cerulean-800 border-cerulean-200',
+    'purple': 'bg-graphite-100 text-graphite-800 border-graphite-200',
+    'orange': 'bg-mint-100 text-mint-800 border-mint-200',
+    'teal': 'bg-mint-100 text-mint-800 border-mint-200',
+    'green': 'bg-mint-100 text-mint-800 border-mint-200',
+    'indigo': 'bg-cerulean-100 text-cerulean-800 border-cerulean-200',
+    'cyan': 'bg-cerulean-100 text-cerulean-800 border-cerulean-200',
+    'pink': 'bg-mint-100 text-mint-800 border-mint-200',
+    'gray': 'bg-graphite-100 text-graphite-800 border-graphite-200'
   };
-  return colorMap[color] || 'bg-blue-100 text-blue-800';
+  return colorMap[color] || 'bg-cerulean-100 text-cerulean-800 border-cerulean-200';
 }
 ---
 
-<section class="relative py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
   <!-- Background Elements -->
   <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-  <div class="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-br from-[#22c55e]/30 to-[#0ea5e9]/30 rounded-full blur-3xl"></div>
-  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tr from-green-100/30 to-blue-100/30 rounded-full blur-3xl"></div>
+  <div class="absolute top-0 left-1/4 w-72 h-72 bg-gradient-to-br from-mint-500/30 to-cerulean-500/30 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tr from-mint-100/30 to-cerulean-100/30 rounded-full blur-3xl"></div>
   
-  <div class="container mx-auto px-4 relative z-10">
-    <div class="max-w-4xl mx-auto text-center">
+  <!-- Main Content -->
+  <div class="relative z-10 container mx-auto px-4 py-20 md:py-32">
+    <div class="max-w-6xl mx-auto text-center">
+      
+      <!-- Glass Badge -->
+      <div class="inline-flex items-center px-4 py-2 glass border-mint-200/30 text-mint-700 text-sm font-semibold rounded-full mb-8 hover:glass-strong transition-all duration-300">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+        {caseStudy.badge}
+      </div>
+      
       <!-- Breadcrumb -->
-      <nav class="flex items-center justify-center mb-8 text-sm text-gray-500">
-        <a href="/case-studies" class="hover:text-primary-600 transition-colors">Case Studies</a>
+      <nav class="flex items-center justify-center mb-8 text-sm font-inter text-graphite-500">
+        <a href="/case-studies" class="hover:text-mint-600 transition-colors">Case Studies</a>
         <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
-        <span class="text-gray-400">{caseStudy.title}</span>
+        <span class="text-graphite-400">{caseStudy.title}</span>
       </nav>
       
       <!-- Badge and Industry -->
       <div class="flex items-center justify-center gap-4 mb-6">
-        <span class={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getBadgeColorClass(caseStudy.badgeColor)}`}>
+        <span class={`inline-flex items-center px-4 py-2 rounded-full text-sm font-inter font-semibold border ${getBadgeColorClass(caseStudy.badgeColor)}`}>
           {caseStudy.badge}
         </span>
-        <span class="text-gray-500 font-medium">•</span>
-        <span class="text-gray-600 font-medium">{caseStudy.industry}</span>
+        <span class="text-graphite-500 font-inter font-medium">•</span>
+        <span class="text-graphite-600 font-inter font-medium">{caseStudy.industry}</span>
       </div>
       
-      <!-- Title -->
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight">
+      <!-- Main Headline -->
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold gradient-title mb-6 leading-tight">
         {caseStudy.title}
       </h1>
       
       <!-- Problem Statement -->
       <div class="max-w-3xl mx-auto">
-        <p class="text-xl md:text-2xl text-gray-600 leading-relaxed mb-8">
+        <p class="text-xl md:text-2xl font-inter text-graphite-600 leading-relaxed mb-8">
           {caseStudy.problemStatement}
         </p>
       </div>
       
-      <!-- CTA Button -->
+      <!-- CTA Buttons with Glassmorphism -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="/contact" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-          Start Your Project
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a 
+          href="/contact" 
+          class="inline-flex items-center px-6 py-3 rounded-lg bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold hover:from-mint-600 hover:to-cerulean-600 
+            transition-all duration-300 hover:scale-105 hover:shadow-md group flex-shrink-0 shadow-sm"
+        >
+          <span>Start Your Project</span>
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
           </svg>
         </a>
-        <a href="/case-studies" class="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300">
-          View All Case Studies
+        
+        <a 
+          href="/case-studies" 
+          class="inline-flex items-center px-6 py-3 glass border-graphite-300/50 text-graphite-700 font-inter font-semibold rounded-lg hover:bg-graphite-50/50 hover:border-graphite-400/70 transition-all duration-300 group hover:scale-105"
+        >
+          <span>View All Case Studies</span>
+          <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
         </a>
       </div>
+      
+      
     </div>
   </div>
 </section>

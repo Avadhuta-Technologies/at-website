@@ -14,14 +14,14 @@ export interface Props {
 const { data } = Astro.props;
 ---
 
-<section class="py-16 lg:py-24 ">
-  <div class="container mx-auto px-4">
+<section class="py-20 relative overflow-hidden">
+  <div class="container mx-auto max-w-screen-2xl px-4 relative z-10">
     <!-- Section Header -->
     <div class="text-center mb-16">
-      <h2 class="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 gradient-title">
+      <h2 class="text-3xl md:text-4xl font-inter font-bold text-graphite-900 mb-4">
         {data.title}
       </h2>
-      <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+      <p class="text-lg font-inter text-graphite-600 max-w-3xl mx-auto">
         {data.subtitle}
       </p>
     </div>
@@ -31,28 +31,34 @@ const { data } = Astro.props;
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {data.steps.map((step, index) => (
           <div 
-            class="relative bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100 group hover:shadow-lg transition-all duration-300"
+            class="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1"
             data-step={index + 1}
           >
-            <!-- Step Number -->
-            <div class="absolute -top-4 -left-4 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
-              {index + 1}
+            <!-- Card Background -->
+            <div class="absolute inset-0 bg-white/90 backdrop-blur-sm border border-white/30 rounded-xl shadow-sm group-hover:shadow-xl transition-all duration-300"></div>
+            
+            <!-- Card Content -->
+            <div class="relative p-6">
+              <!-- Step Number -->
+              <div class="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white rounded-full flex items-center justify-center font-inter font-bold text-sm shadow-md">
+                {index + 1}
+              </div>
+              
+              <!-- Icon -->
+              <div class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                {step.icon}
+              </div>
+              
+              <!-- Title -->
+              <h3 class="text-lg font-inter font-semibold text-graphite-900 mb-3">
+                {step.title}
+              </h3>
+              
+              <!-- Description -->
+              <p class="text-graphite-600 font-inter leading-relaxed">
+                {step.description}
+              </p>
             </div>
-            
-            <!-- Icon -->
-            <div class="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
-              {step.icon}
-            </div>
-            
-            <!-- Title -->
-            <h3 class="text-xl font-semibold text-slate-900 mb-4">
-              {step.title}
-            </h3>
-            
-            <!-- Description -->
-            <p class="text-slate-600 leading-relaxed">
-              {step.description}
-            </p>
           </div>
         ))}
       </div>
@@ -62,25 +68,49 @@ const { data } = Astro.props;
     <div class="text-center mt-16">
       <a 
         href="/explore-pods" 
-        class="inline-flex items-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl mr-4 group"
+        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-mint-500 to-cerulean-500 text-white font-inter font-semibold rounded-lg hover:from-mint-600 hover:to-cerulean-600 transition-all duration-300 hover:scale-105 hover:shadow-md group flex-shrink-0 shadow-sm mr-3"
       >
         Explore Pods
-        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
         </svg>
       </a>
       <a 
         href="#packs-section" 
-        class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-xl border-2 border-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl group"
+        class="inline-flex items-center px-6 py-3 glass border-graphite-300/50 text-graphite-700 font-inter font-semibold rounded-lg hover:bg-graphite-50/50 hover:border-graphite-400/70 transition-all duration-300 group hover:scale-105"
       >
         Browse Packs
-        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
         </svg>
       </a>
     </div>
   </div>
 </section>
+
+<script>
+  // Add animation on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = entry.target as HTMLElement;
+        const delay = (parseInt(target.getAttribute('data-step') || '1') - 1) * 0.2;
+        target.style.animationDelay = `${delay}s`;
+        entry.target.classList.add('animate-fade-in-up');
+      }
+    });
+  }, observerOptions);
+
+  // Observe all step cards
+  document.querySelectorAll('[data-step]').forEach(card => {
+    observer.observe(card);
+  });
+</script>
 
 <style>
   .animate-fade-in-up {
@@ -95,27 +125,4 @@ const { data } = Astro.props;
       transform: translateY(0);
     }
   }
-</style>
-
-<script>
-  // Add animation on scroll
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const delay = (parseInt(entry.target.getAttribute('data-step')) - 1) * 0.2;
-        entry.target.style.animationDelay = `${delay}s`;
-        entry.target.classList.add('animate-fade-in-up');
-      }
-    });
-  }, observerOptions);
-
-  // Observe all step cards
-  document.querySelectorAll('[data-step]').forEach(card => {
-    observer.observe(card);
-  });
-</script> 
+</style> 
