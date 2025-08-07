@@ -1,0 +1,230 @@
+---
+// Generic confirmation modal for removing items from cart
+---
+
+<div id="remove-item-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[9999] hidden flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-95 opacity-0" id="remove-item-modal-content">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900" id="remove-item-modal-title">Remove Item?</h3>
+      </div>
+      <button id="close-remove-item-modal" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Content -->
+    <div class="p-6">
+      <p class="text-gray-600 mb-4" id="remove-item-modal-message">
+        Are you sure you want to remove this item? This action cannot be undone.
+      </p>
+      
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <div>
+            <h4 class="font-semibold text-red-900 mb-1">What will happen:</h4>
+            <ul class="text-sm text-red-800 space-y-1" id="remove-item-modal-consequences">
+              <li>• Item "<span id="current-item-name-remove" class="font-medium">Item Name</span>" will be removed</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="flex gap-3 p-6 border-t border-gray-200">
+      <button id="confirm-remove-item-btn" class="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+        Remove Item
+      </button>
+      <button id="cancel-remove-item-btn" class="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  class RemoveItemConfirmationModal {
+    modal: HTMLElement | null;
+    modalContent: HTMLElement | null;
+    currentItemNameSpan: HTMLElement | null;
+    confirmBtn: HTMLElement | null;
+    cancelBtn: HTMLElement | null;
+    closeBtn: HTMLElement | null;
+    titleEl: HTMLElement | null;
+    messageEl: HTMLElement | null;
+    consequencesEl: HTMLElement | null;
+    onConfirm: (() => void) | null;
+    onCancel: (() => void) | null;
+    
+    constructor() {
+      this.modal = document.getElementById('remove-item-confirmation-modal');
+      this.modalContent = document.getElementById('remove-item-modal-content');
+      this.currentItemNameSpan = document.getElementById('current-item-name-remove');
+      this.confirmBtn = document.getElementById('confirm-remove-item-btn');
+      this.cancelBtn = document.getElementById('cancel-remove-item-btn');
+      this.closeBtn = document.getElementById('close-remove-item-modal');
+      this.titleEl = document.getElementById('remove-item-modal-title');
+      this.messageEl = document.getElementById('remove-item-modal-message');
+      this.consequencesEl = document.getElementById('remove-item-modal-consequences');
+      
+      this.onConfirm = null;
+      this.onCancel = null;
+      
+      this.init();
+    }
+    
+    init() {
+      // Close modal handlers
+      this.closeBtn?.addEventListener('click', () => this.hide());
+      this.cancelBtn?.addEventListener('click', () => this.hide());
+      
+      // Confirm handler
+      this.confirmBtn?.addEventListener('click', () => {
+        if (this.onConfirm) {
+          this.onConfirm();
+        }
+        this.hide();
+      });
+      
+      // Click outside to close
+      this.modal?.addEventListener('click', (e) => {
+        if (e.target === this.modal) {
+          this.hide();
+        }
+      });
+      
+      // Escape key to close
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.isVisible()) {
+          this.hide();
+        }
+      });
+    }
+    
+    show(
+      itemName: string = 'Item',
+      itemType: 'pod' | 'pack' | 'item' = 'item',
+      onConfirm: (() => void) | null = null,
+      onCancel: (() => void) | null = null
+    ) {
+      if (!this.modal || !this.modalContent) return;
+      
+      // Set callbacks
+      this.onConfirm = onConfirm;
+      this.onCancel = onCancel;
+      
+      // Update content based on item type
+      if (this.titleEl) {
+        this.titleEl.textContent = `Remove ${itemType === 'pod' ? 'Pod' : itemType === 'pack' ? 'Pack' : 'Item'}?`;
+      }
+      
+      if (this.messageEl) {
+        if (itemType === 'pod') {
+          this.messageEl.textContent = 'Are you sure you want to remove this pod? This will also remove all selected packs.';
+        } else if (itemType === 'pack') {
+          this.messageEl.textContent = 'Are you sure you want to remove this pack from your selection?';
+        } else {
+          this.messageEl.textContent = 'Are you sure you want to remove this item? This action cannot be undone.';
+        }
+      }
+      
+      if (this.currentItemNameSpan) {
+        this.currentItemNameSpan.textContent = itemName;
+      }
+      
+      if (this.consequencesEl) {
+        if (itemType === 'pod') {
+          this.consequencesEl.innerHTML = `
+            <li>• Current pod "<span class="font-medium">${itemName}</span>" will be removed</li>
+            <li>• All selected packs will be removed</li>
+            <li>• You'll need to select a new pod</li>
+          `;
+        } else if (itemType === 'pack') {
+          this.consequencesEl.innerHTML = `
+            <li>• Pack "<span class="font-medium">${itemName}</span>" will be removed from your selection</li>
+            <li>• You can add it back later if needed</li>
+          `;
+        } else {
+          this.consequencesEl.innerHTML = `
+            <li>• Item "<span class="font-medium">${itemName}</span>" will be removed</li>
+          `;
+        }
+      }
+      
+      if (this.confirmBtn) {
+        this.confirmBtn.textContent = `Remove ${itemType === 'pod' ? 'Pod' : itemType === 'pack' ? 'Pack' : 'Item'}`;
+      }
+      
+      // Show modal with animation
+      this.modal.classList.remove('hidden');
+      this.modal.classList.add('flex');
+      
+      // Trigger animation
+      setTimeout(() => {
+        if (this.modalContent) {
+          this.modalContent.classList.remove('scale-95', 'opacity-0');
+          this.modalContent.classList.add('scale-100', 'opacity-100');
+        }
+      }, 10);
+      
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+    }
+    
+    hide() {
+      if (!this.modal || !this.modalContent) return;
+      
+      // Hide with animation
+      if (this.modalContent) {
+        this.modalContent.classList.remove('scale-100', 'opacity-100');
+        this.modalContent.classList.add('scale-95', 'opacity-0');
+      }
+      
+      setTimeout(() => {
+        this.modal.classList.add('hidden');
+        this.modal.classList.remove('flex');
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
+        
+        // Call cancel callback if provided
+        if (this.onCancel) {
+          this.onCancel();
+        }
+      }, 300);
+    }
+    
+    isVisible() {
+      return this.modal && !this.modal.classList.contains('hidden');
+    }
+  }
+  
+  // Initialize modal when DOM is ready
+  const initModal = () => {
+    if (document.getElementById('remove-item-confirmation-modal')) {
+      (window as any).removeItemConfirmationModal = new RemoveItemConfirmationModal();
+      console.log('🔍 [RemoveItemConfirmationModal] Modal initialized successfully');
+    } else {
+      // Try again after a short delay
+      setTimeout(initModal, 100);
+    }
+  };
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initModal);
+  } else {
+    initModal();
+  }
+</script> 

@@ -15,6 +15,7 @@ import {
   PodAddPacksSection,
   PodReadyToLaunchSection
 } from '../../components/pod-detail/index.js';
+import RemoveItemConfirmationModal from '../../components/shared/RemoveItemConfirmationModal.astro';
 
 export async function getStaticPaths() {
   const { pods } = catalogUtils.getAllProducts();
@@ -190,9 +191,30 @@ const metaInfo = generateMetaInfo(pod);
           const cartStatus = await shared.getPackCartStatus(packId);
           
           if (cartStatus.inCart) {
-            // Remove pack
-            await shared.removePack(packId);
-            shared.showNotification('Pack removed from cart', 'success');
+            // Remove pack with confirmation
+            const cart = await shared.getCart();
+            const selectedPack = cart.find((item) => item.id === packId && item.type === 'pack');
+            const packName = selectedPack?.name || 'Selected Pack';
+            
+            if ((window as any).removeItemConfirmationModal) {
+              (window as any).removeItemConfirmationModal.show(
+                packName,
+                'pack',
+                async () => {
+                  // Confirm callback
+                  await shared.removePack(packId);
+                  shared.showNotification('Pack removed from cart', 'success');
+                },
+                () => {
+                  // Cancel callback - do nothing
+                  console.log('Pack removal cancelled');
+                }
+              );
+            } else {
+              // Fallback to direct removal if modal not available
+              await shared.removePack(packId);
+              shared.showNotification('Pack removed from cart', 'success');
+            }
           } else {
             if (!cartStatus.hasPod) {
               // No pod in cart, add both current pod and pack
@@ -270,6 +292,9 @@ const metaInfo = generateMetaInfo(pod);
 
   <!-- Ready to Launch CTA Section -->
   <PodReadyToLaunchSection pod={{ ...pod, id: pod.id }} />
+  
+  <!-- Remove Item Confirmation Modal -->
+  <RemoveItemConfirmationModal />
 </Layout>
 
 <style>
