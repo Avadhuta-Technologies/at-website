@@ -50,9 +50,9 @@ export const podsCatalog = {
         "Starting at ₹2.5L/month (~$3K/month)",
         "Includes dev, design, QA, infrastructure, and deployment"
       ],
-      basePriceINR: 250000,
-      basePriceUSD: 3000,
-      discountPercentage: 15,
+      basePriceINR: 600000,
+      basePriceUSD: 28000,
+      discountPercentage: 25,
     },
     {
       id: "ar-vr-experience",
@@ -100,9 +100,9 @@ export const podsCatalog = {
         "Starting at ₹3L/month (~$3.6K/month)",
         "Includes full development, 3D assets, testing, and deployment"
       ],
-      basePriceINR: 300000,
-      basePriceUSD: 3600,
-      discountPercentage: 15,
+      basePriceINR: 750000,
+      basePriceUSD: 35000,
+      discountPercentage: 25,
     },
     {
       id: "ai-product-studio",
@@ -150,9 +150,9 @@ export const podsCatalog = {
         "Starting at ₹3.5L/month (~$4.2K/month)",
         "Includes design, dev, infra, and AI pipelines"
       ],
-      basePriceINR: 350000,
-      basePriceUSD: 4200,
-      discountPercentage: 15,
+      basePriceINR: 800000,
+      basePriceUSD: 38000,
+      discountPercentage: 25,
     },
     {
       id: "product-launch",
@@ -200,9 +200,9 @@ export const podsCatalog = {
         "Starts at ₹2.5L/month (~$3K/month)",
         "Includes dev, design, testing, DevOps & coordination"
       ],
-      basePriceINR: 250000,
-      basePriceUSD: 3000,
-      discountPercentage: 15
+      basePriceINR: 550000,
+      basePriceUSD: 25000,
+      discountPercentage: 25
     },
     {
       id: "admin-workflow-automation",
@@ -246,9 +246,9 @@ export const podsCatalog = {
       pricing: [
         "Starting at ₹2L/month (~$2.4K)"
       ],
-      basePriceINR: 200000,
-      basePriceUSD: 2400,
-      discountPercentage: 15,
+      basePriceINR: 500000,
+      basePriceUSD: 22000,
+      discountPercentage: 25,
     },
     {
       id: "ai-ml-integration",
@@ -292,9 +292,9 @@ export const podsCatalog = {
         "Starts at ₹3L/month (~$3.6K)",
         "PoC-based pricing also available"
       ],
-      basePriceINR: 300000, 
-      basePriceUSD: 3600,
-      discountPercentage: 15,
+      basePriceINR: 700000, 
+      basePriceUSD: 30000,
+      discountPercentage: 25,
     },
     {
       id: "mobile-first-saas",
@@ -343,9 +343,9 @@ export const podsCatalog = {
         "Starting at ₹3L/month (~$3.6K)",
         "Includes mobile dev, backend dev, design, testing, and deployment"
       ],
-      basePriceINR: 300000,
-      basePriceUSD: 3600,
-      discountPercentage: 15,
+      basePriceINR: 650000,
+      basePriceUSD: 28000,
+      discountPercentage: 25,
     },
     {
       id: "devops-infra-automation",
@@ -391,9 +391,9 @@ export const podsCatalog = {
         "Starting at ₹2L/month (~$2.4K)",
         "One-time infra setup plans available as well"
       ],
-      basePriceINR: 200000,
-      basePriceUSD: 2400,
-      discountPercentage: 15,
+      basePriceINR: 450000,
+      basePriceUSD: 20000,
+      discountPercentage: 25,
     }
   ],
 
