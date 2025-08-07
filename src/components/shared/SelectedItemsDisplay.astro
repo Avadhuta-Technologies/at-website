@@ -1,5 +1,6 @@
 ---
 // Component to display selected pods and packs
+import RemoveItemConfirmationModal from './RemoveItemConfirmationModal.astro';
 ---
 
 <div id="selected-items-display" class="sticky top-4 bg-white rounded-lg border border-gray-200 shadow-sm">
@@ -253,6 +254,7 @@
               title="Remove pod"
               data-item-id="${pod.id}"
               data-item-type="pod"
+              data-item-name="${pod.title}"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -287,6 +289,7 @@
                 title="Remove pack"
                 data-item-id="${pack.id}"
                 data-item-type="pack"
+                data-item-name="${pack.title}"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -337,10 +340,28 @@
       e.preventDefault();
       const itemId = removePodBtn.getAttribute('data-item-id');
       const itemType = removePodBtn.getAttribute('data-item-type');
-      console.log('🟡 [SelectedItemsDisplay] Remove pod button clicked:', { itemId, itemType });
+      const itemName = removePodBtn.getAttribute('data-item-name') || 'Current Pod';
+      console.log('🟡 [SelectedItemsDisplay] Remove pod button clicked:', { itemId, itemType, itemName });
       
       if (itemId && itemType) {
-        await (window as any).removeFromCart(itemId, itemType);
+        // Show confirmation modal
+        if ((window as any).removeItemConfirmationModal) {
+          (window as any).removeItemConfirmationModal.show(
+            itemName,
+            'pod',
+            async () => {
+              // Confirm callback
+              await (window as any).removeFromCart(itemId, itemType);
+            },
+            () => {
+              // Cancel callback - do nothing
+              console.log('🟡 [SelectedItemsDisplay] Remove pod cancelled');
+            }
+          );
+        } else {
+          // Fallback to direct removal if modal not available
+          await (window as any).removeFromCart(itemId, itemType);
+        }
       }
     }
     
@@ -348,10 +369,28 @@
       e.preventDefault();
       const itemId = removePackBtn.getAttribute('data-item-id');
       const itemType = removePackBtn.getAttribute('data-item-type');
-      console.log('🟡 [SelectedItemsDisplay] Remove pack button clicked:', { itemId, itemType });
+      const itemName = removePackBtn.getAttribute('data-item-name') || 'Selected Pack';
+      console.log('🟡 [SelectedItemsDisplay] Remove pack button clicked:', { itemId, itemType, itemName });
       
       if (itemId && itemType) {
-        await (window as any).removeFromCart(itemId, itemType);
+        // Show confirmation modal
+        if ((window as any).removeItemConfirmationModal) {
+          (window as any).removeItemConfirmationModal.show(
+            itemName,
+            'pack',
+            async () => {
+              // Confirm callback
+              await (window as any).removeFromCart(itemId, itemType);
+            },
+            () => {
+              // Cancel callback - do nothing
+              console.log('🟡 [SelectedItemsDisplay] Remove pack cancelled');
+            }
+          );
+        } else {
+          // Fallback to direct removal if modal not available
+          await (window as any).removeFromCart(itemId, itemType);
+        }
       }
     }
   });
@@ -372,14 +411,23 @@
         window.dispatchEvent(new CustomEvent('cart-updated'));
         
         console.log('🟡 [SelectedItemsDisplay] Item removed successfully');
-        alert('Item removed from selection');
+        // Show success notification if available, otherwise just log
+        if ((window as any).showNotification) {
+          (window as any).showNotification('Item removed from selection', 'success');
+        }
       } else {
         console.error('🟡 [SelectedItemsDisplay] No cart data found');
-        alert('Failed to remove item');
+        // Show error notification if available, otherwise just log
+        if (window.showNotification) {
+          window.showNotification('Failed to remove item', 'error');
+        }
       }
     } catch (error) {
       console.error('🟡 [SelectedItemsDisplay] Error removing item:', error);
-      alert('Error removing item');
+      // Show error notification if available, otherwise just log
+      if (window.showNotification) {
+        window.showNotification('Error removing item', 'error');
+      }
     }
   };
 
@@ -428,4 +476,7 @@
   .remove-pack-btn:hover {
     color: #ef4444 !important; /* text-red-500 */
   }
-</style> 
+</style>
+
+<!-- Remove Item Confirmation Modal -->
+<RemoveItemConfirmationModal /> 

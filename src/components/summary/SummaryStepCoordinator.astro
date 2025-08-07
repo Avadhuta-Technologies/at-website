@@ -1,5 +1,6 @@
 ---
 import SimpleRecaptchaWidget from '../shared/SimpleRecaptchaWidget.astro';
+import RemoveItemConfirmationModal from '../shared/RemoveItemConfirmationModal.astro';
 import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
 // Step Coordinator Component - Using catalog as single source of truth
@@ -181,8 +182,32 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
               console.log('🔍 [Global] ===== PACK ADDED SUCCESSFULLY =====');
             } else if (action === 'remove') {
               console.log('🔍 [Global] ===== REMOVING PACK =====');
-              await this.summaryShared.removePack(packId);
-              console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
+              
+              // Get pack name for confirmation
+              const cart = await this.summaryShared.getCart();
+              const selectedPack = cart.find((item) => item.id === packId && item.type === 'pack');
+              const packName = selectedPack?.name || 'Selected Pack';
+              
+              // Show confirmation modal
+              if ((window as any).removeItemConfirmationModal) {
+                (window as any).removeItemConfirmationModal.show(
+                  packName,
+                  'pack',
+                  async () => {
+                    // Confirm callback
+                    await this.summaryShared.removePack(packId);
+                    console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
+                  },
+                  () => {
+                    // Cancel callback - do nothing
+                    console.log('🔍 [Global] Remove pack cancelled');
+                  }
+                );
+              } else {
+                // Fallback to direct removal if modal not available
+                await this.summaryShared.removePack(packId);
+                console.log('🔍 [Global] ===== PACK REMOVED SUCCESSFULLY =====');
+              }
             }
 
             // Refresh pack cards display immediately for better UX
@@ -212,13 +237,42 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
           const packId = deleteBtn.getAttribute('data-pack-id');
           if (packId) {
             console.log('🔍 [Global] Deleting pack from selected packs:', packId);
-            await this.summaryShared.removePack(packId);
-
-            // Refresh the packs display if we're on Step 2
-            if (this.currentStep === 2) {
-              await this.refreshPackCards();
-              await this.updateSelectedPacksDisplay();
+            
+            // Get pack name for confirmation
+            const cart = await this.summaryShared.getCart();
+            const selectedPack = cart.find((item) => item.id === packId && item.type === 'pack');
+            const packName = selectedPack?.name || 'Selected Pack';
+            
+            // Show confirmation modal
+            if ((window as any).removeItemConfirmationModal) {
+              (window as any).removeItemConfirmationModal.show(
+                packName,
+                'pack',
+                async () => {
+                  // Confirm callback
+                  await this.summaryShared.removePack(packId);
+                  
+                  // Refresh the packs display if we're on Step 2
+                  if (this.currentStep === 2) {
+                    await this.refreshPackCards();
+                  }
+                },
+                () => {
+                  // Cancel callback - do nothing
+                  console.log('🔍 [Global] Remove pack cancelled');
+                }
+              );
+            } else {
+              // Fallback to direct removal if modal not available
+              await this.summaryShared.removePack(packId);
+              
+              // Refresh the packs display if we're on Step 2
+              if (this.currentStep === 2) {
+                await this.refreshPackCards();
+              }
             }
+            
+            await this.updateSelectedPacksDisplay();
           }
         }
       });
@@ -331,8 +385,8 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
               <!-- CTA Section - Always at bottom -->
               <div class="ml-auto mt-auto pt-3 border-t border-mint-200/50">                
-                  <button id="edit-pod-btn" class="text-xs text-mint-600 hover:text-mint-700 font-medium">
-                    Change Pod
+                  <button id="remove-pod-btn" class="text-xs text-red-600 hover:text-red-700 font-medium">
+                    Remove Pod
                   </button>
                 </div>
               </div>
@@ -568,6 +622,9 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
             </div>
           </div>
         </div>
+        
+        <!-- Remove Item Confirmation Modal -->
+        <RemoveItemConfirmationModal />
       `;
 
       await this.initializeStep3();
@@ -747,10 +804,7 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
                   <div class="flex items-baseline space-x-2">
                     <p id="selected-pod-price" class="text-2xl font-bold text-mint-600">Calculating...</p>
                     <p class="text-sm text-graphite-500">per month</p>
-                  </div>
-                  <button id="change-pod-btn" class="text-sm text-mint-600 hover:text-mint-700 font-medium underline">
-                    Change Pod
-                  </button>
+                  </div>                 
                 </div>
                 
                 
@@ -2207,29 +2261,64 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
       // Pack event listeners are now handled globally in setupEventListeners()
       // Only add Step 2 specific listeners here
 
-      // Edit pod button - using event delegation
-      document.addEventListener('click', (e) => {
-        const target = e.target;
-        const editBtn = target.closest('#edit-pod-btn');
-
-        if (editBtn) {
-          this.summaryShared.navigateToStep(1);
-        }
-      });
-
       // Remove pod button - using event delegation
       document.addEventListener('click', async (e) => {
         const target = e.target;
-        const removeBtn = target.closest('#remove-pod-step2-btn');
+        const removeBtn = target.closest('#remove-pod-btn');
 
         if (removeBtn) {
-          console.log(`🔍 [${new Date().toISOString()}] [Step2] Remove pod button clicked`);
+          console.log('🔍 [Step2] Remove pod button clicked');
           e.preventDefault();
           e.stopPropagation();
-          await this.summaryShared.removePod();
-          this.summaryShared.navigateToStep(1);
+          
+          // Get current pod name for the modal
+          const cart = await this.summaryShared.getCart();
+          const selectedPod = cart.find((item) => item.type === 'pod');
+          const podName = selectedPod?.name || 'Current Pod';
+          
+          // Show custom confirmation modal
+          if ((window as any).removeItemConfirmationModal) {
+            (window as any).removeItemConfirmationModal.show(
+              podName,
+              'pod',
+              async () => {
+                // Confirm callback
+                await this.summaryShared.removePod();
+                this.summaryShared.navigateToStep(1);
+              },
+              () => {
+                // Cancel callback - do nothing
+                console.log('🔍 [Step2] Remove pod cancelled');
+              }
+            );
+          } else {
+            // Wait for modal to be available
+            const waitForModal = () => {
+              if ((window as any).removeItemConfirmationModal) {
+                (window as any).removeItemConfirmationModal.show(
+                  podName,
+                  'pod',
+                  async () => {
+                    // Confirm callback
+                    await this.summaryShared.removePod();
+                    this.summaryShared.navigateToStep(1);
+                  },
+                  () => {
+                    // Cancel callback - do nothing
+                    console.log('🔍 [Step2] Remove pod cancelled');
+                  }
+                );
+              } else {
+                // Try again after a short delay
+                setTimeout(waitForModal, 100);
+              }
+            };
+            waitForModal();
+          }
         }
       });
+
+      // Remove pod button - using event delegation (removed duplicate listener for non-existent button)
 
       // Back button removed from Step 2
 
@@ -3027,7 +3116,6 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
 
   /* Ensure remove button text is visible */
   #remove-pod-btn,
-  #remove-pod-step2-btn,
   .remove-pod-btn,
   .remove-pack-btn,
   [data-action='remove'] {
@@ -3035,7 +3123,6 @@ import { getSiteKey, getFormConfig } from '../../config/recaptcha';
   }
 
   #remove-pod-btn:hover,
-  #remove-pod-step2-btn:hover,
   .remove-pod-btn:hover,
   .remove-pack-btn:hover,
   [data-action='remove']:hover {
