@@ -169,6 +169,8 @@ const metaInfo = generateMetaInfo();
         const podId = podCtaButton.getAttribute('data-pod-id');
         
         console.log(`🔍 [${new Date().toISOString()}] [ExplorePods] Pod CTA button clicked:`, { action, podId });
+        console.log(`🔍 [${new Date().toISOString()}] [ExplorePods] Button data-action attribute:`, action);
+        console.log(`🔍 [${new Date().toISOString()}] [ExplorePods] Button classes:`, podCtaButton.className);
         
         try {
           // Import the summaryShared utility
@@ -187,7 +189,7 @@ const metaInfo = generateMetaInfo();
             // Remove pod from cart with confirmation
             const cart = await shared.getCart();
             const selectedPod = cart.find((item) => item.type === 'pod');
-            const podName = selectedPod?.name || 'Current Pod';
+            const podName = selectedPod?.title || selectedPod?.name || 'Current Pod';
             
             if ((window as any).removeItemConfirmationModal) {
               (window as any).removeItemConfirmationModal.show(
