@@ -394,20 +394,57 @@ const { pod } = Astro.props;
             if (icon && originalIcon) icon.innerHTML = originalIcon;
           }
         } else if (action === 'remove') {
-          // Remove pod from cart
+          // Remove pod from cart with confirmation
           console.log('🔵 [PodPricingCard] Attempting to remove pod from cart...');
-          const success = await shared.removePod();
-          if (success) {
-            console.log('🔵 [PodPricingCard] Pod removed from cart successfully');
-            // Update button appearance
-            updatePodPricingCTA();
+          
+          const cart = await shared.getCart();
+          const selectedPod = cart.find((item) => item.type === 'pod');
+          const podName = selectedPod?.name || 'Current Pod';
+          
+          if ((window as any).removeItemConfirmationModal) {
+            (window as any).removeItemConfirmationModal.show(
+              podName,
+              'pod',
+              async () => {
+                // Confirm callback
+                const success = await shared.removePod();
+                if (success) {
+                  console.log('🔵 [PodPricingCard] Pod removed from cart successfully');
+                  // Update button appearance
+                  updatePodPricingCTA();
+                } else {
+                  console.log('🔵 [PodPricingCard] Failed to remove pod from cart');
+                  // Re-enable button on error
+                  button.disabled = false;
+                  if (ctaText) ctaText.textContent = originalText;
+                  const icon = button.querySelector('svg');
+                  if (icon && originalIcon) icon.innerHTML = originalIcon;
+                }
+              },
+              () => {
+                // Cancel callback - re-enable button
+                console.log('🔵 [PodPricingCard] Pod removal cancelled');
+                button.disabled = false;
+                if (ctaText) ctaText.textContent = originalText;
+                const icon = button.querySelector('svg');
+                if (icon && originalIcon) icon.innerHTML = originalIcon;
+              }
+            );
           } else {
-            console.log('🔵 [PodPricingCard] Failed to remove pod from cart');
-            // Re-enable button on error
-            button.disabled = false;
-            if (ctaText) ctaText.textContent = originalText;
-            const icon = button.querySelector('svg');
-            if (icon && originalIcon) icon.innerHTML = originalIcon;
+            // Fallback to direct removal if modal not available
+            const success = await shared.removePod();
+            if (success) {
+              console.log('🔵 [PodPricingCard] Pod removed from cart successfully');
+              // Update button appearance
+              updatePodPricingCTA();
+            } else {
+              console.log('🔵 [PodPricingCard] Failed to remove pod from cart');
+              // Re-enable button on error
+              button.disabled = false;
+              if (ctaText) ctaText.textContent = originalText;
+              const icon = button.querySelector('svg');
+              if (icon && originalIcon) icon.innerHTML = originalIcon;
+            }
           }
         }
       } catch (error) {

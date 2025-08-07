@@ -266,15 +266,43 @@ const { pod } = Astro.props;
               console.log('🔵 [PodHeroSection] Failed to add pod to cart');
             }
           } else if (action === 'remove') {
-            // Remove pod from cart
+            // Remove pod from cart with confirmation
             console.log('🔵 [PodHeroSection] Attempting to remove pod from cart...');
-            const success = await shared.removePod();
-            if (success) {
-              console.log('🔵 [PodHeroSection] Pod removed from cart successfully');
-              // Update button appearance
-              updatePodHeroCTA();
+            
+            const cart = await shared.getCart();
+            const selectedPod = cart.find((item) => item.type === 'pod');
+            const podName = selectedPod?.name || 'Current Pod';
+            
+            if ((window as any).removeItemConfirmationModal) {
+              (window as any).removeItemConfirmationModal.show(
+                podName,
+                'pod',
+                async () => {
+                  // Confirm callback
+                  const success = await shared.removePod();
+                  if (success) {
+                    console.log('🔵 [PodHeroSection] Pod removed from cart successfully');
+                    // Update button appearance
+                    updatePodHeroCTA();
+                  } else {
+                    console.log('🔵 [PodHeroSection] Failed to remove pod from cart');
+                  }
+                },
+                () => {
+                  // Cancel callback - do nothing
+                  console.log('🔵 [PodHeroSection] Pod removal cancelled');
+                }
+              );
             } else {
-              console.log('🔵 [PodHeroSection] Failed to remove pod from cart');
+              // Fallback to direct removal if modal not available
+              const success = await shared.removePod();
+              if (success) {
+                console.log('🔵 [PodHeroSection] Pod removed from cart successfully');
+                // Update button appearance
+                updatePodHeroCTA();
+              } else {
+                console.log('🔵 [PodHeroSection] Failed to remove pod from cart');
+              }
             }
           }
         } catch (error) {

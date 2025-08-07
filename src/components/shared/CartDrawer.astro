@@ -1,5 +1,6 @@
 ---
 // Cart Drawer Component
+import RemoveItemConfirmationModal from './RemoveItemConfirmationModal.astro';
 ---
 
 <div id="cart-drawer" class="fixed top-0 bottom-0 right-0 w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out z-[9999] border-l border-gray-200 flex flex-col">
@@ -239,15 +240,39 @@
             const itemType = cartItem.getAttribute('data-item-type');
             
             if (itemId && itemType) {
-              // Remove item from localStorage
+              // Get item name for confirmation
               const cartData = localStorage.getItem('novapod-cart');
               if (cartData) {
                 const cart = JSON.parse(cartData);
-                const updatedCart = cart.filter((item: any) => !(item.id === itemId && item.type === itemType));
-                localStorage.setItem('novapod-cart', JSON.stringify(updatedCart));
+                const item = cart.find((item: any) => item.id === itemId && item.type === itemType);
+                const itemName = item?.title || item?.name || 'Item';
                 
-                // Dispatch cart-updated event
-                window.dispatchEvent(new CustomEvent('cart-updated'));
+                // Show confirmation modal
+                if ((window as any).removeItemConfirmationModal) {
+                  (window as any).removeItemConfirmationModal.show(
+                    itemName,
+                    itemType as 'pod' | 'pack',
+                    () => {
+                      // Confirm callback - remove item from localStorage
+                      const updatedCart = cart.filter((item: any) => !(item.id === itemId && item.type === itemType));
+                      localStorage.setItem('novapod-cart', JSON.stringify(updatedCart));
+                      
+                      // Dispatch cart-updated event
+                      window.dispatchEvent(new CustomEvent('cart-updated'));
+                    },
+                    () => {
+                      // Cancel callback - do nothing
+                      console.log('Cart item removal cancelled');
+                    }
+                  );
+                } else {
+                  // Fallback to direct removal if modal not available
+                  const updatedCart = cart.filter((item: any) => !(item.id === itemId && item.type === itemType));
+                  localStorage.setItem('novapod-cart', JSON.stringify(updatedCart));
+                  
+                  // Dispatch cart-updated event
+                  window.dispatchEvent(new CustomEvent('cart-updated'));
+                }
               }
             }
           }
@@ -309,4 +334,7 @@
       window.cartDrawer.open();
     }
   };
-</script> 
+</script>
+
+<!-- Remove Item Confirmation Modal -->
+<RemoveItemConfirmationModal /> 

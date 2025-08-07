@@ -11,6 +11,7 @@ import HomePodStrategistSection from '../components/home/HomePodStrategistSectio
 import HomeFinalCTASection from '../components/home/HomeFinalCTASection.astro';
 import HomeFAQSection from '../components/home/HomeFAQSection.astro';
 import HomeHowItWorksSection from '../components/home/HomeHowItWorksSection.astro';
+import RemoveItemConfirmationModal from '../components/shared/RemoveItemConfirmationModal.astro';
 // Import isolated home content
 import { 
   homeHeroData,
@@ -175,6 +176,9 @@ const metaInfo = generateMetaInfo();
   
   <!-- FAQ Section -->
   <HomeFAQSection data={homeFAQData} />
+  
+  <!-- Remove Item Confirmation Modal -->
+  <RemoveItemConfirmationModal />
 </Layout>
 
 <style>
@@ -250,14 +254,37 @@ const metaInfo = generateMetaInfo();
             const existingPod = cart.find((item: any) => item.type === 'pod');
             
             if (existingPod && existingPod.id === itemId) {
-              // Pod is already in cart - remove it
-              const success = await shared.removePod();
-              if (success) {
-                shared.showNotification(`${itemTitle || 'Pod'} removed from cart!`);
-                // Update button appearance
-                updateHomePodButtons();
+              // Pod is already in cart - show confirmation before removing
+              if ((window as any).removeItemConfirmationModal) {
+                (window as any).removeItemConfirmationModal.show(
+                  itemTitle || 'Current Pod',
+                  'pod',
+                  async () => {
+                    // Confirm callback
+                    const success = await shared.removePod();
+                    if (success) {
+                      shared.showNotification(`${itemTitle || 'Pod'} removed from cart!`);
+                      // Update button appearance
+                      updateHomePodButtons();
+                    } else {
+                      shared.showNotification('Failed to remove pod from cart', 'error');
+                    }
+                  },
+                  () => {
+                    // Cancel callback - do nothing
+                    console.log('Pod removal cancelled');
+                  }
+                );
               } else {
-                shared.showNotification('Failed to remove pod from cart', 'error');
+                // Fallback to direct removal if modal not available
+                const success = await shared.removePod();
+                if (success) {
+                  shared.showNotification(`${itemTitle || 'Pod'} removed from cart!`);
+                  // Update button appearance
+                  updateHomePodButtons();
+                } else {
+                  shared.showNotification('Failed to remove pod from cart', 'error');
+                }
               }
             } else {
               // Pod is not in cart - add it with confirmation if replacing
