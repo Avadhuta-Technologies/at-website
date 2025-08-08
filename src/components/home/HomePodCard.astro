@@ -96,9 +96,9 @@ const getIconColor = (pod: any) => {
       </div>
       
       <!-- Pod Type Badge -->
-      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
+      <!-- <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-inter font-medium bg-mint-100 text-mint-700 border border-mint-200">
         Pod
-      </span>
+      </span> -->
     </div>
     
     <!-- Title and Tagline -->
@@ -112,13 +112,13 @@ const getIconColor = (pod: any) => {
     </div>
     
     <!-- Quick Overview -->
-    <div class="mb-5">
+    <!-- <div class="mb-5">
       <div class="bg-graphite-50/80 rounded-lg p-3 border border-graphite-100/50 backdrop-blur-sm">
         <p class="text-graphite-700 font-inter text-sm leading-relaxed line-clamp-4">
           {pod.whatsInPod.description}
         </p>
       </div>
-    </div>
+    </div> -->
     
     <!-- Updated Price Display -->
     <div class="mb-4">
@@ -135,9 +135,9 @@ const getIconColor = (pod: any) => {
     </div>
 
     <!-- Vertical Highlights Layout -->
-    <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="grid grid-cols-1 gap-3 mb-5">
       <!-- Ideal For -->
-      <div class="highlight-item-vertical">
+      <!-- <div class="highlight-item-vertical">
         <div class="highlight-icon-row">
           <svg class={`w-4 h-4 ${getIconColor(pod)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -149,7 +149,7 @@ const getIconColor = (pod: any) => {
             {pod.idealFor[0]}
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Team Size -->
       <div class="highlight-item-vertical">
@@ -161,13 +161,20 @@ const getIconColor = (pod: any) => {
         <div class="highlight-content-vertical">
           <div class="highlight-label">Team</div>
           <div class="highlight-text">
-            {pod.whatsInPod.teamComposition.length} members
+            {pod.whatsInPod.teamComposition.map((member) => (
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-graphite-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span>{member.split('–')[0]}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       <!-- Timeline -->
-      <div class="highlight-item-vertical">
+      <!-- <div class="highlight-item-vertical">
         <div class="highlight-icon-row">
           <svg class={`w-4 h-4 ${getIconColor(pod)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -179,7 +186,7 @@ const getIconColor = (pod: any) => {
             {pod.deliveryTimelines?.[0] || 'Custom'}
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Action Buttons -->
@@ -278,10 +285,13 @@ const getIconColor = (pod: any) => {
   }
 
   .highlight-text {
-    font-size: 0.75rem;
+    font-size: 1rem;
+    text-align: left;
     color: #6b7280;
-    line-height: 1.2;
+    line-height: 1.6rem;
     font-family: 'Inter', sans-serif;
+    margin-left: 12px;
+    margin-top: 12px;
   }
 
   /* Text Clamping */

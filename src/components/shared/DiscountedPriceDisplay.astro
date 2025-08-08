@@ -55,12 +55,6 @@ const hasDiscount = discountPercentage > 0;
   
   <!-- Enhanced Card-Style Design -->
   <div class="price-display-card">
-    {showOriginalPrice && hasDiscount && (
-      <div class="original-price-card text-graphite-500 font-inter text-lg line-through">
-        {priceDisplay.originalPrice}
-      </div>
-    )}
-    
     {showBadge && hasDiscount && (
       <div class="discount-badge-card inline-flex items-center px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm font-inter font-semibold border border-mint-200">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,6 +63,12 @@ const hasDiscount = discountPercentage > 0;
         {discountPercentage}% OFF
       </div>
     )}
+
+    {showOriginalPrice && hasDiscount && (
+      <div class="original-price-card text-graphite-500 font-inter text-lg line-through">
+        {priceDisplay.originalPrice} {itemType === 'pod' ? <span class="text-graphite-500 font-inter text-lg line-through"> /month</span> : ''}
+      </div>
+    )}     
     
     <div class="final-price-card text-4xl font-inter font-bold text-graphite-900">
       {hasDiscount ? priceDisplay.discountedPrice : priceDisplay.originalPrice}
@@ -76,7 +76,7 @@ const hasDiscount = discountPercentage > 0;
     
     {showSavings && hasDiscount && (
       <div class="savings-text-card text-mint-600 font-inter font-semibold text-sm">
-        Save {priceDisplay.savings}
+        Save {priceDisplay.savings} {itemType === 'pod' ? <span class="text-graphite-500 font-inter text-lg line-through"> /month</span> : ''}
       </div>
     )}
   </div>
@@ -159,13 +159,13 @@ const hasDiscount = discountPercentage > 0;
         // Update original price
         const originalPriceElement = display.querySelector('.original-price-card');
         if (originalPriceElement && showOriginalPrice && discountPercentage > 0) {
-          originalPriceElement.textContent = priceDisplay.originalPrice;
+          originalPriceElement.textContent = priceDisplay.originalPrice + (itemType === 'pod' ? " / month" : "");
         }
         
         // Update final price
         const finalPriceElement = display.querySelector('.final-price-card');
         if (finalPriceElement) {
-          finalPriceElement.textContent = discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice;
+          finalPriceElement.textContent = (discountPercentage > 0 ? priceDisplay.discountedPrice : priceDisplay.originalPrice) + (itemType === 'pod' ? " / month" : "");
         }
         
         // Update savings text
