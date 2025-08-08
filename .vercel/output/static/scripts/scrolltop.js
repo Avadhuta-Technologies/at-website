@@ -1,0 +1,1 @@
+function scrollTo(o,t=0,c=500){const e=o.scrollTop,n=t-e;let l=0;const u=()=>{l+=20;const t=Math.easeInOutQuad(l,e,n,c);o.scrollTop=t,l<c&&setTimeout(u,20)};u()}Math.easeInOutQuad=function(o,t,c,e){return(o/=e/2)<1?c/2*o*o+t:-c/2*(--o*(o-2)-1)+t},document.querySelector(".back-to-top").onclick=()=>{scrollTo(document.documentElement)};
