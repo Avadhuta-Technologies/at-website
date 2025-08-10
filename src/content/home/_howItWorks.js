@@ -5,71 +5,44 @@ export const homeHowItWorksData = {
     {
       number: '1',
       title: 'Choose Your Pod',
-      description: 'Pick from a curated set of delivery pods—built for MVPs, AI apps, ecommerce, design sprints, or full product builds. Each pod comes pre-structured with the right blend of human expertise and AI-powered workflows.',
-      icon: 'choose-pod',
-      podTypes: [
-        {
-          name: 'BuildPod',
-          description: 'Full-stack development team'
-        },
-        {
-          name: 'VisionPod',
-          description: 'UX/UI design & prototyping'
-        },
-        {
-          name: 'CodePod',
-          description: 'Developer + AI pair-programming unit'
-        },
-        {
-          name: 'LaunchPod',
-          description: 'End-to-end product launch squad'
-        }
-      ]
+      description: 'Pick the pod that best fits your objective—whether it\'s launching a new product, integrating AI features, building an e-commerce engine, or enabling operational automation. Every pod comes pre-configured with the perfect mix of expert humans and AI assistance.',
+      features: [
+        'Supports fast, outcome-driven delivery'
+      ],
+      podType: 'NovaPod AI'
     },
     {
       number: '2',
-      title: 'Align on Outcomes',
-      description: 'We define clear goals, scope, and success metrics upfront. No hourly billing—just outcome-based delivery that keeps everyone focused and accountable.',
-      icon: 'align-outcomes',
-      benefits: [
-        'Transparent timelines',
-        'Milestone-driven execution',
-        'Flexible scaling as your needs grow'
-      ]
+      title: 'Define Success, Not Hours',
+      description: 'We start by clarifying your goals, scope, and expectations. No hourly billing—even better: it\'s outcome-based. Clear milestones and transparent timelines keep your project on track and focused.',
+      features: [
+        'Outcome-based pricing',
+        'Clear milestones and timelines',
+        'Transparent project tracking'
+      ],
+      podType: 'NovaPod AI'
     },
     {
       number: '3',
-      title: 'Your Pod Gets to Work',
-      description: 'Your NovaPod starts delivering from day one—powered by human builders, supported by AI agents. From design to code to QA, everything runs in sync, fast.',
-      icon: 'pod-working',
-      compositionTitle: "What's inside a pod?",
-      composition: [
-        'Product managers',
-        'Engineers + AI dev copilots',
-        'Designers + AI research assistants',
-        'Automated workflows and delivery pipelines'
-      ]
+      title: 'Launch Your Pod',
+      description: 'Your NovaPod is up and running from day one, blending human expertise with AI-driven workflows. From planning to coding to QA, everything syncs seamlessly for fast, high-quality execution.',
+      features: [
+        'Human expertise + AI workflows',
+        'Seamless planning to QA',
+        'Fast, high-quality execution'
+      ],
+      podType: 'NovaPod AI'
     },
     {
       number: '4',
-      title: 'Review. Launch. Iterate.',
-      description: 'You stay in control with regular updates, reviews, and testable outputs. Once launched, your pod can evolve into a support or growth pod—or spin up a new one instantly.',
-      icon: 'ship-scale',
-      adaptabilityTitle: 'Built to adapt:',
-      adaptabilityFeatures: [
-        {
-          title: 'Retain the same pod or rotate',
-          description: 'Keep your team or switch to new expertise'
-        },
-        {
-          title: 'Layer in new pods for expansion',
-          description: 'Add specialized pods as you grow'
-        },
-        {
-          title: 'Scale delivery without re-hiring',
-          description: 'Expand capacity instantly without hiring delays'
-        }
-      ]
+      title: 'Review, Launch, & Evolve',
+      description: 'Stay in control with regular reviews and deliverable checkpoints. After launch, keep the same pod for maintenance or growth—or spin up new pods instantly when you\'re ready to pivot or scale.',
+      features: [
+        'Regular reviews and checkpoints',
+        'Maintenance or growth options',
+        'Instant pod scaling'
+      ],
+      podType: 'NovaPod AI'
     }
   ]
 }; 
