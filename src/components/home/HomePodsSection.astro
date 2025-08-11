@@ -1,5 +1,6 @@
 ---
 import { catalogUtils } from '../../content/catalog/_index.js';
+import AvailablePodCard from '../explore-pods/AvailablePodCard.astro';
 import HomePodCard from './HomePodCard.astro';
 
 export interface Props {
@@ -62,14 +63,15 @@ const validPods = pods.filter(pod =>
         <span class="gradient-text"> Pods</span>
       </h2>
       <p class="text-lg text-graphite-600 leading-relaxed font-inter">
-        {data.subtitle} {validPods.length}
+        {data.subtitle}
       </p>
     </div>
     
     <!-- Pods Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
       {validPods?.slice(0, 6).map((pod, index) => (
-        <HomePodCard pod={pod} index={index} />
+        // <HomePodCard pod={pod} index={index} />
+        <AvailablePodCard pod={pod} index={index} />
       ))}
     </div>
     
