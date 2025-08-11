@@ -39,7 +39,7 @@ const generateMetaInfo = (caseStudy: any) => {
   ].join(', ');
   
   // Use NovaPod AI logo for consistent branding
-  const image = '/assets/logo/novapod_ai_logo.svg';
+  const image = '/assets/logo/logo_png.png';
   const imageAlt = `${caseStudy.title} - NovaPod AI Case Study`;
   
   // Generate canonical URL
@@ -125,7 +125,7 @@ export async function getStaticPaths() {
       "url": "https://novapod.ai",
       "logo": {
         "@type": "ImageObject",
-        "url": "/assets/logo/novapod_ai_logo.svg"
+        "url": "/assets/logo/logo_png.png"
       }
     },
     "datePublished": new Date().toISOString(),

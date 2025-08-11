@@ -156,7 +156,7 @@ caption: 0.75rem (12px) - font-weight: 400
     <div class="flex justify-between items-center h-16">
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <img class="h-8 w-auto" src="/assets/logo/at-logo.png" alt="AT Logo">
+        <img class="h-8 w-auto" src="/assets/logo/logo_png.png" alt="NovaPod AI Logo">
       </div>
       
       <!-- Navigation Links -->
