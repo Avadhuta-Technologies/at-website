@@ -30,7 +30,7 @@ const allIndustries = [
   'Mobile Apps / Utility & Delivery',
   'SaaS / Commodity Trading',
   'Ecommerce / Beauty & Wellness',
-  'SaaS / Workplace Automation / Facility Management'
+  'AI/ML'
 ];
 
 console.log('\n📋 All Industry Slugs:');

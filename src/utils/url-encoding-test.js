@@ -16,7 +16,7 @@ console.log('🧪 TESTING URL ENCODING FOR AMPERSANDS\n');
 const testCases = [
   'Mobile Apps / Utility & Delivery',
   'Ecommerce / Beauty & Wellness',
-  'SaaS / Workplace Automation / Facility Management'
+  'AI/ML'
 ];
 
 console.log('📝 Testing URL Generation:');

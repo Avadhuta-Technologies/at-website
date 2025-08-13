@@ -106,7 +106,7 @@ export const caseStudiesData = {
       },
       callToAction: "Want to bring AI into your design workflow? Let us help you lead the change.",
       image: "/images/case-studies/placeholder.svg",
-      badge: "AI",
+      badge: "AI/ML",
       badgeColor: "green"
     },
     {
@@ -336,7 +336,7 @@ export const caseStudiesData = {
     {
       id: "storytimeowls-storytelling-app",
       title: "StorytimeOwls – Personalized Storytelling App for Children",
-      industry: "Mobile Apps / EdTech / Parenting",
+      industry: "Mobile Apps / EdTech / Utility",
       engagementType: "UX/UI Revamp + Feature Development & App Release",
       duration: "3 months",
       teamComposition: "1 PM, 1 UI/UX Designer, 1 React Native Dev, 1 Backend Dev",
@@ -402,7 +402,7 @@ export const caseStudiesData = {
     {
       id: "orderlikho-order-delivery-management",
       title: "OrderLikho – All-in-One Order & Delivery Management App",
-      industry: "Mobile Apps / SME Enablement",
+      industry: "Mobile Apps / EdTech / Utility",
       engagementType: "Mobile App Development + Deployment to App Stores",
       duration: "3.5 months",
       teamComposition: "1 PM, 2 React Native Developers, 1 Backend Dev, 1 QA Engineer",
@@ -436,7 +436,7 @@ export const caseStudiesData = {
     {
       id: "pincode-deliverability-checker",
       title: "Pincode Deliverability Checker – Shopify App for Fresh Produce Brands",
-      industry: "Ecommerce (Fresh Food / Direct-to-Consumer)",
+      industry: "Ecommerce",
       engagementType: "Custom Shopify App Development",
       duration: "2 months",
       teamComposition: "1 PM, 1 Shopify App Developer, 1 Backend Dev, 1 QA Engineer",
@@ -504,7 +504,7 @@ export const caseStudiesData = {
     {
       id: "vgas-gas-cylinder-booking",
       title: "VGas – Aggregated Gas Cylinder Booking Platform",
-      industry: "Mobile Apps / Utility & Delivery",
+      industry: "Mobile Apps / EdTech / Utility",
       engagementType: "Mobile App Development (Aggregator Platform)",
       duration: "4 months",
       teamComposition: "1 PM, 2 React Native Devs, 1 Django Backend Dev, 1 QA Engineer",
@@ -572,7 +572,7 @@ export const caseStudiesData = {
     {
       id: "timeless-beauty-secrets-ecommerce",
       title: "Timeless Beauty Secrets – Heritage-Inspired Beauty Ecommerce Experience",
-      industry: "Ecommerce / Beauty & Wellness",
+      industry: "Ecommerce",
       engagementType: "Shopify Custom Storefront + App Integrations",
       duration: "2.5 months",
       teamComposition: "1 PM, 1 Shopify Theme Developer, 1 UI/UX Designer, 1 QA Engineer",
@@ -606,7 +606,7 @@ export const caseStudiesData = {
     {
       id: "smart-visitor-management-system",
       title: "Smart Visitor Management System",
-      industry: "SaaS / Workplace Automation / Facility Management",
+      industry: "SaaS / Commodity Trading",
       engagementType: "End-to-End Product Design & Development",
       duration: "3 months",
       teamComposition: "1 PM, 1 UX Designer, 2 Full Stack Developers, 1 QA Engineer",
@@ -637,6 +637,42 @@ export const caseStudiesData = {
       image: "/images/case-studies/placeholder.svg",
       badge: "SaaS",
       badgeColor: "blue"
+    },
+    {
+      id: "qualifyme-ai-hiring-platform",
+      title: "QualifyMe – AI-Powered Hiring & Assessment Platform",
+      industry: "HR Tech / Recruitment",
+      engagementType: "Full Product Build + AI Integration",
+      duration: "Ongoing since MVP launch",
+      teamComposition: "1 PM, 1 UI/UX Designer, 2 Frontend Devs, 2 Backend Devs, 1 AI Engineer, 1 QA Engineer",
+      techStack: ["ReactJS", "Tailwind CSS", "NodeJS", "NestJS", "Postgres", "AWS", "OpenAI", "n8n", "Judge0"],
+      problemStatement: "Startups and mid-sized companies face high costs and inefficiencies in screening candidates. Recruiters spend hours creating assessments, evaluating answers, and managing multiple interview rounds, which slows down hiring and increases the risk of poor-fit hires.",
+      ourApproach: "We developed QualifyMe, an AI-driven recruitment platform that automates candidate screening through adaptive assessments, structured interviews, and coding challenges. The platform integrates with ATS systems like Lever, supports widget-based job applications on company websites, and leverages AI to generate role-specific questions, evaluate candidate responses, and provide detailed reports for hiring decisions.",
+      solutionHighlights: [
+        "AI-generated role-specific assessments",
+        "Automated candidate evaluation with scoring and feedback",
+        "Integrated coding interview environment using Judge0",
+        "Configurable multi-round interview workflows",
+        "ATS integrations (e.g., Lever Apply Connect)",
+        "Embeddable careers widget for company websites",
+        "Talking avatar interview mode powered by LLMs",
+        "Custom analytics dashboards for hiring insights"
+      ],
+      impact: [
+        "Reduced screening time by 70% for recruiters",
+        "Improved candidate quality through AI-driven shortlisting",
+        "Enabled companies to scale hiring without increasing HR headcount",
+        "Delivered a better candidate experience with instant feedback"
+      ],
+      testimonial: {
+        quote: "QualifyMe transformed our hiring process. We now shortlist top candidates in days instead of weeks—without compromising on quality.",
+        author: "Client"
+      },
+      callToAction: "Want to automate candidate screening and speed up hiring? Let's build your AI-driven hiring process together.",
+      image: "/images/case-studies/qualifyme.svg",
+      badge: "AI/HR Tech",
+      badgeColor: "indigo"
     }
+    
   ]
 }; 

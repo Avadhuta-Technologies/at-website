@@ -3,7 +3,7 @@ export const ourWorkIndustriesData = {
   subtitle: "",
   industries: [
     {
-      name: 'SaaS / Workplace Automation / Facility Management',
+      name: 'AI/ML',
       description: 'We develop intelligent systems that think, learn, and adapt — whether it\'s improving hiring decisions or generating room layouts.',
       projects: [
         {

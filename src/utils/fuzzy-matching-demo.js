@@ -45,8 +45,8 @@ problematicUrls.forEach(url => {
 
 console.log('\n✅ Expected Results:');
 console.log('  "healthcare-&-pharma" → "Pharmacovigilance"');
-console.log('  "ai-&-automation" → "SaaS / Workplace Automation / Facility Management"');
+console.log('  "ai-&-automation" → "AI/ML"');
 console.log('  "retail,-design-&-ecommerce" → "Ecommerce"');
-console.log('  "security-&-field-ops" → "SaaS / Workplace Automation / Facility Management"');
+console.log('  "security-&-field-ops" → "AI/ML"');
 
 console.log('\n🎉 Fuzzy matching system successfully handles all URL variations!'); 

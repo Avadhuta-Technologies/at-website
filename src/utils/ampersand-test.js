@@ -20,7 +20,7 @@ const ampersandTests = [
   'mobile-apps-utility-delivery',
   'Ecommerce / Beauty & Wellness',
   'ecommerce-beauty-&-wellness',
-  'SaaS / Workplace Automation / Facility Management',
+  'AI/ML',
   'saas-workplace-automation-facility-management'
 ];
 

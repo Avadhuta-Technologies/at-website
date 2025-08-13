@@ -16,8 +16,10 @@ export const podsCatalog = {
         teamComposition: [
           "Project Architect (Shared) – scalable architecture, guidance",
           "1 Product Engineer (Frontend + Backend) – builds complete flows",
-          "1 UI/UX Designer – wireframes, high-fidelity UI, interaction design",
-          "0.5 QA Engineer – automated + manual tests",          
+          "UI/UX Designer (Shared) – wireframes, high-fidelity UI, interaction design",
+          "QA Engineer (Shared) – automated + manual tests",
+          "Content/Copywriter (Shared) – content strategy, copywriting, SEO",
+          "Marketing Automation Specialist (Shared) – email automation, CRM setup, growth funnels"          
         ],
         upgradeNote: "💡 Want to build faster or add mobile? Upgrade to Launch+ Pod."
       },
@@ -67,8 +69,8 @@ export const podsCatalog = {
           "Project Lead (Shared) – sprint planning and tech oversight",
           "1 React Native / Flutter Developer – cross-platform mobile app development",
           "1 Backend Developer – APIs, auth, and business logic",
-          "1 UI/UX Designer – mobile-first designs and user flows",
-          "0.5 QA Engineer – test coverage and release readiness"          
+          "1 UI/UX Designer (shared) – mobile-first designs and user flows",
+          "1 QA Engineer (shared) – test coverage and release readiness"          
         ],
         upgradeNote: "💡 Need native performance or wearables? Ask for the Native+ upgrade."
       },
@@ -115,9 +117,10 @@ export const podsCatalog = {
       whatsInPod: {
         description: "This pod focuses on operational software—building dashboards, CRMs, portals, and integrations.",
         teamComposition: [
-          "Project Manager (Shared) – handles coordination, delivery",
+          "1 Automation Architect (Shared) – Architects, handles coordination, delivery",
           "1 Full Stack Developer – dashboard and logic-heavy flows",
-          "1 QA/Tester – robust testing and data validation",          
+          "1 QA/Tester (Shared) – robust testing and data validation", 
+          "1 Business Analyst (Shared) – business requirements, process mapping, data analysis"         
         ],
         upgradeNote: "💡 Need custom integrations? Opt for the Plus Pod with integration engineer."
       },
@@ -161,10 +164,11 @@ export const podsCatalog = {
       whatsInPod: {
         description: "This pod is built for speed, performance, and flexibility — whether you're building headless ecommerce, a custom storefront, or a feature-rich backend.",
         teamComposition: [
-          "Project Lead / Architect (Shared) – ecommerce strategy and tech guidance",
-          "1 Full Stack Developer (4+ yrs) – storefront, backend logic, integrations",
-          "1 UI/UX Designer – conversion-focused shopping experience",
-          "0.5 QA & SEO Engineer – quality, speed, and search optimization",
+          "1 Project Lead / Architect (Shared) – ecommerce strategy and tech guidance",
+          "1 Full Stack Developer – storefront, backend logic, integrations",
+          "1 Frontend Developer – storefront, checkout, cart, payment gateways",
+          "1 UI/UX Designer (Shared) – conversion-focused shopping experience",
+          "1 QA & SEO Engineer (Shared) – quality, speed, and search optimization",
         ],
         upgradeNote: "🧩 Need marketplace features or Shopify/Shopware custom app development? Upgrade to the Plus Pod."
       },
@@ -213,9 +217,12 @@ export const podsCatalog = {
       whatsInPod: {
         description: "This pod helps you ship useful AI features using LLMs, OCR, and lightweight ML models.",
         teamComposition: [
-          "Project Architect (Shared) – data pipeline and evaluation guidance",
+          "1 AI Integration Lead (Shared) – data pipeline and evaluation guidance",
           "1 AI Engineer (ML/LLM experience)",
-          "1 Backend Developer – APIs, integration, deployment"          
+          "1 Backend Developer – APIs, integration, deployment",
+          "1 Frontend Developer (Shared) – API integration, UI/UX, testing",
+          "1 Data Engineer (Shared) – data pipeline, vector DBs, embeddings",
+          "1 QA Engineer (Shared) – testing, error handling, performance optimization"
         ],
         upgradeNote: "💡 Add a front-end engineer if building full flows around the AI."
       },
@@ -309,10 +316,11 @@ export const podsCatalog = {
       whatsInPod: {
         description: "This pod is your go-to team for launching AI-powered products — from design to integration and feedback loops.",
         teamComposition: [
-          "Project Architect (Shared) – use case validation and evaluation framework",
+          "AI Product Manager (Shared) – use case validation and evaluation framework",
           "1 AI Engineer – LLMs, embeddings, prompt tuning, RAG pipelines",
           "1 Full Stack Developer – frontend/backend integration and APIs",
-          "1 Product Designer – conversational UX and AI-specific UI flows",          
+          "1 UI/UX Designer (Shared) – conversational UX and AI-specific UI flows",
+          "1 QA Engineer (Shared) – testing, error handling, performance optimization"
         ],
         upgradeNote: "💬 Add a voice/chat avatar, or document chatbot? Upgrade to the AI+ Copilot Pod."
       },
@@ -359,9 +367,10 @@ export const podsCatalog = {
       whatsInPod: {
         description: "This pod handles everything behind the scenes — CI/CD, cloud provisioning, monitoring, and ops automation.",
         teamComposition: [
-          "Project Lead (Shared) – tracks milestones and environments",
+          "DevOps Architect (Shared) – solution design, architecture, and planning",
           "1 DevOps Engineer – infra setup, pipelines, scaling, security",
-          "0.5 Backend Developer – service integration, logging, tooling",          
+          "1 Backend Developer (Shared) – service integration, logging, tooling",
+          "1 Security Specialist (Shared) – security, compliance, and audit"
         ],
         upgradeNote: "💡 Want 24/7 monitoring or custom cloud setup? Add the Infra+ SLA Pack."
       },

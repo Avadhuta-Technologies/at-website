@@ -30,7 +30,7 @@ const testIndustries = [
   'Mobile Apps / Utility & Delivery',
   'SaaS / Commodity Trading',
   'Ecommerce / Beauty & Wellness',
-  'SaaS / Workplace Automation / Facility Management'
+  'AI/ML'
 ];
 
 testIndustries.forEach(industry => {

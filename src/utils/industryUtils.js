@@ -15,7 +15,7 @@ const AVAILABLE_INDUSTRIES = [
   "Mobile Apps / Utility & Delivery",
   "SaaS / Commodity Trading",
   "Ecommerce / Beauty & Wellness",
-  "SaaS / Workplace Automation / Facility Management"
+  "AI/ML"
 ];
 
 // URL slug to industry mapping for fuzzy matching
@@ -28,10 +28,10 @@ const URL_TO_INDUSTRY_MAPPING = {
   'pharmacovigilance': 'Pharmacovigilance',
   
   // AI & Automation variations
-  'ai-&-automation': 'SaaS / Workplace Automation / Facility Management',
-  'ai-automation': 'SaaS / Workplace Automation / Facility Management',
-  'automation': 'SaaS / Workplace Automation / Facility Management',
-  'ai': 'SaaS / Workplace Automation / Facility Management',
+  'ai-&-automation': 'AI/ML',
+  'ai-automation': 'AI/ML',
+  'automation': 'AI/ML',
+  'ai': 'AI/ML',
   
   // Retail, Design & Ecommerce variations
   'retail,-design-&-ecommerce': 'Ecommerce',
@@ -41,10 +41,10 @@ const URL_TO_INDUSTRY_MAPPING = {
   'ecommerce': 'Ecommerce',
   
   // Security & Field Ops variations
-  'security-&-field-ops': 'SaaS / Workplace Automation / Facility Management',
-  'security-field-ops': 'SaaS / Workplace Automation / Facility Management',
-  'security': 'SaaS / Workplace Automation / Facility Management',
-  'field-ops': 'SaaS / Workplace Automation / Facility Management',
+  'security-&-field-ops': 'AI/ML',
+  'security-field-ops': 'AI/ML',
+  'security': 'AI/ML',
+  'field-ops': 'AI/ML',
   
   // Mobile Apps variations
   'mobile-apps': 'Mobile Apps / EdTech / Parenting',
