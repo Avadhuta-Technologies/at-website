@@ -244,7 +244,7 @@ export const podsCatalog = {
       ],
       pastUseCases: [
         "ai-recommender-shopify-app",
-        "storytimeowls-storytelling-app"
+        "qualifyme-ai-hiring-platform"
       ],
       pricing: [
         "Starts at ₹3L/month (~$3.6K)",
